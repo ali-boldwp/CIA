@@ -1,0 +1,14 @@
+.container{
+
+  margin: 0;
+  padding: 20px;
+  font-family: Arial, sans-serif;
+  background: linear-gradient(180deg, #e7efff, #d6f2f7, #e8e3ff);
+
+}
+.CalenderMain{
+    width:100%;
+}
+.Calender{
+    width:40%;
+}

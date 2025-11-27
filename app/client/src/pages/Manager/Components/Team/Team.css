@@ -1,0 +1,139 @@
+.team-wrapper {
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.07);
+  margin-bottom: 10px;
+}
+
+.team-title {
+  margin-bottom: 15px;
+  font-size: 20px;
+}
+
+.team-table {
+  width: 100%;
+}
+
+.team-header {
+  display: grid;
+  grid-template-columns: 30% 10% 15% 30% 15%;
+  font-size: 14px;
+  opacity: 0.7;
+  margin-bottom: 10px;
+    border: 1px solid  lightgray;
+    padding: 12px;
+    border-radius: 10px;
+    background-color: #fafafc;
+    font-weight: bold;
+}
+
+.team-row {
+  display: grid;
+  grid-template-columns: 30% 10% 15% 30% 15%;
+  padding: 12px 10px;
+  border: 1px solid  lightgray;
+  margin-bottom: 5px;
+  border-radius: 10px;
+  align-items: center;
+}
+
+.team-row:last-child {
+  border-bottom: none;
+}
+
+/* Name section */
+.initial-badge {
+  background: #eef1ff;
+  padding: 8px 12px;
+  border-radius: 50%;
+  font-size: 13px;
+  margin-right: 10px;
+  font-weight: 600;
+}
+
+.col.name {
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+}
+
+/* Score */
+.col.score {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+/* Status */
+.state-badge {
+  padding: 6px 12px;
+  border-radius: 12px;
+  font-size: 13px;
+}
+
+.work {
+  background: #d6fbe6;
+  color: #1a9a4e;
+}
+
+.free {
+  background: #e6e6ee;
+  color: #666;
+}
+
+/* Progress */
+.progress-bar {
+  width: 50%;
+  height: 13px;
+  background: #e9e9e9;
+  border-radius: 10px;
+  margin-bottom: 4px;
+}
+
+.progress-fill {
+  height: 13px;
+  background: linear-gradient(90deg, #6a5af9, #1ec6cd);
+  border-radius: 10px;
+}
+
+.progress-number {
+  font-size: 13px;
+  opacity: 0.8;
+}
+
+/* Actions */
+.open-btn,
+.delete-btn {
+  padding: 6px 10px;
+  border-radius: 10px;
+  border: 1px solid #ddd;
+  background: white;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.delete-btn {
+  margin-left: 6px;
+}
+
+/* Add Analyst Button */
+.add-btn {
+  margin-top: 20px;
+  padding: 12px 20px;
+  border-radius: 30px;
+  background: linear-gradient(90deg, #6a5af9, #1ec6cd);
+  color: white;
+  border: none;
+  font-size: 15px;
+  cursor: pointer;
+}
+
+/* Responsive */
+@media (max-width: 992px) {
+  .team-header,
+  .team-row {
+    grid-template-columns: 1fr;
+    gap: 10px;
+    padding: 15px 0;
+  }
+}
