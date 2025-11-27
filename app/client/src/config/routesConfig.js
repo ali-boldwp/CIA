@@ -4,8 +4,14 @@ import Utils from '@libs/utils';
 import DashboardConfig from '../pages/admin/dashboard/DashboardConfig';
 import LoginConfig from "../pages/auth/Login/LoginConfig";
 import ProjectRequestConfig from '../pages/project/projectRequest/ProjectRequestConfig';
+import ManagerConfig from '../pages/Manager/Dashboard/ManagerConfig';
+import AnalystDashboardConfig from "../pages/analyst/dashboard/AnalystDashboardConfig";
+import SalesDashboardConfig from "../pages/sales/dashboard/SalesDashboardConfig";
+import NewProjectConfig from "../pages/newProjectPage/NewProjectConfig";
 
-const routeConfigs = [ LoginConfig, DashboardConfig, ProjectRequestConfig];
+const routeConfigs = [ LoginConfig, DashboardConfig ,AnalystDashboardConfig ,SalesDashboardConfig ,NewProjectConfig ,ManagerConfig , ProjectRequestConfig ];
+
+
 
 const routes = [
     ...Utils.generateRoutesFromConfigs(routeConfigs),
