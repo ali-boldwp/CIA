@@ -1,7 +1,10 @@
 const Dashboard = ({}) => {
 
     return (
-        <>Dashboard</>
+        <>Dashboard
+        {/* <h1>hello</h1> */}
+        </>
+
     )
 
 }
