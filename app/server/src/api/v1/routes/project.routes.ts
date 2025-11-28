@@ -1,6 +1,7 @@
 import { Router } from "express";
 import * as projectController from "../controllers/project.controller";
 import { auth } from "../../../middlewares/auth.middleware";
+import { upload } from "../../../middlewares/upload.middleware";
 
 
 const router = Router();
@@ -9,6 +10,7 @@ const router = Router();
 router.post(
     "/",
     auth,
+    upload.array("files", 10),
     projectController.createProject
 );
 

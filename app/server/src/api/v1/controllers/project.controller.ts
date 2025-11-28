@@ -2,13 +2,18 @@ import { Request, Response, NextFunction } from "express";
 import * as projectService from "../services/project.service";
 import { ok } from "../../../utils/ApiResponse";
 
-/* CREATE */
+
 export const createProject = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const user = (req as any).user;
 
+        const filePaths = (req.files as Express.Multer.File[])?.map(
+            (file) => file.filename
+        ) || [];
+
         const data = {
             ...req.body,
+            files: filePaths,
             projectRequestedBy: user.id,
             projectCreatedBy: user.id
         };
@@ -21,7 +26,8 @@ export const createProject = async (req: Request, res: Response, next: NextFunct
     }
 };
 
-/* GET ALL */
+
+
 export const getAllProjects = async (_req: Request, res: Response, next: NextFunction) => {
     try {
         const projects = await projectService.getAllProjects();
@@ -31,7 +37,7 @@ export const getAllProjects = async (_req: Request, res: Response, next: NextFun
     }
 };
 
-/* GET ONE */
+
 export const getProjectById = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const project = await projectService.getProjectById(req.params.id);
@@ -41,7 +47,7 @@ export const getProjectById = async (req: Request, res: Response, next: NextFunc
     }
 };
 
-/* UPDATE FULL */
+
 export const updateProject = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const project = await projectService.updateProject(req.params.id, req.body);
@@ -51,7 +57,7 @@ export const updateProject = async (req: Request, res: Response, next: NextFunct
     }
 };
 
-/* UPDATE STATUS */
+
 export const updateProjectStatus = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const project = await projectService.updateProjectStatus(req.params.id, req.body.status);
@@ -61,7 +67,7 @@ export const updateProjectStatus = async (req: Request, res: Response, next: Nex
     }
 };
 
-/* DELETE */
+
 export const deleteProject = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const project = await projectService.deleteProject(req.params.id);

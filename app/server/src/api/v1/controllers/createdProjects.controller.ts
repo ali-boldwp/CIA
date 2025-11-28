@@ -6,8 +6,11 @@ export const createProject = async (req: Request, res: Response, next: NextFunct
     try {
         const user = (req as any).user;
 
+        const files = (req.files as Express.Multer.File[])?.map(f => f.filename) || [];
+
         const payload = {
             ...req.body,
+            files,
             createdBy: user.id
         };
 
@@ -17,6 +20,7 @@ export const createProject = async (req: Request, res: Response, next: NextFunct
         next(err);
     }
 };
+
 
 export const getAllProjects = async (_req: Request, res: Response, next: NextFunction) => {
     try {
