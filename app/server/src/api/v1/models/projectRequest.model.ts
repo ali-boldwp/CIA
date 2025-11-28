@@ -22,11 +22,10 @@ export interface IProjectRequest extends Document {
     category: string;
     projectPrice: string;
 
-    priority: string;
-    deliverableLanguage: string;
+    priority: "Normal" | "Urgent" | "Confidențial" | "Bench Task";   // 🔥 updated type
+    deliverableLanguage: "Romanian" | "English";
 
-
-    preferredAnalyst?: Types.ObjectId;
+    preferredAnalyst?: string;                    // 🔥 was Types.ObjectId
     selectedAnalysts?: Types.ObjectId[];
     wantedServices?: string[];
     referenceRequest?: string;
@@ -38,7 +37,7 @@ export interface IProjectRequest extends Document {
 
     projectRequestedBy: Types.ObjectId;
     projectCreatedBy: Types.ObjectId;
-    status: string;
+    status: "draft" | "requested" | "approved" | "finished" | "cancelled";
 }
 
 const projectRequestSchema = new Schema<IProjectRequest>(
@@ -67,7 +66,7 @@ const projectRequestSchema = new Schema<IProjectRequest>(
 
         priority: {
             type: String,
-            enum: ["Normal", "Urgent", "Confidential", "Bench Task"],
+            enum: ["Normal", "Urgent", "Confidențial", "Bench Task"],   // 🔥 "Confidențial" FE se match
             default: "Normal"
         },
 
@@ -77,24 +76,25 @@ const projectRequestSchema = new Schema<IProjectRequest>(
             default: "Romanian",
         },
 
+        // 🔥 ab yeh sirf string hai, FE se "Analist B" direct store ho jayega
         preferredAnalyst: {
-            type: Schema.Types.ObjectId,
-            ref: "User",
+            type: String,
             required: false
         },
 
+        // future me agar IDs bhejni ho to FE se ObjectId bhej sakte ho
         selectedAnalysts: [
             { type: Schema.Types.ObjectId, ref: "User", required: false }
         ],
 
-        wantedServices: [{ type: String }],
+        wantedServices: [{ type: String, default: [] }],
 
         referenceRequest: { type: String },
 
         projectDescription: { type: String, required: true },
         internalNotes: { type: String },
 
-        files: [{ type: String }],
+        files: [{ type: String, default: [] }],
 
         projectRequestedBy: {
             type: Schema.Types.ObjectId,
