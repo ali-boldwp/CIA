@@ -7,6 +7,7 @@ import { useState } from "react";
 import { useDispatch } from 'react-redux';
 import { setUser } from '../../../features/auth/authSlice';
 import { useForm } from "react-hook-form";
+import {useNavigate} from "react-router-dom";
 
 
 import FormControl from '@mui/material/FormControl';
@@ -18,6 +19,7 @@ import { useLoginMutation } from '../../../services/authApi';
 const Login = () => {
 
     const classes = useStyles();
+    const navigate = useNavigate();
 
     // 🔥 RTK Query hook
     const [login, { data, error, isLoading, isSuccess }] = useLoginMutation();
@@ -33,21 +35,35 @@ const Login = () => {
 
     const onSubmit = async (formData) => {
         try {
-            console.log("FORM DATA:", formData);
-
             const response = await login({
                 email: formData.email,
                 password: formData.password
-            });  // 👈 unwrap handles promise correctly
-            dispatch(setUser(response.data.data.user))
+            }).unwrap();
 
-            console.log("LOGIN SUCCESS:", response);
-            alert("Login successful!");
+            const loggedUser = response.data.user;
+            const token = response.data.accessToken;
+
+            // Save user to Redux + localStorage
+            dispatch(setUser(loggedUser));
+            localStorage.setItem("user", JSON.stringify(loggedUser));
+            localStorage.setItem("token", token);
+
+            // 🔥🔥 SESSION CHECK — Console me print hoga
+            console.log("SESSION - User:", loggedUser);
+            console.log("SESSION - Token:", token);
+
+            // 🔥 LocalStorage check
+            console.log("LOCALSTORAGE USER:", JSON.parse(localStorage.getItem("user")));
+            console.log("LOCALSTORAGE TOKEN:", localStorage.getItem("token"));
+
+            navigate("/manager/dashboard");
 
         } catch (err) {
             console.error("LOGIN ERROR:", err);
         }
     };
+
+
 
     return (
         <Box

@@ -70,7 +70,6 @@ const NewProject = () => {
                     <h2 className="form-title">Detalii proiect</h2>
 
                     {/* ROW 1 */}
-                    {/* ROW 1 */}
                     <div className="row-two">
                         <div className="form-field">
                             <label>Denumire proiect</label>
