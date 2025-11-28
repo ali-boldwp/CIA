@@ -190,7 +190,6 @@
     gap: 0.6rem;
 }
 
-/* sirf Se dorește row ko extra space chahiye */
 .chipRowStandalone {
     margin-top: 1.8rem;
 }
@@ -242,7 +241,7 @@
 
 .fullWidthBlock {
     margin-top: 1.8rem;
-    width: 92%;          /* 8% kam, left aligned */
+    width: 92%;
     margin-left: 0;
     margin-right: 0;
 }
@@ -259,12 +258,12 @@
     margin-right: 0;
 }
 
-.fileUploadHalf .dropZone {
-    min-height: 130px;
+/* hide real input */
+.hiddenFileInput {
+    display: none;
 }
 
-/* ===== File upload visuals ===== */
-
+/* drop zone container */
 .dropZone {
     margin-top: 0.6rem;
     border-radius: 14px;
@@ -273,8 +272,54 @@
     padding: 0.9rem 1rem;
     font-size: 0.85rem;
     color: #6c72a2;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.3rem;
 }
 
+/* custom upload button */
+.uploadButton {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    padding: 0.5rem 1.4rem;
+    border-radius: 999px;
+    background: #4b8dff;
+    color: #ffffff;
+    font-size: 0.85rem;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 6px 14px rgba(75, 141, 255, 0.35);
+    transition: transform 0.12s ease, box-shadow 0.12s ease, background 0.12s ease;
+    text-decoration: none;
+}
+
+.uploadButton:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 8px 18px rgba(75, 141, 255, 0.4);
+    background: #3f7cf0;
+}
+
+/* icon circle */
+.uploadIcon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.18);
+    font-size: 0.9rem;
+}
+
+.dropZoneText {
+    font-size: 0.8rem;
+    color: #6c72a2;
+}
+
+/* file row text */
 .fileRow {
     margin-top: 0.5rem;
     font-size: 0.82rem;
@@ -286,7 +331,7 @@
 .buttonsCard {
     width: 77%;
     max-width: 1400px;
-    margin:0px auto;
+    margin: 0 auto;
     background: #ffffff;
     padding: 1.4rem 2rem;
     margin-top: 2rem;
@@ -338,21 +383,24 @@
     box-shadow: 0 5px 14px rgba(46, 58, 84, 0.3);
 }
 
-/* footer text */
+/* footer text (agar chahiye to) */
+/*
 .footerNote {
     width: 77%;
     max-width: 1400px;
-    margin:0px auto;
+    margin: 0 auto;
     margin-top: 1rem;
     font-size: 0.8rem;
     color: #8a8fb3;
 }
+*/
 
 /* ============== RESPONSIVE ============== */
 
 @media (max-width: 960px) {
     .headerCard,
-    .formCard {
+    .formCard,
+    .buttonsCard {
         width: 92%;
         padding-left: 5%;
         padding-right: 5%;

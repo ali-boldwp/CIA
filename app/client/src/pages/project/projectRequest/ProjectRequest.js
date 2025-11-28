@@ -46,20 +46,20 @@ const ProjectRequest = () => {
     // MULTI SELECT SERVICES
     const toggleService = (name) => {
         setServices((prev) =>
-            prev.includes(name)
-                ? prev.filter((s) => s !== name)
-                : [...prev, name]
+            prev.includes(name) ? prev.filter((s) => s !== name) : [...prev, name]
         );
     };
 
-    // DROPZONE HANDLER
+    // FILE INPUT HANDLER
     const handleFileChange = (e) => {
-        setFiles([...files, ...Array.from(e.target.files)]);
+        setFiles((prev) => [...prev, ...Array.from(e.target.files)]);
     };
 
-    // SUBMIT
     const handleSubmit = async () => {
-        if (!user?._id) return alert("User not logged in");
+        if (!user?._id) {
+            alert("User not logged in");
+            return;
+        }
 
         const payload = {
             name,
@@ -83,17 +83,19 @@ const ProjectRequest = () => {
             category,
             projectPrice,
 
-            priority,
+            priority, // "Normal" / "Urgent" / "Confidențial" / "Bench Task"
             deliverableLanguage: language === "Română" ? "Romanian" : "English",
 
-            preferredAnalyst,
+            preferredAnalyst,             // 🔥 ab straight string jayegi, schema bhi String hai
             selectedAnalysts: [],
+
             wantedServices: services,
             referenceRequest,
 
             projectDescription,
             internalNotes,
 
+            // NOTE: agar tum real file upload kar rahe ho to RTK Query side par FormData use karna hoga
             files: files.map((f) => f.name),
 
             projectRequestedBy: user._id,
@@ -119,7 +121,9 @@ const ProjectRequest = () => {
             <div className={styles.headerWrapper}>
                 <div className={styles.headerCard}>
                     <div className={styles.headerInner}>
-                        <button className={styles.backLink}>← Înapoi la Dashboard</button>
+                        <button className={styles.backLink}>
+                            ← Înapoi la Dashboard
+                        </button>
                         <h1 className={styles.headerTitle}>Solicitare nouă de proiect</h1>
                     </div>
                 </div>
@@ -129,86 +133,107 @@ const ProjectRequest = () => {
             <div className={styles.formWrapper}>
                 <div className={styles.formCard}>
                     <div className={styles.section}>
-                        <h2 className={styles.sectionTitle}>Detalii client & proiect</h2>
+                        <h2 className={styles.sectionTitle}>Detalii client &amp; proiect</h2>
 
-                        {/* --- FORM START --- */}
                         <div className={styles.sectionGrid}>
-
                             {/* NAME */}
                             <div className={`${styles.gridItem} ${styles.span2Left}`}>
-                                <label className={styles.label}>Nume client
-                                    <input className={styles.input}
-                                           value={name}
-                                           onChange={(e) => setName(e.target.value)}
-                                           placeholder="ex: Societatea ABC" />
+                                <label className={styles.label}>
+                                    Nume client
+                                    <input
+                                        className={styles.input}
+                                        value={name}
+                                        onChange={(e) => setName(e.target.value)}
+                                        placeholder="ex: Societatea ABC"
+                                    />
                                 </label>
                             </div>
 
                             {/* CONTACT PERSON */}
                             <div className={styles.gridItem}>
-                                <label className={styles.label}>Persoană de contact
-                                    <input className={styles.input}
-                                           value={contactPerson}
-                                           onChange={(e) => setContactPerson(e.target.value)} />
+                                <label className={styles.label}>
+                                    Persoană de contact
+                                    <input
+                                        className={styles.input}
+                                        value={contactPerson}
+                                        onChange={(e) => setContactPerson(e.target.value)}
+                                    />
                                 </label>
                             </div>
 
                             {/* POSITION */}
                             <div className={styles.gridItem}>
-                                <label className={styles.label}>Funcție (optional)
-                                    <input className={styles.input}
-                                           value={position}
-                                           onChange={(e) => setPosition(e.target.value)} />
+                                <label className={styles.label}>
+                                    Funcție (optional)
+                                    <input
+                                        className={styles.input}
+                                        value={position}
+                                        onChange={(e) => setPosition(e.target.value)}
+                                    />
                                 </label>
                             </div>
 
                             {/* EMAIL */}
                             <div className={styles.gridItem}>
-                                <label className={styles.label}>Email
-                                    <input className={styles.input}
-                                           value={email}
-                                           onChange={(e) => setEmail(e.target.value)} />
+                                <label className={styles.label}>
+                                    Email
+                                    <input
+                                        className={styles.input}
+                                        value={email}
+                                        onChange={(e) => setEmail(e.target.value)}
+                                    />
                                 </label>
                             </div>
 
                             {/* PHONE */}
                             <div className={styles.gridItem}>
-                                <label className={styles.label}>Telefon
-                                    <input className={styles.input}
-                                           value={phone}
-                                           onChange={(e) => setPhone(e.target.value)} />
+                                <label className={styles.label}>
+                                    Telefon
+                                    <input
+                                        className={styles.input}
+                                        value={phone}
+                                        onChange={(e) => setPhone(e.target.value)}
+                                    />
                                 </label>
                             </div>
 
                             {/* CONTRACT */}
                             <div className={styles.gridItem}>
                                 <label className={styles.label}>
-                                    <span className={styles.labelRow}>
-                                        <span>Nr. Contract</span>
-                                        <input type="checkbox"
-                                               className={styles.checkboxSquare}
-                                               checked={contractDone}
-                                               onChange={() => setContractDone(!contractDone)} />
-                                    </span>
-                                    <input className={styles.input}
-                                           value={contractNumber}
-                                           onChange={(e) => setContractNumber(e.target.value)} />
+                  <span className={styles.labelRow}>
+                    <span>Nr. Contract</span>
+                    <input
+                        type="checkbox"
+                        className={styles.checkboxSquare}
+                        checked={contractDone}
+                        onChange={() => setContractDone(!contractDone)}
+                    />
+                  </span>
+                                    <input
+                                        className={styles.input}
+                                        value={contractNumber}
+                                        onChange={(e) => setContractNumber(e.target.value)}
+                                    />
                                 </label>
                             </div>
 
                             {/* ANNEX */}
                             <div className={styles.gridItem}>
                                 <label className={styles.label}>
-                                    <span className={styles.labelRow}>
-                                        <span>Nr. Anexa</span>
-                                        <input type="checkbox"
-                                               className={styles.checkboxSquare}
-                                               checked={annexDone}
-                                               onChange={() => setAnnexDone(!annexDone)} />
-                                    </span>
-                                    <input className={styles.input}
-                                           value={annexNumber}
-                                           onChange={(e) => setAnnexNumber(e.target.value)} />
+                  <span className={styles.labelRow}>
+                    <span>Nr. Anexa</span>
+                    <input
+                        type="checkbox"
+                        className={styles.checkboxSquare}
+                        checked={annexDone}
+                        onChange={() => setAnnexDone(!annexDone)}
+                    />
+                  </span>
+                                    <input
+                                        className={styles.input}
+                                        value={annexNumber}
+                                        onChange={(e) => setAnnexNumber(e.target.value)}
+                                    />
                                 </label>
                             </div>
 
@@ -216,9 +241,11 @@ const ProjectRequest = () => {
                             <div className={`${styles.gridItem} ${styles.span2Left}`}>
                                 <label className={styles.label}>
                                     Subiect proiect
-                                    <textarea className={`${styles.textarea} ${styles.textareaTall}`}
-                                              value={projectSubject}
-                                              onChange={(e) => setProjectSubject(e.target.value)} />
+                                    <textarea
+                                        className={`${styles.textarea} ${styles.textareaTall}`}
+                                        value={projectSubject}
+                                        onChange={(e) => setProjectSubject(e.target.value)}
+                                    />
                                 </label>
                             </div>
 
@@ -226,9 +253,11 @@ const ProjectRequest = () => {
                             <div className={`${styles.gridItem} ${styles.span2Right}`}>
                                 <label className={styles.label}>
                                     Alte informații
-                                    <textarea className={`${styles.textarea} ${styles.textareaTall}`}
-                                              value={additionalInfo}
-                                              onChange={(e) => setAdditionalInfo(e.target.value)} />
+                                    <textarea
+                                        className={`${styles.textarea} ${styles.textareaTall}`}
+                                        value={additionalInfo}
+                                        onChange={(e) => setAdditionalInfo(e.target.value)}
+                                    />
                                 </label>
                             </div>
 
@@ -236,9 +265,11 @@ const ProjectRequest = () => {
                             <div className={`${styles.gridItem} ${styles.span2Left}`}>
                                 <label className={styles.label}>
                                     Tip entitate
-                                    <input className={styles.input}
-                                           value={entityType}
-                                           onChange={(e) => setEntityType(e.target.value)} />
+                                    <input
+                                        className={styles.input}
+                                        value={entityType}
+                                        onChange={(e) => setEntityType(e.target.value)}
+                                    />
                                 </label>
                             </div>
 
@@ -246,10 +277,12 @@ const ProjectRequest = () => {
                             <div className={`${styles.gridItem} ${styles.span2Right}`}>
                                 <label className={styles.label}>
                                     Termen limită
-                                    <input type="date"
-                                           className={styles.input}
-                                           value={deadline}
-                                           onChange={(e) => setDeadline(e.target.value)} />
+                                    <input
+                                        type="date"
+                                        className={styles.input}
+                                        value={deadline}
+                                        onChange={(e) => setDeadline(e.target.value)}
+                                    />
                                 </label>
                             </div>
 
@@ -257,9 +290,11 @@ const ProjectRequest = () => {
                             <div className={`${styles.gridItem} ${styles.span2Left}`}>
                                 <label className={styles.label}>
                                     Categorie
-                                    <input className={styles.input}
-                                           value={category}
-                                           onChange={(e) => setCategory(e.target.value)} />
+                                    <input
+                                        className={styles.input}
+                                        value={category}
+                                        onChange={(e) => setCategory(e.target.value)}
+                                    />
                                 </label>
                             </div>
 
@@ -267,14 +302,105 @@ const ProjectRequest = () => {
                             <div className={`${styles.gridItem} ${styles.span2Right}`}>
                                 <label className={styles.label}>
                                     Preț proiect
-                                    <input className={styles.input}
-                                           value={projectPrice}
-                                           onChange={(e) => setProjectPrice(e.target.value)} />
+                                    <input
+                                        className={styles.input}
+                                        value={projectPrice}
+                                        onChange={(e) => setProjectPrice(e.target.value)}
+                                    />
+                                </label>
+                            </div>
+
+                            {/* PRIORITY */}
+                            <div className={`${styles.gridItem} ${styles.span2Left}`}>
+                                <div className={styles.chipRow}>
+                                    <div className={styles.chipRowLabel}>Prioritate</div>
+                                    <div className={styles.chipRowChips}>
+                                        {["Normal", "Urgent", "Confidențial", "Bench Task"].map(
+                                            (p) => (
+                                                <button
+                                                    key={p}
+                                                    type="button"
+                                                    className={`${styles.chip} ${
+                                                        priority === p ? styles.chipActive : ""
+                                                    }`}
+                                                    onClick={() => setPriority(p)}
+                                                >
+                                                    {p}
+                                                </button>
+                                            )
+                                        )}
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* PREFERRED ANALYST */}
+                            <div className={`${styles.gridItem} ${styles.span2Right}`}>
+                                <label className={styles.label}>
+                                    Preferința analist implicat în proiect
+                                    <select
+                                        className={`${styles.input} ${styles.selectAnalyst}`}
+                                        value={preferredAnalyst}
+                                        onChange={(e) => setPreferredAnalyst(e.target.value)}
+                                    >
+                                        <option value="">Selectează analist -</option>
+                                        <option value="Analist A">Analist A</option>
+                                        <option value="Analist B">Analist B</option>
+                                        <option value="Analist C">Analist C</option>
+                                        <option value="Analist D">Analist D</option>
+                                        <option value="Analist E">Analist E</option>
+                                        <option value="Analist F">Analist F</option>
+                                        <option value="Analist G">Analist G</option>
+                                    </select>
+                                </label>
+                            </div>
+
+                            {/* LANGUAGE */}
+                            <div className={`${styles.gridItem} ${styles.span2Left}`}>
+                                <div className={styles.chipRow}>
+                                    <div className={styles.chipRowLabel}>Limba livrabilă</div>
+                                    <div className={styles.chipRowChips}>
+                                        {["Română", "Engleză"].map((lng) => (
+                                            <button
+                                                key={lng}
+                                                type="button"
+                                                className={`${styles.chip} ${
+                                                    language === lng ? styles.chipActive : ""
+                                                }`}
+                                                onClick={() => setLanguage(lng)}
+                                            >
+                                                {lng}
+                                            </button>
+                                        ))}
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* REFERENCE REQUEST */}
+                            <div className={`${styles.gridItem} ${styles.span2Right}`}>
+                                <label className={styles.label}>
+                                    Solicitare referințe / informații suplimentare
+                                    <select
+                                        className={`${styles.input} ${styles.selectAnalyst}`}
+                                        value={referenceRequest}
+                                        onChange={(e) => setReferenceRequest(e.target.value)}
+                                    >
+                                        <option value="">Selectează opțiune -</option>
+                                        <option value="Referințe bancare">
+                                            Referințe bancare
+                                        </option>
+                                        <option value="Referințe legale">Referințe legale</option>
+                                        <option value="Verificare persoană de contact">
+                                            Verificare persoană de contact
+                                        </option>
+                                        <option value="Detalii suplimentare despre companie">
+                                            Detalii suplimentare despre companie
+                                        </option>
+                                    </select>
                                 </label>
                             </div>
                         </div>
 
-                        {/* ==== SERVICES ==== */}
+                        {/* SERVICES */}
                         <div className={`${styles.chipRow} ${styles.chipRowStandalone}`}>
                             <div className={styles.chipRowLabel}>Se dorește:</div>
                             <div className={styles.chipRowChips}>
@@ -325,12 +451,31 @@ const ProjectRequest = () => {
                         </div>
 
                         {/* FILE UPLOAD */}
-                        <div className={`${styles.fullWidthBlock} ${styles.fileUploadHalf}`}>
+                        <div
+                            className={`${styles.fullWidthBlock} ${styles.fileUploadHalf}`}
+                        >
                             <label className={styles.label}>
-                                Atașează fișiere
+                                Atașează fișiere (drag &amp; drop)
                                 <div className={styles.dropZone}>
-                                    <input type="file" multiple onChange={handleFileChange} />
-                                    Trage aici fișierele sau fă click pentru a încărca
+                                    <input
+                                        id="fileUpload"
+                                        type="file"
+                                        multiple
+                                        onChange={handleFileChange}
+                                        className={styles.hiddenFileInput}
+                                    />
+
+                                    <label
+                                        htmlFor="fileUpload"
+                                        className={styles.uploadButton}
+                                    >
+                                        <span className={styles.uploadIcon}>📎</span>
+                                        <span>Încarcă fișiere</span>
+                                    </label>
+
+                                    <span className={styles.dropZoneText}>
+                    sau trage aici fișierele pentru a le încărca
+                  </span>
                                 </div>
                             </label>
 
