@@ -8,8 +8,9 @@ import ManagerConfig from '../pages/Manager/Dashboard/ManagerConfig';
 import AnalystDashboardConfig from "../pages/analyst/dashboard/AnalystDashboardConfig";
 import SalesDashboardConfig from "../pages/sales/dashboard/SalesDashboardConfig";
 import NewProjectConfig from "../pages/newProjectPage/NewProjectConfig";
+import EmployeeListConfig from "../pages/EmployeeList/EmployeeListConfig";
 
-const routeConfigs = [ LoginConfig, DashboardConfig ,AnalystDashboardConfig ,SalesDashboardConfig ,NewProjectConfig ,ManagerConfig , ProjectRequestConfig ];
+const routeConfigs = [ LoginConfig, DashboardConfig ,AnalystDashboardConfig ,SalesDashboardConfig ,NewProjectConfig ,ManagerConfig , ProjectRequestConfig,EmployeeListConfig ];
 
 
 
