@@ -61,50 +61,55 @@ const ProjectRequest = () => {
             return;
         }
 
-        const payload = {
-            name,
-            contactPerson,
-            position,
-            email,
-            phone,
+        const formData = new FormData();
 
-            contractNumber,
-            contractDone,
+        formData.append("name", name);
+        formData.append("contactPerson", contactPerson);
+        formData.append("position", position);
+        formData.append("email", email);
+        formData.append("phone", phone);
 
-            annexNumber,
-            annexDone,
+        formData.append("contractNumber", contractNumber);
+        formData.append("contractDone", contractDone);
 
-            projectSubject,
-            additionalInfo,
+        formData.append("annexNumber", annexNumber);
+        formData.append("annexDone", annexDone);
 
-            entityType,
-            deadline,
+        formData.append("projectSubject", projectSubject);
+        formData.append("additionalInfo", additionalInfo);
 
-            category,
-            projectPrice,
+        formData.append("entityType", entityType);
+        formData.append("deadline", deadline);
 
-            priority, // "Normal" / "Urgent" / "Confidențial" / "Bench Task"
-            deliverableLanguage: language === "Română" ? "Romanian" : "English",
+        formData.append("category", category);
+        formData.append("projectPrice", projectPrice);
 
-            preferredAnalyst,             // 🔥 ab straight string jayegi, schema bhi String hai
-            selectedAnalysts: [],
+        formData.append("priority", priority);
+        formData.append(
+            "deliverableLanguage",
+            language === "Română" ? "Romanian" : "English"
+        );
 
-            wantedServices: services,
-            referenceRequest,
+        formData.append("preferredAnalyst", preferredAnalyst);
+        formData.append("referenceRequest", referenceRequest);
 
-            projectDescription,
-            internalNotes,
+        services.forEach((srv) => {
+            formData.append("wantedServices", srv);
+        });
 
-            // NOTE: agar tum real file upload kar rahe ho to RTK Query side par FormData use karna hoga
-            files: files.map((f) => f.name),
+        formData.append("projectDescription", projectDescription);
+        formData.append("internalNotes", internalNotes);
 
-            projectRequestedBy: user._id,
-            projectCreatedBy: user._id,
-            status: "requested",
-        };
+        files.forEach((file) => {
+            formData.append("files", file);
+        });
+
+        formData.append("projectRequestedBy", user._id);
+        formData.append("projectCreatedBy", user._id);
+        formData.append("status", "requested");
 
         try {
-            const response = await createProject(payload).unwrap();
+            const response = await createProject(formData).unwrap();
             alert("Project created successfully!");
             console.log(response);
         } catch (err) {
@@ -112,6 +117,7 @@ const ProjectRequest = () => {
             alert("Error creating project");
         }
     };
+
 
     return (
         <div className={styles.page}>
