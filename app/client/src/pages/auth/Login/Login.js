@@ -7,6 +7,7 @@ import { useState } from "react";
 import { useDispatch } from 'react-redux';
 import { setUser } from '../../../features/auth/authSlice';
 import { useForm } from "react-hook-form";
+import {useNavigate} from "react-router-dom";
 
 
 import FormControl from '@mui/material/FormControl';
@@ -18,6 +19,7 @@ import { useLoginMutation } from '../../../services/authApi';
 const Login = () => {
 
     const classes = useStyles();
+    const navigate = useNavigate();
 
     // 🔥 RTK Query hook
     const [login, { data, error, isLoading, isSuccess }] = useLoginMutation();
@@ -39,10 +41,13 @@ const Login = () => {
                 email: formData.email,
                 password: formData.password
             });  // 👈 unwrap handles promise correctly
-            dispatch(setUser(response.data.data.user))
 
-            console.log("LOGIN SUCCESS:", response);
-            alert("Login successful!");
+            console.log("LOGIN SUCCESS:", response.data.data.user);
+            dispatch(setUser(response.data.data))
+
+            // alert("Login successful!");
+
+            navigate( "/manager/dashboard" )
 
         } catch (err) {
             console.error("LOGIN ERROR:", err);

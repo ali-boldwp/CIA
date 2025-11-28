@@ -1,8 +1,8 @@
 export enum Role {
-    SUPER_ADMIN = 'super_admin',
+    SALES = 'sales',
     ADMIN = 'admin',
     MANAGER = 'manager',
-    USER = 'user'
+    ANALYTICS= 'user'
 }
 
 export const DEFAULT_ROLE = Role.USER;
