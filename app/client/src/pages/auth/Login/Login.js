@@ -7,15 +7,19 @@ import { useState } from "react";
 
 import { useForm } from "react-hook-form";
 
+
 import FormControl from '@mui/material/FormControl';
 import OutlinedInput from '@mui/material/OutlinedInput';
 import FormHelperText from '@mui/material/FormHelperText';
 import Button from '@mui/material/Button';
+import { useLoginMutation } from '../../../services/authApi';
 
 const Login = () => {
 
     const classes = useStyles();
-    const [loading, setLoading] = useState(false);
+
+    // 🔥 RTK Query hook
+    const [login, { data, error, isLoading, isSuccess }] = useLoginMutation();
 
     // -------------------------
     //   react-hook-form setup
@@ -26,16 +30,21 @@ const Login = () => {
         formState: { errors }
     } = useForm();
 
-    const onSubmit = (data) => {
+    const onSubmit = async (formData) => {
+        try {
+            console.log("FORM DATA:", formData);
 
-        console.log("FORM SUBMIT:", data);
-        setLoading(true);
+            const response = await login({
+                email: formData.email,
+                password: formData.password
+            });  // 👈 unwrap handles promise correctly
 
-        setTimeout(() => {
-            setLoading(false);
-            alert("Login Success!");
-        }, 1500);
+            console.log("LOGIN SUCCESS:", response);
+            alert("Login successful!");
 
+        } catch (err) {
+            console.error("LOGIN ERROR:", err);
+        }
     };
 
     return (
@@ -93,17 +102,18 @@ const Login = () => {
                         type="submit"
                         variant="contained"
                         size="large"
-                        disabled={loading}
+                        disabled={isLoading}
                         sx={{ marginTop: "40px" }}
                     >
-                        {loading ? <CircularProgress size={24} /> : "Login"}
+                        {isLoading ? <CircularProgress size={24} /> : "Login"}
                     </Button>
 
-                    {/* Social buttons */}
-                    <div className="social">
-                        <div className="go"><i className="fab fa-google"></i> Google</div>
-                        <div className="fb"><i className="fab fa-facebook"></i> Facebook</div>
-                    </div>
+                    {/* Show API error */}
+                    {error && (
+                        <p style={{ color: "red", marginTop: "10px" }}>
+                            {error?.data?.message || "Login failed"}
+                        </p>
+                    )}
 
                 </form>
             </div>
