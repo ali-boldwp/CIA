@@ -3,6 +3,7 @@ import * as createdProjectController from "../controllers/createdProjects.contro
 import { auth } from "../../../middlewares/auth.middleware";
 import { authorizeRoles } from "../../../middlewares/role.middleware";
 import { Role } from "../../../constants/roles";
+import { upload } from "../../../middlewares/upload.middleware";
 
 const router = Router();
 
@@ -10,6 +11,7 @@ const router = Router();
 router.post(
     "/",
     auth,
+    upload.array("files", 10),
     createdProjectController.createProject
 );
 

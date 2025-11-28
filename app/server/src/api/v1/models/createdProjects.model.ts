@@ -31,6 +31,8 @@ export interface ICreatedProject extends Document {
     referenceRequest?: string;
     internalNotes?: string;
 
+    files?: string[];  
+
     createdBy: Types.ObjectId;
     fromRequestId?: Types.ObjectId;
 }
@@ -80,6 +82,8 @@ const createdProjectSchema = new Schema<ICreatedProject>(
         referenceRequest: { type: String },
         internalNotes: { type: String },
 
+        files: [{ type: String }],
+
         createdBy: {
             type: Schema.Types.ObjectId,
             ref: "User",
@@ -88,8 +92,7 @@ const createdProjectSchema = new Schema<ICreatedProject>(
 
         fromRequestId: {
             type: Schema.Types.ObjectId,
-            ref: "ProjectRequest",
-            required: false
+            ref: "ProjectRequest"
         }
     },
     {
@@ -103,9 +106,6 @@ const createdProjectSchema = new Schema<ICreatedProject>(
     }
 );
 
-const CreatedProject = model<ICreatedProject>(
-    "CreatedProject",
-    createdProjectSchema
-);
+const CreatedProject = model<ICreatedProject>("CreatedProject", createdProjectSchema);
 
 export default CreatedProject;
