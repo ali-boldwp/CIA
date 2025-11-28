@@ -1,4 +1,5 @@
 import express, { Application } from 'express';
+import path from "path";
 import cors from 'cors';
 import helmet from 'helmet';
 import morgan from 'morgan';
@@ -7,6 +8,7 @@ import env from './config/env';
 import v1Routes from './api/v1/routes';
 import { notFoundHandler, errorHandler } from './middlewares/error.middleware';
 
+
 const app: Application = express();
 
 /* Security & basics */
@@ -14,6 +16,9 @@ app.use(helmet());
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+
 
 if (env.nodeEnv !== 'test') {
     app.use(morgan('dev'));
