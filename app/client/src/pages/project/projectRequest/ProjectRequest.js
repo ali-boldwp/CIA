@@ -46,20 +46,20 @@ const ProjectRequest = () => {
     // MULTI SELECT SERVICES
     const toggleService = (name) => {
         setServices((prev) =>
-            prev.includes(name) ? prev.filter((s) => s !== name) : [...prev, name]
+            prev.includes(name)
+                ? prev.filter((s) => s !== name)
+                : [...prev, name]
         );
     };
 
-    // FILE INPUT HANDLER
+    // DROPZONE HANDLER
     const handleFileChange = (e) => {
         setFiles((prev) => [...prev, ...Array.from(e.target.files)]);
     };
 
+    // SUBMIT
     const handleSubmit = async () => {
-        if (!user?._id) {
-            alert("User not logged in");
-            return;
-        }
+        if (!user?._id) return alert("User not logged in");
 
         const formData = new FormData();
 
@@ -127,9 +127,7 @@ const ProjectRequest = () => {
             <div className={styles.headerWrapper}>
                 <div className={styles.headerCard}>
                     <div className={styles.headerInner}>
-                        <button className={styles.backLink}>
-                            ← Înapoi la Dashboard
-                        </button>
+                        <button className={styles.backLink}>← Înapoi la Dashboard</button>
                         <h1 className={styles.headerTitle}>Solicitare nouă de proiect</h1>
                     </div>
                 </div>
@@ -139,8 +137,9 @@ const ProjectRequest = () => {
             <div className={styles.formWrapper}>
                 <div className={styles.formCard}>
                     <div className={styles.section}>
-                        <h2 className={styles.sectionTitle}>Detalii client &amp; proiect</h2>
+                        <h2 className={styles.sectionTitle}>Detalii client & proiect</h2>
 
+                        {/* --- FORM START --- */}
                         <div className={styles.sectionGrid}>
                             {/* NAME */}
                             <div className={`${styles.gridItem} ${styles.span2Left}`}>
@@ -316,30 +315,27 @@ const ProjectRequest = () => {
                                 </label>
                             </div>
 
-                            {/* PRIORITY */}
+                            {/* ===== ROW: Prioritate + Preferința analist ===== */}
                             <div className={`${styles.gridItem} ${styles.span2Left}`}>
                                 <div className={styles.chipRow}>
                                     <div className={styles.chipRowLabel}>Prioritate</div>
                                     <div className={styles.chipRowChips}>
-                                        {["Normal", "Urgent", "Confidențial", "Bench Task"].map(
-                                            (p) => (
-                                                <button
-                                                    key={p}
-                                                    type="button"
-                                                    className={`${styles.chip} ${
-                                                        priority === p ? styles.chipActive : ""
-                                                    }`}
-                                                    onClick={() => setPriority(p)}
-                                                >
-                                                    {p}
-                                                </button>
-                                            )
-                                        )}
+                                        {["Normal", "Urgent", "Confidențial", "Bench Task"].map((p) => (
+                                            <button
+                                                key={p}
+                                                type="button"
+                                                className={`${styles.chip} ${
+                                                    priority === p ? styles.chipActive : ""
+                                                }`}
+                                                onClick={() => setPriority(p)}
+                                            >
+                                                {p}
+                                            </button>
+                                        ))}
                                     </div>
                                 </div>
                             </div>
 
-                            {/* PREFERRED ANALYST */}
                             <div className={`${styles.gridItem} ${styles.span2Right}`}>
                                 <label className={styles.label}>
                                     Preferința analist implicat în proiect
@@ -360,7 +356,7 @@ const ProjectRequest = () => {
                                 </label>
                             </div>
 
-                            {/* LANGUAGE */}
+                            {/* ===== ROW: Limba livrabilă + Solicitare referințe (dropdown) ===== */}
                             <div className={`${styles.gridItem} ${styles.span2Left}`}>
                                 <div className={styles.chipRow}>
                                     <div className={styles.chipRowLabel}>Limba livrabilă</div>
@@ -381,7 +377,6 @@ const ProjectRequest = () => {
                                 </div>
                             </div>
 
-                            {/* REFERENCE REQUEST */}
                             <div className={`${styles.gridItem} ${styles.span2Right}`}>
                                 <label className={styles.label}>
                                     Solicitare referințe / informații suplimentare
@@ -391,9 +386,7 @@ const ProjectRequest = () => {
                                         onChange={(e) => setReferenceRequest(e.target.value)}
                                     >
                                         <option value="">Selectează opțiune -</option>
-                                        <option value="Referințe bancare">
-                                            Referințe bancare
-                                        </option>
+                                        <option value="Referințe bancare">Referințe bancare</option>
                                         <option value="Referințe legale">Referințe legale</option>
                                         <option value="Verificare persoană de contact">
                                             Verificare persoană de contact
@@ -406,7 +399,7 @@ const ProjectRequest = () => {
                             </div>
                         </div>
 
-                        {/* SERVICES */}
+                        {/* ==== SERVICES ==== */}
                         <div className={`${styles.chipRow} ${styles.chipRowStandalone}`}>
                             <div className={styles.chipRowLabel}>Se dorește:</div>
                             <div className={styles.chipRowChips}>
@@ -457,9 +450,7 @@ const ProjectRequest = () => {
                         </div>
 
                         {/* FILE UPLOAD */}
-                        <div
-                            className={`${styles.fullWidthBlock} ${styles.fileUploadHalf}`}
-                        >
+                        <div className={`${styles.fullWidthBlock} ${styles.fileUploadHalf}`}>
                             <label className={styles.label}>
                                 Atașează fișiere (drag &amp; drop)
                                 <div className={styles.dropZone}>
@@ -471,11 +462,18 @@ const ProjectRequest = () => {
                                         className={styles.hiddenFileInput}
                                     />
 
-                                    <label
-                                        htmlFor="fileUpload"
-                                        className={styles.uploadButton}
-                                    >
-                                        <span className={styles.uploadIcon}>📎</span>
+                                    <label htmlFor="fileUpload" className={styles.uploadButton}>
+                    <span className={styles.uploadIcon}>
+                      <svg
+                          viewBox="0 0 24 24"
+                          className={styles.uploadSvg}
+                          aria-hidden="true"
+                      >
+                        <path d="M12 16V5" />
+                        <path d="M8.5 8.5L12 5L15.5 8.5" />
+                        <path d="M5 19H19" />
+                      </svg>
+                    </span>
                                         <span>Încarcă fișiere</span>
                                     </label>
 
@@ -487,7 +485,10 @@ const ProjectRequest = () => {
 
                             {files.map((file, idx) => (
                                 <div key={idx} className={styles.fileRow}>
-                                    {file.name} - {(file.size / 1024).toFixed(1)} KB
+                                    <span className={styles.fileName}>{file.name}</span>
+                                    <span className={styles.fileSize}>
+                    {(file.size / 1024).toFixed(1)} KB
+                  </span>
                                 </div>
                             ))}
                         </div>
