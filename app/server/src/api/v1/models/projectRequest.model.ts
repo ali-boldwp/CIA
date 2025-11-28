@@ -1,4 +1,4 @@
-import { Schema, model, Document , Types  } from "mongoose";
+import { Schema, model, Document, Types } from "mongoose";
 
 export interface IProjectRequest extends Document {
     name: string;
@@ -25,6 +25,11 @@ export interface IProjectRequest extends Document {
     priority: string;
     deliverableLanguage: string;
 
+
+    preferredAnalyst?: Types.ObjectId;
+    selectedAnalysts?: Types.ObjectId[];
+    wantedServices?: string[];
+    referenceRequest?: string;
 
     projectDescription: string;
     internalNotes?: string;
@@ -69,14 +74,27 @@ const projectRequestSchema = new Schema<IProjectRequest>(
         deliverableLanguage: {
             type: String,
             enum: ["Romanian", "English"],
-            default: "Romanian"
+            default: "Romanian",
         },
+
+        preferredAnalyst: {
+            type: Schema.Types.ObjectId,
+            ref: "User",
+            required: false
+        },
+
+        selectedAnalysts: [
+            { type: Schema.Types.ObjectId, ref: "User", required: false }
+        ],
+
+        wantedServices: [{ type: String }],
+
+        referenceRequest: { type: String },
 
         projectDescription: { type: String, required: true },
         internalNotes: { type: String },
 
         files: [{ type: String }],
-
 
         projectRequestedBy: {
             type: Schema.Types.ObjectId,
@@ -108,9 +126,6 @@ const projectRequestSchema = new Schema<IProjectRequest>(
     }
 );
 
-const ProjectRequest = model<IProjectRequest>(
-    "ProjectRequest",
-    projectRequestSchema
-);
+const ProjectRequest = model<IProjectRequest>("ProjectRequest", projectRequestSchema);
 
 export default ProjectRequest;
