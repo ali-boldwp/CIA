@@ -250,7 +250,7 @@
     min-height: 130px;
 }
 
-/* ===== File upload (half width + same height) ===== */
+/* ===== File upload (half width + height similar to textarea) ===== */
 
 .fileUploadHalf {
     width: 46%;
@@ -276,42 +276,49 @@
     flex-direction: column;
     align-items: flex-start;
     gap: 0.3rem;
+    min-height: 130px; /* same feel as textarea */
 }
 
-/* custom upload button */
+/* custom upload button: shape like Adaugă but soft colors */
 .uploadButton {
     display: inline-flex;
     align-items: center;
     gap: 0.45rem;
-    padding: 0.5rem 1.4rem;
-    border-radius: 999px;
-    background: #4b8dff;
-    color: #ffffff;
+    padding: 0.6rem 1.6rem;
+    border-radius: 10px;          /* same radius as action buttons */
+    background: #e8ecff;          /* requested bg */
+    color: #4b8dff;               /* requested text color */
     font-size: 0.85rem;
     font-weight: 600;
-    border: none;
+    border: 1px solid #cdd6ff;
     cursor: pointer;
-    box-shadow: 0 6px 14px rgba(75, 141, 255, 0.35);
+    box-shadow: 0 4px 10px rgba(75, 141, 255, 0.22);
     transition: transform 0.12s ease, box-shadow 0.12s ease, background 0.12s ease;
     text-decoration: none;
 }
 
 .uploadButton:hover {
     transform: translateY(-1px);
-    box-shadow: 0 8px 18px rgba(75, 141, 255, 0.4);
-    background: #3f7cf0;
+    box-shadow: 0 6px 14px rgba(75, 141, 255, 0.27);
+    background: #dde5ff;
 }
 
-/* icon circle */
+/* icon wrapper */
 .uploadIcon {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 20px;
-    height: 20px;
-    border-radius: 999px;
-    background: rgba(255, 255, 255, 0.18);
-    font-size: 0.9rem;
+}
+
+/* actual SVG icon styling */
+.uploadSvg {
+    width: 18px;
+    height: 18px;
+    stroke: #4b8dff;
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    fill: none;
 }
 
 .dropZoneText {
@@ -319,14 +326,31 @@
     color: #6c72a2;
 }
 
-/* file row text */
+/* uploaded file row card */
 .fileRow {
-    margin-top: 0.5rem;
+    margin-top: 0.6rem;
     font-size: 0.82rem;
-    color: #858ab0;
+    color: #4a4f6a;
+    background: #f9fbff;
+    border: 1px solid #e3e7f5;
+    border-radius: 10px;
+    padding: 0.55rem 0.9rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 }
 
-/* ===== BUTTONS CARD (LIKE HEADER SEPARATION) ===== */
+.fileName {
+    font-weight: 600;
+    font-size: 0.82rem;
+}
+
+.fileSize {
+    font-size: 0.78rem;
+    color: #8a8fb3;
+}
+
+/* ===== BUTTONS CARD ===== */
 
 .buttonsCard {
     width: 77%;
@@ -382,18 +406,6 @@
     color: #ffffff;
     box-shadow: 0 5px 14px rgba(46, 58, 84, 0.3);
 }
-
-/* footer text (agar chahiye to) */
-/*
-.footerNote {
-    width: 77%;
-    max-width: 1400px;
-    margin: 0 auto;
-    margin-top: 1rem;
-    font-size: 0.8rem;
-    color: #8a8fb3;
-}
-*/
 
 /* ============== RESPONSIVE ============== */
 
