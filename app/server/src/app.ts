@@ -1,31 +1,38 @@
-// apps/server/src/app.ts
-import express from "express";
-import cors from "cors";
-import morgan from "morgan";
-import helmet from "helmet";
-import cookieParser from "cookie-parser";
-import { errorHandler } from "./middleware/errorHandler";
-import authRoutes from "./modules/auth/auth.routes";
-import userRoutes from "./modules/user/user.routes";
+import express, { Application } from 'express';
+import cors from 'cors';
+import helmet from 'helmet';
+import morgan from 'morgan';
+import rateLimit from 'express-rate-limit';
+import env from './config/env';
+import v1Routes from './api/v1/routes';
+import { notFoundHandler, errorHandler } from './middlewares/error.middleware';
 
-const app = express();
+const app: Application = express();
 
+/* Security & basics */
 app.use(helmet());
-app.use(cors({ origin: process.env.CLIENT_URL, credentials: true }));
-app.use(morgan("dev"));
+app.use(cors());
 app.use(express.json());
-app.use(cookieParser());
+app.use(express.urlencoded({ extended: true }));
 
-// health check
-app.get("/health", (_req, res) => {
-    res.json({ status: "ok" });
+if (env.nodeEnv !== 'test') {
+    app.use(morgan('dev'));
+}
+
+/* Rate limiting */
+const limiter = rateLimit({
+    windowMs: 15 * 60 * 1000,
+    max: 200,
+    standardHeaders: true,
+    legacyHeaders: false
 });
+app.use('/api', limiter);
 
-// API routes
-app.use("/api/auth", authRoutes);
-app.use("/api/users", userRoutes);
+/* API v1 */
+app.use('/api/v1', v1Routes);
 
-// error handler
+/* 404 + error */
+app.use(notFoundHandler);
 app.use(errorHandler);
 
 export default app;
