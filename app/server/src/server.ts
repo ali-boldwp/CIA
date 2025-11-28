@@ -3,6 +3,7 @@ import { connectDB } from './config/db';
 import app from './app';
 import logger from './utils/logger';
 
+
 const start = async () => {
     await connectDB();
 
