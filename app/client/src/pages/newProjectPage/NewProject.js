@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from "react";
 import "./NewProjectstyle.css";
 
 const NewProject = () => {
+    const [files, setFiles] = useState([]);
 
     const [respOpen, setRespOpen] = useState(false);
     const [responsible, setResponsible] = useState("Analist C");
@@ -12,6 +13,22 @@ const NewProject = () => {
         "Analist A",
         "Analist E"
     ]);
+
+    const handleFileUpload = (e) => {
+        const uploaded = Array.from(e.target.files);
+        setFiles([...files, ...uploaded]);
+    };
+
+    const handleDrop = (e) => {
+        e.preventDefault();
+        const dropped = Array.from(e.dataTransfer.files);
+        setFiles([...files, ...dropped]);
+    };
+
+    const handleDragOver = (e) => {
+        e.preventDefault();
+    };
+
 
     const respRef = useRef(null);
     const multiRef = useRef(null);
@@ -38,6 +55,9 @@ const NewProject = () => {
             setSelectedAnalysts([...selectedAnalysts, name]);
         }
     };
+    const attachedFiles = [
+        { name: "Lista_intrebari_client.docx", size: "86 KB" }
+    ];
 
 
 
@@ -138,10 +158,33 @@ const NewProject = () => {
 
                         <div className="form-field">
                             <label>Vizualizare fișiere atașate</label>
-                            <div className="file-preview">
-                                • Lista_intrebari_client.docx · 86 KB
+
+                            {/* DROPZONE */}
+                            <div
+                                className="dropzone"
+                                onDrop={handleDrop}
+                                onDragOver={handleDragOver}
+                                onClick={() => document.getElementById("fileInput").click()}
+                            >
+                                <p>📁 Click sau trage fișiere aici</p>
+                                <span className="drop-hint">Fișiere acceptate: .pdf, .docx, .png...</span>
+                                <input
+                                    id="fileInput"
+                                    type="file"
+                                    multiple
+                                    onChange={handleFileUpload}
+                                    hidden
+                                />
                             </div>
+
+                            {/* FILE LIST */}
+                            {files.map((file, index) => (
+                                <div className="file-item" key={index}>
+                                    📄 {file.name} · {(file.size / 1024).toFixed(1)} KB
+                                </div>
+                            ))}
                         </div>
+
 
                     </div>
 
@@ -164,6 +207,7 @@ const NewProject = () => {
 
                         <div className="row-two">
 
+                            {/* LEFT: RESPONSABIL PROJECT */}
                             <div className="form-field" ref={respRef}>
                                 <label>Responsabil proiect (alege 1)</label>
 
@@ -171,16 +215,16 @@ const NewProject = () => {
                                     className="dropdown-box"
                                     onClick={() => setRespOpen(!respOpen)}
                                 >
-                                <span className="dropdown-selected">
-                                    {responsible} ▾
-                                </span>
+                        <span className="dropdown-selected">
+                            {responsible} ▾
+                        </span>
                                 </div>
 
                                 {respOpen && (
                                     <div className="dropdown-list">
                                         <p className="sub-label">Selectează responsabilul</p>
 
-                                        {["Analist A","Analist B","Analist C","Analist D","Analist E","Analist F","Analist G"].map((name) => (
+                                        {["Analist A", "Analist B", "Analist C", "Analist D", "Analist E", "Analist F", "Analist G"].map((name) => (
                                             <label className="radio-item" key={name}>
                                                 <input
                                                     type="radio"
@@ -190,17 +234,17 @@ const NewProject = () => {
                                                         setResponsible(name);
                                                         setRespOpen(false);
                                                     }}
-                                                />{" "}
+                                                />
                                                 {name}
                                             </label>
                                         ))}
                                     </div>
                                 )}
 
-                                <button className="submit-btn">Creează Task Proiect</button>
+
                             </div>
 
-
+                            {/* RIGHT: MULTIPLE ANALYSTS */}
                             <div className="form-field" ref={multiRef}>
                                 <label>Analiști alocați suplimentar (select multiplu, opțional)</label>
 
@@ -208,11 +252,11 @@ const NewProject = () => {
                                     className="dropdown-box"
                                     onClick={() => setMultiOpen(!multiOpen)}
                                 >
-                                <span className="dropdown-selected">
-                                    {selectedAnalysts.length > 0
-                                        ? selectedAnalysts.join(", ")
-                                        : "Selectează analiști ▾"}
-                                </span>
+                        <span className="dropdown-selected">
+                            {selectedAnalysts.length > 0
+                                ? selectedAnalysts.join(", ")
+                                : "Selectează analiști ▾"}
+                        </span>
                                 </div>
 
                                 {multiOpen && (
@@ -240,9 +284,13 @@ const NewProject = () => {
                                         })}
                                     </div>
                                 )}
-
                             </div>
 
+                        </div>
+
+                        <div className="button-row">
+                            <button className="submit-btn">Creează Task Proiect</button>
+                            <button className="submit-btn">Mergi la Task Proiect</button>
                         </div>
                     </div>
                 </div>
