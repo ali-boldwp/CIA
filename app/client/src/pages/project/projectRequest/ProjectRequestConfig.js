@@ -9,7 +9,7 @@ const ProjectRequestConfig = {
     
     routes: [
         {
-            path: '/dashboard/projectRequest',
+            path: '/projectRequest',
             element: <ProjectRequest />
         }
     ]
