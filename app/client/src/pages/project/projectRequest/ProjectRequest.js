@@ -61,48 +61,55 @@ const ProjectRequest = () => {
     const handleSubmit = async () => {
         if (!user?._id) return alert("User not logged in");
 
-        const payload = {
-            name,
-            contactPerson,
-            position,
-            email,
-            phone,
+        const formData = new FormData();
 
-            contractNumber,
-            contractDone,
+        formData.append("name", name);
+        formData.append("contactPerson", contactPerson);
+        formData.append("position", position);
+        formData.append("email", email);
+        formData.append("phone", phone);
 
-            annexNumber,
-            annexDone,
+        formData.append("contractNumber", contractNumber);
+        formData.append("contractDone", contractDone);
 
-            projectSubject,
-            additionalInfo,
+        formData.append("annexNumber", annexNumber);
+        formData.append("annexDone", annexDone);
 
-            entityType,
-            deadline,
+        formData.append("projectSubject", projectSubject);
+        formData.append("additionalInfo", additionalInfo);
 
-            category,
-            projectPrice,
+        formData.append("entityType", entityType);
+        formData.append("deadline", deadline);
 
-            priority,
-            deliverableLanguage: language === "Română" ? "Romanian" : "English",
+        formData.append("category", category);
+        formData.append("projectPrice", projectPrice);
 
-            preferredAnalyst,
-            selectedAnalysts: [],
-            wantedServices: services,
-            referenceRequest,
+        formData.append("priority", priority);
+        formData.append(
+            "deliverableLanguage",
+            language === "Română" ? "Romanian" : "English"
+        );
 
-            projectDescription,
-            internalNotes,
+        formData.append("preferredAnalyst", preferredAnalyst);
+        formData.append("referenceRequest", referenceRequest);
 
-            files: files.map((f) => f.name),
+        services.forEach((srv) => {
+            formData.append("wantedServices", srv);
+        });
 
-            projectRequestedBy: user._id,
-            projectCreatedBy: user._id,
-            status: "requested",
-        };
+        formData.append("projectDescription", projectDescription);
+        formData.append("internalNotes", internalNotes);
+
+        files.forEach((file) => {
+            formData.append("files", file);
+        });
+
+        formData.append("projectRequestedBy", user._id);
+        formData.append("projectCreatedBy", user._id);
+        formData.append("status", "requested");
 
         try {
-            const response = await createProject(payload).unwrap();
+            const response = await createProject(formData).unwrap();
             alert("Project created successfully!");
             console.log(response);
         } catch (err) {
@@ -110,6 +117,7 @@ const ProjectRequest = () => {
             alert("Error creating project");
         }
     };
+
 
     return (
         <div className={styles.page}>

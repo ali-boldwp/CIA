@@ -6,15 +6,67 @@ export const createProject = async (req: Request, res: Response, next: NextFunct
     try {
         const user = (req as any).user;
 
-        const files = (req.files as Express.Multer.File[])?.map(f => f.filename) || [];
+  
+        const files: string[] = Array.isArray(req.files)
+            ? (req.files as Express.Multer.File[]).map((f) => f.filename)
+            : [];
 
-        const payload = {
-            ...req.body,
-            files,
-            createdBy: user.id
+
+        const body = req.body;
+
+        // convert to array when needed
+        const toArray = (val: any) => {
+            if (!val) return [];
+            if (Array.isArray(val)) return val;
+            return [val];
         };
 
+
+        const payload = {
+            projectName: body.projectName,
+            projectSubject: body.projectSubject,
+            reportType: body.reportType,
+            entityType: body.entityType,
+
+            deadline: body.deadline ? new Date(body.deadline) : undefined,
+
+            priority: body.priority,
+            deliverableLanguage: body.deliverableLanguage,
+
+            projectDescription: body.projectDescription,
+
+            responsibleAnalyst: body.responsibleAnalyst || undefined,
+
+            assignedAnalysts: toArray(body.assignedAnalysts),
+
+            clientName: body.clientName,
+            clientContactPerson: body.clientContactPerson,
+            clientPosition: body.clientPosition,
+
+            clientEmail: body.clientEmail,
+            clientPhone: body.clientPhone,
+
+            contractNumber: body.contractNumber,
+            annexNumber: body.annexNumber,
+
+            servicesRequested: toArray(body.servicesRequested),
+
+            projectPrice: body.projectPrice,
+            currency: body.currency || "EUR",
+
+            contractInfo: body.contractInfo,
+            referenceRequest: body.referenceRequest,
+            internalNotes: body.internalNotes,
+
+            files,
+
+            createdBy: user.id,
+            fromRequestId: body.fromRequestId || undefined
+        };
+
+
         const project = await createdProjectService.createProject(payload);
+
         res.json(ok(project));
     } catch (err) {
         next(err);

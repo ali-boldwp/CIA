@@ -9,26 +9,33 @@ export const createProject = async (
 ) => {
     try {
         const user = (req as any).user;
+        
+        const filePaths: string[] = Array.isArray(req.files)
+            ? (req.files as Express.Multer.File[]).map((f) => f.filename)
+            : [];
 
-        const filePaths =
-            ((req.files as Express.Multer.File[]) || []).map(
-                (file) => file.filename
-            ) || [];
 
         const body = req.body as any;
 
+        // Helper function to ensure array consistency
+        const toArray = (val: any) => {
+            if (!val) return [];
+            if (Array.isArray(val)) return val;
+            return [val];
+        };
+
+
         const data = {
-            // saari basic fields body se:
             name: body.name,
             contactPerson: body.contactPerson,
             position: body.position,
             email: body.email,
             phone: body.phone,
 
-            contractNumber: body.contractNumber,
+            contractNumber: body.contractNumber || "",
             contractDone: body.contractDone === "true" || body.contractDone === true,
 
-            annexNumber: body.annexNumber,
+            annexNumber: body.annexNumber || "",
             annexDone: body.annexDone === "true" || body.annexDone === true,
 
             projectSubject: body.projectSubject,
@@ -40,19 +47,16 @@ export const createProject = async (
             category: body.category,
             projectPrice: body.projectPrice,
 
-            priority: body.priority, // e.g. "Normal" | "Urgent" | "Confidențial" | "Bench Task"
-            deliverableLanguage: body.deliverableLanguage, // "Romanian" / "English"
+            priority: body.priority,
+            deliverableLanguage: body.deliverableLanguage,
 
-            preferredAnalyst: body.preferredAnalyst || undefined, // 🔥 ab String hai (no ObjectId cast)
-            selectedAnalysts: Array.isArray(body.selectedAnalysts)
-                ? body.selectedAnalysts.filter((id: string) => !!id)
-                : [],
+            preferredAnalyst: body.preferredAnalyst || null,
 
-            wantedServices: Array.isArray(body.wantedServices)
-                ? body.wantedServices
-                : [],
+            selectedAnalysts: toArray(body.selectedAnalysts),
 
-            referenceRequest: body.referenceRequest,
+            wantedServices: toArray(body.wantedServices),
+
+            referenceRequest: body.referenceRequest || "",
 
             projectDescription: body.projectDescription,
             internalNotes: body.internalNotes,
@@ -61,10 +65,13 @@ export const createProject = async (
 
             projectRequestedBy: user.id,
             projectCreatedBy: user.id,
+
             status: body.status || "requested",
         };
 
+
         const project = await projectService.createProject(data);
+
         res.json(ok(project));
     } catch (err) {
         next(err);
