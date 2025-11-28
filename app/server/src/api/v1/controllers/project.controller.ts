@@ -13,18 +13,21 @@ export const createProject = async (req: Request, res: Response, next: NextFunct
 
         const data = {
             ...req.body,
+            preferredAnalyst: req.body.preferredAnalyst || undefined,   // ✅ FIX
+            selectedAnalysts: req.body.selectedAnalysts?.filter(id => id) || [],  // remove empty
             files: filePaths,
             projectRequestedBy: user.id,
-            projectCreatedBy: user.id
+            projectCreatedBy: user.id,
         };
 
         const project = await projectService.createProject(data);
-
         res.json(ok(project));
+
     } catch (err) {
         next(err);
     }
 };
+
 
 
 

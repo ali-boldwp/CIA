@@ -35,24 +35,35 @@ const Login = () => {
 
     const onSubmit = async (formData) => {
         try {
-            console.log("FORM DATA:", formData);
-
             const response = await login({
                 email: formData.email,
                 password: formData.password
-            });  // 👈 unwrap handles promise correctly
+            }).unwrap();
 
-            console.log("LOGIN SUCCESS:", response.data.data.user);
-            dispatch(setUser(response.data.data))
+            const loggedUser = response.data.user;
+            const token = response.data.accessToken;
 
-            // alert("Login successful!");
+            // Save user to Redux + localStorage
+            dispatch(setUser(loggedUser));
+            localStorage.setItem("user", JSON.stringify(loggedUser));
+            localStorage.setItem("token", token);
 
-            navigate( "/manager/dashboard" )
+            // 🔥🔥 SESSION CHECK — Console me print hoga
+            console.log("SESSION - User:", loggedUser);
+            console.log("SESSION - Token:", token);
+
+            // 🔥 LocalStorage check
+            console.log("LOCALSTORAGE USER:", JSON.parse(localStorage.getItem("user")));
+            console.log("LOCALSTORAGE TOKEN:", localStorage.getItem("token"));
+
+            navigate("/manager/dashboard");
 
         } catch (err) {
             console.error("LOGIN ERROR:", err);
         }
     };
+
+
 
     return (
         <Box
