@@ -6,7 +6,7 @@ const DashboardConfig = {
             config: {}
         }
     },
-    auth: [ 'admin' ],
+    auth: [ 'admin', 'user' ],
     routes: [
         {
             path: '/dashboard',
