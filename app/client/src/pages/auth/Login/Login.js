@@ -4,7 +4,8 @@ import useStyles from "./Styles";
 import Stack from '@mui/material/Stack';
 import CircularProgress from '@mui/material/CircularProgress';
 import { useState } from "react";
-
+import { useDispatch } from 'react-redux';
+import { setUser } from '../../../features/auth/authSlice';
 import { useForm } from "react-hook-form";
 
 
@@ -20,7 +21,7 @@ const Login = () => {
 
     // 🔥 RTK Query hook
     const [login, { data, error, isLoading, isSuccess }] = useLoginMutation();
-
+    const dispatch=useDispatch();
     // -------------------------
     //   react-hook-form setup
     // -------------------------
@@ -38,6 +39,7 @@ const Login = () => {
                 email: formData.email,
                 password: formData.password
             });  // 👈 unwrap handles promise correctly
+            dispatch(setUser(response.data.data.user))
 
             console.log("LOGIN SUCCESS:", response);
             alert("Login successful!");
