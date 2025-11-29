@@ -298,7 +298,7 @@
     font-weight: 600;
     border: 1px solid #cdd6ff;
     cursor: pointer;
-    box-shadow: 0 4px 10px rgba(75, 141, 255, 0.22);
+    /*box-shadow:1px 1px 15px lightgray;*/
     transition: transform 0.12s ease, box-shadow 0.12s ease, background 0.12s ease;
     text-decoration: none;
 }
@@ -306,7 +306,7 @@
 
 .uploadButton:hover {
     transform: translateY(-1px);
-    box-shadow: 0 6px 14px rgba(75, 141, 255, 0.27);
+
     background: #dde5ff;
 }
 

@@ -4,7 +4,7 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 export const projectApi = createApi({
     reducerPath: "projectApi",
     baseQuery: fetchBaseQuery({
-        baseUrl: "http://localhost:4000/api/v1/",
+        baseUrl: process.env.REACT_APP_API_BASE_URL,
         prepareHeaders: (headers, { getState }) => {
             const token = localStorage.getItem("token");
 
@@ -19,7 +19,7 @@ export const projectApi = createApi({
     endpoints: (builder) => ({
         createProject: builder.mutation({
             query: (formData) => ({
-                url: "projects",
+                url: "/projects",
                 method: "POST",
                 body: formData,
             }),
