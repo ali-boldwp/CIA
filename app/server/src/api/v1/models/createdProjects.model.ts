@@ -74,15 +74,20 @@ const createdProjectSchema = new Schema<ICreatedProject>(
         contractNumber: { type: String },
         annexNumber: { type: String },
 
-        servicesRequested: [{ type: String }],
-        projectPrice: { type: String, required: true },
+        // FIX ✔ default []
+        servicesRequested: { type: [String], default: [] },
+
+        // FIX ✔ number not string
+        projectPrice: { type: Number, required: true },
+
         currency: { type: String, default: "EUR" },
 
         contractInfo: { type: String },
         referenceRequest: { type: String },
         internalNotes: { type: String },
 
-        files: [{ type: String }],
+        // FIX ✔ default []
+        files: { type: [String], default: [] },
 
         createdBy: {
             type: Schema.Types.ObjectId,
@@ -105,6 +110,7 @@ const createdProjectSchema = new Schema<ICreatedProject>(
         }
     }
 );
+
 
 const CreatedProject = model<ICreatedProject>("CreatedProject", createdProjectSchema);
 
