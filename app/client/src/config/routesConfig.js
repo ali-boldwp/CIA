@@ -11,10 +11,9 @@ import NewProjectConfig from "../pages/newProjectPage/NewProjectConfig";
 import EmployeeListConfig from "../pages/EmployeeList/EmployeeListConfig";
 import AnalstListConfig from "../pages/AnalystList/AnalystListConfig";
 import AnalistProfileCon from "../pages/AnalystProfile/AnalystProfileCon";
+import ProjectCostsPageConfig from "../pages/ProjectCostsPage/ProjectCostsPageConfig";
 
-const routeConfigs = [ LoginConfig, DashboardConfig ,AnalystDashboardConfig ,SalesDashboardConfig ,NewProjectConfig , ManagerConfig , AnalistProfileCon , ProjectRequestConfig,EmployeeListConfig , AnalstListConfig];
-
-
+const routeConfigs = [ LoginConfig, DashboardConfig ,AnalystDashboardConfig ,SalesDashboardConfig ,NewProjectConfig ,ManagerConfig , ProjectRequestConfig , EmployeeListConfig , AnalistProfileCon , AnalstListConfig , ProjectCostsPageConfig];
 
 const routes = [
     ...Utils.generateRoutesFromConfigs(routeConfigs),
