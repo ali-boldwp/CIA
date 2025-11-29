@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from "express";
 import * as employeeService from "../services/employee.service";
 import { ok } from "../../../utils/ApiResponse";
 
-/* CREATE EMPLOYEE */
+
 export const createEmployee = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const employee = await employeeService.createEmployee(req.body);
@@ -12,7 +12,7 @@ export const createEmployee = async (req: Request, res: Response, next: NextFunc
     }
 };
 
-/* GET ALL EMPLOYEES */
+
 export const getAllEmployees = async (_req: Request, res: Response, next: NextFunction) => {
     try {
         const employees = await employeeService.getAllEmployees();
@@ -22,7 +22,7 @@ export const getAllEmployees = async (_req: Request, res: Response, next: NextFu
     }
 };
 
-/* GET EMPLOYEE BY ID */
+
 export const getEmployeeById = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const employee = await employeeService.getEmployeeById(req.params.id);
@@ -32,7 +32,7 @@ export const getEmployeeById = async (req: Request, res: Response, next: NextFun
     }
 };
 
-/* UPDATE EMPLOYEE */
+
 export const updateEmployee = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const employee = await employeeService.updateEmployee(req.params.id, req.body);
@@ -42,7 +42,7 @@ export const updateEmployee = async (req: Request, res: Response, next: NextFunc
     }
 };
 
-/* DELETE EMPLOYEE */
+
 export const deleteEmployee = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const employee = await employeeService.deleteEmployee(req.params.id);
