@@ -4,7 +4,8 @@ import routes from "./config/routesConfig"
 import {BrowserRouter} from 'react-router-dom';
 import AppRoutes from './AppRoutes';
 import { AuthProvider } from './auth/AuthProvider'
-
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import { Provider } from 'react-redux';
 import store from './store';
 
@@ -18,6 +19,7 @@ function App() {
             >
                 <AuthProvider>
                     <BrowserRouter>
+                        <ToastContainer />
                         <AppRoutes/>
                     </BrowserRouter>
                 </AuthProvider>

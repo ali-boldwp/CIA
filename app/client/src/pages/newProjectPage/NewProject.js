@@ -5,13 +5,12 @@ const NewProject = () => {
     const [files, setFiles] = useState([]);
 
     const [respOpen, setRespOpen] = useState(false);
-    const [responsible, setResponsible] = useState("Analist C");
+    const [responsible, setResponsible] = useState("Selectează responsabilul");
 
     // MULTI-SELECT ANALYSTS
     const [multiOpen, setMultiOpen] = useState(false);
     const [selectedAnalysts, setSelectedAnalysts] = useState([
-        "Analist A",
-        "Analist E"
+       "Selectează analiștii"
     ]);
 
     const handleFileUpload = (e) => {
@@ -102,7 +101,7 @@ const NewProject = () => {
                         <div className="form-field">
                             <label>Subiect proiect</label>
                             <div className="input-wrapper">
-                                <input className="input-box" defaultValue="Societatea ABC" />
+                                <input className="input-box" placeholder="Societatea ABC" />
                                 <button className="pill-badge badge-inline">auto din solicitare</button>
                             </div>
                         </div>
@@ -114,7 +113,7 @@ const NewProject = () => {
                         <div className="form-field">
                             <label>Tip raport</label>
                             <div className="input-wrapper">
-                                <input className="input-box" defaultValue="Enhanced Due Diligence" />
+                                <input className="input-box" placeholder="Enhanced Due Diligence" />
                                 <button className="pill-badge badge-inline">auto din solicitare</button>
                             </div>
                         </div>
@@ -122,7 +121,7 @@ const NewProject = () => {
                         <div className="form-field">
                             <label>Tip entitate</label>
                             <div className="input-wrapper">
-                                <input className="input-box" defaultValue="Societate" />
+                                <input className="input-box" placeholder="Societate" />
                                 <button className="pill-badge badge-inline">auto din solicitare</button>
                             </div>
                         </div>
@@ -130,7 +129,7 @@ const NewProject = () => {
                         <div className="form-field">
                             <label>Termen limită (deadline)</label>
                             <div className="input-wrapper">
-                                <input className="input-box bold" defaultValue="2025-12-05" />
+                                <input className="input-box bold" placeholder="2025-12-05" />
                                 <button className="pill-badge badge-inline">auto din solicitare</button>
                             </div>
                         </div>
@@ -138,7 +137,7 @@ const NewProject = () => {
                         <div className="form-field">
                             <label>Prioritate</label>
                             <div className="input-wrapper">
-                                <input className="input-box bold" defaultValue="Normal" />
+                                <input className="input-box bold" placeholder="Normal" />
                                 <button className="pill-badge badge-inline">auto din solicitare</button>
                             </div>
                         </div>
@@ -151,7 +150,7 @@ const NewProject = () => {
                         <div className="form-field">
                             <label>Limbă livrabil</label>
                             <div className="input-wrapper">
-                                <input className="input-box" defaultValue="Română" />
+                                <input className="input-box" placeholder="Română" />
                                 <button className="pill-badge badge-inline">auto din solicitare</button>
                             </div>
                         </div>
@@ -193,8 +192,8 @@ const NewProject = () => {
                     <div className="form-field full-width">
                         <label>Descriere proiect</label>
                         <div className="textarea">
-                        <textarea className="textarea-box">
-                           Scop: evaluare reputațională & riscuri de integritate; întrebări client; beneficiari reali, litigii active, sancțiuni, reputație media; livrabile: raport PDF.
+                        <textarea className="textarea-box" placeholder="evaluare reputațională & riscuri de integritate; întrebări client; beneficiari reali, litigii active, sancțiuni, reputație media; livrabile: raport PDF.">
+
                         </textarea>
 
                             <button className="pill-badge textarea-badge ">auto din solicitare</button>
@@ -308,7 +307,7 @@ const NewProject = () => {
                         <div className="form-field">
                             <label>Nume client</label>
                             <div className="input-wrapper">
-                                <input className="input-box" defaultValue="ZZZ SRL" />
+                                <input className="input-box" placeholder="ZZZ SRL" />
                                 <button className="pill-badge badge-inline">auto din solicitare</button>
                             </div>
                         </div>
@@ -316,7 +315,7 @@ const NewProject = () => {
                         <div className="form-field">
                             <label>Persoană de contact</label>
                             <div className="input-wrapper">
-                                <input className="input-box" defaultValue="Ana Popescu" />
+                                <input className="input-box" placeholder="Ana Popescu" />
                                 <button className="pill-badge badge-inline">auto din solicitare</button>
                             </div>
                         </div>
@@ -324,7 +323,7 @@ const NewProject = () => {
                         <div className="form-field">
                             <label>Funcție (opțional)</label>
                             <div className="input-wrapper">
-                                <input className="input-box" defaultValue="Director Achiziții" />
+                                <input className="input-box" placeholder="Director Achiziții" />
                                 <button className="pill-badge badge-inline">auto din solicitare</button>
                             </div>
                         </div>
@@ -337,7 +336,7 @@ const NewProject = () => {
                         <div className="form-field">
                             <label>Email</label>
                             <div className="input-wrapper">
-                                <input className="input-box" defaultValue="ana.popescu@zzz.ro" />
+                                <input className="input-box" placeholder="ana.popescu@zzz.ro" />
                                 <button className="pill-badge badge-inline">auto din solicitare</button>
                             </div>
                         </div>
@@ -345,7 +344,7 @@ const NewProject = () => {
                         <div className="form-field">
                             <label>Telefon</label>
                             <div className="input-wrapper">
-                                <input className="input-box" defaultValue="+40 7xx xxx xxx" />
+                                <input className="input-box" placeholder="+40 7xx xxx xxx" />
                                 <button className="pill-badge badge-inline">auto din solicitare</button>
                             </div>
                         </div>
@@ -358,7 +357,7 @@ const NewProject = () => {
                         <div className="form-field">
                             <label>Nr. contract</label>
                             <div className="input-wrapper">
-                                <input className="input-box" defaultValue="CTR-2025-014" />
+                                <input className="input-box" placeholder="CTR-2025-014" />
                                 <button className="pill-badge badge-inline">auto din solicitare</button>
                             </div>
                         </div>
@@ -366,7 +365,7 @@ const NewProject = () => {
                         <div className="form-field">
                             <label>Nr. Anexă</label>
                             <div className="input-wrapper">
-                                <input className="input-box" defaultValue="ANX-03" />
+                                <input className="input-box" placeholder="ANX-03" />
                                 <button className="pill-badge badge-inline">auto din solicitare</button>
                             </div>
                         </div>
@@ -374,7 +373,7 @@ const NewProject = () => {
                         <div className="form-field">
                             <label>Se dorește</label>
                             <div className="input-wrapper">
-                                <input className="input-box" defaultValue="OSINT, HUMINT" />
+                                <input className="input-box" placeholder="OSINT, HUMINT" />
                                 <button className="pill-badge badge-inline">auto din solicitare</button>
                             </div>
                         </div>
@@ -387,7 +386,7 @@ const NewProject = () => {
                         <div className="form-field">
                             <label>Preț proiect</label>
                             <div className="input-wrapper">
-                                <input className="input-box" defaultValue="3.500" />
+                                <input className="input-box" placeholder="3.500" />
                                 <button className="pill-badge badge-inline">auto din solicitare</button>
                             </div>
                         </div>
@@ -395,7 +394,7 @@ const NewProject = () => {
                         <div className="form-field">
                             <label>Monedă</label>
                             <div className="input-wrapper">
-                                <input className="input-box" defaultValue="EUR ▾" />
+                                <input className="input-box" placeholder= "EUR ▾" />
                                 <button className="pill-badge badge-inline">auto din solicitare</button>
                             </div>
                         </div>
@@ -409,8 +408,8 @@ const NewProject = () => {
                             <label>Alte informații despre contract</label>
 
                             <div className="textarea-wrapper">
-                <textarea className="textarea-box">
-Clauze SLA: 5 zile lucrătoare; livrabile intermediare; confidențialitate extinsă.
+                <textarea className="textarea-box" placeholder="Clauze SLA: 5 zile lucrătoare; livrabile intermediare; confidențialitate extinsă.">
+
                 </textarea>
                                 <button className="pill-badge badge-inline">auto din solicitare</button>
                             </div>
@@ -420,8 +419,8 @@ Clauze SLA: 5 zile lucrătoare; livrabile intermediare; confidențialitate extin
                             <label>Solicitare referințe / informații suplimentare</label>
 
                             <div className="textarea-wrapper">
-                <textarea className="textarea-box">
-De la Popa Remus
+                <textarea className="textarea-box" placeholder="De la Popa Remus">
+
                 </textarea>
                                 <button className="pill-badge badge-inline">auto din solicitare</button>
                             </div>
@@ -432,8 +431,8 @@ De la Popa Remus
                     {/* ROW 6 */}
                     <div className="form-field full-width">
                         <label>Note interne</label>
-                        <textarea className="textarea-box">
-Risc moderat; țări sursă: RO/DE; verificări suplimentare: CF, RC, monitorizare media.
+                        <textarea className="textarea-box" placeholder="Risc moderat; țări sursă: RO/DE; verificări suplimentare: CF, RC, monitorizare media.">
+
         </textarea>
                     </div>
 
