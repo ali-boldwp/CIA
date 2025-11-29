@@ -1,7 +1,27 @@
 import { Schema, model, Document } from "mongoose";
 
+export interface IEmployeeCostItem {
+    analyst: string;
+    role: string;
+    days?: number;
+    hours: number;
+    hourlyRate: number;
+    dayCost?: number;
+    total: number;
+}
+
+export interface IHumintCostItem {
+    date: Date;
+    description: string;
+    utility: number;
+    cash: number;
+    other: number;
+    baseCost: number;
+    taxPercent: number;
+    totalWithTaxes: number;
+}
+
 export interface IProjectDetails extends Document {
-    // BASIC PROJECT DETAILS
     projectName: string;
     projectSubject: string;
     reportType: string;
@@ -11,24 +31,20 @@ export interface IProjectDetails extends Document {
     description?: string;
     actions: string[];
 
-    // TIMELINE
     createdAtRequest: Date;
     projectStart: Date;
     deadline: Date;
     status: "In progress" | "Completed" | "Pending" | "On Hold";
 
-    // ATTACHMENTS
     attachments: {
         fileName: string;
         size: string;
         url: string;
     }[];
 
-    // TEAM
     responsible: string;
     assignedAnalysts: string[];
 
-    // CLIENT & CONTRACT
     clientName: string;
     contactPerson: string;
     contactRole?: string;
@@ -45,7 +61,9 @@ export interface IProjectDetails extends Document {
     supplementaryRequest?: string;
     internalNotes?: string;
 
-    // FINANCIAL COSTS
+    employeeCostItems: IEmployeeCostItem[];
+    humintCostItems: IHumintCostItem[];
+
     fixedCosts: number;
     osintCosts: number;
     employeeCosts: number;
@@ -53,11 +71,36 @@ export interface IProjectDetails extends Document {
     humintCostTaxes: number;
 
     totalCosts: number;
-
-    // MARGIN
     marginAmount: number;
     marginPercent: number;
 }
+
+const employeeCostItemSchema = new Schema<IEmployeeCostItem>(
+    {
+        analyst: String,
+        role: String,
+        days: Number,
+        hours: Number,
+        hourlyRate: Number,
+        dayCost: Number,
+        total: Number
+    },
+    { _id: false }
+);
+
+const humintCostItemSchema = new Schema<IHumintCostItem>(
+    {
+        date: Date,
+        description: String,
+        utility: Number,
+        cash: Number,
+        other: Number,
+        baseCost: Number,
+        taxPercent: Number,
+        totalWithTaxes: Number
+    },
+    { _id: false }
+);
 
 const projectDetailsSchema = new Schema<IProjectDetails>(
     {
@@ -93,7 +136,6 @@ const projectDetailsSchema = new Schema<IProjectDetails>(
         clientName: { type: String, required: true },
         contactPerson: { type: String, required: true },
         contactRole: String,
-
         contactEmail: { type: String, required: true },
         contactPhone: { type: String, required: true },
 
@@ -107,6 +149,9 @@ const projectDetailsSchema = new Schema<IProjectDetails>(
         supplementaryRequest: String,
         internalNotes: String,
 
+        employeeCostItems: [employeeCostItemSchema],
+        humintCostItems: [humintCostItemSchema],
+
         fixedCosts: { type: Number, default: 0 },
         osintCosts: { type: Number, default: 0 },
         employeeCosts: { type: Number, default: 0 },
@@ -114,7 +159,6 @@ const projectDetailsSchema = new Schema<IProjectDetails>(
         humintCostTaxes: { type: Number, default: 0 },
 
         totalCosts: { type: Number, default: 0 },
-
         marginAmount: { type: Number, default: 0 },
         marginPercent: { type: Number, default: 0 }
     },
@@ -129,20 +173,39 @@ const projectDetailsSchema = new Schema<IProjectDetails>(
     }
 );
 
-// AUTO CALCULATION
+// AUTO CALC
 projectDetailsSchema.pre("save", function (next) {
-    const humintTotal = (this.humintCosts || 0) + (this.humintCostTaxes || 0);
+    const self: any = this;
 
-    this.totalCosts =
-        (this.fixedCosts || 0) +
-        (this.osintCosts || 0) +
-        (this.employeeCosts || 0) +
-        humintTotal;
+    self.employeeCosts = (self.employeeCostItems || []).reduce(
+        (sum: number, item: IEmployeeCostItem) => sum + (item.total || 0),
+        0
+    );
 
-    if (this.projectPrice) {
-        this.marginAmount = this.projectPrice - this.totalCosts;
-        this.marginPercent = Number(
-            ((this.marginAmount / this.projectPrice) * 100).toFixed(2)
+    let base = 0;
+    let taxes = 0;
+
+    (self.humintCostItems || []).forEach((item: IHumintCostItem) => {
+        const b = item.baseCost || 0;
+        const t = (item.totalWithTaxes || 0) - b;
+        base += b;
+        taxes += t;
+    });
+
+    self.humintCosts = base;
+    self.humintCostTaxes = taxes;
+
+    self.totalCosts =
+        (self.fixedCosts || 0) +
+        (self.osintCosts || 0) +
+        (self.employeeCosts || 0) +
+        self.humintCosts +
+        self.humintCostTaxes;
+
+    if (self.projectPrice) {
+        self.marginAmount = self.projectPrice - self.totalCosts;
+        self.marginPercent = Number(
+            ((self.marginAmount / self.projectPrice) * 100).toFixed(2)
         );
     }
 
