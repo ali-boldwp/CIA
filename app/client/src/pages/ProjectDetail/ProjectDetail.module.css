@@ -1,0 +1,375 @@
+/* PAGE */
+.page {
+    padding: 30px;
+    background: #f4f8ff;
+    min-height: 100vh;
+    font-family: Inter, sans-serif;
+    width: 100%;
+}
+
+/* CONTENT WRAPPER */
+.contentWrapper {
+    margin-top: 16px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+/* CARD */
+.card {
+    width: 100%;
+    background: #ffffff;
+    border-radius: 18px;
+    padding: 22px 22px 20px 22px;
+    box-shadow: 0 16px 40px rgba(15, 23, 42, 0.06);
+}
+
+.sectionTitle {
+    font-size: 15px;
+    font-weight: 700;
+    color: #111827;
+    margin-bottom: 18px;
+}
+
+/* ===== ROW 1: NAME + STATUS ===== */
+
+.detailTop {
+    display: grid;
+    grid-template-columns: 2.1fr 1.3fr;
+    align-items: center;
+    gap: 24px;
+    margin-bottom: 22px;
+}
+
+.nameBlock {
+    flex: 1;
+}
+
+.label {
+    font-size: 14px;
+    font-weight: 700;
+    color: #111827;
+}
+
+/* standard chip used with labels */
+.autoChip {
+    background: #dcfce7;
+    color: #15803d;
+    border-radius: 999px;
+    padding: 3px 10px;
+    font-size: 11px;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+/* wrapper for pill field + inner chip */
+.valueWrapper {
+    position: relative;
+    width: 100%;
+}
+
+/* big rounded name field */
+.nameValueBox {
+    width: 100%;
+    min-height: 52px;
+    border-radius: 14px;
+
+    background: #f5f7ff;
+    border: 1px solid #e0e7ff;
+    padding: 12px 20px;
+    padding-right: 110px;
+    font-size: 15px;
+    font-weight: 600;
+    color: #0f172a;
+    display: flex;
+    align-items: center;
+}
+
+/* chip INSIDE pill (right) */
+.autoChipInside {
+    position: absolute;
+    right: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: #dcfce7;
+    color: #15803d;
+    border-radius: 999px;
+    padding: 3px 10px;
+    font-size: 11px;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+/* status pills block */
+.statusBlock {
+    flex: 1;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+.statusPill {
+    border-radius: 999px;
+    padding: 9px 20px;
+    font-size: 13px;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    line-height: 1.2;
+}
+
+.statusBold {
+    font-weight: 700;
+}
+
+.statusCreated {
+    background: #dbeafe;
+    color: #1d4ed8;
+}
+
+.statusStart {
+    background: #dcfce7;
+    color: #166534;
+}
+
+.statusState {
+    background: #bbf7d0;
+    color: #166534;
+}
+
+/* ===== ROW 2: 4 META FIELDS ===== */
+
+.metaRow {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 14px 18px;
+    margin-bottom: 18px;
+}
+
+/* ===== ROW 3: 3 META FIELDS ===== */
+
+.metaRow2 {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 14px 18px;
+    margin-bottom: 18px;
+}
+
+.metaField {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.metaValueBox {
+    width: 100%;
+    min-height: 42px;
+    border-radius: 14px;       /* UPDATED SAME AS DESCRIERE FIELD */
+    background: #f5f7ff;
+    border: 1px solid #e0e7ff;
+    padding: 10px 16px;
+    padding-right: 110px;
+    font-size: 13px;
+    color: #111827;
+    display: flex;
+    align-items: center;
+}
+
+
+.metaValueBold {
+    font-weight: 700;
+}
+
+/* bottom divider (inside card) */
+.sectionDivider {
+    margin: 12px 0 0 0;
+    border-top: 1px solid #e5e7eb;
+}
+
+/* ===== GENERIC GRID FOR LOWER SECTIONS ===== */
+
+.detailGrid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 14px 18px;
+}
+
+.itemFull {
+    grid-column: 1 / -1;
+}
+
+.itemHalf {
+    grid-column: span 1;
+}
+
+.itemThird {
+    grid-column: span 1;
+}
+
+.labelRow {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 4px;
+}
+
+.value {
+    font-size: 13px;
+    color: #111827;
+}
+
+/* FILE BOX – border-radius 8px jaisa tum ne bola */
+.filesBox {
+    margin-top: 6px;
+    background: #f5f7ff;
+    border-radius: 8px;
+    border: 1px dashed #d4ddff;
+    padding: 14px 16px;
+    padding-right: 130px;      /* chip ke liye space */
+    min-height: 80px;          /* 👈 height badi */
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    gap: 4px;
+}
+
+
+.fileRow {
+    font-size: 12px;
+    color: #374151;
+}
+.filesWrapper {
+    position: relative;
+    width: 100%;
+}
+
+/* TEAM CHIPS */
+.chipRow {
+    margin-top: 8px;        /* more spacing */
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;              /* more space between chips */
+}
+
+
+.chipLabel {
+    font-size: 14px;        /* bigger */
+    font-weight: 700;       /* stronger */
+    color: #111827;         /* darker (same as other labels) */
+    margin-bottom: 4px;
+}
+
+
+.chipPrimary {
+    background: #4f46e5;
+    color: #ffffff;
+    border-radius: 999px;
+    padding: 6px 14px;      /* bigger */
+    font-size: 13px;        /* bigger font */
+    font-weight: 600;
+}
+
+
+.chipGhost {
+    background: #f3f4ff;
+    border-radius: 999px;
+    padding: 6px 14px;      /* bigger */
+    font-size: 13px;        /* bigger */
+    color: #1f2937;
+    border: 1px solid #e5e7eb;
+}
+
+/* Large input container wrapper */
+.bigInputWrapper {
+    position: relative;
+    width: 100%;
+}
+
+/* Big input styled box (textarea style but non-editable) */
+.bigInputBox {
+    width: 100%;
+    min-height: 120px;
+    background: #f5f7ff;
+    border: 1px solid #e0e7ff;
+    border-radius: 14px; /* bigger radius like screenshot */
+    padding: 16px 18px;
+    padding-right: 130px; /* space for chip */
+    font-size: 14px;
+    color: #111827;
+    display: flex;
+    align-items: flex-start;
+    line-height: 1.45;
+    white-space: pre-wrap;
+}
+
+/* Chip inside the big input */
+.autoChipInsideBig {
+    position: absolute;
+    right: 16px;
+    top: 16px;
+    background: #dcfce7;
+    color: #15803d;
+    padding: 4px 12px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+
+/* ===== RESPONSIVE ===== */
+
+@media (max-width: 1024px) {
+    .detailTop {
+        grid-template-columns: 1fr;
+        align-items: flex-start;
+    }
+
+    .statusBlock {
+        justify-content: flex-start;
+    }
+
+    .metaRow {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .metaRow2 {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .detailGrid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 768px) {
+    .page {
+        padding: 16px;
+    }
+
+    .card {
+        padding: 18px 16px;
+    }
+
+    .metaRow {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .metaRow2 {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .detailGrid {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .itemFull,
+    .itemHalf,
+    .itemThird {
+        grid-column: 1 / -1;
+    }
+}
