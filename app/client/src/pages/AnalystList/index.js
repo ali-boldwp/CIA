@@ -3,48 +3,121 @@ import styles from "./AnalystList.module.css";
 import { FiTrash2, FiEdit3 } from "react-icons/fi";
 import AddAnalystForm from "./AddAnalystForm";
 
-const initialAnalysts = [
-    {
-        name: "Analist A",
-        role: "Head of Investigations",
-        date: "2021-03-10",
-        seniority: "3.7 / 10",
-        salary: "8.000 RON",
-        bonus: "50 RON",
-        costDay: "400 RON",
-        costHour: "50.0 RON",
-        color: "#6C5CE7",
-    },
-];
+import {
+    useGetAnalystsQuery,
+    useDeleteAnalystMutation
+} from "../../services/analystApi";
+import { toast } from "react-toastify";
 
 export default function AnalystList() {
-    const [analysts, setAnalysts] = useState(initialAnalysts);
     const [search, setSearch] = useState("");
+    const [roleFilter, setRoleFilter] = useState("all");
+    const [sortBy, setSortBy] = useState("desc");
     const [showModal, setShowModal] = useState(false);
+    const [editData, setEditData] = useState(null);
 
     const open = () => setShowModal(true);
-    const close = () => setShowModal(false);
 
+    const close = () => {
+        setShowModal(false);
+        setEditData(null);
+    };
+
+    // FETCH ANALYSTS
+    const { data, isLoading, isError } = useGetAnalystsQuery();
+    const [deleteAnalyst] = useDeleteAnalystMutation();
+
+    // SAFELY extract array
+    const analysts = Array.isArray(data)
+        ? data
+        : Array.isArray(data?.analysts)
+            ? data.analysts
+            : Array.isArray(data?.data)
+                ? data.data
+                : [];
+
+    // DELETE ANALYST
+    const handleDelete = async (_id) => {
+        try {
+            await deleteAnalyst(_id).unwrap();
+            toast.success("Analist șters cu succes!");
+        } catch (err) {
+            toast.error("Eroare la ștergere!");
+        }
+    };
+
+    // EXPORT CSV
+    const exportCSV = () => {
+        if (filteredData.length === 0) {
+            toast.error("Nu există date pentru export!");
+            return;
+        }
+
+        const headers = [
+            "Nume,Funcție,Data angajării,Vechime,Salariu,Bonus,Cost Zi,Cost Oră"
+        ];
+
+        const rows = filteredData.map((a) =>
+            [
+                a.name,
+                a.role,
+                a.hiringDate,
+                a.seniority || "-",
+                a.monthlySalary + " RON",
+                a.bonus,
+                a.costPerDay,
+                a.costPerHour
+            ].join(",")
+        );
+
+        const csvContent = [...headers, ...rows].join("\n");
+        const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = "analysts_export.csv";
+        link.click();
+    };
+
+    // FILTER + SORT DATA
     const filteredData = useMemo(() => {
         let data = [...analysts];
 
+        // SEARCH FILTER
         if (search.trim() !== "") {
             data = data.filter((a) =>
                 a.name.toLowerCase().includes(search.toLowerCase())
             );
         }
-        return data;
-    }, [analysts, search]);
 
-    // ---------- TOTAL COST ----------
+        // ROLE FILTER
+        if (roleFilter !== "all") {
+            data = data.filter((a) => a.role === roleFilter);
+        }
+
+        // SORT BY SENIORITY
+        data.sort((a, b) => {
+            const valA = parseFloat(a.seniority || 0);
+            const valB = parseFloat(b.seniority || 0);
+            return sortBy === "asc" ? valA - valB : valB - valA;
+        });
+
+        return data;
+    }, [analysts, search, roleFilter, sortBy]);
+
+    // TOTAL COST
     const totalCost = useMemo(() => {
         return filteredData.reduce((sum, a) => {
-            const num = parseFloat(a.costDay);
+            const num = parseFloat(a.costPerDay);
             return isNaN(num) ? sum : sum + num;
         }, 0);
     }, [filteredData]);
 
     const formattedTotalCost = `${totalCost.toLocaleString("ro-RO")} RON`;
+
+    if (isLoading) return <h2 className={styles.loading}>Se încarcă...</h2>;
+    if (isError) return <h2 className={styles.error}>Eroare la încărcare date!</h2>;
 
     return (
         <div className={styles.page}>
@@ -58,6 +131,7 @@ export default function AnalystList() {
             {/* FILTER ROW */}
             <div className={styles.filtersRow}>
 
+                {/* SEARCH */}
                 <div className={styles.serMain}>
                     <span className={styles.serIcon}>🔍</span>
                     <input
@@ -68,19 +142,32 @@ export default function AnalystList() {
                     />
                 </div>
 
-                <select className={styles.filterSelect}>
-                    <option>Toate funcțiile</option>
-                    <option>Head of Investigations</option>
-                    <option>Analist de informații</option>
-                    <option>Detectiv HUMINT</option>
+                {/* ROLE FILTER */}
+                <select
+                    className={styles.filterSelect}
+                    value={roleFilter}
+                    onChange={(e) => setRoleFilter(e.target.value)}
+                >
+                    <option value="all">Toate funcțiile</option>
+                    <option value="Head of Investigations">Head of Investigations</option>
+                    <option value="Analyst">Analyst</option>
+                    <option value="HUMINT Detective">HUMINT Detective</option>
                 </select>
 
-                <select className={styles.sortSelect}>
-                    <option>Vechime desc</option>
-                    <option>Vechime asc</option>
+                {/* SORT */}
+                <select
+                    className={styles.sortSelect}
+                    value={sortBy}
+                    onChange={(e) => setSortBy(e.target.value)}
+                >
+                    <option value="desc">Vechime desc</option>
+                    <option value="asc">Vechime asc</option>
                 </select>
 
-                <button className={styles.exportBtn}>Export CSV</button>
+                {/* EXPORT */}
+                <button className={styles.exportBtn} onClick={exportCSV}>
+                    Export CSV
+                </button>
             </div>
 
             {/* TABLE */}
@@ -105,7 +192,7 @@ export default function AnalystList() {
                         <div className={styles.userCell}>
                             <span
                                 className={styles.avatar}
-                                style={{ background: a.color }}
+                                style={{ background: a.color || "#6C5CE7" }}
                             >
                                 {a.name.charAt(0)}
                             </span>
@@ -113,16 +200,26 @@ export default function AnalystList() {
                         </div>
 
                         <span>{a.role}</span>
-                        <span>{a.date}</span>
-                        <span>{a.seniority}</span>
-                        <span>{a.salary}</span>
-                        <span>{a.bonus}</span>
-                        <span>{a.costDay}</span>
-                        <span>{a.costHour}</span>
+                        <span>{a.hiringDate}</span>
+                        <span>{a.seniority || "-"}</span>
+                        <span>{a.monthlySalary} RON</span>
+                        <span>{a.bonus || 0}</span>
+                        <span>{a.costPerDay} RON</span>
+                        <span>{a.costPerHour} RON</span>
 
                         <div className={styles.actions}>
-                            <FiEdit3 className={styles.icon} />
-                            <FiTrash2 className={styles.iconDelete} />
+                            <FiEdit3
+                                className={styles.icon}
+                                onClick={() => {
+                                    setEditData(a);
+                                    setShowModal(true);
+                                }}
+                            />
+
+                            <FiTrash2
+                                className={styles.iconDelete}
+                                onClick={() => handleDelete(a._id)}
+                            />
                         </div>
                     </div>
                 ))}
@@ -130,13 +227,8 @@ export default function AnalystList() {
                 {/* FOOTER */}
                 <div className={styles.footer}>
                     <div className={styles.footerTop}>
-                        <span className={styles.footerLeft}>
-                            Total analiști: {filteredData.length}
-                        </span>
-
-                        <span className={styles.footerCenter}>
-                            Cost total: {formattedTotalCost}
-                        </span>
+                        <span>Total analiști: {filteredData.length}</span>
+                        <span>Cost total: {formattedTotalCost}</span>
                     </div>
 
                     <button className={styles.addBtn} onClick={open}>
@@ -146,8 +238,11 @@ export default function AnalystList() {
 
                 {showModal && (
                     <div className={styles.overlay} onClick={close}>
-                        <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
-                            <AddAnalystForm closeModal={close} />
+                        <div
+                            className={styles.modal}
+                            onClick={(e) => e.stopPropagation()}
+                        >
+                            <AddAnalystForm closeModal={close} editData={editData} />
                         </div>
                     </div>
                 )}
