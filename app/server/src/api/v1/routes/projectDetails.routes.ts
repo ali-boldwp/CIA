@@ -1,5 +1,6 @@
 import { Router } from "express";
 import * as projectDetailsController from "../controllers/projectDetails.controller";
+import * as projectCostsController from "../controllers/projectCosts.controller";
 import { auth } from "../../../middlewares/auth.middleware";
 import { authorizeRoles } from "../../../middlewares/role.middleware";
 import { Role } from "../../../constants/roles";
@@ -7,7 +8,7 @@ import { upload } from "../../../middlewares/upload.middleware";
 
 const router = Router();
 
-// CREATE ProjectDetails
+// CREATE
 router.post(
     "/",
     auth,
@@ -15,7 +16,7 @@ router.post(
     projectDetailsController.createProjectDetails
 );
 
-// GET ALL (Admins & Managers only)
+// GET ALL
 router.get(
     "/",
     auth,
@@ -23,26 +24,40 @@ router.get(
     projectDetailsController.getAllProjectDetails
 );
 
-// GET BY ID
+// GET ONE
 router.get(
     "/:id",
     auth,
     projectDetailsController.getProjectDetailsById
 );
 
-// UPDATE ProjectDetails
+// UPDATE BASIC DETAILS
 router.put(
     "/:id",
     auth,
     projectDetailsController.updateProjectDetails
 );
 
-// DELETE ProjectDetails (Admins & Managers only)
+// DELETE
 router.delete(
     "/:id",
     auth,
     authorizeRoles(Role.ADMIN, Role.MANAGER),
     projectDetailsController.deleteProjectDetails
+);
+
+// COST PAGE: GET
+router.get(
+    "/:id/costs",
+    auth,
+    projectCostsController.getProjectCosts
+);
+
+// COST PAGE: UPDATE
+router.put(
+    "/:id/costs",
+    auth,
+    projectCostsController.updateProjectCosts
 );
 
 export default router;
