@@ -5,6 +5,7 @@ import projectRequestRoutes from "./project.routes";
 import createdProjectRoutes from "./createdProjects.routes";
 import humintRoutes from "./humint.routes";
 import employeeRoutes from "./employee.routes";
+import analystRoutes from "./analyst.routes";
 
 const router = Router();
 
@@ -14,5 +15,6 @@ router.use("/projects", projectRequestRoutes);
 router.use("/created-project", createdProjectRoutes);
 router.use("/humint" , humintRoutes)
 router.use("/employees", employeeRoutes);
+router.use("/analyst", analystRoutes)
 
 export default router;

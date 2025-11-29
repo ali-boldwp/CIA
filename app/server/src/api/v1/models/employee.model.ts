@@ -1,15 +1,15 @@
 import { Schema, model, Document } from "mongoose";
 
 export interface IEmployee extends Document {
-    name: string;               // Nume
-    jobRole: string;            // Funcție
-    hiringDate: Date;           // Data angajării
+    name: string;
+    jobRole: string;
+    hiringDate: Date;
 
-    salaryGross: number;        // Salariu lunar brut (RON)
-    bonusMonthly: number;       // Bonus lunar (RON)
-    bonusProject: number;       // Bonus proiect (RON)
+    salaryGross: number;
+    bonusMonthly: number;
+    bonusProject: number;
 
-    notes?: string;             // Note (optional)
+    notes?: string;
 }
 
 const employeeSchema = new Schema<IEmployee>(
