@@ -3,7 +3,7 @@ import AppContext from '@libs/AppContext';
 import routes from "./config/routesConfig"
 import {BrowserRouter} from 'react-router-dom';
 import AppRoutes from './AppRoutes';
-import { AuthProvider } from '@libs/Authorization'
+import { AuthProvider } from './auth/AuthProvider'
 
 import { Provider } from 'react-redux';
 import store from './store';
