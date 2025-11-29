@@ -265,6 +265,7 @@
 
 /* drop zone container */
 .dropZone {
+    position: relative;
     margin-top: 0.6rem;
     border-radius: 14px;
     border: 1px dashed #c7cff5;
@@ -281,13 +282,18 @@
 
 /* custom upload button: shape like Adaugă but soft colors */
 .uploadButton {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    z-index: 10;
+
     display: inline-flex;
     align-items: center;
     gap: 0.45rem;
     padding: 0.6rem 1.6rem;
-    border-radius: 10px;          /* same radius as action buttons */
-    background: #e8ecff;          /* requested bg */
-    color: #4b8dff;               /* requested text color */
+    border-radius: 10px;
+    background: #e8ecff;
+    color: #4b8dff;
     font-size: 0.85rem;
     font-weight: 600;
     border: 1px solid #cdd6ff;
@@ -296,6 +302,7 @@
     transition: transform 0.12s ease, box-shadow 0.12s ease, background 0.12s ease;
     text-decoration: none;
 }
+
 
 .uploadButton:hover {
     transform: translateY(-1px);
@@ -322,8 +329,9 @@
 }
 
 .dropZoneText {
-    font-size: 0.8rem;
-    color: #6c72a2;
+    margin-top: 80px;   /* Moves text below the button */
+    margin-left: 0px;  /* Perfect left alignment */
+    display: block;
 }
 
 /* uploaded file row card */

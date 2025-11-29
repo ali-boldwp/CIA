@@ -149,7 +149,7 @@ const ProjectRequest = () => {
                                         className={styles.input}
                                         value={name}
                                         onChange={(e) => setName(e.target.value)}
-                                        placeholder="ex: Societatea ABC"
+                                        placeholder="ex: Societatea ABC / POPESCU Ion"
                                     />
                                 </label>
                             </div>
@@ -162,6 +162,7 @@ const ProjectRequest = () => {
                                         className={styles.input}
                                         value={contactPerson}
                                         onChange={(e) => setContactPerson(e.target.value)}
+                                        placeholder="nume"
                                     />
                                 </label>
                             </div>
@@ -169,11 +170,12 @@ const ProjectRequest = () => {
                             {/* POSITION */}
                             <div className={styles.gridItem}>
                                 <label className={styles.label}>
-                                    Funcție (optional)
+                                    Funcție
                                     <input
                                         className={styles.input}
                                         value={position}
                                         onChange={(e) => setPosition(e.target.value)}
+                                        placeholder="funcție"
                                     />
                                 </label>
                             </div>
@@ -186,6 +188,7 @@ const ProjectRequest = () => {
                                         className={styles.input}
                                         value={email}
                                         onChange={(e) => setEmail(e.target.value)}
+                                        placeholder="ex: contact@client.ro"
                                     />
                                 </label>
                             </div>
@@ -198,6 +201,7 @@ const ProjectRequest = () => {
                                         className={styles.input}
                                         value={phone}
                                         onChange={(e) => setPhone(e.target.value)}
+                                        placeholder="+40 7xx xxx xxx"
                                     />
                                 </label>
                             </div>
@@ -205,19 +209,20 @@ const ProjectRequest = () => {
                             {/* CONTRACT */}
                             <div className={styles.gridItem}>
                                 <label className={styles.label}>
-                  <span className={styles.labelRow}>
-                    <span>Nr. Contract</span>
-                    <input
-                        type="checkbox"
-                        className={styles.checkboxSquare}
-                        checked={contractDone}
-                        onChange={() => setContractDone(!contractDone)}
-                    />
-                  </span>
+    <span className={styles.labelRow}>
+      <span>Nr. Contract</span>
+      <input
+          type="checkbox"
+          className={styles.checkboxSquare}
+          checked={contractDone}
+          onChange={() => setContractDone(!contractDone)}
+      />
+    </span>
                                     <input
                                         className={styles.input}
                                         value={contractNumber}
                                         onChange={(e) => setContractNumber(e.target.value)}
+                                        placeholder="ex: CTR-2025-014"
                                     />
                                 </label>
                             </div>
@@ -225,19 +230,20 @@ const ProjectRequest = () => {
                             {/* ANNEX */}
                             <div className={styles.gridItem}>
                                 <label className={styles.label}>
-                  <span className={styles.labelRow}>
-                    <span>Nr. Anexa</span>
-                    <input
-                        type="checkbox"
-                        className={styles.checkboxSquare}
-                        checked={annexDone}
-                        onChange={() => setAnnexDone(!annexDone)}
-                    />
-                  </span>
+    <span className={styles.labelRow}>
+      <span>Nr. Anexa</span>
+      <input
+          type="checkbox"
+          className={styles.checkboxSquare}
+          checked={annexDone}
+          onChange={() => setAnnexDone(!annexDone)}
+      />
+    </span>
                                     <input
                                         className={styles.input}
                                         value={annexNumber}
                                         onChange={(e) => setAnnexNumber(e.target.value)}
+                                        placeholder="de făcut"
                                     />
                                 </label>
                             </div>
@@ -250,6 +256,7 @@ const ProjectRequest = () => {
                                         className={`${styles.textarea} ${styles.textareaTall}`}
                                         value={projectSubject}
                                         onChange={(e) => setProjectSubject(e.target.value)}
+                                        placeholder="persoană de interes, societate/societăți (nume complet / denumire)..."
                                     />
                                 </label>
                             </div>
@@ -262,21 +269,34 @@ const ProjectRequest = () => {
                                         className={`${styles.textarea} ${styles.textareaTall}`}
                                         value={additionalInfo}
                                         onChange={(e) => setAdditionalInfo(e.target.value)}
+                                        placeholder="Alte info despre contract etc"
                                     />
                                 </label>
                             </div>
 
-                            {/* ENTITY TYPE */}
+                            {/* ENTITY TYPE (Dropdown) */}
                             <div className={`${styles.gridItem} ${styles.span2Left}`}>
                                 <label className={styles.label}>
-                                    Tip entitate
-                                    <input
-                                        className={styles.input}
+                                    Tip entitate / caz (dropdown)
+                                    <select
+                                        className={`${styles.input} ${styles.selectAnalyst}`}
                                         value={entityType}
                                         onChange={(e) => setEntityType(e.target.value)}
-                                    />
+                                    >
+                                        <option value="">Societate (include persoane cheie)</option>
+                                        <option value="Persoana">Persoana</option>
+                                        <option value="ONG">ONG</option>
+                                        <option value="Investigatie frauda">Investigatie frauda</option>
+                                        <option value="Analiza de piata">Analiza de piata</option>
+                                        <option value="Supraveghere operativa">Supraveghere operativa</option>
+                                        <option value="TCSM">TCSM</option>
+                                        <option value="Protectie supraveghere clandestina">
+                                            Protectie supraveghere clandestina
+                                        </option>
+                                    </select>
                                 </label>
                             </div>
+
 
                             {/* DEADLINE */}
                             <div className={`${styles.gridItem} ${styles.span2Right}`}>
@@ -291,17 +311,34 @@ const ProjectRequest = () => {
                                 </label>
                             </div>
 
-                            {/* CATEGORY */}
+                            {/* CATEGORY (Dropdown) */}
                             <div className={`${styles.gridItem} ${styles.span2Left}`}>
                                 <label className={styles.label}>
-                                    Categorie
-                                    <input
-                                        className={styles.input}
+                                    Categorie (dropdown)
+                                    <select
+                                        className={`${styles.input} ${styles.selectAnalyst}`}
                                         value={category}
                                         onChange={(e) => setCategory(e.target.value)}
-                                    />
+                                    >
+                                        <option value="">Enhanced Due Diligence</option>
+                                        <option value="Enhanced Due Diligence (Societate / Grup)">
+                                            Enhanced Due Diligence (Societate / Grup)
+                                        </option>
+                                        <option value="Preliminary Due Diligence">
+                                            Preliminary Due Diligence
+                                        </option>
+                                        <option value="Background Check">Background Check</option>
+                                        <option value="Preliminary Background Check">
+                                            Preliminary Background Check
+                                        </option>
+                                        <option value="Fraud Investigation">Fraud Investigation</option>
+                                        <option value="Audit reputational">Audit reputational</option>
+                                        <option value="Raport de informare">Raport de informare</option>
+                                        <option value="Altele (Custom)">Altele (Custom)</option>
+                                    </select>
                                 </label>
                             </div>
+
 
                             {/* PRICE */}
                             <div className={`${styles.gridItem} ${styles.span2Right}`}>
@@ -311,6 +348,7 @@ const ProjectRequest = () => {
                                         className={styles.input}
                                         value={projectPrice}
                                         onChange={(e) => setProjectPrice(e.target.value)}
+                                        placeholder="ex: 3.500 EUR"
                                     />
                                 </label>
                             </div>
@@ -433,6 +471,7 @@ const ProjectRequest = () => {
                                     className={`${styles.textarea} ${styles.largeTextarea}`}
                                     value={projectDescription}
                                     onChange={(e) => setProjectDescription(e.target.value)}
+                                    placeholder="ce se vrea, întrebările clientului, pe ce se pune accent..."
                                 />
                             </label>
                         </div>
@@ -445,6 +484,7 @@ const ProjectRequest = () => {
                                     className={`${styles.textarea} ${styles.largeTextarea}`}
                                     value={internalNotes}
                                     onChange={(e) => setInternalNotes(e.target.value)}
+                                    placeholder="constrângeri, jurisdicții, termeni contractuali, preferințe livrare..."
                                 />
                             </label>
                         </div>
