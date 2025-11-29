@@ -1,183 +1,187 @@
 // /src/pages/AnalystList/AddAnalystForm.js
-import React, { useState, useMemo } from "react";
+import React, { useEffect } from "react";
 import styles from "./AnalystList.module.css";
+import { toast } from "react-toastify";
+import { useForm } from "react-hook-form";
 
-export default function AddAnalystForm({ closeModal }) {
-    const [name, setName] = useState("");
-    const [role, setRole] = useState("");
-    const [salary, setSalary] = useState("");
-    const [date, setDate] = useState("");
-    const [bonus, setBonus] = useState("");
-    const [notes, setNotes] = useState("");
+import {
+    useCreateAnalystMutation,
+    useUpdateAnalystMutation,
+} from "../../services/analystApi";
 
-    // ab ye editable honge
-    const [hoursMonth, setHoursMonth] = useState(160);
-    const [hoursDay, setHoursDay] = useState(8);
+export default function AddAnalystForm({ closeModal, editData }) {
+    const isEdit = Boolean(editData);
 
-    // auto calc cost/oră & cost/zi
-    const { costHour, costDay } = useMemo(() => {
-        const s = parseFloat(salary || "0");
-        const hMonth = parseFloat(hoursMonth || "0");
-        const hDay = parseFloat(hoursDay || "0");
+    // Convert backend fields → form fields
+    const convertEditData = (data) => {
+        if (!data) return null;
 
-        if (!s || !hMonth || !hDay) {
-            return { costHour: "0", costDay: "0" };
-        }
-
-        const perHour = (s / hMonth).toFixed(1);       // salary / ore/lună
-        const perDay = (perHour * hDay).toFixed(0);    // cost/oră * ore/zi
-
-        return { costHour: perHour, costDay: perDay };
-    }, [salary, hoursMonth, hoursDay]);
-
-    const reset = () => {
-        setName("");
-        setRole("");
-        setSalary("");
-        setDate("");
-        setBonus("");
-        setNotes("");
-        setHoursMonth(160);
-        setHoursDay(8);
+        return {
+            name: data.name,
+            role: data.role,
+            salary: data.monthlySalary,
+            hoursMonth: data.hoursPerMonth,
+            hoursDay: data.hoursPerDay,
+            bonus: data.bonus,
+            date: data.hiringDate?.substring(0, 10), // yyyy-mm-dd
+            notes: data.notes,
+        };
     };
 
-    const saveAnalyst = () => {
-        alert("Analist salvat!");
-        closeModal();
+    const {
+        register,
+        handleSubmit,
+        watch,
+        reset,
+    } = useForm({
+        defaultValues: convertEditData(editData) || {
+            name: "",
+            role: "",
+            salary: "",
+            date: "",
+            bonus: "",
+            notes: "",
+            hoursMonth: 160,
+            hoursDay: 8,
+        },
+    });
+
+    // Auto-fill on edit
+    useEffect(() => {
+        if (editData) {
+            reset(convertEditData(editData));
+        }
+    }, [editData, reset]);
+
+    // Auto-cost calculations
+    const salary = watch("salary");
+    const hoursMonth = watch("hoursMonth");
+    const hoursDay = watch("hoursDay");
+
+    const costHour =
+        salary && hoursMonth ? (salary / hoursMonth).toFixed(1) : 0;
+    const costDay = (costHour * hoursDay).toFixed(0);
+
+    const [createAnalyst] = useCreateAnalystMutation();
+    const [updateAnalyst] = useUpdateAnalystMutation();
+
+    const onSubmit = async (data) => {
+        const payload = {
+            name: data.name,
+            role: data.role,
+
+            monthlySalary: Number(data.salary),
+            hoursPerMonth: Number(data.hoursMonth),
+            hoursPerDay: Number(data.hoursDay),
+
+            bonus: Number(data.bonus),
+            hiringDate: data.date,
+            notes: data.notes,
+
+            costPerHour: Number(costHour),
+            costPerDay: Number(costDay),
+        };
+
+        try {
+            if (isEdit) {
+                await updateAnalyst({ id: editData._id, data: payload }).unwrap();
+                toast.success("Analist actualizat!");
+            } else {
+                await createAnalyst(payload).unwrap();
+                toast.success("Analist creat!");
+            }
+
+            closeModal();
+        } catch (err) {
+            toast.error(err?.data?.message || "Eroare la salvare!");
+        }
     };
 
     return (
-        <div className={styles.formContainer}>
-            <h3 className={styles.formTitle}>Adaugă analist</h3>
+        <form className={styles.formContainer} onSubmit={handleSubmit(onSubmit)}>
+            <h3 className={styles.formTitle}>
+                {isEdit ? "Editează analist" : "Adaugă analist"}
+            </h3>
+
             <p className={styles.formSubtitle}>
-                Completează câmpurile. Costurile se calculează automat din salariu / ore.
-                Câmpurile „auto” sunt calculate și nu necesită introducere.
+                Completează câmpurile. Costurile se calculează automat.
             </p>
 
             <div className={styles.formGrid}>
-                {/* ROW 1 */}
+
+                {/* NAME */}
                 <div className={`${styles.field} ${styles.fieldLeft}`}>
                     <label>Nume</label>
-                    <input
-                        type="text"
-                        placeholder="ex: Analist I"
-                        value={name}
-                        onChange={(e) => setName(e.target.value)}
-                    />
+                    <input placeholder="ex: Analist I" {...register("name")} />
                 </div>
 
+                {/* SALARY */}
                 <div className={`${styles.field} ${styles.fieldRightWide}`}>
                     <label>Salariu lunar (RON)</label>
-                    <input
-                        type="number"
-                        placeholder="ex: 6000"
-                        value={salary}
-                        onChange={(e) => setSalary(e.target.value)}
-                    />
+                    <input type="number" {...register("salary")} />
                 </div>
 
-                {/* ROW 2 */}
+                {/* ROLE */}
                 <div className={`${styles.field} ${styles.fieldLeft}`}>
                     <label>Funcție</label>
-                    <select
-                        value={role}
-                        onChange={(e) => setRole(e.target.value)}
-                    >
-                        <option value="">Selectează funcția -</option>
+                    <select {...register("role")}>
+                        <option value="">Selectează funcția</option>
                         <option>Head of Investigations</option>
-                        <option>Analist de informații</option>
-                        <option>Detectiv HUMINT</option>
+                        <option>Intelligence Analyst</option>
+                        <option>HUMINT Detective</option>
+                        <option>Analyst</option>
                     </select>
-
-                    <div className={styles.helperText}>
-                        Roluri disponibile: Head of Investigations · Analist de informații · Detectiv HUMINT
-                    </div>
                 </div>
 
-                <div className={`${styles.fieldSmall} ${styles.fieldRight}`}>
+                {/* HOURS MONTH */}
+                <div className={styles.fieldSmall}>
                     <label>Ore/lună</label>
-                    <input
-                        type="number"
-                        value={hoursMonth}
-                        onChange={(e) => setHoursMonth(e.target.value)}
-                    />
+                    <input type="number" {...register("hoursMonth")} />
                 </div>
 
-                <div className={`${styles.fieldSmall} ${styles.fieldRightLast}`}>
+                {/* HOURS DAY */}
+                <div className={styles.fieldSmall}>
                     <label>Ore/zi</label>
-                    <input
-                        type="number"
-                        value={hoursDay}
-                        onChange={(e) => setHoursDay(e.target.value)}
-                    />
+                    <input type="number" {...register("hoursDay")} />
                 </div>
 
-                {/* ROW 3 */}
+                {/* DATE */}
                 <div className={`${styles.field} ${styles.fieldLeft}`}>
                     <label>Data angajării</label>
-                    <input
-                        type="date"
-                        value={date}
-                        onChange={(e) => setDate(e.target.value)}
-                    />
+                    <input type="date" {...register("date")} />
                 </div>
 
-                <div className={`${styles.fieldSmall} ${styles.fieldRight}`}>
+                {/* BONUS */}
+                <div className={styles.fieldSmall}>
                     <label>Bonus (%)</label>
-                    <input
-                        type="number"
-                        placeholder="-"
-                        value={bonus}
-                        onChange={(e) => setBonus(e.target.value)}
-                    />
+                    <input type="number" {...register("bonus")} />
                 </div>
 
-                <div className={`${styles.fieldCosts} ${styles.fieldRightLast}`}>
-                    <label>Costuri (calcul automat)</label>
+                {/* COSTS */}
+                <div className={styles.fieldCosts}>
+                    <label>Costuri (automat)</label>
                     <div className={styles.costGrid}>
-                        <input
-                            value={costHour}
-                            readOnly
-                            placeholder="Cost/oră"
-                            className={styles.costInput}
-                        />
-                        <input
-                            value={costDay}
-                            readOnly
-                            placeholder="Cost/zi"
-                            className={styles.costInput}
-                        />
+                        <input readOnly value={costHour} style={{ padding:"11px 10px",background: "#f9fafb",border: "1px solid #ddd",borderRadius:"10px" }} />
+                        <input readOnly value={costDay} style={{ padding:"11px 10px",background: "#f9fafb",border: "1px solid #ddd",borderRadius:"10px" }} />
                     </div>
                 </div>
 
-                {/* ROW 4 – NOTE */}
-                <div className={`${styles.notesBox} ${styles.fieldFull}`}>
-                    <label>Note (optional)</label>
-                    <textarea
-                        placeholder="observații, senioritate, certificări…"
-                        value={notes}
-                        onChange={(e) => setNotes(e.target.value)}
-                    />
-                </div>
-
-                {/* ROW 5 – PREVIEW */}
-                <div className={`${styles.previewBox} ${styles.fieldFull}`}>
-                    <strong>Previzualizare costuri:</strong>{" "}
-                    <span>
-            Salariu {salary || 0} RON → Cost/oră = {costHour} RON, Cost/zi = {costDay} RON
-          </span>
+                {/* NOTES */}
+                <div className={styles.notesBox}>
+                    <label>Note</label>
+                    <textarea placeholder="observații..." {...register("notes")} />
                 </div>
             </div>
 
-            {/* BUTTONS */}
             <div className={styles.buttons}>
-                <button className={styles.resetBtn} onClick={reset}>
+                <button type="button" className={styles.resetBtn} onClick={() => reset()}>
                     Reset
                 </button>
-                <button className={styles.saveBtn} onClick={saveAnalyst}>
-                    Salvează
+
+                <button className={styles.saveBtn} type="submit">
+                    {isEdit ? "Actualizează" : "Salvează"}
                 </button>
             </div>
-        </div>
+        </form>
     );
 }

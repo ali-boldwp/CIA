@@ -1,0 +1,537 @@
+/* RESET */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* PAGE WRAPPER */
+.page-wrapper {
+    padding: 30px;
+    background: #f4f7ff;
+    font-family: "Inter", sans-serif;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+}
+
+/* CONTENT WIDTH */
+.page-container {
+    width: 92%;
+    max-width: 1400px;
+}
+
+/* ========================= HEADER ========================= */
+
+.header-box {
+    background: #ffffff;
+    border-radius: 16px;
+    padding: 20px 26px;
+    margin-bottom: 26px;
+    box-shadow: 0 10px 30px rgba(99, 132, 255, 0.12);
+    display: flex;
+    align-items: center;
+    position: relative;
+}
+
+.header-back {
+    color: #64748b;
+    font-size: 14px;
+    font-weight: 600;
+    position: absolute;
+    left: 26px;
+    cursor: pointer;
+}
+
+.header-title {
+    flex: 1;
+    text-align: center;
+    font-size: 20px;
+    font-weight: 700;
+    color: #111827;
+}
+
+.header-tags {
+    position: absolute;
+    right: 26px;
+    display: flex;
+    gap: 10px;
+}
+
+.tag {
+    padding: 5px 12px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.tag.blue {
+    background: #e0eaff;
+    color: #3366ff;
+}
+.tag.yellow {
+    background: #fff3c4;
+    color: #a67c00;
+}
+
+/* ========================= GENERIC CARD ========================= */
+
+.form-card {
+    background: #ffffff;
+    border-radius: 18px;
+    padding: 24px 28px;
+    margin-bottom: 24px;
+}
+
+.form-title {
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 20px;
+}
+
+/* ========================= TOP ROW ========================= */
+
+.top-row {
+    display: grid;
+    grid-template-columns: 1.2fr 1.8fr;
+    gap: 24px;
+    margin-bottom: 24px;
+}
+
+.project-card {
+    padding-right: 40px;
+}
+
+/* project bullet list */
+.project-block ul {
+    list-style: none;
+}
+
+.project-block li {
+    position: relative;
+    padding-left: 18px;
+    margin-bottom: 18px;
+    font-size: 14px;
+    color: #111827;
+    font-weight: 700;
+}
+
+.project-block li::before {
+    content: "";
+    width: 7px;
+    height: 7px;
+    background: #4f46e5;
+    border-radius: 50%;
+    position: absolute;
+    left: 0;
+    top: 8px;
+}
+
+.project-block li b {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    color: #6b7280;
+    margin-bottom: 2px;
+}
+
+/* ========================= FINANCIAL SUMMARY ========================= */
+
+.finance-card {
+    padding-bottom: 26px;
+}
+
+.financial-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 18px;
+}
+
+.summary-box {
+    border-radius: 16px;
+    padding: 18px 20px;
+    min-height: 104px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.s-label {
+    font-size: 13px;
+    font-weight: 600;
+    color: #6366f1;
+    margin-bottom: 6px;
+}
+
+.s-label-green {
+    font-size: 13px;
+    font-weight: 600;
+    color: #15803d;
+    margin-bottom: 6px;
+}
+
+.s-value {
+    font-size: 21px;
+    font-weight: 700;
+    color: #111827;
+}
+
+/* colors */
+.box-purple {
+    background: #efe6ff;
+}
+.box-blue {
+    background: #e6efff;
+}
+.box-cyan {
+    background: #e3f8ff;
+}
+.box-gray {
+    background: #f0f2f5;
+}
+.box-yellow {
+    background: #fff7df;
+}
+.box-lightgray {
+    background: #f3f3f3;
+}
+
+/* profit row full width */
+.box-profit {
+    grid-column: 1 / -1;
+    background: #e8ffe8;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+}
+
+.profit-left {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.profit-right {
+    font-size: 17px;
+    font-weight: 700;
+    color: #64748B;
+    margin-right: 12px;
+}
+
+/* ========================= COSTS BAR (FIXE + OSINT) ========================= */
+
+.costs-bar {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+}
+
+.cost-block {
+    border-radius: 18px;
+}
+
+.cost-title {
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 16px;
+}
+
+.cost-row {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 18px;
+}
+
+/* generic grid helpers */
+
+.row-two {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 22px;
+    margin-bottom: 18px;
+}
+
+.row-three {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 18px;
+    margin-top: 18px;
+}
+
+.row-four {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 18px;
+    margin-top: 18px;
+}
+
+.row-five {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 18px;
+    margin-top: 18px;
+}
+
+.row-six {
+    display: grid;
+    grid-template-columns: 1.2fr repeat(5, minmax(0, 1fr));
+    gap: 18px;
+    margin-top: 18px;
+}
+
+/* ========================= GENERIC FORM CONTROLS ========================= */
+
+.form-field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.form-field label {
+    font-size: 13px;
+    font-weight: 600;
+    color: #444;
+}
+
+.input-box {
+    width: 100%;
+    border-radius: 12px;
+    border: 1px solid #e3e6ef;
+    background: #f9fafc;
+    padding: 12px 14px;
+    font-size: 14px;
+}
+
+.input-box.soft {
+    background: #f9fafc;
+    border-color: #e5e7eb;
+}
+
+/* textarea */
+.textarea-box {
+    width: 100%;
+    min-height: 120px;
+    border-radius: 12px;
+    border: 1px solid #e3e6ef;
+    background: #f9fafc;
+    padding: 14px;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+/* file preview (not used here but kept for consistency) */
+.file-preview {
+    background: #f9fafc;
+    border: 1px solid #e2e6eb;
+    padding: 14px;
+    border-radius: 12px;
+    font-size: 14px;
+    height: 55px;
+    display: flex;
+    align-items: center;
+}
+
+/* ========================= TABLES ========================= */
+
+.cost-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+    margin-top: 6px;
+}
+
+.cost-table thead tr {
+    background: #f9fafb;
+}
+
+.cost-table th,
+.cost-table td {
+    padding: 12px 16px;
+    border-bottom: 1px solid #e5e7eb;
+    text-align: left;
+}
+
+.cost-table th {
+    font-size: 13px;
+    color: #6b7280;
+    font-weight: 600;
+}
+
+.cost-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.input-cell {
+    width: 70px;
+    border-radius: 8px;
+    border: 1px solid #d1d5db;
+    padding: 6px 8px;
+    background: #f9fafb;
+}
+
+/* blank strip under employee table */
+.table-empty-strip {
+    margin-top: 10px;
+    border-radius: 12px;
+    background: #f9fafb;
+    border: 1px solid #e5e7eb;
+    height: 60px;
+}
+
+/* edit column text */
+.edit-cell {
+    white-space: nowrap;
+}
+
+/* ========================= ADD BLOCKS ========================= */
+
+/* ADD HUMINT BLOCK */
+.add-block {
+    margin-top: 20px;
+}
+
+.block-label {
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: #111827;
+}
+
+/* 2-column layout */
+.row-two {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 22px;
+    margin-bottom: 18px;
+}
+
+/* 6-column row */
+.row-six {
+    display: grid;
+    grid-template-columns: 120px 1fr 1fr 1fr 1fr 1fr;
+    gap: 22px;
+    margin-top: 10px;
+}
+
+/* Utilitate box (1–5 selection) */
+.utilitate-list label {
+    font-weight: 600;
+    font-size: 13px;
+}
+
+.utilitate-box {
+    border-radius: 12px;
+    border: 1px solid #e5e7eb;
+    background: #f9fafc;
+    padding: 10px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    font-size: 14px;
+    color: #111;
+}
+
+/* INPUT SOFT STYLE */
+.input-box.soft {
+    background: #f9fafc;
+    border-color: #e5e7eb;
+}
+
+/* Save button */
+.add-actions {
+    margin-top: 18px;
+}
+.total-box{
+    margin: 10px;
+}
+
+
+/* ========================= BUTTONS ========================= */
+
+.btn-green {
+    margin-top: 16px;
+    background: #22C55E;
+    color: #ffffff;
+    padding: 14px 20px;
+    border-radius: 8px;
+    border: none;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.btn-green:hover {
+    background: #15803d;
+}
+
+.button-row {
+    display: flex;
+    gap: 16px;
+    margin-top: 24px;
+    margin-bottom: 30px;
+}
+
+.footer-row {
+    justify-content: flex-start;
+}
+
+.btn-primary {
+    background: #4f46e5;
+    color: #ffffff;
+    padding: 14px 22px;
+    border-radius: 8px;
+    border: none;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.btn-secondary {
+    background: #0E65F7;
+    color: #ffffff;
+    padding: 14px 22px;
+    border-radius: 8px;
+    border: none;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.btn-primary:hover {
+    background: #4338ca;
+}
+.btn-secondary:hover {
+    background: #020617;
+}
+
+/* ========================= RESPONSIVE ========================= */
+
+@media (max-width: 1100px) {
+    .top-row {
+        grid-template-columns: 1fr;
+    }
+
+    .costs-bar {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 900px) {
+    .row-two,
+    .row-three,
+    .row-four,
+    .row-five,
+    .row-six {
+        grid-template-columns: 1fr;
+    }
+
+    .header-tags {
+        position: static;
+        margin-left: auto;
+    }
+
+    .header-title {
+        font-size: 18px;
+    }
+}
