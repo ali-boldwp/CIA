@@ -7,6 +7,7 @@ import humintRoutes from "./humint.routes";
 import employeeRoutes from "./employee.routes";
 import analystRoutes from "./analyst.routes";
 import projectDetailsRoutes from "./projectDetails.routes";
+import taskRoutes from "./task.routes";
 
 const router = Router();
 
@@ -17,6 +18,7 @@ router.use("/created-project", createdProjectRoutes);
 router.use("/humint" , humintRoutes);
 router.use("/employees", employeeRoutes);
 router.use("/analyst", analystRoutes);
-router.use("/project-details", projectDetailsRoutes)
+router.use("/project-details", projectDetailsRoutes);
+router.use("/tasks", taskRoutes);
 
 export default router;
