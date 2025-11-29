@@ -1,7 +1,14 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import {
+    useCreateEmployeeMutation,
+    useUpdateEmployeeMutation
+} from "../../services/EmployeesApi";
 import styles from "./EmployeeList.module.css";
 
-export default function AddEmployeeForm({ closeModal }) {
+export default function AddEmployeeForm({ mode = "add", employee = null, closeModal }) {
+
+    const [createEmployee, { isLoading: creating }] = useCreateEmployeeMutation();
+    const [updateEmployee, { isLoading: updating }] = useUpdateEmployeeMutation();
 
     const [name, setName] = useState("");
     const [role, setRole] = useState("");
@@ -10,6 +17,19 @@ export default function AddEmployeeForm({ closeModal }) {
     const [bonus, setBonus] = useState("");
     const [bonusProject, setBonusProject] = useState("");
     const [notes, setNotes] = useState("");
+
+    // Load existing employee into form when editing
+    useEffect(() => {
+        if (mode === "edit" && employee) {
+            setName(employee.name);
+            setRole(employee.jobRole);
+            setDate(employee.hiringDate.split("T")[0]);
+            setSalary(employee.salaryGross);
+            setBonus(employee.bonusMonthly);
+            setBonusProject(employee.bonusProject);
+            setNotes(employee.notes || "");
+        }
+    }, [employee, mode]);
 
     const reset = () => {
         setName("");
@@ -21,19 +41,42 @@ export default function AddEmployeeForm({ closeModal }) {
         setNotes("");
     };
 
-    const saveEmployee = () => {
-        // Later you will connect API here
-        alert("Saved!");
+    const saveEmployee = async () => {
+        const payload = {
+            name,
+            jobRole: role,
+            hiringDate: date,
+            salaryGross: Number(salary),
+            bonusMonthly: Number(bonus),
+            bonusProject: Number(bonusProject),
+            notes,
+        };
 
-        closeModal();
+        try {
+            if (mode === "add") {
+                await createEmployee(payload).unwrap();
+                alert("Angajat adăugat!");
+            } else {
+                await updateEmployee({ id: employee._id, updatedData: payload }).unwrap();
+                alert("Angajat actualizat!");
+            }
+
+            reset();
+            closeModal();
+
+        } catch (error) {
+            console.error("Error saving employee:", error);
+            alert("Eroare la salvare.");
+        }
     };
 
     return (
         <div className={styles.container}>
-            <h3 className={styles.title}>Adaugă angajat</h3>
+            <h3 className={styles.title}>
+                {mode === "add" ? "Adaugă angajat" : "Editează angajat"}
+            </h3>
 
             <div className={styles.grid}>
-
                 <div className={styles.field}>
                     <label>Nume</label>
                     <input
@@ -69,7 +112,6 @@ export default function AddEmployeeForm({ closeModal }) {
                     <label>Salariu lunar brut (RON)</label>
                     <input
                         type="number"
-                        placeholder="ex: 6000"
                         value={salary}
                         onChange={(e) => setSalary(e.target.value)}
                     />
@@ -79,7 +121,6 @@ export default function AddEmployeeForm({ closeModal }) {
                     <label>Bonus lunar (RON)</label>
                     <input
                         type="number"
-                        placeholder="ex: 500"
                         value={bonus}
                         onChange={(e) => setBonus(e.target.value)}
                     />
@@ -89,14 +130,12 @@ export default function AddEmployeeForm({ closeModal }) {
                     <label>Bonus proiect (RON)</label>
                     <input
                         type="number"
-                        placeholder="ex: 800"
                         value={bonusProject}
                         onChange={(e) => setBonusProject(e.target.value)}
                     />
                 </div>
             </div>
 
-            {/* Notes */}
             <div className={styles.notesBox}>
                 <label>Note (optional)</label>
                 <textarea
@@ -106,21 +145,21 @@ export default function AddEmployeeForm({ closeModal }) {
                 ></textarea>
             </div>
 
-            {/* FORMULA PREVIEW */}
-            <div className={styles.previewBox}>
-                <h4>Previzualizare formulă:</h4>
-                <p><strong>Bonus incl. taxe = (Bonus lunar + bonus proiect) * (1 + nivel taxare cash)</strong></p>
-                <p>Cost total = salariu brut + bonus incl. taxe</p>
-                <p>Cost/zi = salariu / 160 • Cost/oră = x 8</p>
-            </div>
-
-            {/* FOOTER BUTTONS */}
             <div className={styles.buttons}>
                 <button className={styles.resetBtn} onClick={reset}>
                     Resetează
                 </button>
-                <button className={styles.saveBtn} onClick={saveEmployee}>
-                    Salvează în listă
+
+                <button
+                    className={styles.saveBtn}
+                    onClick={saveEmployee}
+                    disabled={creating || updating}
+                >
+                    {creating || updating
+                        ? "Se salvează..."
+                        : mode === "add"
+                            ? "Salvează"
+                            : "Actualizează"}
                 </button>
             </div>
         </div>

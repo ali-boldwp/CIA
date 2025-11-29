@@ -17,7 +17,7 @@ router.put("/:id", auth, employeeController.updateEmployee);
 router.delete(
     "/:id",
     auth,
-    authorizeRoles(Role.ADMIN, Role.MANAGER),
+    // authorizeRoles(Role.ADMIN, Role.MANAGER),
     employeeController.deleteEmployee
 );
 
