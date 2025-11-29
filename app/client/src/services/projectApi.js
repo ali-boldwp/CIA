@@ -5,12 +5,17 @@ export const projectApi = createApi({
     reducerPath: "projectApi",
     baseQuery: fetchBaseQuery({
         baseUrl: "http://localhost:4000/api/v1/",
-        prepareHeaders: (headers) => {
+        prepareHeaders: (headers, { getState }) => {
             const token = localStorage.getItem("token");
-            if (token) headers.set("Authorization", `Bearer ${token}`);
+
+            if (token) {
+                headers.set("Authorization", `Bearer ${token}`);
+            }
+
             return headers;
-        },
+        }
     }),
+
     endpoints: (builder) => ({
         createProject: builder.mutation({
             query: (formData) => ({
