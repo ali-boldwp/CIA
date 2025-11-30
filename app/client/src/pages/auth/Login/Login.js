@@ -15,6 +15,7 @@ import OutlinedInput from '@mui/material/OutlinedInput';
 import FormHelperText from '@mui/material/FormHelperText';
 import Button from '@mui/material/Button';
 import { useLoginMutation } from '../../../services/authApi';
+import {toast} from "react-toastify";
 
 const Login = () => {
 
@@ -55,6 +56,8 @@ const Login = () => {
             // 🔥 LocalStorage check
             console.log("LOCALSTORAGE USER:", JSON.parse(localStorage.getItem("user")));
             console.log("LOCALSTORAGE TOKEN:", localStorage.getItem("token"));
+
+            toast.success("Autentificare reușită")
 
             navigate("/manager/dashboard");
 

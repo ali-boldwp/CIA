@@ -2,12 +2,8 @@ import React, { useState, useMemo } from "react";
 import styles from "./AnalystList.module.css";
 import { FiTrash2, FiEdit3 } from "react-icons/fi";
 import AddAnalystForm from "./AddAnalystForm";
-
-import {
-    useGetAnalystsQuery,
-    useDeleteAnalystMutation
-} from "../../services/analystApi";
 import { toast } from "react-toastify";
+import {useDeleteAnalystMutation, useGetAnalystsQuery} from "../../services/userApi";
 
 export default function AnalystList() {
     const [search, setSearch] = useState("");
@@ -27,14 +23,19 @@ export default function AnalystList() {
     const { data, isLoading, isError } = useGetAnalystsQuery();
     const [deleteAnalyst] = useDeleteAnalystMutation();
 
-    // SAFELY extract array
-    const analysts = Array.isArray(data)
+    const users = Array.isArray(data)
         ? data
         : Array.isArray(data?.analysts)
             ? data.analysts
             : Array.isArray(data?.data)
                 ? data.data
                 : [];
+
+// ONLY show users with role = analyst OR user
+    const analysts = users.filter(
+        (u) => u.role === "analyst" || u.role === "user"
+    );
+
 
     // DELETE ANALYST
     const handleDelete = async (_id) => {

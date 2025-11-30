@@ -5,12 +5,7 @@
     padding-bottom: 40px;
 }
 
-/* TOP BLUE LINE */
-.topBar {
-    width: 100%;
-    height: 3px;
-    background: #4b8dff;
-}
+
 
 /* HEADER */
 .headerWrapper {
