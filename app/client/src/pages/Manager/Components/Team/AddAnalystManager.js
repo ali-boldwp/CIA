@@ -151,11 +151,9 @@ const AddAnalystManager = ({ isOpen, onClose, editData }) => {
                         <div className={styles.fieldFull}>
                             <label className={styles.checkboxLabel}>
                                 <input type="checkbox" {...register("isLogin")} />
-                                <span>Is login</span>
+                                <span>Are cont de acces</span>
                             </label>
-                            <p className={styles.helperText}>
-                                Agar login chahiye ho to username aur password neeche bharo.
-                            </p>
+
                         </div>
 
                         {/* USERNAME & PASSWORD EXACT CHECKBOX KE NICHE */}
