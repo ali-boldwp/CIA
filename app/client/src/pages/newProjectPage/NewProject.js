@@ -79,7 +79,7 @@ const NewProject = () => {
 
                 {/* HEADER */}
                 <div className="project-header-box">
-                    <span className="project-header-back">← Înapoi la solicitare</span>
+                    <span className="project-header-back"><a href="/manager/dashboard">← Înapoi la solicitare</a></span>
                     <h1 className="project-header-title">Creează proiect nou</h1>
                 </div>
 
