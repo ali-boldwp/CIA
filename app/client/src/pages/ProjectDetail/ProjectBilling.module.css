@@ -1,0 +1,106 @@
+.billingCard {
+    width: 100%;
+    background: #ffffff;
+    border-radius: 18px;
+    padding: 32px 28px 36px 28px;   /* ⬆ more height */
+    margin-top: 26px;
+    box-shadow: 0 16px 40px rgba(15, 23, 42, 0.06);
+}
+
+.sectionTitle {
+    font-size: 16px;
+    font-weight: 700;
+    color: #111827;
+    margin-bottom: 22px; /* ⬆ more spacing */
+}
+
+.gridRow {
+    display: grid;
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    gap: 18px;                  /* ⬆ bigger gap between boxes */
+}
+
+/* All stat boxes */
+.box,
+.priceBox,
+.boxWarning {
+    min-height: 105px;          /* ⬆ box height increased */
+    padding: 18px 20px;         /* ⬆ more inner padding */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;    /* content centered vertically */
+    gap: 10px;                  /* ⬆ bigger gap between label/value */
+    border-radius: 14px;
+}
+
+.box {
+    background: #f4f7ff;
+    border: 1px solid #e0e7ff;
+}
+
+.priceBox {
+    background: #ede9fe;
+    border: 1px solid #c4b5fd;
+}
+
+.boxWarning {
+    background: #fef7e8;
+    border: 1px solid #fcd34d;
+}
+
+.label {
+    font-size: 14px;       /* ⬆ slightly bigger */
+    font-weight: 600;
+    color: #475569;
+}
+
+.value {
+    font-size: 20px;       /* ⬆ bigger value */
+    font-weight: 700;
+    color: #0f172a;
+}
+
+/* Profit box */
+.profitBox {
+    margin-top: 24px;     /* ⬆ more spacing from above */
+    background: #ecfdf5;
+    border-radius: 14px;
+    padding: 22px 24px;   /* ⬆ bigger height */
+    min-height: 90px;     /* ⬆ bigger fixed height */
+    border: 1px solid #bbf7d0;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.percentage {
+    font-size: 17px;      /* ⬆ slightly bigger */
+    font-weight: 700;
+    color: #059669;
+}
+.marja{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+    .gridRow {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 768px) {
+    .gridRow {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .profitBox {
+        flex-direction: column;
+        text-align: center;
+        gap: 12px;
+        min-height: 120px;
+    }
+}

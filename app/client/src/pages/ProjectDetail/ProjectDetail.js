@@ -2,6 +2,8 @@
 import React from "react";
 import styles from "./ProjectDetail.module.css";
 import ProjectDetailHeader from "./ProjectDetailHeader";
+import ProjectBilling from "./ProjectBilling";
+import ProjectDetailButton from "./ProjectDetailButton";
 
 const ProjectDetail = () => {
     const project = {
@@ -50,6 +52,17 @@ const ProjectDetail = () => {
     const handleBack = () => {
         window.history.back();
     };
+    const billingData = {
+        price: 3500,
+        fixed: 300,
+        osint: 150,
+        staff: 1050,
+        humint: 554.4,
+        total: 2054.4,
+        margin: 1445.6,
+        percentage: 41.3,
+    };
+
 
     return (
         <div className={styles.page}>
@@ -60,7 +73,7 @@ const ProjectDetail = () => {
             />
 
             <div className={styles.contentWrapper}>
-                {/* ========== CARD 1: DETALII PROIECT ========== */}
+                {/* ========== SINGLE CARD: DETALII PROIECT + CLIENT & CONTRACT + NOTE INTERNE ========== */}
                 <div className={styles.card}>
                     <h2 className={styles.sectionTitle}>
                         Detalii proiect (preluate automat din solicitare)
@@ -75,29 +88,33 @@ const ProjectDetail = () => {
                             <div className={styles.valueWrapper}>
                                 <div className={styles.nameValueBox}>{project.name}</div>
                                 <span className={styles.autoChipInside}>
-                  auto din solicitare
-                </span>
+                                    auto din solicitare
+                                </span>
                             </div>
                         </div>
 
                         {/* Created / Start / Status */}
                         <div className={styles.statusBlock}>
-              <span
-                  className={`${styles.statusPill} ${styles.statusCreated}`}
-              >
-                <span className={styles.statusBold}>Creat la:</span>{" "}
-                  {project.createdAt}
-              </span>
+                            <span
+                                className={`${styles.statusPill} ${styles.statusCreated}`}
+                            >
+                                <span className={styles.statusBold}>Creat la:</span>{" "}
+                                {project.createdAt}
+                            </span>
 
-                            <span className={`${styles.statusPill} ${styles.statusStart}`}>
-                <span className={styles.statusBold}>Start proiect:</span>{" "}
+                            <span
+                                className={`${styles.statusPill} ${styles.statusStart}`}
+                            >
+                                <span className={styles.statusBold}>Start proiect:</span>{" "}
                                 {project.startDate}
-              </span>
+                            </span>
 
-                            <span className={`${styles.statusPill} ${styles.statusState}`}>
-                <span className={styles.statusBold}>Status:</span>{" "}
+                            <span
+                                className={`${styles.statusPill} ${styles.statusState}`}
+                            >
+                                <span className={styles.statusBold}>Status:</span>{" "}
                                 {project.status}
-              </span>
+                            </span>
                         </div>
                     </div>
 
@@ -108,28 +125,32 @@ const ProjectDetail = () => {
                             <div className={styles.valueWrapper}>
                                 <div className={styles.metaValueBox}>{project.subject}</div>
                                 <span className={styles.autoChipInside}>
-                  auto din solicitare
-                </span>
+                                    auto din solicitare
+                                </span>
                             </div>
                         </div>
 
                         <div className={styles.metaField}>
                             <span className={styles.label}>Tip raport</span>
                             <div className={styles.valueWrapper}>
-                                <div className={styles.metaValueBox}>{project.reportType}</div>
+                                <div className={styles.metaValueBox}>
+                                    {project.reportType}
+                                </div>
                                 <span className={styles.autoChipInside}>
-                  auto din solicitare
-                </span>
+                                    auto din solicitare
+                                </span>
                             </div>
                         </div>
 
                         <div className={styles.metaField}>
                             <span className={styles.label}>Tip entitate</span>
                             <div className={styles.valueWrapper}>
-                                <div className={styles.metaValueBox}>{project.entityType}</div>
+                                <div className={styles.metaValueBox}>
+                                    {project.entityType}
+                                </div>
                                 <span className={styles.autoChipInside}>
-                  auto din solicitare
-                </span>
+                                    auto din solicitare
+                                </span>
                             </div>
                         </div>
 
@@ -142,8 +163,8 @@ const ProjectDetail = () => {
                                     {project.deadline}
                                 </div>
                                 <span className={styles.autoChipInside}>
-                  auto din solicitare
-                </span>
+                                    auto din solicitare
+                                </span>
                             </div>
                         </div>
                     </div>
@@ -155,8 +176,8 @@ const ProjectDetail = () => {
                             <div className={styles.valueWrapper}>
                                 <div className={styles.metaValueBox}>{project.priority}</div>
                                 <span className={styles.autoChipInside}>
-                  auto din solicitare
-                </span>
+                                    auto din solicitare
+                                </span>
                             </div>
                         </div>
 
@@ -165,8 +186,8 @@ const ProjectDetail = () => {
                             <div className={styles.valueWrapper}>
                                 <div className={styles.metaValueBox}>{project.language}</div>
                                 <span className={styles.autoChipInside}>
-                  auto din solicitare
-                </span>
+                                    auto din solicitare
+                                </span>
                             </div>
                         </div>
 
@@ -175,13 +196,13 @@ const ProjectDetail = () => {
                             <div className={styles.valueWrapper}>
                                 <div className={styles.metaValueBox}>{project.services}</div>
                                 <span className={styles.autoChipInside}>
-                  auto din solicitare
-                </span>
+                                    auto din solicitare
+                                </span>
                             </div>
                         </div>
                     </div>
 
-                    {/* ===== Descriere, Fișiere, Echipă – exactly 2nd screenshot style ===== */}
+                    {/* ===== Descriere, Fișiere, Echipă ===== */}
                     <div className={styles.detailGrid}>
                         {/* Descriere proiect – full width text */}
                         <div className={styles.itemFull}>
@@ -192,7 +213,9 @@ const ProjectDetail = () => {
                                     {project.description}
                                 </div>
 
-                                <span className={styles.autoChipInsideBig}>auto din solicitare</span>
+                                <span className={styles.autoChipInsideBig}>
+                                    auto din solicitare
+                                </span>
                             </div>
                         </div>
 
@@ -209,7 +232,9 @@ const ProjectDetail = () => {
                                     ))}
                                 </div>
 
-                                <span className={styles.autoChipInsideBig}>auto din solicitare</span>
+                                <span className={styles.autoChipInsideBig}>
+                                    auto din solicitare
+                                </span>
                             </div>
                         </div>
 
@@ -219,15 +244,17 @@ const ProjectDetail = () => {
 
                             <div className={styles.chipRow}>
                                 <span className={styles.chipLabel}>Responsabil:</span>
-                                <span className={styles.chipPrimary}>{project.responsible}</span>
+                                <span className={styles.chipPrimary}>
+                                    {project.responsible}
+                                </span>
                             </div>
 
                             <div className={styles.chipRow}>
                                 <span className={styles.chipLabel}>Analiști alocați:</span>
                                 {project.team.map((member) => (
                                     <span key={member} className={styles.chipGhost}>
-                    {member}
-                  </span>
+                                        {member}
+                                    </span>
                                 ))}
                             </div>
                         </div>
@@ -235,115 +262,172 @@ const ProjectDetail = () => {
 
                     {/* bottom thin line inside card */}
                     <div className={styles.sectionDivider} />
-                </div>
 
-                {/* ========== CARD 2: CLIENT & CONTRACT ========== */}
-                <div className={styles.card}>
-                    <h2 className={styles.sectionTitle}>
-                        Detalii client & contract (confidențiale — vizibile doar manageri)
+                    {/* ========== Detalii client & contract ========== */}
+                    <h2 className={styles.subSectionTitle}>
+                        Detalii client & contract (confidențiale — vizibile doar
+                        manageri)
                     </h2>
 
-                    <div className={styles.detailGrid}>
-                        <div className={styles.itemThird}>
-                            <div className={styles.labelRow}>
-                                <span className={styles.label}>Nume client</span>
-                                <span className={styles.autoChip}>auto din solicitare</span>
+                    <div className={styles.clientGrid}>
+                        {/* ROW 1 – 3 fields */}
+                        <div className={styles.clientItem3}>
+                            <span className={styles.label}>Nume client</span>
+                            <div className={styles.valueWrapper}>
+                                <div className={styles.metaValueBox}>
+                                    {project.clientName}
+                                </div>
+                                <span className={styles.autoChipInside}>
+                                    auto din solicitare
+                                </span>
                             </div>
-                            <p className={styles.value}>{project.clientName}</p>
                         </div>
 
-                        <div className={styles.itemThird}>
-                            <div className={styles.labelRow}>
-                                <span className={styles.label}>Persoană de contact</span>
-                                <span className={styles.autoChip}>auto din solicitare</span>
+                        <div className={styles.clientItem3}>
+                            <span className={styles.label}>Persoană de contact</span>
+                            <div className={styles.valueWrapper}>
+                                <div className={styles.metaValueBox}>
+                                    {project.contactPerson}
+                                </div>
+                                <span className={styles.autoChipInside}>
+                                    auto din solicitare
+                                </span>
                             </div>
-                            <p className={styles.value}>{project.contactPerson}</p>
                         </div>
 
-                        <div className={styles.itemThird}>
-                            <div className={styles.labelRow}>
-                                <span className={styles.label}>Funcție</span>
-                                <span className={styles.autoChip}>auto din solicitare</span>
+                        <div className={styles.clientItem3}>
+                            <span className={styles.label}>Funcție (opțional)</span>
+                            <div className={styles.valueWrapper}>
+                                <div className={styles.metaValueBox}>
+                                    {project.contactRole}
+                                </div>
+                                <span className={styles.autoChipInside}>
+                                    auto din solicitare
+                                </span>
                             </div>
-                            <p className={styles.value}>{project.contactRole}</p>
                         </div>
 
-                        <div className={styles.itemThird}>
-                            <div className={styles.labelRow}>
-                                <span className={styles.label}>Email</span>
-                                <span className={styles.autoChip}>auto din solicitare</span>
+                        {/* ROW 2 – 2 fields */}
+                        <div className={styles.clientItemHalf}>
+                            <span className={styles.label}>Email</span>
+                            <div className={styles.valueWrapper}>
+                                <div className={styles.metaValueBox}>{project.email}</div>
+                                <span className={styles.autoChipInside}>
+                                    auto din solicitare
+                                </span>
                             </div>
-                            <p className={styles.value}>{project.email}</p>
                         </div>
 
-                        <div className={styles.itemThird}>
-                            <div className={styles.labelRow}>
-                                <span className={styles.label}>Telefon</span>
-                                <span className={styles.autoChip}>auto din solicitare</span>
+                        <div className={styles.clientItemHalf}>
+                            <span className={styles.label}>Telefon</span>
+                            <div className={styles.valueWrapper}>
+                                <div className={styles.metaValueBox}>{project.phone}</div>
+                                <span className={styles.autoChipInside}>
+                                    auto din solicitare
+                                </span>
                             </div>
-                            <p className={styles.value}>{project.phone}</p>
                         </div>
 
-                        <div className={styles.itemThird}>
-                            <div className={styles.labelRow}>
-                                <span className={styles.label}>Preț proiect</span>
-                                <span className={styles.autoChip}>auto din solicitare</span>
+                        {/* ROW 3 – 4 fields */}
+                        <div className={styles.clientItemQuarter}>
+                            <span className={styles.label}>Nr. contract</span>
+                            <div className={styles.valueWrapper}>
+                                <div className={styles.metaValueBox}>
+                                    {project.contractNumber}
+                                </div>
+                                <span className={styles.autoChipInside}>
+                                    auto din solicitare
+                                </span>
                             </div>
-                            <p className={styles.value}>
-                                {project.price} {project.currency}
-                            </p>
                         </div>
 
-                        <div className={styles.itemThird}>
-                            <div className={styles.labelRow}>
-                                <span className={styles.label}>Nr. contract</span>
-                                <span className={styles.autoChip}>auto din solicitare</span>
+                        <div className={styles.clientItemQuarter}>
+                            <span className={styles.label}>Nr. anexă</span>
+                            <div className={styles.valueWrapper}>
+                                <div className={styles.metaValueBox}>
+                                    {project.annexNumber}
+                                </div>
+                                <span className={styles.autoChipInside}>
+                                    auto din solicitare
+                                </span>
                             </div>
-                            <p className={styles.value}>{project.contractNumber}</p>
                         </div>
 
-                        <div className={styles.itemThird}>
-                            <div className={styles.labelRow}>
-                                <span className={styles.label}>Nr. anexă</span>
-                                <span className={styles.autoChip}>auto din solicitare</span>
+                        <div className={styles.clientItemQuarter}>
+                            <span className={styles.label}>Preț proiect</span>
+                            <div className={styles.valueWrapper}>
+                                <div className={styles.metaValueBox}>
+                                    {project.price} {project.currency}
+                                </div>
+                                <span className={styles.autoChipInside}>
+                                    auto din solicitare
+                                </span>
                             </div>
-                            <p className={styles.value}>{project.annexNumber}</p>
                         </div>
 
-                        <div className={styles.itemHalf}>
-                            <div className={styles.labelRow}>
-                <span className={styles.label}>
-                  Solicitare referințe / informații suplimentare
-                </span>
-                                <span className={styles.autoChip}>auto din solicitare</span>
+                        <div className={styles.clientItemQuarter}>
+                            <span className={styles.label}>Monedă</span>
+                            <div className={styles.valueWrapper}>
+                                <div className={styles.metaValueBox}>{project.currency}</div>
+                                <span className={styles.autoChipInside}>
+                                    auto din solicitare
+                                </span>
                             </div>
-                            <p className={styles.value}>{project.referenceRequest}</p>
                         </div>
 
-                        <div className={styles.itemHalf}>
-                            <div className={styles.labelRow}>
-                                <span className={styles.label}>Alte informații contract</span>
-                                <span className={styles.autoChip}>auto din solicitare</span>
+                        {/* ROW 4 – 2 text areas */}
+                        <div className={styles.clientItemHalf}>
+                            <span className={styles.label}>
+                                Alte informații despre contract
+                            </span>
+                            <div className={styles.bigInputWrapper}>
+                                <div className={styles.bigInputBox}>
+                                    {project.contractNotes}
+                                </div>
+                                <span className={styles.autoChipInsideBig}>
+                                    auto din solicitare
+                                </span>
                             </div>
-                            <p className={styles.value}>{project.contractNotes}</p>
+                        </div>
+
+                        <div className={styles.clientItemHalf}>
+                            <span className={styles.label}>
+                                Solicitare referințe / informații suplimentare
+                            </span>
+                            <div className={styles.bigInputWrapper}>
+                                <div className={styles.bigInputBox}>
+                                    {project.referenceRequest}
+                                </div>
+                                <span className={styles.autoChipInsideBig}>
+                                    auto din solicitare
+                                </span>
+                            </div>
+                        </div>
+
+                        {/* ROW 5 – Note interne (confidențiale) in same section */}
+                        <div className={styles.clientItemFull}>
+                            <span className={styles.label}>Note interne (confidențiale)</span>
+                        </div>
+
+                        <div className={styles.clientItemFull}>
+                            <div className={styles.bigInputWrapper}>
+                                <div className={styles.bigInputBox}>
+                                    {project.internalNotes}
+                                </div>
+                                <span className={styles.autoChipInsideBig}>
+                                    auto din solicitare
+                                </span>
+                            </div>
                         </div>
                     </div>
                 </div>
 
-                {/* ========== CARD 3: NOTE INTERNE ========== */}
-                <div className={styles.card}>
-                    <h2 className={styles.sectionTitle}>Note interne (confidențiale)</h2>
-
-                    <div className={styles.detailGrid}>
-                        <div className={styles.itemFull}>
-                            <div className={styles.labelRow}>
-                                <span className={styles.label}>Note interne / comentarii</span>
-                                <span className={styles.autoChip}>auto din solicitare</span>
-                            </div>
-                            <p className={styles.value}>{project.internalNotes}</p>
-                        </div>
-                    </div>
-                </div>
+                <ProjectBilling billing={billingData} />
+                <ProjectDetailButton
+                    onSave={() => console.log("save clicked")}
+                    onGoToTask={() => console.log("go to task clicked")}
+                    onViewCosts={() => console.log("view costs clicked")}
+                />
             </div>
         </div>
     );

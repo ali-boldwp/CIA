@@ -32,6 +32,14 @@
     margin-bottom: 18px;
 }
 
+/* sub-section title inside same card */
+.subSectionTitle {
+    font-size: 15px;
+    font-weight: 700;
+    color: #111827;
+    margin: 18px 0 14px 0;
+}
+
 /* ===== ROW 1: NAME + STATUS ===== */
 
 .detailTop {
@@ -167,7 +175,7 @@
 .metaValueBox {
     width: 100%;
     min-height: 42px;
-    border-radius: 14px;       /* UPDATED SAME AS DESCRIERE FIELD */
+    border-radius: 14px;
     background: #f5f7ff;
     border: 1px solid #e0e7ff;
     padding: 10px 16px;
@@ -177,7 +185,6 @@
     display: flex;
     align-items: center;
 }
-
 
 .metaValueBold {
     font-weight: 700;
@@ -189,7 +196,7 @@
     border-top: 1px solid #e5e7eb;
 }
 
-/* ===== GENERIC GRID FOR LOWER SECTIONS ===== */
+/* ===== GENERIC GRID FOR UPPER LOWER SECTIONS ===== */
 
 .detailGrid {
     display: grid;
@@ -221,21 +228,20 @@
     color: #111827;
 }
 
-/* FILE BOX – border-radius 8px jaisa tum ne bola */
+/* FILE BOX */
 .filesBox {
     margin-top: 6px;
     background: #f5f7ff;
     border-radius: 8px;
     border: 1px dashed #d4ddff;
     padding: 14px 16px;
-    padding-right: 130px;      /* chip ke liye space */
-    min-height: 80px;          /* 👈 height badi */
+    padding-right: 130px;
+    min-height: 80px;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
     gap: 4px;
 }
-
 
 .fileRow {
     font-size: 12px;
@@ -248,37 +254,34 @@
 
 /* TEAM CHIPS */
 .chipRow {
-    margin-top: 8px;        /* more spacing */
+    margin-top: 8px;
     display: flex;
     align-items: center;
     flex-wrap: wrap;
-    gap: 10px;              /* more space between chips */
+    gap: 10px;
 }
-
 
 .chipLabel {
-    font-size: 14px;        /* bigger */
-    font-weight: 700;       /* stronger */
-    color: #111827;         /* darker (same as other labels) */
+    font-size: 14px;
+    font-weight: 700;
+    color: #111827;
     margin-bottom: 4px;
 }
-
 
 .chipPrimary {
     background: #4f46e5;
     color: #ffffff;
     border-radius: 999px;
-    padding: 6px 14px;      /* bigger */
-    font-size: 13px;        /* bigger font */
+    padding: 6px 14px;
+    font-size: 13px;
     font-weight: 600;
 }
-
 
 .chipGhost {
     background: #f3f4ff;
     border-radius: 999px;
-    padding: 6px 14px;      /* bigger */
-    font-size: 13px;        /* bigger */
+    padding: 6px 14px;
+    font-size: 13px;
     color: #1f2937;
     border: 1px solid #e5e7eb;
 }
@@ -295,9 +298,9 @@
     min-height: 120px;
     background: #f5f7ff;
     border: 1px solid #e0e7ff;
-    border-radius: 14px; /* bigger radius like screenshot */
+    border-radius: 14px;
     padding: 16px 18px;
-    padding-right: 130px; /* space for chip */
+    padding-right: 130px;
     font-size: 14px;
     color: #111827;
     display: flex;
@@ -320,6 +323,33 @@
     white-space: nowrap;
 }
 
+/* ===== CLIENT & CONTRACT GRID (exact layout like screenshot) ===== */
+
+.clientGrid {
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    gap: 14px 18px;
+}
+
+/* first row: 3 fields */
+.clientItem3 {
+    grid-column: span 4;
+}
+
+/* row 2 & text areas: 2 fields */
+.clientItemHalf {
+    grid-column: span 6;
+}
+
+/* row 3: 4 fields */
+.clientItemQuarter {
+    grid-column: span 3;
+}
+
+/* full width rows (Note interne label + textarea) */
+.clientItemFull {
+    grid-column: 1 / -1;
+}
 
 /* ===== RESPONSIVE ===== */
 
@@ -344,6 +374,10 @@
     .detailGrid {
         grid-template-columns: repeat(2, minmax(0, 1fr));
     }
+
+    .clientGrid {
+        grid-template-columns: repeat(6, minmax(0, 1fr));
+    }
 }
 
 @media (max-width: 768px) {
@@ -367,6 +401,14 @@
         grid-template-columns: minmax(0, 1fr);
     }
 
+    .clientGrid {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .clientItem3,
+    .clientItemHalf,
+    .clientItemQuarter,
+    .clientItemFull,
     .itemFull,
     .itemHalf,
     .itemThird {
