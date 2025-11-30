@@ -19,6 +19,11 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
+app.use(express.static(path.join(__dirname, 'build')));
+
+app.get('/*', (req, res) => {
+    res.sendFile(path.join(__dirname, 'build', 'index.html'));
+});
 
 if (env.nodeEnv !== 'test') {
     app.use(morgan('dev'));
