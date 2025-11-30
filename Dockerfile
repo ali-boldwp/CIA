@@ -28,4 +28,4 @@ WORKDIR /app/server
 
 RUN ls
 
-CMD ["npm", "npm run dev"]
+CMD ["npm", "start"]
