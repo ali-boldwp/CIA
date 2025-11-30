@@ -1,0 +1,76 @@
+/* Background container */
+.wrapper {
+    width: 100%;
+    margin-top: 24px;
+    background: #ffffff;
+    border-radius: 18px;
+    padding: 28px 26px;   /* 👈 container height increased */
+    box-shadow: 0 8px 20px rgba(15, 23, 42, 0.05);
+}
+
+/* Row */
+.buttonRow {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    justify-content: flex-start;
+}
+
+/* Base button style */
+.buttonRow button {
+    border: none;
+    border-radius: 10px;   /* 👈 rectangle with soft corners (INPUT FIELD STYLE) */
+    padding: 14px 28px;    /* 👈 bigger height & width */
+    min-width: 170px;      /* 👈 width increased */
+    font-size: 15px;       /* 👈 bigger text */
+    font-weight: 600;
+    cursor: pointer;
+    color: #ffffff;
+
+    /* Subtle shadow */
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.12);
+    transition: all 0.15s ease;
+}
+
+/* Colors */
+.saveBtn {
+    background: #22c55e;
+}
+
+.taskBtn {
+    background: #2563eb;
+}
+
+.costBtn {
+    background: #ef4444;
+}
+
+/* Hover */
+.buttonRow button:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.16);
+}
+
+/* Active */
+.buttonRow button:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 6px rgba(0,0,0,0.12);
+    opacity: 0.96;
+}
+
+/* Mobile */
+@media (max-width: 640px) {
+    .wrapper {
+        padding: 20px;
+    }
+
+    .buttonRow {
+        justify-content: center;
+    }
+
+    .buttonRow button {
+        width: 100%;
+        text-align: center;
+        min-width: unset;
+    }
+}
