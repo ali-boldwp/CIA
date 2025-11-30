@@ -20,9 +20,9 @@ RUN npm run build
 RUN ls
 
 # Move frontend build into server folder (adjust target as you need)
-RUN cp -r build ../server/build
+# RUN cp -r build ../server/build
 
-EXPOSE 5000
+EXPOSE 4000
 
 WORKDIR /app/server
 
