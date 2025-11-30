@@ -78,9 +78,9 @@ const NewProject = () => {
             <div className="page-container">
 
                 {/* HEADER */}
-                <div className="header-box">
-                    <span className="header-back">← Înapoi la solicitare</span>
-                    <h1 className="header-title">Creează proiect nou</h1>
+                <div className="project-header-box">
+                    <span className="project-header-back">← Înapoi la solicitare</span>
+                    <h1 className="project-header-title">Creează proiect nou</h1>
                 </div>
 
                 {/* FORM CARD */}
@@ -438,8 +438,8 @@ const NewProject = () => {
 
                     {/* BUTTONS */}
                     <div className="button-row">
-                        <button className="btn-secondary">Salvează draft</button>
-                        <button className="btn-primary">Creează pagina proiect</button>
+                        <button className=" draftProject">Salvează draft</button>
+                        <button className=" createProject">Creează pagina proiect</button>
                     </div>
 
                 </div>
