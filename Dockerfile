@@ -1,6 +1,6 @@
 FROM node:20-alpine
 
-WORKDIR /app
+WORKDIR /
 
 # Copy entire app directory
 COPY ./ /
