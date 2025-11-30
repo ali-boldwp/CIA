@@ -2,10 +2,10 @@ export enum Role {
     SALES = 'sales',
     ADMIN = 'admin',
     MANAGER = 'manager',
-    ANALYST= 'user',
-    EMPLOYEE = 'employee'
+    ANALYST= 'analyst',
+    EMPLOYEE = 'user'
 }
 
-export const DEFAULT_ROLE = Role.ANALYST;
+export const DEFAULT_ROLE = Role.EMPLOYEE;
 
 export const allRoles = Object.values(Role);

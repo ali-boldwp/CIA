@@ -2,7 +2,7 @@ import { Schema, model, Document } from "mongoose";
 
 export interface IAnalyst extends Document {
     name: string;
-    role: "Head of Investigations" | "Intelligence Analyst" | "HUMINT Detective";
+    analystRole: "Head of Investigations" | "Intelligence Analyst" | "HUMINT Detective";
     monthlySalary: number;
     hoursPerMonth: number;
     hoursPerDay: number;
@@ -21,7 +21,7 @@ const analystSchema = new Schema<IAnalyst>(
             trim: true
         },
 
-        role: {
+        analystRole: {
             type: String,
             enum: [
                 "Head of Investigations",

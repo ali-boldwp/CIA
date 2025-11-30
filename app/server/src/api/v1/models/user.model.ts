@@ -4,28 +4,84 @@ import { Role, DEFAULT_ROLE } from '../../../constants/roles';
 
 export interface IUser extends Document {
     name: string;
-    email: string;
-    password: string;
+
+    isLogin: boolean;
+
+    email?: string;
+    password?: string;
+
     role: Role;
+
+    // Analyst-only fields
+    analystRole: "Head of Investigations" | "Intelligence Analyst" | "HUMINT Detective";
+    monthlySalary?: number;
+    hoursPerMonth?: number;
+    hoursPerDay?: number;
+    bonus?: number;
+    hiringDate?: Date;
+    notes?: string;
+    costPerHour?: number;
+    costPerDay?: number;
+
     comparePassword(candidate: string): Promise<boolean>;
 }
 
 const userSchema = new Schema<IUser>(
     {
         name: { type: String, required: true, trim: true },
+
+        // NEW FIELD
+        isLogin: {
+            type: Boolean,
+            default: false
+        },
+
+        // Email & Password only required when isLogin = TRUE
         email: {
             type: String,
-            required: true,
-            unique: true,
+            required: false,
             lowercase: true,
-            index: true
+            index: true,
+            sparse: true
         },
-        password: { type: String, required: true, select: false },
+
+
+        password: {
+            type: String,
+            required: false,
+            select: false
+        },
+
         role: {
             type: String,
             enum: Object.values(Role),
             default: DEFAULT_ROLE
-        }
+        },
+
+
+        analystRole: {
+            type: String,
+            enum: [
+                "Head of Investigations",
+                "Intelligence Analyst",
+                "HUMINT Detective"
+            ],
+            required: function () {
+                return this.role === Role.ANALYST;
+            },
+            default: undefined
+        },
+
+
+        monthlySalary: Number,
+        hoursPerMonth: Number,
+        hoursPerDay: Number,
+        bonus: { type: Number, default: 0 },
+        hiringDate: Date,
+        notes: String,
+
+        costPerHour: Number,
+        costPerDay: Number
     },
     {
         timestamps: true,
@@ -39,24 +95,33 @@ const userSchema = new Schema<IUser>(
     }
 );
 
+// PRE-SAVE HOOK
 userSchema.pre('save', async function (next) {
     const user = this as IUser;
 
-    if (!user.isModified('password')) return next();
+    // ✔ HASH ONLY IF isLogin = true AND password provided
+    if (user.isLogin && user.password && user.isModified('password')) {
+        const salt = await bcrypt.genSalt(10);
+        user.password = await bcrypt.hash(user.password, salt);
+    }
 
-    const salt = await bcrypt.genSalt(10);
-    user.password = await bcrypt.hash(user.password, salt);
+    // ✔ ANALYST COST CALCULATION
+    if (user.role === Role.ANALYST) {
+        if (user.monthlySalary && user.hoursPerMonth) {
+            user.costPerHour = user.monthlySalary / user.hoursPerMonth;
+        }
+
+        if (user.costPerHour && user.hoursPerDay) {
+            user.costPerDay = user.costPerHour * user.hoursPerDay;
+        }
+    }
 
     next();
 });
 
-userSchema.methods.comparePassword = async function (
-    candidate: string
-): Promise<boolean> {
-    const user = this as IUser;
-    return bcrypt.compare(candidate, user.password);
+// Compare Password
+userSchema.methods.comparePassword = async function (candidate: string) {
+    return bcrypt.compare(candidate, this.password);
 };
 
-const User = model<IUser>('User', userSchema);
-
-export default User;
+export default model<IUser>('User', userSchema);
