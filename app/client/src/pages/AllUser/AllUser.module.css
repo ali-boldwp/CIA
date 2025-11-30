@@ -1,0 +1,198 @@
+/* ============ PAGE ============ */
+.page {
+    padding: 30px;
+    background: #f4f8ff !important;    /* ⭐ new background */
+    min-height: 100vh;
+    width: 100%;
+    font-family: Inter, sans-serif;
+}
+
+/* ============ HEADER ============ */
+.headerBar {
+    width: 100%;
+    background: #ffffff;
+    padding: 14px 18px;
+    display: flex;
+    align-items: center;
+    gap: 80px;                 /* ⭐ gap between back button & title */
+    border-radius: 16px;
+    margin-bottom: 20px;
+    box-shadow: 0 8px 20px rgba(15, 23, 42, 0.05);
+}
+.backBtn {
+    background: none;
+    border: none;
+    font-size: 14px;
+    cursor: pointer;
+    color: #64748b;
+    padding: 0;
+}
+
+.title {
+    font-size: 20px;
+    font-weight: 700;
+    color: #0f172a;
+}
+
+/* ============ SEARCH ROW ============ */
+.filtersRow {
+    margin-top: 10px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    background: #ffffff;
+    padding: 14px 16px;
+    border-radius: 16px;
+    box-shadow: 0 8px 20px rgba(15, 23, 42, 0.04);
+}
+
+/* search + icon */
+.serMain {
+    position: relative;
+    width: 100%;
+}
+
+.serIcon {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 14px;
+    color: #9ca3af;
+}
+
+/* search input only */
+.searchInput {
+    width: 100%;
+    padding: 11px 14px;
+    padding-left: 36px;
+    background: #ffffff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 14px;
+    outline: none;
+    color: #111827;
+    transition: 0.2s ease;
+}
+
+.searchInput:focus {
+    border-color: #2d9cdb;
+    box-shadow: 0 0 0 2px rgba(45, 156, 219, 0.15);
+}
+
+/* ============ TABLE CARD ============ */
+.table {
+    margin-top: 24px;
+    background: #ffffff;
+    border-radius: 22px;
+    padding: 20px 20px 18px 20px;
+    box-shadow: 0 18px 45px rgba(15, 23, 42, 0.06);
+    width: 100%;
+}
+
+/* header row */
+.tableHeader {
+    display: grid;
+    grid-template-columns: 2fr 2fr 1.5fr 0.8fr;
+    align-items: center;
+    padding: 14px 18px;
+    border-radius: 14px;
+    background: #f5f7ff;             /* thora light blue */
+    font-size: 13px;
+    font-weight: 600;
+    color: #6b7280;
+}
+
+/* data rows */
+.row {
+    display: grid;
+    grid-template-columns: 2fr 2fr 1.5fr 0.8fr;
+    align-items: center;
+    padding: 14px 18px;
+    margin-top: 10px;
+    border-radius: 14px;
+    background: #ffffff;
+    border: 1px solid #edf2ff;
+    font-size: 14px;
+    font-weight: 500;
+    color: #1e293b;
+    transition: background 0.15s ease, box-shadow 0.15s ease,
+    transform 0.05s ease;
+}
+
+.row:hover {
+    background: #f9faff;
+    box-shadow: 0 8px 20px rgba(15, 23, 42, 0.04);
+    transform: translateY(-1px);
+}
+
+/* cells */
+.cell {
+    display: flex;
+    align-items: center;
+}
+
+/* user cell with avatar */
+.userCell {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 999px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #ffffff;
+    font-weight: 700;
+    font-size: 14px;
+    background: linear-gradient(135deg, #6c5ce7, #2d9cdb);
+}
+
+.nameBlock {
+    display: flex;
+    flex-direction: column;
+}
+
+.userName {
+    font-weight: 600;
+    color: #111827;
+}
+
+/* actions */
+.actions {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-start;
+}
+
+.icon,
+.iconDelete {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 18px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.icon {
+    color: #4b5563;
+}
+
+.iconDelete {
+    color: #ef4444;
+}
+
+/* empty state */
+.emptyState {
+    margin-top: 16px;
+    font-size: 13px;
+    color: #6b7280;
+    text-align: center;
+}
