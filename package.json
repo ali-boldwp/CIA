@@ -3,7 +3,7 @@
   "private": true,
   "scripts": {
     "setup": " npm i && npm install --prefix app/client && npm install --prefix app/server && npm run dev",
-    "install:all": "npm i && npm install --prefix server && npm install --prefix client",
+    "livesetup": "npm i && npm install --prefix server && npm install --prefix client",
     "_dev": "concurrently \"npm run dev --prefix server\" \"npm run dev --prefix client\"",
     "dev": "concurrently \"npm run dev --prefix app/server\"  \"npm run dev --prefix app/client\""
   },
