@@ -1,6 +1,6 @@
 FROM node:20-alpine
 
-WORKDIR /
+WORKDIR /app
 
 # Copy entire app directory
 COPY ./ /
@@ -8,11 +8,9 @@ COPY ./ /
 RUN ls
 
 # Install dependencies (recommended: npm ci)
-# RUN npm run livesetup
+RUN npm run install:all
 
 WORKDIR /app/client
-
-RUN npm install
 
 RUN ls
 
