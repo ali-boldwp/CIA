@@ -19,11 +19,7 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
-app.use(express.static(path.join(__dirname, 'client')));
 
-app.get('/*', (req, res) => {
-    res.sendFile(path.join(__dirname, 'client', 'index.html'));
-});
 
 if (env.nodeEnv !== 'test') {
     app.use(morgan('dev'));
@@ -40,6 +36,12 @@ app.use('/api', limiter);
 
 /* API v1 */
 app.use('/api/v1', v1Routes);
+
+app.use(express.static(path.join(__dirname, 'client')));
+
+app.get('/*', (req, res) => {
+    res.sendFile(path.join(__dirname, 'client', 'index.html'));
+});
 
 /* 404 + error */
 app.use(notFoundHandler);

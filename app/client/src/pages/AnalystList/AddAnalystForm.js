@@ -1,30 +1,27 @@
-// /src/pages/AnalystList/AddAnalystForm.js
 import React, { useEffect } from "react";
 import styles from "./AnalystList.module.css";
 import { toast } from "react-toastify";
 import { useForm } from "react-hook-form";
 
-import {
-    useCreateAnalystMutation,
-    useUpdateAnalystMutation,
-} from "../../services/analystApi";
+import { useCreateAnalystMutation } from "../../services/analystApi";
+import { useUpdateAnalystMutation } from "../../services/userApi";
 
 export default function AddAnalystForm({ closeModal, editData }) {
     const isEdit = Boolean(editData);
 
-    // Convert backend fields → form fields
+    // Convert backend user → form-friendly values
     const convertEditData = (data) => {
         if (!data) return null;
 
         return {
-            name: data.name,
-            role: data.role,
-            salary: data.monthlySalary,
-            hoursMonth: data.hoursPerMonth,
-            hoursDay: data.hoursPerDay,
-            bonus: data.bonus,
-            date: data.hiringDate?.substring(0, 10), // yyyy-mm-dd
-            notes: data.notes,
+            name: data.name || "",
+            analystRole: data.analystRole || "",
+            salary: data.monthlySalary || "",
+            hoursMonth: data.hoursPerMonth || 160,
+            hoursDay: data.hoursPerDay || 8,
+            bonus: data.bonus || 0,
+            date: data.hiringDate ? data.hiringDate.substring(0, 10) : "",
+            notes: data.notes || "",
         };
     };
 
@@ -36,30 +33,26 @@ export default function AddAnalystForm({ closeModal, editData }) {
     } = useForm({
         defaultValues: convertEditData(editData) || {
             name: "",
-            role: "",
+            analystRole: "",
             salary: "",
-            date: "",
-            bonus: "",
-            notes: "",
             hoursMonth: 160,
             hoursDay: 8,
+            bonus: "",
+            date: "",
+            notes: "",
         },
     });
 
-    // Auto-fill on edit
     useEffect(() => {
-        if (editData) {
-            reset(convertEditData(editData));
-        }
+        if (editData) reset(convertEditData(editData));
     }, [editData, reset]);
 
-    // Auto-cost calculations
+    // Auto cost
     const salary = watch("salary");
     const hoursMonth = watch("hoursMonth");
     const hoursDay = watch("hoursDay");
 
-    const costHour =
-        salary && hoursMonth ? (salary / hoursMonth).toFixed(1) : 0;
+    const costHour = salary && hoursMonth ? (salary / hoursMonth).toFixed(1) : 0;
     const costDay = (costHour * hoursDay).toFixed(0);
 
     const [createAnalyst] = useCreateAnalystMutation();
@@ -68,7 +61,10 @@ export default function AddAnalystForm({ closeModal, editData }) {
     const onSubmit = async (data) => {
         const payload = {
             name: data.name,
-            role: data.role,
+
+            // Analyst-specific fields (must match Mongoose schema)
+            role: "analyst", // fixed role
+            analystRole: data.analystRole,
 
             monthlySalary: Number(data.salary),
             hoursPerMonth: Number(data.hoursMonth),
@@ -112,7 +108,7 @@ export default function AddAnalystForm({ closeModal, editData }) {
                 {/* NAME */}
                 <div className={`${styles.field} ${styles.fieldLeft}`}>
                     <label>Nume</label>
-                    <input placeholder="ex: Analist I" {...register("name")} />
+                    <input placeholder="ex: Iulia Barbu" {...register("name")} />
                 </div>
 
                 {/* SALARY */}
@@ -121,15 +117,14 @@ export default function AddAnalystForm({ closeModal, editData }) {
                     <input type="number" {...register("salary")} />
                 </div>
 
-                {/* ROLE */}
+                {/* ANALYST ROLE — matches your model */}
                 <div className={`${styles.field} ${styles.fieldLeft}`}>
-                    <label>Funcție</label>
-                    <select {...register("role")}>
+                    <label>Funcție analist</label>
+                    <select {...register("analystRole")}>
                         <option value="">Selectează funcția</option>
-                        <option>Head of Investigations</option>
-                        <option>Intelligence Analyst</option>
-                        <option>HUMINT Detective</option>
-                        <option>Analyst</option>
+                        <option value="Head of Investigations">Head of Investigations</option>
+                        <option value="Intelligence Analyst">Intelligence Analyst</option>
+                        <option value="HUMINT Detective">HUMINT Detective</option>
                     </select>
                 </div>
 
@@ -161,8 +156,8 @@ export default function AddAnalystForm({ closeModal, editData }) {
                 <div className={styles.fieldCosts}>
                     <label>Costuri (automat)</label>
                     <div className={styles.costGrid}>
-                        <input readOnly value={costHour} style={{ padding:"11px 10px",background: "#f9fafb",border: "1px solid #ddd",borderRadius:"10px" }} />
-                        <input readOnly value={costDay} style={{ padding:"11px 10px",background: "#f9fafb",border: "1px solid #ddd",borderRadius:"10px" }} />
+                        <input readOnly value={costHour} className={styles.costInput} />
+                        <input readOnly value={costDay} className={styles.costInput} />
                     </div>
                 </div>
 

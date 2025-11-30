@@ -6,28 +6,29 @@ import styles from "./AddAnalystManager.module.css";
 import {
     useCreateAnalystMutation,
     useUpdateAnalystMutation,
-} from "../../../../services/analystApi";
+} from "../../../../services/userApi";   // 👈 FIXED IMPORT
 
 const AddAnalystManager = ({ isOpen, onClose, editData }) => {
     const isEdit = Boolean(editData);
 
-    const convertEditData = (data) => {
-        if (!data) return null;
+    // Convert backend response → form-friendly values
+    const convertEditData = (u) => {
+        if (!u) return null;
 
         return {
-            name: data.name,
-            role: data.role,
-            salary: data.monthlySalary,
-            hoursMonth: data.hoursPerMonth,
-            hoursDay: data.hoursPerDay,
-            bonus: data.bonus,
-            date: data.hiringDate?.substring(0, 10),
-            notes: data.notes,
+            name: u.name || "",
+            role: u.analystRole || "",
+            salary: u.monthlySalary || "",
+            hoursMonth: u.hoursPerMonth || 160,
+            hoursDay: u.hoursPerDay || 8,
+            bonus: u.bonus || 0,
+            date: u.hiringDate ? u.hiringDate.substring(0, 10) : "",
+            notes: u.notes || "",
 
-            // NEW login fields
-            isLogin: data.isLogin || false,
-            username: data.username || "",
-            password: "",
+            // Login fields
+            isLogin: u.isLogin || false,
+            email: u.email || "",
+            password: ""
         };
     };
 
@@ -41,43 +42,49 @@ const AddAnalystManager = ({ isOpen, onClose, editData }) => {
             name: "",
             role: "",
             salary: "",
-            date: "",
-            bonus: "",
-            notes: "",
             hoursMonth: 160,
             hoursDay: 8,
+            bonus: 0,
+            date: "",
+            notes: "",
 
-            // NEW defaults
             isLogin: false,
-            username: "",
-            password: "",
-        },
+            email: "",
+            password: ""
+        }
     });
 
+    // Reset form when editing
     useEffect(() => {
-        if (editData) reset(convertEditData(editData));
+        if (editData) {
+            reset(convertEditData(editData));
+        }
     }, [editData, reset]);
 
-    const salary = watch("salary");
-    const hoursMonth = watch("hoursMonth");
-    const hoursDay = watch("hoursDay");
+    // Auto-cost calculations
+    const salary = watch("salary") || 0;
+    const hoursMonth = watch("hoursMonth") || 1;
+    const hoursDay = watch("hoursDay") || 1;
     const isLogin = watch("isLogin");
 
-    const costHour = salary && hoursMonth ? (salary / hoursMonth).toFixed(1) : 0;
+    const costHour = (salary / hoursMonth).toFixed(1);
     const costDay = (costHour * hoursDay).toFixed(0);
 
     const [createAnalyst] = useCreateAnalystMutation();
     const [updateAnalyst] = useUpdateAnalystMutation();
 
+    // Submit handler
     const onSubmit = async (data) => {
         const payload = {
             name: data.name,
-            role: data.role,
+
+            // Backend requires:
+            role: "analyst",
+            analystRole: data.role,        // human job title
 
             monthlySalary: Number(data.salary),
             hoursPerMonth: Number(data.hoursMonth),
             hoursPerDay: Number(data.hoursDay),
-
             bonus: Number(data.bonus),
             hiringDate: data.date,
             notes: data.notes,
@@ -85,10 +92,10 @@ const AddAnalystManager = ({ isOpen, onClose, editData }) => {
             costPerHour: Number(costHour),
             costPerDay: Number(costDay),
 
-            // NEW login
+            // Login fields
             isLogin: Boolean(data.isLogin),
-            username: data.isLogin ? data.username : undefined,
-            password: data.isLogin ? data.password : undefined,
+            email: data.isLogin ? data.email : undefined,
+            password: data.isLogin ? data.password : undefined
         };
 
         try {
@@ -99,7 +106,6 @@ const AddAnalystManager = ({ isOpen, onClose, editData }) => {
                 await createAnalyst(payload).unwrap();
                 toast.success("Analist creat!");
             }
-
             onClose();
         } catch (err) {
             toast.error(err?.data?.message || "Eroare la salvare!");
@@ -112,6 +118,7 @@ const AddAnalystManager = ({ isOpen, onClose, editData }) => {
         <div className={styles.overlay}>
             <div className={styles.modal}>
                 <form className={styles.formContainer} onSubmit={handleSubmit(onSubmit)}>
+
                     <h3 className={styles.formTitle}>
                         {isEdit ? "Editează analist" : "Adaugă analist"}
                     </h3>
@@ -123,54 +130,47 @@ const AddAnalystManager = ({ isOpen, onClose, editData }) => {
                     <div className={styles.formGrid}>
 
                         {/* NAME */}
-                        <div className={`${styles.field} ${styles.fieldLeft}`}>
+                        <div className={styles.field}>
                             <label>Nume</label>
-                            <input placeholder="ex: Analist I" {...register("name")} />
+                            <input {...register("name")} placeholder="ex: Andrei Popescu" />
                         </div>
 
                         {/* SALARY */}
-                        <div className={`${styles.field} ${styles.fieldRightWide}`}>
+                        <div className={styles.field}>
                             <label>Salariu lunar (RON)</label>
                             <input type="number" {...register("salary")} />
                         </div>
 
                         {/* ROLE */}
-                        <div className={`${styles.field} ${styles.fieldLeft}`}>
+                        <div className={styles.field}>
                             <label>Funcție</label>
                             <select {...register("role")}>
                                 <option value="">Selectează funcția</option>
                                 <option>Head of Investigations</option>
                                 <option>Intelligence Analyst</option>
                                 <option>HUMINT Detective</option>
-                                <option>Analyst</option>
                             </select>
-                            <p className={styles.helperText}>Alege rolul principal al analistului.</p>
                         </div>
 
-                        {/* CHECKBOX */}
+                        {/* LOGIN CHECKBOX */}
                         <div className={styles.fieldFull}>
                             <label className={styles.checkboxLabel}>
                                 <input type="checkbox" {...register("isLogin")} />
-                                <span>Is login</span>
+                                <span>Este cont de login</span>
                             </label>
-                            <p className={styles.helperText}>
-                                Agar login chahiye ho to username aur password neeche bharo.
-                            </p>
                         </div>
 
-                        {/* USERNAME & PASSWORD EXACT CHECKBOX KE NICHE */}
+                        {/* LOGIN FIELDS */}
                         {isLogin && (
-                            <div className={`${styles.fieldFull} ${styles.loginBox}`}>
-                                <div className={styles.loginGrid}>
-                                    <div className={styles.field}>
-                                        <label>Username</label>
-                                        <input placeholder="ex: andrei.pop" {...register("username")} />
-                                    </div>
+                            <div className={styles.loginBox}>
+                                <div className={styles.field}>
+                                    <label>Email</label>
+                                    <input {...register("email")} placeholder="emailul analistului" />
+                                </div>
 
-                                    <div className={styles.field}>
-                                        <label>Parolă</label>
-                                        <input type="password" placeholder="••••••••" {...register("password")} />
-                                    </div>
+                                <div className={styles.field}>
+                                    <label>Parolă</label>
+                                    <input type="password" {...register("password")} placeholder="••••••" />
                                 </div>
                             </div>
                         )}
@@ -188,7 +188,7 @@ const AddAnalystManager = ({ isOpen, onClose, editData }) => {
                         </div>
 
                         {/* DATE */}
-                        <div className={`${styles.field} ${styles.fieldLeft}`}>
+                        <div className={styles.field}>
                             <label>Data angajării</label>
                             <input type="date" {...register("date")} />
                         </div>
@@ -199,27 +199,24 @@ const AddAnalystManager = ({ isOpen, onClose, editData }) => {
                             <input type="number" {...register("bonus")} />
                         </div>
 
-                        {/* COSTS AUTOMATIC */}
+                        {/* COSTS AUTO */}
                         <div className={styles.fieldCosts}>
                             <label>Costuri (automat)</label>
                             <div className={styles.costGrid}>
-                                <input readOnly value={costHour} className={styles.costInput} />
-                                <input readOnly value={costDay} className={styles.costInput} />
+                                <input readOnly value={costHour} />
+                                <input readOnly value={costDay} />
                             </div>
                         </div>
 
                         {/* NOTES */}
                         <div className={styles.notesBox}>
                             <label>Note</label>
-                            <textarea placeholder="observații..." {...register("notes")} />
+                            <textarea {...register("notes")} placeholder="Observații..." />
                         </div>
+
                     </div>
 
                     <div className={styles.buttons}>
-                        <button type="button" className={styles.resetBtn} onClick={() => reset()}>
-                            Reset
-                        </button>
-
                         <button type="button" className={styles.cancelBtn} onClick={onClose}>
                             Anulează
                         </button>

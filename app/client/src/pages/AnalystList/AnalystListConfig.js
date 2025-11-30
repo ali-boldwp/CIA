@@ -1,6 +1,6 @@
 import Analyst from "./"
 
-const AnalstListConfig = {
+const AnalstListConfig  = {
     settings: {
         layout: {
             config: {}
@@ -15,4 +15,4 @@ const AnalstListConfig = {
     ]
 };
 
-export default AnalstListConfig;
+export default AnalstListConfig ;
