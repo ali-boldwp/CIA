@@ -9,4 +9,5 @@
 /app/server/.env
 
 /app/server/node_modules
+/app/server/client
 /app/server/package-lock.json
