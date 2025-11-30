@@ -1,4 +1,5 @@
 import "./StatusSection.css";
+import {Link} from "react-router-dom";
 
 const StatusSection = () => {
   return (
@@ -18,7 +19,7 @@ const StatusSection = () => {
 
       <div className="stat-box">
         <span className="label">💻 Solicitare de proiect nou</span>
-        <button className="gradient-btn">Adaugă</button>
+        <Link to="/projectRequest" className="gradient-btn"  >Adaugă</Link>
       </div>
 
       <div className="stat-box">

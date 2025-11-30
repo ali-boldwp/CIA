@@ -41,9 +41,9 @@ const Team = () => {
             </div>
 
             <div className="col progress">
-              <div className="progress-bar">
+              <div className="progres-bar">
                 <div
-                  className="progress-fill"
+                  className="progres-fill"
                   style={{ width: `${a.progress}%` }}
                 ></div>
               </div>

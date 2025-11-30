@@ -82,7 +82,7 @@
 }
 
 /* Progress */
-.progress-bar {
+.progres-bar {
   width: 50%;
   height: 13px;
   background: #e9e9e9;
@@ -90,7 +90,7 @@
   margin-bottom: 4px;
 }
 
-.progress-fill {
+.progres-fill {
   height: 13px;
   background: linear-gradient(90deg, #6a5af9, #1ec6cd);
   border-radius: 10px;
