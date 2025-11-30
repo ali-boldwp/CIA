@@ -1,0 +1,255 @@
+.overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.35);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+}
+
+.modal {
+    background: #ffffff;
+    width: 1100px;
+    max-width: 96vw;
+    padding: 32px;
+    border-radius: 20px;
+    box-shadow: 0 30px 60px rgba(15,23,42,0.14);
+}
+
+.formContainer {
+    width: 100%;
+}
+
+.formTitle {
+    font-size: 20px;
+    font-weight: 700;
+    color: #111827;
+    margin-bottom: 12px;
+}
+
+.formSubtitle {
+    font-size: 13px;
+    color: #6b7280;
+    margin-bottom: 16px;
+}
+
+/* === GRID 3 COLUMNS (same as AnalystList) === */
+.formGrid {
+    display: grid;
+    grid-template-columns: 2fr 1.1fr 1.1fr;
+    gap: 16px 18px;
+    align-items: flex-start;
+}
+
+/* base field groups */
+.field,
+.fieldSmall,
+.fieldCosts,
+.fieldInline {
+    display: flex;
+    flex-direction: column;
+}
+
+/* left column (Nume, Funcție, Data) */
+.fieldLeft {
+    grid-column: 1 / 2;
+}
+
+/* top right wide (Salariu) spans col2+3 */
+.fieldRightWide {
+    grid-column: 2 / 4;
+}
+
+/* right column 2 (Ore/lună, Bonus) */
+.fieldRight {
+    grid-column: 2 / 3;
+}
+
+/* right column 3 (Ore/zi, Costuri) */
+.fieldRightLast {
+    grid-column: 3 / 4;
+}
+
+/* full width rows (checkbox, login, Note) */
+.fieldFull {
+    grid-column: 1 / 4;
+}
+
+/* small fields like Ore/lună, Ore/zi, Bonus */
+.fieldSmall {
+    flex: 1;
+}
+
+/* cost block */
+.fieldCosts {
+    flex: 1;
+}
+
+/* === LABELS & INPUTS (IMPORTANT PART) === */
+.field label,
+.fieldSmall label,
+.fieldCosts > label,
+.fieldInline label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: 600;
+    font-size: 12px;
+    color: #4b5563;
+}
+
+.field input,
+.field select,
+.fieldSmall input,
+.fieldInline input {
+    width: 100%;
+    padding: 11px 14px;
+    background: #ffffff;
+    border: 1px solid #ddd;
+    border-radius: 12px;
+    outline: none;
+    font-size: 14px;
+    color: #111827;
+}
+
+.field input:focus,
+.field select:focus,
+.fieldSmall input:focus,
+.fieldInline input:focus {
+    border-color: #2D9CDB;
+    box-shadow: 0 0 0 2px rgba(45,156,219,0.15);
+}
+
+/* readonly auto fields */
+.field input[readonly],
+.fieldSmall input[readonly],
+.fieldInline input[readonly] {
+    background: #f9fafb;
+    color: #6b7280;
+}
+
+/* helper text */
+.helperText {
+    margin-top: 6px;
+    font-size: 11px;
+    color: #9ca3af;
+}
+
+/* === CHECKBOX === */
+.checkboxLabel {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    font-size: 13px;
+    color: #374151;
+}
+
+.checkboxLabel input {
+    width: 16px;
+    height: 16px;
+}
+
+/* === LOGIN FIELDS (username/password) === */
+.loginBox {
+    margin-top: -4px;
+}
+
+.loginGrid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px 18px;
+}
+
+/* === COST FIELDS === */
+.costGrid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+    margin-top: 0;
+}
+
+.costInput {
+    width: 100%;
+    padding: 11px 14px;
+    background: #f9fafb;
+    border: 1px solid #ddd;
+    border-radius: 12px;
+    font-size: 14px;
+    color: #111827;
+}
+
+.costInput[readonly] {
+    background: #f9fafb;
+    border: 1px solid #ddd;
+    color: #6b7280;
+}
+
+/* === NOTES === */
+.notesBox {
+    grid-column: 1 / 4;
+    margin-top: 4px;
+}
+
+.notesBox label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: 600;
+    font-size: 12px;
+    color: #4b5563;
+}
+
+.notesBox textarea {
+    width: 100%;
+    height: 110px;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 12px;
+    resize: none;
+    font-size: 14px;
+    outline: none;
+}
+
+.notesBox textarea:focus {
+    border-color: #2D9CDB;
+    box-shadow: 0 0 0 2px rgba(45,156,219,0.15);
+}
+
+/* === BUTTONS === */
+.buttons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.resetBtn {
+    background: #e5e7eb;
+    color: #111827;
+    padding: 10px 22px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.cancelBtn {
+    background: #ef4444;
+    color: #ffffff;
+    padding: 10px 22px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.saveBtn {
+    background: #22c55e;
+    color: #ffffff;
+    padding: 10px 24px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+}
