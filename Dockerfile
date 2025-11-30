@@ -8,7 +8,7 @@ COPY ./ /
 RUN ls
 
 # Install dependencies (recommended: npm ci)
-RUN npm run install:all
+RUN npm run livesetup
 
 WORKDIR /app/client
 
