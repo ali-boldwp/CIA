@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import styles from "./ProjectRequest.module.css";
 import { useSelector } from "react-redux";
 import { useCreateProjectMutation } from "../../../services/projectApi";
+import { useGetAnalystsQuery } from "../../../services/analystApi";
+import {Link} from "react-router-dom";
 
 const ProjectRequest = () => {
     const user = useSelector((state) => state.auth.user);
@@ -42,6 +44,17 @@ const ProjectRequest = () => {
     const [files, setFiles] = useState([]);
 
     const [createProject, { isLoading }] = useCreateProjectMutation();
+
+    const { data: analystsData } = useGetAnalystsQuery();
+
+    const analysts = Array.isArray(analystsData)
+        ? analystsData
+        : Array.isArray(analystsData?.data)
+            ? analystsData.data
+            : Array.isArray(analystsData?.analysts)
+                ? analystsData.analysts
+                : [];
+
 
     // MULTI SELECT SERVICES
     const toggleService = (name) => {
@@ -127,7 +140,7 @@ const ProjectRequest = () => {
             <div className={styles.headerWrapper}>
                 <div className={styles.headerCard}>
                     <div className={styles.headerInner}>
-                        <button className={styles.backLink}>← Înapoi la Dashboard</button>
+                        <Link to="/manager/dashboard" className={styles.backLink}>← Înapoi la Dashboard</Link>
                         <h1 className={styles.headerTitle}>Solicitare nouă de proiect</h1>
                     </div>
                 </div>
@@ -383,14 +396,14 @@ const ProjectRequest = () => {
                                         onChange={(e) => setPreferredAnalyst(e.target.value)}
                                     >
                                         <option value="">Selectează analist -</option>
-                                        <option value="Analist A">Analist A</option>
-                                        <option value="Analist B">Analist B</option>
-                                        <option value="Analist C">Analist C</option>
-                                        <option value="Analist D">Analist D</option>
-                                        <option value="Analist E">Analist E</option>
-                                        <option value="Analist F">Analist F</option>
-                                        <option value="Analist G">Analist G</option>
+
+                                        {analysts.map((a) => (
+                                            <option key={a._id} value={a._id}>
+                                                {a.name} — {a.role}
+                                            </option>
+                                        ))}
                                     </select>
+
                                 </label>
                             </div>
 
