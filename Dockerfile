@@ -8,7 +8,7 @@ COPY ./ /
 RUN ls
 
 # Install dependencies (recommended: npm ci)
-RUN npm run setup
+RUN npm run install:all
 
 WORKDIR /app/client
 
