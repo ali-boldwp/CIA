@@ -24,8 +24,8 @@ RUN ls
 
 EXPOSE 4000
 
-WORKDIR /
+WORKDIR /app/server
 
 RUN ls
 
-CMD ["npm", "live"]
+CMD ["npm", "dev"]
