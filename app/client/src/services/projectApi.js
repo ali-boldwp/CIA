@@ -24,7 +24,29 @@ export const projectApi = createApi({
                 body: formData,
             }),
         }),
+        getProjectRequests: builder.query({
+            query: () => "/projects",
+        }),
+        getProjectRequestById: builder.query({
+            query: (id) => `/projects/${id}`,
+        }),
+        updateProject: builder.mutation({
+            query: ({ id, data }) => ({
+                url: `/projects/${id}`,
+                method: "PUT",
+                body: data,
+            }),
+        }),
+        updateProjectStatus: builder.mutation({
+            query: ({ id, status }) => ({
+                url: `/projects/${id}/status`,
+                method: "PATCH",
+                body: { status },
+            }),
+        }),
+
+
     }),
 });
 
-export const { useCreateProjectMutation } = projectApi;
+export const { useCreateProjectMutation  ,useGetProjectRequestsQuery , useGetProjectRequestByIdQuery,useUpdateProjectMutation,useUpdateProjectStatusMutation} = projectApi;
