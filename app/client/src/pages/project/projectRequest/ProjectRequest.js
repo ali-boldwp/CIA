@@ -4,6 +4,7 @@ import { useSelector } from "react-redux";
 import { useCreateProjectMutation } from "../../../services/projectApi";
 import {Link} from "react-router-dom";
 import { useGetAnalystsQuery } from "../../../services/userApi";
+import { toast } from "react-toastify";
 
 const ProjectRequest = () => {
     const user = useSelector((state) => state.auth.user);
@@ -132,11 +133,11 @@ const ProjectRequest = () => {
 
         try {
             const response = await createProject(formData).unwrap();
-            alert("Project created successfully!");
+            toast.success("Proiect creat cu succes!");
             console.log(response);
         } catch (err) {
             console.error(err);
-            alert("Error creating project");
+            toast.error("Eroare la crearea proiectului");
         }
     };
 
@@ -380,7 +381,7 @@ const ProjectRequest = () => {
                             <div className={`${styles.gridItem} ${styles.span2Left}`}>
                                 <div className={styles.chipRow}>
                                     <div className={styles.chipRowLabel}>Prioritate</div>
-                                    <div className={styles.chipRowChips}>
+                                        <div className={styles.chipRowChips}>
                                         {["Normal", "Urgent", "Confidențial", "Bench Task"].map((p) => (
                                             <button
                                                 key={p}
@@ -441,21 +442,16 @@ const ProjectRequest = () => {
                             <div className={`${styles.gridItem} ${styles.span2Right}`}>
                                 <label className={styles.label}>
                                     Solicitare referințe / informații suplimentare
-                                    <select
-                                        className={`${styles.input} ${styles.selectAnalyst}`}
+                                    <input
+                                        type="text"
+                                        className={styles.input}
                                         value={referenceRequest}
                                         onChange={(e) => setReferenceRequest(e.target.value)}
-                                    >
-                                        <option value="">Selectează analist -</option>
-
-                                        {filteredAnalysts.map((a) => (
-                                            <option key={a._id} value={a._id}>
-                                                {a.name} — {a.role}
-                                            </option>
-                                        ))}
-                                    </select>
+                                        placeholder="Introdu solicitarea de referințe..."
+                                    />
                                 </label>
                             </div>
+
 
                         </div>
 

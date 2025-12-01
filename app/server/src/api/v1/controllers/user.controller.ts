@@ -146,14 +146,14 @@ export const updateUser = async (req: Request, res: Response, next: NextFunction
         }
 
 
-        if (data.role !== Role.ANALYST) {
-            delete data.monthlySalary;
-            delete data.hoursPerMonth;
-            delete data.hoursPerDay;
-            delete data.bonus;
-            delete data.hiringDate;
-            delete data.notes;
-        }
+        // if (data.role !== Role.ANALYST) {
+        //     delete data.monthlySalary;
+        //     delete data.hoursPerMonth;
+        //     delete data.hoursPerDay;
+        //     delete data.bonus;
+        //     delete data.hiringDate;
+        //     delete data.notes;
+        // }
 
         const updatedUser = await User.findByIdAndUpdate(userId, data, {
             new: true

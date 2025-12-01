@@ -63,7 +63,7 @@ export default function AddAnalystForm({ closeModal, editData }) {
             name: data.name,
 
             // Analyst-specific fields (must match Mongoose schema)
-            role: "analyst", // fixed role
+
             analystRole: data.analystRole,
 
             monthlySalary: Number(data.salary),
