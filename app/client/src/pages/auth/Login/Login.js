@@ -44,29 +44,34 @@ const Login = () => {
             const loggedUser = response.data.user;
             const token = response.data.accessToken;
 
-            // Save user to Redux + localStorage
             dispatch(setUser(loggedUser));
             localStorage.setItem("user", JSON.stringify(loggedUser));
             localStorage.setItem("token", token);
 
-            // 🔥🔥 SESSION CHECK — Console me print hoga
-            console.log("SESSION - User:", loggedUser);
-            console.log("SESSION - Token:", token);
+            toast.success("Autentificare reușită");
 
-            // 🔥 LocalStorage check
-            console.log("LOCALSTORAGE USER:", JSON.parse(localStorage.getItem("user")));
-            console.log("LOCALSTORAGE TOKEN:", localStorage.getItem("token"));
+            // ⭐ ROLE BASED REDIRECT ⭐
+            const role = loggedUser.role;
 
-            toast.success("Autentificare reușită")
-
-            navigate("/manager/dashboard");
+            if (role === "sales" || role === "user") {
+                navigate("/dashboard/sales");
+            }
+            else if (role === "analyst") {
+                navigate("/dashboard/analyst");
+            }
+            else if (role === "manager" || role === "admin") {
+                navigate("/manager/dashboard");
+            }
+            else {
+                // fallback
+                navigate("/");
+            }
 
         } catch (err) {
             console.error("LOGIN ERROR:", err);
         }
     };
-
-
+    
 
     return (
         <Box

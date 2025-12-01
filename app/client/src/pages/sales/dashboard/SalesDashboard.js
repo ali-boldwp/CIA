@@ -1,6 +1,7 @@
 import React from 'react';
 import "../../analyst/dashboard/style.css"
 import Header from "../../../layouts/Component/Header";
+import { Link } from "react-router-dom";
 
 const SalesDashboard = () => {
 
@@ -23,13 +24,15 @@ const SalesDashboard = () => {
                     </div>
                     <div className="summary-value">2</div>
                 </div>
-
+                <Link to="/projectRequest">
                 <div className="summary-card">
                     <div className="summary-title">
-                        🕵️‍♀️ Adauga solicitare noua de proiect
+                        ➕ Adauga solicitare noua de proiect
                     </div>
+
                     <div className="summary-value">1</div>
                 </div>
+                </Link>
             </div>
 
             {/* PROJECTS */}
