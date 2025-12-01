@@ -25,11 +25,29 @@ const Login = () => {
             localStorage.setItem("token", token);
 
             toast.success("Autentificare reușită");
-            navigate("/manager/dashboard");
+
+            // ⭐ ROLE BASED REDIRECT ⭐
+            const role = loggedUser.role;
+
+            if (role === "sales" || role === "user") {
+                navigate("/dashboard/sales");
+            }
+            else if (role === "analyst") {
+                navigate("/dashboard/analyst");
+            }
+            else if (role === "manager" || role === "admin") {
+                navigate("/manager/dashboard");
+            }
+            else {
+                // fallback
+                navigate("/");
+            }
+
         } catch (err) {
             console.error("LOGIN ERROR:", err);
         }
     };
+    
 
     return (
         <div className="login-page">
