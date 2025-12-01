@@ -1,0 +1,140 @@
+/* Full page */
+.login-page {
+    min-height: 100vh;
+    background: linear-gradient(to bottom right, #eef3ff, #ffffff);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Center card */
+.mainLog{
+    border-left: 5px solid #2a66ff;
+}
+.login-card {
+    width: 550px;
+    background: white;
+    border-radius: 12px;
+    padding: 40px 50px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.07);
+    text-align: center;
+}
+
+/* Logo */
+.login-logo {
+    width: 190px;
+    margin-bottom: 10px;
+}
+
+/* Titles */
+.login-title {
+    font-size: 28px;
+    font-weight: 600;
+    margin-bottom: 5px;
+}
+
+.login-subtitle {
+    font-size: 14px;
+    color: #555;
+    margin-bottom: 25px;
+}
+
+/* Form */
+.login-form {
+    text-align: left;
+}
+
+/* Labels */
+.login-label {
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: 5px;
+    display: block;
+}
+
+/* Input wrapper for icons */
+.input-wrapper {
+    position: relative;
+    margin-bottom: 25px;
+}
+
+.login-input {
+    width: 100%;
+    height: 46px;
+    border-radius: 8px;
+    border: 1px solid #dcdcdc;
+    padding: 0 40px 0 15px;
+    font-size: 15px;
+}
+
+.input-icon {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    opacity: 0.5;
+    font-size: 18px;
+}
+
+/* Options row */
+.login-options {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 25px;
+    font-size: 14px;
+}
+
+.remember-me {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+}
+
+.forgot-password {
+    color: #2a66ff;
+    text-decoration: none;
+}
+
+.forgot-password:hover {
+    text-decoration: underline;
+}
+
+/* Login button */
+.login-btn {
+    width: 100%;
+    height: 46px;
+    background: #2a66ff;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.login-btn:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+/* Errors */
+.error {
+    color: red;
+    font-size: 13px;
+    margin-top: -20px;
+    margin-bottom: 15px;
+}
+
+/* Footer */
+.footer-text {
+    margin-top: 25px;
+    font-size: 12px;
+    color: #666;
+}
+
+.bottom-footer {
+    margin-top: 40px;
+    font-size: 15px;
+    font-weight: bold;
+    color: #000;
+}
