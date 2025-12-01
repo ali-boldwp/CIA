@@ -1,4 +1,5 @@
 import "./Header.css";
+import {Link} from "react-router-dom";
 
 const Header = () => {
   return (
@@ -12,7 +13,7 @@ const Header = () => {
       </div>
       </div>
        <div className="secSec">
-      <button className="new-project-btn">+ Creeeaza proiect nou</button>
+      <Link to="/project" className="new-project-btn">+ Creeeaza proiect nou</Link>
 
       <div className="right-buttons">
         <button className="icon-btn">🔔 Alarme</button>

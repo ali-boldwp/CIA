@@ -6,6 +6,7 @@ const StatusSection = () => {
         <div className="stats-container">
 
             {/* Row 1 */}
+            <div className="status1">
             <div className="stat-box">
                 <span className="label">📁 Proiecte active</span>
                 <h3>6</h3>
@@ -18,7 +19,7 @@ const StatusSection = () => {
 
             <div className="stat-box">
                 <span className="label">💻 Solicitare de proiect nou</span>
-                <button className="gradient-btn">Adaugă</button>
+                <Link to="/projectRequest-list" className="gradient-btn">Adaugă</Link>
             </div>
 
             <div className="stat-box">
@@ -40,6 +41,9 @@ const StatusSection = () => {
                 <span className="label">💳 Costuri & performanța</span>
                 <button className="gradient-btn">KPI</button>
             </div>
+            </div>
+
+            <div className="status2">
 
             {/* Row 2 */}
             <div className="stat-box wide">
@@ -75,6 +79,7 @@ const StatusSection = () => {
                         👥 Vezi utilizatorii
                     </Link>
                 </div>
+            </div>
             </div>
 
         </div>

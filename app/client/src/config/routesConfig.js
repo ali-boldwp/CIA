@@ -14,7 +14,7 @@ import ProjectDetailConfig from "../pages/ProjectDetail/ProjectDetailConfig";
 import AnalistProfileCon from "../pages/AnalystProfile/AnalystProfileCon";
 import ProjectCostsPageConfig from "../pages/ProjectCostsPage/ProjectCostsPageConfig";
 import AllUserConfig from "../pages/AllUser/AllUserConfig";
-import MessengerConfig from "../pages/Messenger/MessengerConfig";
+import RequestListConfig from "../pages/ProjectRequestList/RequestListConfig";
 
 const routeConfigs = [
   LoginConfig,
@@ -30,7 +30,7 @@ const routeConfigs = [
   ProjectCostsPageConfig ,
   ProjectDetailConfig ,
    AllUserConfig,
-    MessengerConfig
+    RequestListConfig
 ];
 
 
