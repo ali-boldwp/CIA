@@ -13,50 +13,57 @@ export const userApi = createApi({
         }
     }),
 
-    tagTypes: ["Analysts"],
+    tagTypes: ["Users", "Analysts"],
 
     endpoints: (builder) => ({
 
-        // ========= GET ALL ANALYSTS =========
+       
+        getAllUsers: builder.query({
+            query: () => "/users",
+            providesTags: ["Users"]
+        }),
+
+
         getAnalysts: builder.query({
-            query: () => "/users",   // 👈 FIXED role
+            query: () => "/users?role=Analyst",
             providesTags: ["Analysts"]
         }),
 
-        // ========= CREATE ANALYST =========
-        createAnalyst: builder.mutation({
+
+        createUser: builder.mutation({
             query: (data) => ({
                 url: "/users",
                 method: "POST",
                 body: data,
             }),
-            invalidatesTags: ["Analysts"],
+            invalidatesTags: ["Users", "Analysts"],
         }),
 
-        // ========= UPDATE ANALYST =========
-        updateAnalyst: builder.mutation({
+
+        updateUser: builder.mutation({
             query: ({ id, data }) => ({
                 url: `/users/${id}`,
                 method: "PUT",
                 body: data,
             }),
-            invalidatesTags: ["Analysts"],
+            invalidatesTags: ["Users", "Analysts"],
         }),
 
-        // ========= DELETE ANALYST =========
-        deleteAnalyst: builder.mutation({
+
+        deleteUser: builder.mutation({
             query: (id) => ({
                 url: `/users/${id}`,
                 method: "DELETE",
             }),
-            invalidatesTags: ["Analysts"],
+            invalidatesTags: ["Users", "Analysts"],
         }),
     }),
 });
 
 export const {
+    useGetAllUsersQuery,
     useGetAnalystsQuery,
-    useCreateAnalystMutation,
-    useUpdateAnalystMutation,
-    useDeleteAnalystMutation
+    useCreateUserMutation,
+    useUpdateUserMutation,
+    useDeleteUserMutation
 } = userApi;

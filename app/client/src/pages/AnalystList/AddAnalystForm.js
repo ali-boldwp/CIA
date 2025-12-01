@@ -4,7 +4,7 @@ import { toast } from "react-toastify";
 import { useForm } from "react-hook-form";
 
 import { useCreateAnalystMutation } from "../../services/analystApi";
-import { useUpdateAnalystMutation } from "../../services/userApi";
+import { useUpdateUserMutation } from "../../services/userApi";
 
 export default function AddAnalystForm({ closeModal, editData }) {
     const isEdit = Boolean(editData);
@@ -56,7 +56,7 @@ export default function AddAnalystForm({ closeModal, editData }) {
     const costDay = (costHour * hoursDay).toFixed(0);
 
     const [createAnalyst] = useCreateAnalystMutation();
-    const [updateAnalyst] = useUpdateAnalystMutation();
+    const [updateAnalyst] = useUpdateUserMutation();
 
     const onSubmit = async (data) => {
         const payload = {

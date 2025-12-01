@@ -1,76 +1,84 @@
 import { Request, Response, NextFunction } from "express";
 import * as projectService from "../services/project.service";
 import { ok } from "../../../utils/ApiResponse";
+import ProjectRequest from "../models/projectRequest.model";
 
-export const createProject = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
-) => {
+export const createProject = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const user = (req as any).user;
-        
-        const filePaths: string[] = Array.isArray(req.files)
-            ? (req.files as Express.Multer.File[]).map((f) => f.filename)
+        const body = req.body;
+
+        const files = Array.isArray(req.files)
+            ? (req.files as Express.Multer.File[]).map(f => f.filename)
             : [];
 
-
-        const body = req.body as any;
-
-        // Helper function to ensure array consistency
-        const toArray = (val: any) => {
-            if (!val) return [];
-            if (Array.isArray(val)) return val;
-            return [val];
+        const toArray = (v: any) => {
+            if (!v) return [];
+            return Array.isArray(v) ? v : [v];
         };
 
+        // STEP 1 → Load RequestProject if provided
+        let requestData: any = {};
+        if (body.fromRequestId) {
+            const reqProject = await ProjectRequest.findById(body.fromRequestId);
+            if (reqProject) {
+                requestData = reqProject.toObject();
+            }
+        }
 
-        const data = {
-            name: body.name,
-            contactPerson: body.contactPerson,
-            position: body.position,
-            email: body.email,
-            phone: body.phone,
+        // STEP 2 → Merge: Form2 fields override Form1 fields
+        const payload: any = {
+            // Required fields auto-filled
+            projectName: body.projectName || requestData.projectName,
+            projectSubject: body.projectSubject || requestData.projectSubject,
+            reportType: body.reportType || requestData.reportType,
+            entityType: body.entityType || requestData.entityType,
+            priority: body.priority || requestData.priority,
+            deliverableLanguage: body.deliverableLanguage || requestData.deliverableLanguage,
+            projectDescription: body.projectDescription || requestData.projectDescription,
 
-            contractNumber: body.contractNumber || "",
-            contractDone: body.contractDone === "true" || body.contractDone === true,
+            clientName: body.clientName || requestData.clientName,
+            clientContactPerson: body.clientContactPerson || requestData.clientContactPerson,
+            clientEmail: body.clientEmail || requestData.clientEmail,
+            clientPhone: body.clientPhone || requestData.clientPhone,
 
-            annexNumber: body.annexNumber || "",
-            annexDone: body.annexDone === "true" || body.annexDone === true,
+            projectPrice: body.projectPrice
+                ? Number(body.projectPrice)
+                : Number(requestData.projectPrice),
 
-            projectSubject: body.projectSubject,
-            additionalInfo: body.additionalInfo,
+            currency: body.currency || requestData.currency || "EUR",
 
-            entityType: body.entityType,
-            deadline: body.deadline ? new Date(body.deadline) : undefined,
+            // Optional fields
+            deadline: body.deadline
+                ? new Date(body.deadline)
+                : requestData.deadline,
 
-            category: body.category,
-            projectPrice: body.projectPrice,
+            clientPosition: body.clientPosition || requestData.clientPosition,
 
-            priority: body.priority,
-            deliverableLanguage: body.deliverableLanguage,
+            responsibleAnalyst: body.responsibleAnalyst || requestData.responsibleAnalyst,
 
-            preferredAnalyst: body.preferredAnalyst || null,
+            assignedAnalysts: toArray(body.assignedAnalysts || requestData.assignedAnalysts),
 
-            selectedAnalysts: toArray(body.selectedAnalysts),
+            contractNumber: body.contractNumber || requestData.contractNumber,
+            annexNumber: body.annexNumber || requestData.annexNumber,
 
-            wantedServices: toArray(body.wantedServices),
+            servicesRequested: toArray(body.servicesRequested || requestData.servicesRequested),
 
-            referenceRequest: body.referenceRequest || "",
+            contractInfo: body.contractInfo || requestData.contractInfo,
+            referenceRequest: body.referenceRequest || requestData.referenceRequest,
+            internalNotes: body.internalNotes || requestData.internalNotes,
 
-            projectDescription: body.projectDescription,
-            internalNotes: body.internalNotes,
+            files: [...(requestData.files || []), ...files],
 
-            files: filePaths,
+            createdBy: user.id,
 
-            projectRequestedBy: user.id,
-            projectCreatedBy: user.id,
+            fromRequestId: body.fromRequestId,
 
-            status: body.status || "requested",
+            status: body.status || "approved"
         };
 
-
-        const project = await projectService.createProject(data);
+        // FINAL SAVE
+        const project = await projectService.createProject(payload);
 
         res.json(ok(project));
     } catch (err) {
@@ -78,11 +86,9 @@ export const createProject = async (
     }
 };
 
-export const getAllProjects = async (
-    _req: Request,
-    res: Response,
-    next: NextFunction
-) => {
+
+
+export const getAllProjects = async (_req, res, next) => {
     try {
         const projects = await projectService.getAllProjects();
         res.json(ok(projects));
@@ -91,11 +97,7 @@ export const getAllProjects = async (
     }
 };
 
-export const getProjectById = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
-) => {
+export const getProjectById = async (req, res, next) => {
     try {
         const project = await projectService.getProjectById(req.params.id);
         res.json(ok(project));
@@ -104,46 +106,30 @@ export const getProjectById = async (
     }
 };
 
-export const updateProject = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
-) => {
+export const updateProject = async (req, res, next) => {
     try {
-        const project = await projectService.updateProject(
-            req.params.id,
-            req.body
-        );
-        res.json(ok(project));
+        const updated = await projectService.updateProject(req.params.id, req.body);
+        res.json(ok(updated));
     } catch (err) {
         next(err);
     }
 };
 
-export const updateProjectStatus = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
-) => {
+export const updateProjectStatus = async (req, res, next) => {
     try {
-        const project = await projectService.updateProjectStatus(
-            req.params.id,
-            req.body.status
+        const updated = await projectService.updateProjectStatus(
+            req.params.id, req.body.status
         );
-        res.json(ok(project));
+        res.json(ok(updated));
     } catch (err) {
         next(err);
     }
 };
 
-export const deleteProject = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
-) => {
+export const deleteProject = async (req, res, next) => {
     try {
-        const project = await projectService.deleteProject(req.params.id);
-        res.json(ok(project));
+        const deleted = await projectService.deleteProject(req.params.id);
+        res.json(ok(deleted));
     } catch (err) {
         next(err);
     }

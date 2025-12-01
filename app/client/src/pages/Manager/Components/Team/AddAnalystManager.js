@@ -4,8 +4,8 @@ import { toast } from "react-toastify";
 import styles from "./AddAnalystManager.module.css";
 
 import {
-    useCreateAnalystMutation,
-    useUpdateAnalystMutation,
+    useCreateUserMutation,
+    useUpdateUserMutation,
 } from "../../../../services/userApi";   // 👈 FIXED IMPORT
 
 const AddAnalystManager = ({ isOpen, onClose, editData }) => {
@@ -70,8 +70,8 @@ const AddAnalystManager = ({ isOpen, onClose, editData }) => {
     const costHour = (salary / hoursMonth).toFixed(1);
     const costDay = (costHour * hoursDay).toFixed(0);
 
-    const [createAnalyst] = useCreateAnalystMutation();
-    const [updateAnalyst] = useUpdateAnalystMutation();
+    const [createAnalyst] = useCreateUserMutation();
+    const [updateAnalyst] = useUpdateUserMutation();
 
     // Submit handler
     const onSubmit = async (data) => {

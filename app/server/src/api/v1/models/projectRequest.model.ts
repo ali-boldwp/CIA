@@ -1,124 +1,117 @@
 import { Schema, model, Document, Types } from "mongoose";
 
 export interface IProjectRequest extends Document {
-    name: string;
-    email: string;
-    phone: string;
-    contactPerson: string;
-    position?: string;
 
-    contractNumber: string;
-    contractDone: boolean;
-
-    annexNumber: string;
-    annexDone: boolean;
-
+    projectName: string;
     projectSubject: string;
-    additionalInfo?: string;
-
+    reportType: string;
     entityType: string;
-    deadline: Date;
-
-    category: string;
-    projectPrice: string;
-
-    priority: "Normal" | "Urgent" | "Confidențial" | "Bench Task";   // 🔥 updated type
-    deliverableLanguage: "Romanian" | "English";
-
-    preferredAnalyst?: string;                    // 🔥 was Types.ObjectId
-    selectedAnalysts?: Types.ObjectId[];
-    wantedServices?: string[];
-    referenceRequest?: string;
-
+    priority: string;
+    deliverableLanguage: string;
     projectDescription: string;
+
+    clientName: string;
+    clientContactPerson: string;
+    clientEmail: string;
+    clientPhone: string;
+
+    projectPrice: number;
+    currency: string;
+
+
+    deadline?: Date;
+    clientPosition?: string;
+    responsibleAnalyst?: Types.ObjectId;
+    assignedAnalysts?: Types.ObjectId[];
+    contractNumber?: string;
+    annexNumber?: string;
+
+    servicesRequested?: string[];
+    contractInfo?: string;
+    referenceRequest?: string;
     internalNotes?: string;
 
-    files: string[];
+    files?: string[];
 
-    projectRequestedBy: Types.ObjectId;
-    projectCreatedBy: Types.ObjectId;
+    createdBy: Types.ObjectId;
+    fromRequestId?: Types.ObjectId;
+
     status: "draft" | "requested" | "approved" | "finished" | "cancelled";
 }
 
 const projectRequestSchema = new Schema<IProjectRequest>(
     {
-        name: { type: String, required: true },
-        email: { type: String, required: true },
-        phone: { type: String, required: true },
+        // REQUIRED FIELDS (common to both models)
+        projectName: { type: String, required: false },
+        projectSubject: { type: String, required: false },
+        reportType: { type: String, required: false },
+        entityType: { type: String, required: false },
+        priority: { type: String, required: false },
+        deliverableLanguage: { type: String, required: false },
+        projectDescription: { type: String, required: false },
 
-        contactPerson: { type: String, required: true },
-        position: { type: String },
+        clientName: { type: String, required: false },
+        clientContactPerson: { type: String, required: false },
+        clientEmail: { type: String, required: false },
+        clientPhone: { type: String, required: false },
 
-        contractNumber: { type: String },
-        contractDone: { type: Boolean, default: false },
+        projectPrice: { type: Number, required: false },
+        currency: { type: String, default: "EUR" },
 
-        annexNumber: { type: String },
-        annexDone: { type: Boolean, default: false },
+        // OPTIONAL FIELDS
+        deadline: { type: Date },
+        clientPosition: String,
 
-        projectSubject: { type: String, required: true },
-        additionalInfo: { type: String },
-
-        entityType: { type: String, required: true },
-        deadline: { type: Date, required: true },
-
-        category: { type: String, required: true },
-        projectPrice: { type: String, required: true },
-
-        priority: {
-            type: String,
-            enum: ["Normal", "Urgent", "Confidențial", "Bench Task"],   // 🔥 "Confidențial" FE se match
-            default: "Normal"
+        responsibleAnalyst: {
+            type: Schema.Types.ObjectId,
+            ref: "User"
         },
 
-        deliverableLanguage: {
-            type: String,
-            enum: ["Romanian", "English"],
-            default: "Romanian",
-        },
-
-        // 🔥 ab yeh sirf string hai, FE se "Analist B" direct store ho jayega
-        preferredAnalyst: {
-            type: String,
-            required: false
-        },
-
-        // future me agar IDs bhejni ho to FE se ObjectId bhej sakte ho
-        selectedAnalysts: [
-            { type: Schema.Types.ObjectId, ref: "User", required: false }
+        assignedAnalysts: [
+            {
+                type: Schema.Types.ObjectId,
+                ref: "User"
+            }
         ],
 
-        wantedServices: [{ type: String, default: [] }],
+        contractNumber: String,
+        annexNumber: String,
 
-        referenceRequest: { type: String },
+        servicesRequested: {
+            type: [String],
+            default: []
+        },
 
-        projectDescription: { type: String, required: true },
-        internalNotes: { type: String },
+        contractInfo: String,
+        referenceRequest: String,
+        internalNotes: String,
 
-        files: [{ type: String, default: [] }],
+        files: {
+            type: [String],
+            default: []
+        },
 
-        projectRequestedBy: {
+        createdBy: {
             type: Schema.Types.ObjectId,
             ref: "User",
             required: true
         },
 
-        projectCreatedBy: {
+        fromRequestId: {
             type: Schema.Types.ObjectId,
-            ref: "User",
-            required: true
+            ref: "ProjectRequest"
         },
 
         status: {
             type: String,
-            enum: ["draft", "requested", "approved", "finished", "cancelled"],
-            default: "draft"
-        }
+            enum: ["draft" , "requested" , "approved" , "finished" , "cancelled"],
+            default: "requested"
+        },
     },
-
     {
         timestamps: true,
         toJSON: {
-            transform: (_doc, ret) => {
+            transform(_doc, ret) {
                 delete ret.__v;
                 return ret;
             }

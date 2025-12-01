@@ -2,8 +2,8 @@ import React, { useState } from "react";
 import styles from "./ProjectRequest.module.css";
 import { useSelector } from "react-redux";
 import { useCreateProjectMutation } from "../../../services/projectApi";
-import { useGetAnalystsQuery } from "../../../services/analystApi";
 import {Link} from "react-router-dom";
+import { useGetAnalystsQuery } from "../../../services/userApi";
 
 const ProjectRequest = () => {
     const user = useSelector((state) => state.auth.user);
@@ -47,13 +47,19 @@ const ProjectRequest = () => {
 
     const { data: analystsData } = useGetAnalystsQuery();
 
+    // Normalize user list
     const analysts = Array.isArray(analystsData)
         ? analystsData
         : Array.isArray(analystsData?.data)
             ? analystsData.data
-            : Array.isArray(analystsData?.analysts)
-                ? analystsData.analysts
-                : [];
+            : Array.isArray(analystsData?.users)
+                ? analystsData.users
+                : Array.isArray(analystsData?.analysts)
+                    ? analystsData.analysts
+                    : [];
+
+// ✅ Filter only analysts (role === "analyst")
+    const filteredAnalysts = analysts.filter(a => a.role === "analyst");
 
 
     // MULTI SELECT SERVICES
@@ -76,49 +82,52 @@ const ProjectRequest = () => {
 
         const formData = new FormData();
 
-        formData.append("name", name);
-        formData.append("contactPerson", contactPerson);
-        formData.append("position", position);
-        formData.append("email", email);
-        formData.append("phone", phone);
+        // REQUIRED FIELDS → match backend EXACTLY
+        formData.append("projectName", name);
+        formData.append("projectSubject", projectSubject);
+        formData.append("reportType", category); // your dropdown acts as reportType
+        formData.append("entityType", entityType);
+        formData.append("priority", priority);
+        formData.append("deliverableLanguage", language === "Română" ? "Romanian" : "English");
+        formData.append("projectDescription", projectDescription);
+
+        // CLIENT FIELDS
+        formData.append("clientName", name);
+        formData.append("clientContactPerson", contactPerson);
+        formData.append("clientEmail", email);
+        formData.append("clientPhone", phone);
+        formData.append("clientPosition", position); // optional
+
+        // PRICE
+        formData.append("projectPrice", Number(projectPrice));
+        formData.append("currency", "EUR");
+
+        // OPTIONAL FIELDS
+        if (deadline) formData.append("deadline", deadline);
 
         formData.append("contractNumber", contractNumber);
-        formData.append("contractDone", contractDone);
-
         formData.append("annexNumber", annexNumber);
-        formData.append("annexDone", annexDone);
-
-        formData.append("projectSubject", projectSubject);
-        formData.append("additionalInfo", additionalInfo);
-
-        formData.append("entityType", entityType);
-        formData.append("deadline", deadline);
-
-        formData.append("category", category);
-        formData.append("projectPrice", projectPrice);
-
-        formData.append("priority", priority);
-        formData.append(
-            "deliverableLanguage",
-            language === "Română" ? "Romanian" : "English"
-        );
-
-        formData.append("preferredAnalyst", preferredAnalyst);
+        formData.append("contractInfo", additionalInfo);
         formData.append("referenceRequest", referenceRequest);
-
-        services.forEach((srv) => {
-            formData.append("wantedServices", srv);
-        });
-
-        formData.append("projectDescription", projectDescription);
         formData.append("internalNotes", internalNotes);
 
+        // SERVICES → backend expects servicesRequested[]
+        services.forEach((srv) => {
+            formData.append("servicesRequested", srv);
+        });
+
+        // ANALYST FIELDS (optional)
+        if (preferredAnalyst) {
+            formData.append("responsibleAnalyst", preferredAnalyst);
+        }
+
+        // FILES
         files.forEach((file) => {
             formData.append("files", file);
         });
 
-        formData.append("projectRequestedBy", user._id);
-        formData.append("projectCreatedBy", user._id);
+        // REQUIRED BY BACKEND
+        formData.append("createdBy", user._id);
         formData.append("status", "requested");
 
         try {
@@ -130,6 +139,7 @@ const ProjectRequest = () => {
             alert("Error creating project");
         }
     };
+
 
 
     return (
@@ -397,7 +407,7 @@ const ProjectRequest = () => {
                                     >
                                         <option value="">Selectează analist -</option>
 
-                                        {analysts.map((a) => (
+                                        {filteredAnalysts.map((a) => (
                                             <option key={a._id} value={a._id}>
                                                 {a.name} — {a.role}
                                             </option>
@@ -436,18 +446,17 @@ const ProjectRequest = () => {
                                         value={referenceRequest}
                                         onChange={(e) => setReferenceRequest(e.target.value)}
                                     >
-                                        <option value="">Selectează opțiune -</option>
-                                        <option value="Referințe bancare">Referințe bancare</option>
-                                        <option value="Referințe legale">Referințe legale</option>
-                                        <option value="Verificare persoană de contact">
-                                            Verificare persoană de contact
-                                        </option>
-                                        <option value="Detalii suplimentare despre companie">
-                                            Detalii suplimentare despre companie
-                                        </option>
+                                        <option value="">Selectează analist -</option>
+
+                                        {filteredAnalysts.map((a) => (
+                                            <option key={a._id} value={a._id}>
+                                                {a.name} — {a.role}
+                                            </option>
+                                        ))}
                                     </select>
                                 </label>
                             </div>
+
                         </div>
 
                         {/* ==== SERVICES ==== */}
