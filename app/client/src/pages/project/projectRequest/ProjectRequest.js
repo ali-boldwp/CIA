@@ -45,17 +45,17 @@ const ProjectRequest = () => {
 
     const [createProject, { isLoading }] = useCreateProjectMutation();
 
-    const { data: analystsData } = useGetAnalystsQuery();
+    const { data: userData } = useGetAnalystsQuery();
 
     // Normalize user list
-    const analysts = Array.isArray(analystsData)
-        ? analystsData
-        : Array.isArray(analystsData?.data)
-            ? analystsData.data
-            : Array.isArray(analystsData?.users)
-                ? analystsData.users
-                : Array.isArray(analystsData?.analysts)
-                    ? analystsData.analysts
+    const analysts = Array.isArray(userData)
+        ? userData
+        : Array.isArray(userData?.data)
+            ? userData.data
+            : Array.isArray(userData?.users)
+                ? userData.users
+                : Array.isArray(userData?.analysts)
+                    ? userData.analysts
                     : [];
 
 // ✅ Filter only analysts (role === "analyst")
@@ -85,7 +85,7 @@ const ProjectRequest = () => {
         // REQUIRED FIELDS → match backend EXACTLY
         formData.append("projectName", name);
         formData.append("projectSubject", projectSubject);
-        formData.append("reportType", category); // your dropdown acts as reportType
+        formData.append("reportType", category);
         formData.append("entityType", entityType);
         formData.append("priority", priority);
         formData.append("deliverableLanguage", language === "Română" ? "Romanian" : "English");
@@ -96,13 +96,13 @@ const ProjectRequest = () => {
         formData.append("clientContactPerson", contactPerson);
         formData.append("clientEmail", email);
         formData.append("clientPhone", phone);
-        formData.append("clientPosition", position); // optional
+        formData.append("clientPosition", position);
 
         // PRICE
         formData.append("projectPrice", Number(projectPrice));
         formData.append("currency", "EUR");
 
-        // OPTIONAL FIELDS
+       
         if (deadline) formData.append("deadline", deadline);
 
         formData.append("contractNumber", contractNumber);
@@ -127,7 +127,7 @@ const ProjectRequest = () => {
         });
 
         // REQUIRED BY BACKEND
-        formData.append("createdBy", user._id);
+        formData.append("fromRequestId", user._id);
         formData.append("status", "requested");
 
         try {
@@ -150,7 +150,7 @@ const ProjectRequest = () => {
             <div className={styles.headerWrapper}>
                 <div className={styles.headerCard}>
                     <div className={styles.headerInner}>
-                        <Link to="/manager/dashboard" className={styles.backLink}>← Înapoi la Dashboard</Link>
+                        <Link to="/dashboard/sales" className={styles.backLink}>← Înapoi la Dashboard</Link>
                         <h1 className={styles.headerTitle}>Solicitare nouă de proiect</h1>
                     </div>
                 </div>

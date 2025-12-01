@@ -7,7 +7,7 @@ const SalesDashboardConfig = {
             config: {}
         }
     },
-
+    auth: [ 'admin' , 'manager' , 'sales' ],
     routes: [
         {
             path: '/dashboard/sales',

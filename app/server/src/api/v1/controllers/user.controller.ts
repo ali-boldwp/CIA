@@ -114,9 +114,6 @@ export const getMe = async (req: Request, res: Response, next: NextFunction) => 
 
 export const getUsers = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        if ((req as any).user.role !== Role.ADMIN && (req as any).user.role !== Role.MANAGER) {
-            return res.status(403).json({ message: "Access denied" });
-        }
 
         const users = await userService.getAllUsers();
         res.json(ok(users));
