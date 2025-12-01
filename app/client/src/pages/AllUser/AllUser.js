@@ -1,29 +1,37 @@
 import React, { useMemo, useState } from "react";
 import styles from "./AllUser.module.css";
+import { useGetAllUsersQuery } from "../../services/userApi";
 
 const AllUser = () => {
     const [searchTerm, setSearchTerm] = useState("");
 
-    // TODO: yahan baad me API se real users la sakte ho
-    const users = [
-        { id: 1, name: "Ana Pop", email: "ana.pop@example.com", role: "Admin" },
-        { id: 2, name: "Mihai Ionescu", email: "mihai.ionescu@example.com", role: "Investigator" },
-        { id: 3, name: "Carmen Vasilescu", email: "carmen.v@example.com", role: "Analyst" },
-        { id: 4, name: "Andrei Georgescu", email: "andrei.g@example.com", role: "Viewer" },
-    ];
+    // Fetch all users from backend
+    const { data: usersData, isLoading } = useGetAllUsersQuery();
 
+    // Normalize API response
+    const users = Array.isArray(usersData)
+        ? usersData
+        : Array.isArray(usersData?.data)
+            ? usersData.data
+            : Array.isArray(usersData?.users)
+                ? usersData.users
+                : [];
+
+    // Filter users by search
     const filteredUsers = useMemo(() => {
         if (!searchTerm.trim()) return users;
+
         const q = searchTerm.toLowerCase();
         return users.filter((u) =>
             `${u.name} ${u.email} ${u.role}`.toLowerCase().includes(q)
         );
     }, [searchTerm, users]);
 
+    // Avatar initials
     const getInitials = (name) => {
         if (!name) return "?";
         const parts = name.split(" ");
-        if (parts.length === 1) return parts[0].charAt(0).toUpperCase();
+        if (parts.length === 1) return parts[0]?.charAt(0)?.toUpperCase();
         return (
             parts[0].charAt(0).toUpperCase() +
             parts[parts.length - 1].charAt(0).toUpperCase()
@@ -31,29 +39,29 @@ const AllUser = () => {
     };
 
     const handleEdit = (user) => {
-        // TODO: yahan future me edit modal / page open kar sakte ho
         console.log("Edit user:", user);
     };
 
     const handleDelete = (user) => {
-        // TODO: yahan delete confirm / API call add kar sakte ho
         console.log("Delete user:", user);
     };
+
+    if (isLoading) {
+        return <div className={styles.loading}>Loading users...</div>;
+    }
 
     return (
         <div className={styles.page}>
             {/* Top Header */}
             <div className={styles.headerBar}>
-
                 <button className={styles.backBtn} onClick={() => window.history.back()}>
                     ← Înapoi la Dashboard
                 </button>
 
                 <h2 className={styles.title}>Lista tuturor utilizatorilor</h2>
-
             </div>
 
-            {/* Search row (sirf search bar) */}
+            {/* Search Bar */}
             <div className={styles.filtersRow}>
                 <div className={styles.serMain}>
                     <span className={styles.serIcon}>🔍</span>
@@ -67,9 +75,9 @@ const AllUser = () => {
                 </div>
             </div>
 
-            {/* Table section */}
+            {/* Users Table */}
             <div className={styles.table}>
-                {/* Header row */}
+                {/* Header */}
                 <div className={styles.tableHeader}>
                     <span>Nume</span>
                     <span>E-mail</span>
@@ -77,14 +85,12 @@ const AllUser = () => {
                     <span>Acțiuni</span>
                 </div>
 
-                {/* Data rows */}
+                {/* Data Rows */}
                 {filteredUsers.map((user) => (
-                    <div className={styles.row} key={user.id}>
-                        {/* NAME cell */}
+                    <div className={styles.row} key={user._id}>
+                        {/* NAME */}
                         <div className={styles.userCell}>
-                            <div className={styles.avatar}>
-                                {getInitials(user.name)}
-                            </div>
+                            <div className={styles.avatar}>{getInitials(user.name)}</div>
                             <div className={styles.nameBlock}>
                                 <div className={styles.userName}>{user.name}</div>
                             </div>
@@ -98,8 +104,12 @@ const AllUser = () => {
 
                         {/* ACTIONS */}
                         <div className={styles.actions}>
-                            <button type="button" className={styles.icon} onClick={() => handleEdit(user)}>
-                                {/* EDIT SVG */}
+                            {/* EDIT BUTTON */}
+                            <button
+                                type="button"
+                                className={styles.icon}
+                                onClick={() => handleEdit(user)}
+                            >
                                 <svg
                                     xmlns="http://www.w3.org/2000/svg"
                                     width="18"
@@ -116,8 +126,12 @@ const AllUser = () => {
                                 </svg>
                             </button>
 
-                            <button type="button" className={styles.iconDelete} onClick={() => handleDelete(user)}>
-                                {/* DELETE SVG */}
+                            {/* DELETE BUTTON */}
+                            <button
+                                type="button"
+                                className={styles.iconDelete}
+                                onClick={() => handleDelete(user)}
+                            >
                                 <svg
                                     xmlns="http://www.w3.org/2000/svg"
                                     width="18"
@@ -136,10 +150,10 @@ const AllUser = () => {
                                 </svg>
                             </button>
                         </div>
-
                     </div>
                 ))}
 
+                {/* Empty state */}
                 {filteredUsers.length === 0 && (
                     <div className={styles.emptyState}>
                         Niciun utilizator găsit pentru căutarea curentă.

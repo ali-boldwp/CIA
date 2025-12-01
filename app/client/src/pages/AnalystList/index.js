@@ -3,11 +3,11 @@ import styles from "./AnalystList.module.css";
 import { FiTrash2, FiEdit3 } from "react-icons/fi";
 import AddAnalystForm from "./AddAnalystForm";
 import { toast } from "react-toastify";
-import {useDeleteAnalystMutation, useGetAnalystsQuery} from "../../services/userApi";
+import {useDeleteUserMutation, useGetAnalystsQuery} from "../../services/userApi";
 
 export default function AnalystList() {
     const [search, setSearch] = useState("");
-    const [roleFilter, setRoleFilter] = useState("all");
+    const [roleAnalystFilter, setAnalystRoleFilter] = useState("all");
     const [sortBy, setSortBy] = useState("desc");
     const [showModal, setShowModal] = useState(false);
     const [editData, setEditData] = useState(null);
@@ -21,7 +21,7 @@ export default function AnalystList() {
 
     // FETCH ANALYSTS
     const { data, isLoading, isError } = useGetAnalystsQuery();
-    const [deleteAnalyst] = useDeleteAnalystMutation();
+    const [deleteAnalyst] = useDeleteUserMutation();
 
     const users = Array.isArray(data)
         ? data
@@ -61,7 +61,7 @@ export default function AnalystList() {
         const rows = filteredData.map((a) =>
             [
                 a.name,
-                a.role,
+                a.analystRole,
                 a.hiringDate,
                 a.seniority || "-",
                 a.monthlySalary + " RON",
@@ -93,8 +93,8 @@ export default function AnalystList() {
         }
 
         // ROLE FILTER
-        if (roleFilter !== "all") {
-            data = data.filter((a) => a.role === roleFilter);
+        if (roleAnalystFilter !== "all") {
+            data = data.filter((a) => a.role === roleAnalystFilter);
         }
 
         // SORT BY SENIORITY
@@ -105,7 +105,7 @@ export default function AnalystList() {
         });
 
         return data;
-    }, [analysts, search, roleFilter, sortBy]);
+    }, [analysts, search, roleAnalystFilter, sortBy]);
 
     // TOTAL COST
     const totalCost = useMemo(() => {
@@ -146,8 +146,8 @@ export default function AnalystList() {
                 {/* ROLE FILTER */}
                 <select
                     className={styles.filterSelect}
-                    value={roleFilter}
-                    onChange={(e) => setRoleFilter(e.target.value)}
+                    value={roleAnalystFilter}
+                    onChange={(e) => setAnalystRoleFilter(e.target.value)}
                 >
                     <option value="all">Toate funcțiile</option>
                     <option value="Head of Investigations">Head of Investigations</option>
