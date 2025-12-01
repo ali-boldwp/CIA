@@ -20,7 +20,7 @@ export default function AnalystList() {
     };
 
     // FETCH ANALYSTS
-    const { data, isLoading, isError } = useGetAnalystsQuery();
+    const {data, isLoading, isError  } = useGetAnalystsQuery();
     const [deleteAnalyst] = useDeleteUserMutation();
 
     const users = Array.isArray(data)
