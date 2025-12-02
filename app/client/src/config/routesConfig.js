@@ -15,6 +15,7 @@ import AnalistProfileCon from "../pages/AnalystProfile/AnalystProfileCon";
 import ProjectCostsPageConfig from "../pages/ProjectCostsPage/ProjectCostsPageConfig";
 import AllUserConfig from "../pages/AllUser/AllUserConfig";
 import RequestListConfig from "../pages/ProjectRequestList/RequestListConfig";
+import TaskPageConfig from "../pages/taskPageConfig.js/TaskPageConfig";
 
 const routeConfigs = [
   LoginConfig,
@@ -30,7 +31,8 @@ const routeConfigs = [
   ProjectCostsPageConfig ,
   ProjectDetailConfig ,
    AllUserConfig,
-    RequestListConfig
+    RequestListConfig,
+    TaskPageConfig
 ];
 
 
