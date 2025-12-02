@@ -1,5 +1,5 @@
 import React from 'react';
-import { Navigate } from 'react-router-dom';
+import {Navigate} from 'react-router-dom';
 import Utils from '@libs/utils';
 import DashboardConfig from '../pages/admin/dashboard/DashboardConfig';
 import LoginConfig from "../pages/auth/Login/LoginConfig";
@@ -15,24 +15,28 @@ import AnalistProfileCon from "../pages/AnalystProfile/AnalystProfileCon";
 import ProjectCostsPageConfig from "../pages/ProjectCostsPage/ProjectCostsPageConfig";
 import AllUserConfig from "../pages/AllUser/AllUserConfig";
 import RequestListConfig from "../pages/ProjectRequestList/RequestListConfig";
+import MessengerConfig from "../pages/Messenger/MessengerConfig";
 import TaskPageConfig from "../pages/taskPageConfig.js/TaskPageConfig";
 
+
 const routeConfigs = [
-  LoginConfig,
-  DashboardConfig ,
-  AnalystDashboardConfig ,
-  SalesDashboardConfig ,
-  NewProjectConfig ,
-  ManagerConfig ,
-  ProjectRequestConfig ,
-  EmployeeListConfig ,
-  AnalistProfileCon ,
-  AnalstListConfig ,
-  ProjectCostsPageConfig ,
-  ProjectDetailConfig ,
-   AllUserConfig,
+    LoginConfig,
+    DashboardConfig,
+    AnalystDashboardConfig,
+    SalesDashboardConfig,
+    NewProjectConfig,
+    ManagerConfig,
+    ProjectRequestConfig,
+    EmployeeListConfig,
+    AnalistProfileCon,
+    AnalstListConfig,
+    ProjectCostsPageConfig,
+    ProjectDetailConfig,
+    AllUserConfig,
     RequestListConfig,
+    MessengerConfig,
     TaskPageConfig
+
 ];
 
 
@@ -40,10 +44,10 @@ const routes = [
     ...Utils.generateRoutesFromConfigs(routeConfigs),
     {
         path: '/',
-        element: <Navigate to="/login" />
+        element: <Navigate to="/login"/>
     }
 ];
 
-console.log( routes );
+console.log(routes);
 
 export default routes;

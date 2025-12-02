@@ -7,7 +7,8 @@ const ProjectRequestList = () => {
     const { data, isLoading, error } = useGetProjectRequestsQuery();
     const [search, setSearch] = useState("");
 
-    const projects = data?.data || [];
+    const allProjects = data?.data || [];
+    const projects=allProjects.filter((p)=>p.status?.toLowerCase() === "requested")
 
     // --- SAFE FILTER (Does NOT modify your data structure) ---
     const filteredProjects = projects.filter((project) => {
@@ -55,6 +56,7 @@ const ProjectRequestList = () => {
                     <div className="projects-table-header1">
                         <span>Nume proiect / Responsabili & echipă</span>
                         <span>Deadline</span>
+                        <span>Solicitant</span>
                         <span>Acțiuni</span>
                     </div>
 

@@ -4,6 +4,7 @@ import { auth } from "../../../middlewares/auth.middleware";
 import { upload } from "../../../middlewares/upload.middleware";
 
 
+
 const router = Router();
 
 
@@ -35,6 +36,11 @@ router.put(
     projectController.updateProject
 );
 
+router.put(
+    "/:id/approve",
+    auth,
+    projectController.approveProject
+);
 
 router.patch(
     "/:id/status",

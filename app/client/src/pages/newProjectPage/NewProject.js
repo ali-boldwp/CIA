@@ -4,10 +4,11 @@ import {
     useGetProjectRequestByIdQuery,
     useCreateProjectMutation,
     useUpdateProjectMutation,
-    useUpdateProjectStatusMutation
+
 } from "../../services/projectApi";
 import { useGetAnalystsQuery } from "../../services/userApi";
 import "./NewProjectstyle.css";
+import {toast} from "react-toastify";
 
 const NewProject = () => {
 
@@ -147,8 +148,9 @@ const NewProject = () => {
     // API MUTATIONS
     // ============================
     const [createProject] = useCreateProjectMutation();
+
     const [updateProject] = useUpdateProjectMutation();
-    const [updateStatus] = useUpdateProjectStatusMutation();
+
 
     // ============================
     // FINAL PAYLOAD
@@ -190,20 +192,19 @@ const NewProject = () => {
 
         try {
             if (id) {
-                // 1️⃣ Update fields
-                await updateProject({ id, data: payload }).unwrap();
-
-                // 2️⃣ Update status -> approved
-                await updateStatus({ id, status: "approved" }).unwrap();
-
-                alert("Solicitarea a fost actualizată și aprobată!");
-            } else {
-                await createProject(payload).unwrap();
-                alert("Proiect creat cu succes!");
+                // UPDATE PROJECT
+                await updateProject({ id, ...payload }).unwrap();
+                toast.success("Proiect actualizat cu succes!");
             }
+            else {
+                // CREATE PROJECT
+                await createProject(payload).unwrap();
+                toast.success("Proiect creat cu succes!");
+            }
+
         } catch (err) {
             console.log(err);
-            alert("Eroare la salvare!");
+            toast.error("Eroare la salvare!");
         }
     };
 
@@ -390,7 +391,7 @@ const NewProject = () => {
                         </div>
 
                     </div>
-                    <div className="button-row"> <button className="submit-btn">Creează Task Proiect</button> <button className="submit-btn">Mergi la Task Proiect</button> </div>
+
                 </div>
 
                 {/* ----------------------------- */}

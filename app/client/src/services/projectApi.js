@@ -32,16 +32,16 @@ export const projectApi = createApi({
         }),
         updateProject: builder.mutation({
             query: ({ id, data }) => ({
-                url: `/projects/${id}`,
+                url: `/projects/${id}/approve`,
                 method: "PUT",
                 body: data,
             }),
         }),
         updateProjectStatus: builder.mutation({
-            query: ({ id, status }) => ({
+            query: ({ id,status }) => ({
                 url: `/projects/${id}/status`,
                 method: "PATCH",
-                body: { status },
+                body: status,
             }),
         }),
 

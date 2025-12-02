@@ -101,7 +101,7 @@ RequestContainer {
 /* Table Headings */
 .projects-table-header1 {
     display: grid;
-    grid-template-columns: 40% 45%   15%;
+    grid-template-columns: 35% 25% 25%  15%;
     padding: 10px 5px;
     font-size: 14px;
     font-weight: bold;
@@ -116,7 +116,7 @@ RequestContainer {
 /* Rows */
 .project-row1 {
     display: grid;
-    grid-template-columns: 40% 45%   15%;
+    grid-template-columns: 35% 25% 25%  15%;
     padding: 18px 5px;
     border: 1px solid  lightgray;
     margin: 10px 0px;

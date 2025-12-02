@@ -11,6 +11,10 @@ const ProjectDetailConfig = {
         {
             path: '/projectDetail',
             element: <ProjectDetail />
+        },
+        {
+            path: '/projectDetail/:id',
+            element: <ProjectDetail />
         }
     ]
 };

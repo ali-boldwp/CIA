@@ -1,12 +1,12 @@
 // /home/ubaid/workspace/app/client/src/pages/ProjectDetail/ProjectDetail.js
-import React from "react";
+import React, { useState } from "react";
 import styles from "./ProjectDetail.module.css";
 import ProjectDetailHeader from "./ProjectDetailHeader";
 import ProjectBilling from "./ProjectBilling";
 import ProjectDetailButton from "./ProjectDetailButton";
 
 const ProjectDetail = () => {
-    const project = {
+    const [project, setProject] = useState({
         name: "Due Diligence: Societatea ABC",
         subject: "Societatea ABC",
         reportType: "Enhanced Due Diligence",
@@ -47,11 +47,12 @@ const ProjectDetail = () => {
             "Informații contractuale confidențiale, termeni, clauze, etc.",
         internalNotes:
             "Alte informații confidențiale despre proiect, recomandări interne, etc.",
-    };
+    });
 
     const handleBack = () => {
         window.history.back();
     };
+
     const billingData = {
         price: 3500,
         fixed: 300,
@@ -63,6 +64,26 @@ const ProjectDetail = () => {
         percentage: 41.3,
     };
 
+    const handleFieldChange = (field) => (e) => {
+        const value = e.target.value;
+        setProject((prev) => ({
+            ...prev,
+            [field]: value,
+        }));
+    };
+
+    const handleFilesChange = (e) => {
+        const filesArray = Array.from(e.target.files || []);
+        setProject((prev) => ({
+            ...prev,
+            files: filesArray.map((f) => f.name),
+        }));
+    };
+
+    const handleSave = () => {
+        // yahan backend call wire karna hai (PUT/POST)
+        console.log("SAVE PAYLOAD:", project);
+    };
 
     return (
         <div className={styles.page}>
@@ -81,19 +102,21 @@ const ProjectDetail = () => {
 
                     {/* ROW 1 – Denumire + status pills */}
                     <div className={styles.detailTop}>
-                        {/* Denumire proiect */}
+                        {/* Denumire proiect (EDITABLE) */}
                         <div className={styles.nameBlock}>
                             <span className={styles.label}>Denumire proiect</span>
 
                             <div className={styles.valueWrapper}>
-                                <div className={styles.nameValueBox}>{project.name}</div>
-                                <span className={styles.autoChipInside}>
-                                    auto din solicitare
-                                </span>
+                                <input
+                                    type="text"
+                                    className={styles.nameValueBox}
+                                    value={project.name}
+                                    onChange={handleFieldChange("name")}
+                                />
                             </div>
                         </div>
 
-                        {/* Created / Start / Status */}
+                        {/* Created / Start / Status (READ ONLY) */}
                         <div className={styles.statusBlock}>
                             <span
                                 className={`${styles.statusPill} ${styles.statusCreated}`}
@@ -123,48 +146,48 @@ const ProjectDetail = () => {
                         <div className={styles.metaField}>
                             <span className={styles.label}>Subiect proiect</span>
                             <div className={styles.valueWrapper}>
-                                <div className={styles.metaValueBox}>{project.subject}</div>
-                                <span className={styles.autoChipInside}>
-                                    auto din solicitare
-                                </span>
+                                <input
+                                    type="text"
+                                    className={styles.metaValueBox}
+                                    value={project.subject}
+                                    onChange={handleFieldChange("subject")}
+                                />
                             </div>
                         </div>
 
                         <div className={styles.metaField}>
                             <span className={styles.label}>Tip raport</span>
                             <div className={styles.valueWrapper}>
-                                <div className={styles.metaValueBox}>
-                                    {project.reportType}
-                                </div>
-                                <span className={styles.autoChipInside}>
-                                    auto din solicitare
-                                </span>
+                                <input
+                                    type="text"
+                                    className={styles.metaValueBox}
+                                    value={project.reportType}
+                                    onChange={handleFieldChange("reportType")}
+                                />
                             </div>
                         </div>
 
                         <div className={styles.metaField}>
                             <span className={styles.label}>Tip entitate</span>
                             <div className={styles.valueWrapper}>
-                                <div className={styles.metaValueBox}>
-                                    {project.entityType}
-                                </div>
-                                <span className={styles.autoChipInside}>
-                                    auto din solicitare
-                                </span>
+                                <input
+                                    type="text"
+                                    className={styles.metaValueBox}
+                                    value={project.entityType}
+                                    onChange={handleFieldChange("entityType")}
+                                />
                             </div>
                         </div>
 
                         <div className={styles.metaField}>
                             <span className={styles.label}>Deadline</span>
                             <div className={styles.valueWrapper}>
-                                <div
+                                <input
+                                    type="date"
                                     className={`${styles.metaValueBox} ${styles.metaValueBold}`}
-                                >
-                                    {project.deadline}
-                                </div>
-                                <span className={styles.autoChipInside}>
-                                    auto din solicitare
-                                </span>
+                                    value={project.deadline}
+                                    onChange={handleFieldChange("deadline")}
+                                />
                             </div>
                         </div>
                     </div>
@@ -174,56 +197,72 @@ const ProjectDetail = () => {
                         <div className={styles.metaField}>
                             <span className={styles.label}>Prioritate</span>
                             <div className={styles.valueWrapper}>
-                                <div className={styles.metaValueBox}>{project.priority}</div>
-                                <span className={styles.autoChipInside}>
-                                    auto din solicitare
-                                </span>
+                                <input
+                                    type="text"
+                                    className={styles.metaValueBox}
+                                    value={project.priority}
+                                    onChange={handleFieldChange("priority")}
+                                />
                             </div>
                         </div>
 
                         <div className={styles.metaField}>
                             <span className={styles.label}>Limba livrabilă</span>
                             <div className={styles.valueWrapper}>
-                                <div className={styles.metaValueBox}>{project.language}</div>
-                                <span className={styles.autoChipInside}>
-                                    auto din solicitare
-                                </span>
+                                <input
+                                    type="text"
+                                    className={styles.metaValueBox}
+                                    value={project.language}
+                                    onChange={handleFieldChange("language")}
+                                />
                             </div>
                         </div>
 
                         <div className={styles.metaField}>
                             <span className={styles.label}>Se dorește (tipuri)</span>
                             <div className={styles.valueWrapper}>
-                                <div className={styles.metaValueBox}>{project.services}</div>
-                                <span className={styles.autoChipInside}>
-                                    auto din solicitare
-                                </span>
+                                <input
+                                    type="text"
+                                    className={styles.metaValueBox}
+                                    value={project.services}
+                                    onChange={handleFieldChange("services")}
+                                />
                             </div>
                         </div>
                     </div>
 
                     {/* ===== Descriere, Fișiere, Echipă ===== */}
                     <div className={styles.detailGrid}>
-                        {/* Descriere proiect – full width text */}
+                        {/* Descriere proiect – TEXTAREA */}
                         <div className={styles.itemFull}>
                             <div className={styles.label}>Descriere proiect</div>
 
                             <div className={styles.bigInputWrapper}>
-                                <div className={styles.bigInputBox}>
-                                    {project.description}
-                                </div>
-
-                                <span className={styles.autoChipInsideBig}>
-                                    auto din solicitare
-                                </span>
+                                <textarea
+                                    className={styles.bigInputBox}
+                                    value={project.description}
+                                    onChange={handleFieldChange("description")}
+                                />
                             </div>
                         </div>
 
-                        {/* Fișiere atașate – full width light box */}
+                        {/* Fișiere atașate – FILE DROP + LIST */}
                         <div className={styles.itemFull}>
                             <div className={styles.label}>Fișiere atașate</div>
 
                             <div className={styles.filesWrapper}>
+                                <label className={styles.fileDrop}>
+                                    <input
+                                        type="file"
+                                        multiple
+                                        onChange={handleFilesChange}
+                                        className={styles.fileInput}
+                                    />
+                                    <span>
+                                        Trage fișierele aici sau fă click pentru a le selecta
+                                    </span>
+                                </label>
+
                                 <div className={styles.filesBox}>
                                     {project.files.map((file, idx) => (
                                         <div key={idx} className={styles.fileRow}>
@@ -231,14 +270,10 @@ const ProjectDetail = () => {
                                         </div>
                                     ))}
                                 </div>
-
-                                <span className={styles.autoChipInsideBig}>
-                                    auto din solicitare
-                                </span>
                             </div>
                         </div>
 
-                        {/* Echipă proiect – full width */}
+                        {/* Echipă proiect – READ ONLY */}
                         <div className={styles.itemFull}>
                             <span className={styles.label}>Echipă proiect</span>
 
@@ -263,7 +298,7 @@ const ProjectDetail = () => {
                     {/* bottom thin line inside card */}
                     <div className={styles.sectionDivider} />
 
-                    {/* ========== Detalii client & contract ========== */}
+                    {/* ========== Detalii client & contract (EDITABLE) ========== */}
                     <h2 className={styles.subSectionTitle}>
                         Detalii client & contract (confidențiale — vizibile doar
                         manageri)
@@ -274,36 +309,36 @@ const ProjectDetail = () => {
                         <div className={styles.clientItem3}>
                             <span className={styles.label}>Nume client</span>
                             <div className={styles.valueWrapper}>
-                                <div className={styles.metaValueBox}>
-                                    {project.clientName}
-                                </div>
-                                <span className={styles.autoChipInside}>
-                                    auto din solicitare
-                                </span>
+                                <input
+                                    type="text"
+                                    className={styles.metaValueBox}
+                                    value={project.clientName}
+                                    onChange={handleFieldChange("clientName")}
+                                />
                             </div>
                         </div>
 
                         <div className={styles.clientItem3}>
                             <span className={styles.label}>Persoană de contact</span>
                             <div className={styles.valueWrapper}>
-                                <div className={styles.metaValueBox}>
-                                    {project.contactPerson}
-                                </div>
-                                <span className={styles.autoChipInside}>
-                                    auto din solicitare
-                                </span>
+                                <input
+                                    type="text"
+                                    className={styles.metaValueBox}
+                                    value={project.contactPerson}
+                                    onChange={handleFieldChange("contactPerson")}
+                                />
                             </div>
                         </div>
 
                         <div className={styles.clientItem3}>
                             <span className={styles.label}>Funcție (opțional)</span>
                             <div className={styles.valueWrapper}>
-                                <div className={styles.metaValueBox}>
-                                    {project.contactRole}
-                                </div>
-                                <span className={styles.autoChipInside}>
-                                    auto din solicitare
-                                </span>
+                                <input
+                                    type="text"
+                                    className={styles.metaValueBox}
+                                    value={project.contactRole}
+                                    onChange={handleFieldChange("contactRole")}
+                                />
                             </div>
                         </div>
 
@@ -311,20 +346,24 @@ const ProjectDetail = () => {
                         <div className={styles.clientItemHalf}>
                             <span className={styles.label}>Email</span>
                             <div className={styles.valueWrapper}>
-                                <div className={styles.metaValueBox}>{project.email}</div>
-                                <span className={styles.autoChipInside}>
-                                    auto din solicitare
-                                </span>
+                                <input
+                                    type="email"
+                                    className={styles.metaValueBox}
+                                    value={project.email}
+                                    onChange={handleFieldChange("email")}
+                                />
                             </div>
                         </div>
 
                         <div className={styles.clientItemHalf}>
                             <span className={styles.label}>Telefon</span>
                             <div className={styles.valueWrapper}>
-                                <div className={styles.metaValueBox}>{project.phone}</div>
-                                <span className={styles.autoChipInside}>
-                                    auto din solicitare
-                                </span>
+                                <input
+                                    type="text"
+                                    className={styles.metaValueBox}
+                                    value={project.phone}
+                                    onChange={handleFieldChange("phone")}
+                                />
                             </div>
                         </div>
 
@@ -332,46 +371,48 @@ const ProjectDetail = () => {
                         <div className={styles.clientItemQuarter}>
                             <span className={styles.label}>Nr. contract</span>
                             <div className={styles.valueWrapper}>
-                                <div className={styles.metaValueBox}>
-                                    {project.contractNumber}
-                                </div>
-                                <span className={styles.autoChipInside}>
-                                    auto din solicitare
-                                </span>
+                                <input
+                                    type="text"
+                                    className={styles.metaValueBox}
+                                    value={project.contractNumber}
+                                    onChange={handleFieldChange("contractNumber")}
+                                />
                             </div>
                         </div>
 
                         <div className={styles.clientItemQuarter}>
                             <span className={styles.label}>Nr. anexă</span>
                             <div className={styles.valueWrapper}>
-                                <div className={styles.metaValueBox}>
-                                    {project.annexNumber}
-                                </div>
-                                <span className={styles.autoChipInside}>
-                                    auto din solicitare
-                                </span>
+                                <input
+                                    type="text"
+                                    className={styles.metaValueBox}
+                                    value={project.annexNumber}
+                                    onChange={handleFieldChange("annexNumber")}
+                                />
                             </div>
                         </div>
 
                         <div className={styles.clientItemQuarter}>
                             <span className={styles.label}>Preț proiect</span>
                             <div className={styles.valueWrapper}>
-                                <div className={styles.metaValueBox}>
-                                    {project.price} {project.currency}
-                                </div>
-                                <span className={styles.autoChipInside}>
-                                    auto din solicitare
-                                </span>
+                                <input
+                                    type="text"
+                                    className={styles.metaValueBox}
+                                    value={project.price}
+                                    onChange={handleFieldChange("price")}
+                                />
                             </div>
                         </div>
 
                         <div className={styles.clientItemQuarter}>
                             <span className={styles.label}>Monedă</span>
                             <div className={styles.valueWrapper}>
-                                <div className={styles.metaValueBox}>{project.currency}</div>
-                                <span className={styles.autoChipInside}>
-                                    auto din solicitare
-                                </span>
+                                <input
+                                    type="text"
+                                    className={styles.metaValueBox}
+                                    value={project.currency}
+                                    onChange={handleFieldChange("currency")}
+                                />
                             </div>
                         </div>
 
@@ -381,12 +422,11 @@ const ProjectDetail = () => {
                                 Alte informații despre contract
                             </span>
                             <div className={styles.bigInputWrapper}>
-                                <div className={styles.bigInputBox}>
-                                    {project.contractNotes}
-                                </div>
-                                <span className={styles.autoChipInsideBig}>
-                                    auto din solicitare
-                                </span>
+                                <textarea
+                                    className={styles.bigInputBox}
+                                    value={project.contractNotes}
+                                    onChange={handleFieldChange("contractNotes")}
+                                />
                             </div>
                         </div>
 
@@ -395,36 +435,35 @@ const ProjectDetail = () => {
                                 Solicitare referințe / informații suplimentare
                             </span>
                             <div className={styles.bigInputWrapper}>
-                                <div className={styles.bigInputBox}>
-                                    {project.referenceRequest}
-                                </div>
-                                <span className={styles.autoChipInsideBig}>
-                                    auto din solicitare
-                                </span>
+                                <textarea
+                                    className={styles.bigInputBox}
+                                    value={project.referenceRequest}
+                                    onChange={handleFieldChange("referenceRequest")}
+                                />
                             </div>
                         </div>
 
-                        {/* ROW 5 – Note interne (confidențiale) in same section */}
+                        {/* ROW 5 – Note interne (confidențiale) */}
                         <div className={styles.clientItemFull}>
                             <span className={styles.label}>Note interne (confidențiale)</span>
                         </div>
 
                         <div className={styles.clientItemFull}>
                             <div className={styles.bigInputWrapper}>
-                                <div className={styles.bigInputBox}>
-                                    {project.internalNotes}
-                                </div>
-                                <span className={styles.autoChipInsideBig}>
-                                    auto din solicitare
-                                </span>
+                                <textarea
+                                    className={styles.bigInputBox}
+                                    value={project.internalNotes}
+                                    onChange={handleFieldChange("internalNotes")}
+                                />
                             </div>
                         </div>
                     </div>
                 </div>
 
                 <ProjectBilling billing={billingData} />
+
                 <ProjectDetailButton
-                    onSave={() => console.log("save clicked")}
+                    onSave={handleSave}
                     onGoToTask={() => console.log("go to task clicked")}
                     onViewCosts={() => console.log("view costs clicked")}
                 />

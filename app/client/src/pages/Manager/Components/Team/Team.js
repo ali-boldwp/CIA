@@ -1,20 +1,41 @@
-import React, { useState } from "react";
+import React from "react";
 import "./Team.css";
-
-// NEW: popup component import
-import AddAnalystManager from "./AddAnalystManager";
+import { useGetAnalystsQuery } from "../../../../services/userApi";
+import { useGetProjectRequestsQuery } from "../../../../services/projectApi";
 
 const Team = () => {
-    const [showAddModal, setShowAddModal] = useState(false);
 
-    const analysts = [
-        { name: "Andrei Pop", initials: "AP", score: 4.9, status: "în lucru", progress: 80 },
-        { name: "Carmen Vasilescu", initials: "CV", score: 4.7, status: "în lucru", progress: 35 },
-        { name: "Mihai Matei", initials: "MM", score: 4.6, status: "liber", progress: 0 },
-        { name: "Iulia Barbu", initials: "IB", score: 4.8, status: "în lucru", progress: 48 },
-        { name: "Vlad Georgescu", initials: "VG", score: 4.5, status: "în lucru", progress: 22 },
-        { name: "Roxana Petrescu", initials: "RP", score: 4.6, status: "în lucru", progress: 58 },
-    ];
+    // Fetch all analysts
+    const { data: analystsData } = useGetAnalystsQuery();
+    const analysts = analystsData?.data || [];
+
+    // Fetch all projects
+    const { data: projectsData } = useGetProjectRequestsQuery();
+    const projects = projectsData?.data || [];
+
+    // Only approved projects
+    const approvedProjects = projects.filter(
+        (p) => p.status?.toLowerCase() === "approved"
+    );
+
+    // Function to check workload
+    const getAnalystStatus = (id) => {
+        const assigned = approvedProjects.some((proj) =>
+            proj.assignedAnalysts?.includes(id)
+        );
+        return assigned ? "în lucru" : "liber";
+    };
+
+    const getAnalystProgress = (id) => {
+        const assignedProjects = approvedProjects.filter((proj) =>
+            proj.assignedAnalysts?.includes(id)
+        );
+
+        if (assignedProjects.length === 0) return 0;
+
+        // OPTIONAL: if you want progress, use your own logic
+        return Math.min(100, assignedProjects.length * 20);
+    };
 
     return (
         <div className="main" style={{ marginBottom: "50px" }}>
@@ -29,57 +50,52 @@ const Team = () => {
                         <span>Progres</span>
                         <span>Acțiuni</span>
                     </div>
+                    <div className="teamBody">
+                    {analysts.map((a) => {
+                        const status = getAnalystStatus(a._id);
+                        const progress = getAnalystProgress(a._id);
 
-                    {analysts.map((a, index) => (
-                        <div className="team-row" key={index}>
-                            <div className="col name">
-                                <span className="initial-badge">{a.initials}</span>
-                                <span>{a.name}</span>
-                            </div>
-
-                            <div className="col score">{a.score}</div>
-
-                            <div className="col state">
-                <span
-                    className={`state-badge ${a.status === "liber" ? "free" : "work"}`}
-                >
-                  {a.status}
-                </span>
-                            </div>
-
-                            <div className="col progress">
-                                <div className="progres-bar">
-                                    <div
-                                        className="progres-fill"
-                                        style={{ width: `${a.progress}%` }}
-                                    ></div>
+                        return (
+                            <div className="team-row" key={a._id}>
+                                <div className="col name">
+                  <span   className={status === "în lucru" ? "purple" : "initial-badge"}>
+                    {a.initials || a.name?.slice(0, 2).toUpperCase()}
+                  </span>
+                                    <span>{a.name}</span>
                                 </div>
-                                <span className="progress-number">{a.progress}%</span>
-                            </div>
 
-                            <div className="col actions">
-                                <button className="open-btn">Deschide</button>
-                                <button className="delete-btn">🗑 Șterge</button>
+                                <div className="col score">{a.score || 0}</div>
+
+                                <div className="col state">
+                  <span
+                      className={`state-badge ${
+                          status === "liber" ? "free" : "work"
+                      }`}
+                  >
+                    {status}
+                  </span>
+                                </div>
+
+                                <div className="col progress">
+                                    <div className="progres-bar">
+                                        <div
+                                            className="progres-fill"
+                                            style={{ width: `${progress}%` }}
+                                        ></div>
+                                    </div>
+                                    <span className="progress-number">{progress}%</span>
+                                </div>
+
+                                <div className="col actions">
+                                    <button className="open-btn">Deschide</button>
+                                    <button className="delete-btn">🗑 Șterge</button>
+                                </div>
                             </div>
-                        </div>
-                    ))}
+                        );
+                    })}
+                    </div>
                 </div>
             </div>
-
-            {/* yeh button ab popup open karega */}
-            <button
-                className="add-btn"
-                onClick={() => setShowAddModal(true)}
-            >
-                + Adaugă analist
-            </button>
-
-            {/* NEW: AddAnalystManager popup */}
-            <AddAnalystManager
-                isOpen={showAddModal}
-                onClose={() => setShowAddModal(false)}
-                // future me agar edit mode chahiye ho to yahan editData pass kar sakte ho
-            />
         </div>
     );
 };

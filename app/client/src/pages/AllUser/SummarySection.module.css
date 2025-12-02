@@ -1,0 +1,67 @@
+/* outer wrapper to center the summary card */
+.wrapper {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-top: 24px;
+    margin-bottom: 48px;   /* 👈 yeh naya gap bottom ke liye */
+}
+
+/* white card same width as other sections */
+.card {
+    width: 96%;
+    max-width: 1500px;
+    background: #ffffff;
+    border-radius: 22px;
+    padding: 16px 20px 18px;
+    box-shadow: 0 18px 45px rgba(15, 23, 42, 0.06);
+}
+
+/* "Rezumat" title */
+.title {
+    font-size: 15px;
+    font-weight: 600;
+    color: #111827;
+}
+
+/* two boxes side by side */
+.grid {
+    margin-top: 10px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;   /* 👈 Both equal width now */
+    gap: 12px;
+}
+
+/* inner boxes */
+.box {
+    border-radius: 16px;
+    padding: 12px 16px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+/* left card background (light blue) */
+.leftBox {
+    background: #eef2ff;
+}
+
+/* right card background (light green) */
+.rightBox {
+    background: #ecfdf5;
+}
+
+/* small top label */
+.label {
+    font-size: 11px;
+    color: #6b7280;
+    margin-bottom: 4px;
+    font-weight: 600;
+}
+
+/* main big value */
+.value {
+    font-size: 18px;
+    font-weight: 700;
+    color: #111827;
+}

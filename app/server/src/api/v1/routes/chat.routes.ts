@@ -1,0 +1,15 @@
+import { Router } from "express";
+import { auth } from "../../../middlewares/auth.middleware";
+import * as chatController from "../controllers/chat.controller";
+import * as messageController from "../controllers/message.controller";
+
+const router = Router();
+
+router.post("/", auth, chatController.createChat);
+router.get("/", auth, chatController.getMyChats);
+router.get("/:id", auth, chatController.getChatById);
+
+router.post("/:chatId/message", auth, messageController.sendMessage);
+router.get("/:chatId/messages", auth, messageController.getMessages);
+
+export default router;
