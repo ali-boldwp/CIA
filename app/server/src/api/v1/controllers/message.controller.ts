@@ -6,7 +6,7 @@ import { getIO } from "../../../socket";
 export const sendMessage = async (req, res, next) => {
     try {
         const sender = (req as any).user.id;
-        const { chatId } = req.params;
+        let { chatId } = req.params;
         const { text } = req.body;
 
         // 🔥 Emit instantly — NO DELAY
@@ -19,12 +19,22 @@ export const sendMessage = async (req, res, next) => {
 
         getIO().to(chatId).emit("new_message", instantMsg);
 
-        // 🔥 Now save in background
-        const savedMessage = await Message.create({
-            chatId,
+        if ( chatId == 'open' ) {
+
+            chatId = null;
+
+        }
+
+        let data = {
             sender,
-            text
-        });
+            text,
+            chatId
+        }
+
+
+
+        // 🔥 Now save in background
+        const savedMessage = await Message.create(data);
 
         await Chat.findByIdAndUpdate(chatId, {
             lastMessage: savedMessage._id
