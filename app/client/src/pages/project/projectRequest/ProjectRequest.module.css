@@ -144,6 +144,24 @@
     background: #ffffff;
 }
 
+/* Disabled fields styling */
+.input:disabled {
+    background: #e5e7f5;
+    color: #9ca3af;
+    border-color: #d1d5db;
+    cursor: not-allowed;
+    box-shadow: none;
+}
+
+.textarea:disabled {
+    background: #e5e7f5;
+    color: #9ca3af;
+    border-color: #d1d5db;
+    cursor: not-allowed;
+    box-shadow: none;
+}
+
+
 /* TEXTAREA */
 
 .textarea {

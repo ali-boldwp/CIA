@@ -13,6 +13,7 @@
     "concurrently": "^9.2.1"
   },
   "dependencies": {
+    "@fontsource/inter": "^5.2.8",
     "@libs/AppContext": "file:./libs/AppContext",
     "@libs/AppRoutes": "file:./libs/AppRoutes",
     "@libs/AuthContext": "file:./libs/AuthContext",
