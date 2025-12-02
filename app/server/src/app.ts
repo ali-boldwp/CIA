@@ -37,11 +37,11 @@ app.use('/api', limiter);
 /* API v1 */
 app.use('/api/v1', v1Routes);
 
-// app.use(express.static(path.join(__dirname, 'client')));
-//
-// app.get('/*', (req, res) => {
-//     res.sendFile(path.join(__dirname, 'client', 'index.html'));
-// });
+app.use(express.static(path.join(__dirname, 'client')));
+
+app.get('/*', (req, res) => {
+    res.sendFile(path.join(__dirname, 'client', 'index.html'));
+});
 
 /* 404 + error */
 app.use(notFoundHandler);
