@@ -1,11 +1,19 @@
 import React, { useMemo, useState } from "react";
 import styles from "./AllUser.module.css";
+import PageHeader from "./PageHeader";
+import SearchBar from "./SearchBar";
+import EmployeeSection from "./EmployeeSection";
+import SummarySection from "./SummarySection";
+import AddEmployeeModal from "./AddEmployeeModal";
+
 import { useGetAllUsersQuery } from "../../services/userApi";
 
 const AllUser = () => {
     const [searchTerm, setSearchTerm] = useState("");
+    const [showModal, setShowModal] = useState(false);
+    const [activeSection, setActiveSection] = useState(null);
 
-    // Fetch all users from backend
+    // Fetch all users
     const { data: usersData, isLoading } = useGetAllUsersQuery();
 
     // Normalize API response
@@ -17,33 +25,50 @@ const AllUser = () => {
                 ? usersData.users
                 : [];
 
-    // Filter users by search
+    // Global search
     const filteredUsers = useMemo(() => {
         if (!searchTerm.trim()) return users;
-
         const q = searchTerm.toLowerCase();
         return users.filter((u) =>
             `${u.name} ${u.email} ${u.role}`.toLowerCase().includes(q)
         );
     }, [searchTerm, users]);
 
-    // Avatar initials
-    const getInitials = (name) => {
-        if (!name) return "?";
-        const parts = name.split(" ");
-        if (parts.length === 1) return parts[0]?.charAt(0)?.toUpperCase();
+    // ---- ROLE GROUPS (sirf layout ke liye) ----
+    const managementUsers = filteredUsers.filter((u) => {
+        const r = (u.role || "").toLowerCase();
         return (
-            parts[0].charAt(0).toUpperCase() +
-            parts[parts.length - 1].charAt(0).toUpperCase()
+            r.includes("ceo") ||
+            r.includes("cfo") ||
+            r.includes("manager") ||
+            r.includes("management")
         );
+    });
+
+    const investigationsUsers = filteredUsers.filter((u) => {
+        const r = (u.role || "").toLowerCase();
+        return (
+            r.includes("analist") ||
+            r.includes("analyst") ||
+            r.includes("detectiv") ||
+            r.includes("investig")
+        );
+    });
+
+    // jo na upar aaya na yahan, wo auxiliar
+    const auxiliaryUsers = filteredUsers.filter(
+        (u) => !managementUsers.includes(u) && !investigationsUsers.includes(u)
+    );
+
+    // ---- Modal control ----
+    const openModal = (sectionKey) => {
+        setActiveSection(sectionKey);
+        setShowModal(true);
     };
 
-    const handleEdit = (user) => {
-        console.log("Edit user:", user);
-    };
-
-    const handleDelete = (user) => {
-        console.log("Delete user:", user);
+    const closeModal = () => {
+        setShowModal(false);
+        setActiveSection(null);
     };
 
     if (isLoading) {
@@ -52,114 +77,36 @@ const AllUser = () => {
 
     return (
         <div className={styles.page}>
-            {/* Top Header */}
-            <div className={styles.headerBar}>
-                <button className={styles.backBtn} onClick={() => window.history.back()}>
-                    ← Înapoi la Dashboard
-                </button>
+            {/* HEADER */}
+            <PageHeader
+                title="Lista angajaților"
+                onBack={() => window.history.back()}
+            />
 
-                <h2 className={styles.title}>Lista tuturor utilizatorilor</h2>
-            </div>
+            {/* SEARCH */}
+            <SearchBar
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                placeholder="Caută angajat după nume..."
+            />
 
-            {/* Search Bar */}
-            <div className={styles.filtersRow}>
-                <div className={styles.serMain}>
-                    <span className={styles.serIcon}>🔍</span>
-                    <input
-                        className={styles.searchInput}
-                        type="text"
-                        placeholder="Caută utilizator după nume sau email..."
-                        value={searchTerm}
-                        onChange={(e) => setSearchTerm(e.target.value)}
-                    />
-                </div>
-            </div>
+            {/* ========= MANAGEMENT ========= */}
+            <EmployeeSection type="management" onAddClick={openModal} />
+            <EmployeeSection type="investigatii" onAddClick={openModal} />
+            <EmployeeSection type="auxiliar" onAddClick={openModal} />
 
-            {/* Users Table */}
-            <div className={styles.table}>
-                {/* Header */}
-                <div className={styles.tableHeader}>
-                    <span>Nume</span>
-                    <span>E-mail</span>
-                    <span>Rol</span>
-                    <span>Acțiuni</span>
-                </div>
+            {/* ========= REZUMAT ========= */}
+            <SummarySection
+                totalEmployees={filteredUsers.length}
+                totalMonthlyCost="115 806 RON" // abhi hardcoded
+            />
 
-                {/* Data Rows */}
-                {filteredUsers.map((user) => (
-                    <div className={styles.row} key={user._id}>
-                        {/* NAME */}
-                        <div className={styles.userCell}>
-                            <div className={styles.avatar}>{getInitials(user.name)}</div>
-                            <div className={styles.nameBlock}>
-                                <div className={styles.userName}>{user.name}</div>
-                            </div>
-                        </div>
-
-                        {/* EMAIL */}
-                        <div className={styles.cell}>{user.email}</div>
-
-                        {/* ROLE */}
-                        <div className={styles.cell}>{user.role}</div>
-
-                        {/* ACTIONS */}
-                        <div className={styles.actions}>
-                            {/* EDIT BUTTON */}
-                            <button
-                                type="button"
-                                className={styles.icon}
-                                onClick={() => handleEdit(user)}
-                            >
-                                <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    width="18"
-                                    height="18"
-                                    viewBox="0 0 24 24"
-                                    fill="none"
-                                    stroke="#1e293b"
-                                    strokeWidth="2"
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                >
-                                    <path d="M12 20h9" />
-                                    <path d="M16.5 3.5a2.121 2.121 0 1 1 3 3L7 19l-4 1 1-4 12.5-12.5z" />
-                                </svg>
-                            </button>
-
-                            {/* DELETE BUTTON */}
-                            <button
-                                type="button"
-                                className={styles.iconDelete}
-                                onClick={() => handleDelete(user)}
-                            >
-                                <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    width="18"
-                                    height="18"
-                                    viewBox="0 0 24 24"
-                                    fill="none"
-                                    stroke="#ef4444"
-                                    strokeWidth="2"
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                >
-                                    <polyline points="3 6 5 6 21 6" />
-                                    <path d="M19 6l-2 14H7L5 6" />
-                                    <path d="M10 11v6" />
-                                    <path d="M14 11v6" />
-                                </svg>
-                            </button>
-                        </div>
-                    </div>
-                ))}
-
-                {/* Empty state */}
-                {filteredUsers.length === 0 && (
-                    <div className={styles.emptyState}>
-                        Niciun utilizator găsit pentru căutarea curentă.
-                    </div>
-                )}
-            </div>
+            {/* ========= POPUP COMPONENT ========= */}
+            <AddEmployeeModal
+                isOpen={showModal}
+                sectionKey={activeSection}
+                onClose={closeModal}
+            />
         </div>
     );
 };
