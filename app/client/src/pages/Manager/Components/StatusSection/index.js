@@ -62,6 +62,16 @@ const StatusSection = () => {
                 </div>
             </div>
 
+                <div className="stat-box wide">
+                    <span className="label">👤 Toți utilizatorii</span>
+                    <div className="sec">
+                        <h3>0</h3>
+                        <Link to="/allUser" className="gradient-btn">
+                            👥 Vezi utilizatorii
+                        </Link>
+                    </div>
+                </div>
+
             <div className="stat-box wide blue-box">
                 <span className="label">💬 Mesaje necitite</span>
                 <div className="sec">
@@ -70,16 +80,8 @@ const StatusSection = () => {
                 </div>
             </div>
 
-            {/* ✅ NEW CARD: All User Romania Language */}
-            <div className="stat-box wide">
-                <span className="label">👤 Toți utilizatorii</span>
-                <div className="sec">
-                    <h3>0</h3>
-                    <Link to="/allUser" className="gradient-btn">
-                        👥 Vezi utilizatorii
-                    </Link>
-                </div>
-            </div>
+
+
             </div>
 
         </div>

@@ -22,7 +22,7 @@ const ProjectRow = ({ data }) => {
             {/* INFO SECTION -------------------- */}
             <div className="col project-info">
                 <h4 style={{ marginBottom: "5px" }}>
-                    {data.projectName || "Fără nume proiect"}
+                    {data.name || "Fără nume proiect"}
                 </h4>
 
                 <p>

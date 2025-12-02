@@ -18,6 +18,8 @@ html, body {
     justify-content: flex-start;
     flex-direction: column;
     gap:50px;
+    font-style: italic;
+    font-weight: bold;
 }
 
 RequestContainer {
@@ -38,7 +40,7 @@ RequestContainer {
 }
 
 .project-header-back {
-    color: #64748B;
+
     font-size: 14px;
     font-weight: 700;
     position: absolute;
@@ -46,9 +48,13 @@ RequestContainer {
     cursor: pointer;
     transition: 0.2s;
 }
-
-.project-header-back:hover {
+.project-header-back a{
+    color: #64748B;
+    transition: all ease 0.3s;
+}
+.project-header-back a:hover {
     color: #475569;
+    font-size: 14.5px;
 }
 
 .project-header-title {
@@ -84,6 +90,9 @@ RequestContainer {
     display: flex;
     flex-direction: column;
     gap:3px;
+}
+.project-info h4{
+    color: #0F172A;
 }
 .count {
     opacity: 0.7;
@@ -240,4 +249,34 @@ RequestContainer {
     margin-top: 5px;
     border-radius: 10px;
     box-shadow: 1px 1px 15px lightgray;
+}
+.search-container {
+    width: 100%;
+    background:  white;
+    border-radius: 12px;
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 25px;
+    border: 1px solid #e7edf5;
+    box-shadow: 0px 2px 12px rgba(0, 0, 0, 0.05);
+}
+
+.search-icon {
+    font-size: 18px;
+    opacity: 0.6;
+}
+
+.search-input {
+    flex: 1;
+    border: none;
+    outline: none;
+    background: transparent;
+    font-size: 15px;
+    color: #3b4455;
+}
+
+.search-input::placeholder {
+    color: #9aa6b8;
 }
