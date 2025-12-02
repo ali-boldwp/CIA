@@ -1,6 +1,6 @@
 import React , { useEffect } from "react";
 import "../MessengerPage.css";
-import socket from "../../../socket";
+// import socket from "../../../socket";
 import {
     FiDownload,
     FiSettings,
@@ -42,7 +42,7 @@ function Header() {
 
 function MessengerPage() {
 
-    useEffect(() => {
+    /*useEffect(() => {
         const CHAT_ID = "692f0cbee1afd5908152efd9";
 
         console.log("Joining chat:", CHAT_ID);
@@ -56,7 +56,7 @@ function MessengerPage() {
         return () => {
             socket.off("new_message");
         };
-    }, []);
+    }, []);*/
 
     return (
         <div className="app-bg">
