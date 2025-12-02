@@ -60,18 +60,7 @@
     color: #111827;
 }
 
-/* standard chip used with labels */
-.autoChip {
-    background: #dcfce7;
-    color: #15803d;
-    border-radius: 999px;
-    padding: 3px 10px;
-    font-size: 11px;
-    font-weight: 600;
-    white-space: nowrap;
-}
-
-/* wrapper for pill field + inner chip */
+/* wrapper for pill field */
 .valueWrapper {
     position: relative;
     width: 100%;
@@ -82,31 +71,16 @@
     width: 100%;
     min-height: 52px;
     border-radius: 14px;
-
     background: #f5f7ff;
     border: 1px solid #e0e7ff;
     padding: 12px 20px;
-    padding-right: 110px;
     font-size: 15px;
     font-weight: 600;
     color: #0f172a;
     display: flex;
     align-items: center;
-}
-
-/* chip INSIDE pill (right) */
-.autoChipInside {
-    position: absolute;
-    right: 14px;
-    top: 50%;
-    transform: translateY(-50%);
-    background: #dcfce7;
-    color: #15803d;
-    border-radius: 999px;
-    padding: 3px 10px;
-    font-size: 11px;
-    font-weight: 600;
-    white-space: nowrap;
+    outline: none;
+    box-sizing: border-box;
 }
 
 /* status pills block */
@@ -179,11 +153,12 @@
     background: #f5f7ff;
     border: 1px solid #e0e7ff;
     padding: 10px 16px;
-    padding-right: 110px;
     font-size: 13px;
     color: #111827;
     display: flex;
     align-items: center;
+    outline: none;
+    box-sizing: border-box;
 }
 
 .metaValueBold {
@@ -229,27 +204,52 @@
 }
 
 /* FILE BOX */
+.filesWrapper {
+    position: relative;
+    width: 100%;
+}
+
 .filesBox {
     margin-top: 6px;
     background: #f5f7ff;
     border-radius: 8px;
     border: 1px dashed #d4ddff;
     padding: 14px 16px;
-    padding-right: 130px;
     min-height: 80px;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
     gap: 4px;
+    box-sizing: border-box;
 }
 
 .fileRow {
     font-size: 12px;
     color: #374151;
 }
-.filesWrapper {
-    position: relative;
-    width: 100%;
+
+/* FILE DROP STYLES */
+.fileDrop {
+    border: 1px dashed #d4ddff;
+    background: #f9fbff;
+    border-radius: 10px;
+    padding: 12px 16px;
+    cursor: pointer;
+    display: block;
+    text-align: center;
+    font-size: 13px;
+    color: #4b5563;
+    transition: background 0.15s ease, border-color 0.15s ease;
+    margin-bottom: 8px;
+}
+
+.fileDrop:hover {
+    background: #eff4ff;
+    border-color: #6366f1;
+}
+
+.fileInput {
+    display: none;
 }
 
 /* TEAM CHIPS */
@@ -292,7 +292,7 @@
     width: 100%;
 }
 
-/* Big input styled box (textarea style but non-editable) */
+/* Big input styled box (for textarea and read-only text) */
 .bigInputBox {
     width: 100%;
     min-height: 120px;
@@ -300,27 +300,14 @@
     border: 1px solid #e0e7ff;
     border-radius: 14px;
     padding: 16px 18px;
-    padding-right: 130px;
     font-size: 14px;
     color: #111827;
     display: flex;
     align-items: flex-start;
     line-height: 1.45;
     white-space: pre-wrap;
-}
-
-/* Chip inside the big input */
-.autoChipInsideBig {
-    position: absolute;
-    right: 16px;
-    top: 16px;
-    background: #dcfce7;
-    color: #15803d;
-    padding: 4px 12px;
-    border-radius: 999px;
-    font-size: 11px;
-    font-weight: 600;
-    white-space: nowrap;
+    box-sizing: border-box;
+    outline: none;
 }
 
 /* ===== CLIENT & CONTRACT GRID (exact layout like screenshot) ===== */
