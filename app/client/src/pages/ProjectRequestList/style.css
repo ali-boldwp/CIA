@@ -131,11 +131,24 @@ RequestContainer {
     font-size: 13px;
 }
 
-.team-badge {
-    padding: 3px 8px;
-    background: #eef2ff;
-    border-radius: 8px;
-    font-size: 12px;
+.team-badge:first-child {
+    padding: 8px 7px;
+    color:white;
+    background: #14B8A6;
+    border-radius: 50%;
+    font-size: 10px;
+    font-weight: bold;
+    font-style: italic;
+    margin-right: 5px;
+}
+.team-badge{
+    padding: 8px 7px;
+    color:white;
+    background:  #6D28D9;
+    border-radius: 50%;
+    font-size: 10px;
+    font-weight: bold;
+    font-style: italic;
     margin-right: 5px;
 }
 
