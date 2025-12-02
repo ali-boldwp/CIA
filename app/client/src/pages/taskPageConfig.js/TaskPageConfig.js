@@ -6,6 +6,7 @@ const TaskPageConfig = {
             config: {}
         }
     },
+    auth: [ 'admin', 'user' , 'manager'  ],
 
     routes: [
         {

@@ -7,6 +7,8 @@ const ProjectDetailConfig = {
         }
     },
 
+
+
     routes: [
         {
             path: '/projectDetail',

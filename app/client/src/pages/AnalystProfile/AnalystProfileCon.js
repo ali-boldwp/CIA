@@ -8,6 +8,7 @@ const AnalistProfileCon = {
             config: {}
         }
     },
+    auth: [ 'admin', 'manager' ],
 
     routes: [
         {

@@ -6,7 +6,7 @@ const AllUserConfig = {
             config: {}
         }
     },
-
+    auth: [ 'admin', 'manager' ],
     routes: [
         {
             path: '/allUser',

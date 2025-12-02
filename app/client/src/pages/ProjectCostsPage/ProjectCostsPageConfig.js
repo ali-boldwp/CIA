@@ -8,6 +8,7 @@ const ProjectRequestConfig = {
         }
     },
 
+    auth: [ 'admin', 'manager' ],
     routes: [
         {
             path: '/projectCost',

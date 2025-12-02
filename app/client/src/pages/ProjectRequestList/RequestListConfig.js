@@ -8,6 +8,8 @@ const RequestListConfig = {
         }
     },
 
+    auth: [ 'admin', 'manager' ],
+
     routes: [
         {
             path: '/projectRequest-list',
