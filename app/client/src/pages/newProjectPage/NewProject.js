@@ -4,7 +4,7 @@ import {
     useGetProjectRequestByIdQuery,
     useCreateProjectMutation,
     useUpdateProjectMutation,
-    useUpdateProjectStatusMutation
+
 } from "../../services/projectApi";
 import { useGetAnalystsQuery } from "../../services/userApi";
 import "./NewProjectstyle.css";
@@ -149,7 +149,8 @@ const NewProject = () => {
     // ============================
     const [createProject] = useCreateProjectMutation();
 
-    const [updateStatus] = useUpdateProjectStatusMutation();
+    const [updateProject] = useUpdateProjectMutation();
+
 
     // ============================
     // FINAL PAYLOAD
@@ -190,18 +191,20 @@ const NewProject = () => {
         const payload = buildPayload();
 
         try {
-
-                // 1️⃣ Update fields
-
-            await createProject(payload).unwrap();
-                // 2️⃣ Update status -> approved
-                await updateStatus({ id, status: "approved" }).unwrap();
-
+            if (id) {
+                // UPDATE PROJECT
+                await updateProject({ id, ...payload }).unwrap();
+                toast.success("Proiect actualizat cu succes!");
+            }
+            else {
+                // CREATE PROJECT
+                await createProject(payload).unwrap();
                 toast.success("Proiect creat cu succes!");
+            }
 
         } catch (err) {
             console.log(err);
-            alert("Eroare la salvare!");
+            toast.error("Eroare la salvare!");
         }
     };
 

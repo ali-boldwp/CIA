@@ -8,10 +8,16 @@ const StatusSection = () => {
 
     // Projects Fetch
     const { data: projectData, isLoading: loadingProjects } = useGetProjectRequestsQuery();
+
     const projects = projectData?.data || [];
 
     // Only Approved
     const approvedReq = projects.filter((p) => p.status?.toLowerCase() === "approved");
+
+
+
+
+
 
 
     const { data: usersData, isLoading: usersLoading } = useGetAllUsersQuery();
@@ -25,10 +31,6 @@ const StatusSection = () => {
                 : [];
 
     const totalUsers = users.length;
-
-    // Users Fetch (FOR TOTAL USERS)
-    const { data: userData, isLoading: loadingUsers } = useGetAllUsersQuery();
-    const allUsers = userData?.data || [];
 
     return (
         <div className="stats-container">
