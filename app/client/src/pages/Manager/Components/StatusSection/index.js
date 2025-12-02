@@ -1,8 +1,26 @@
 import "./StatusSection.css";
 import { Link } from "react-router-dom";
+import { useGetAllUsersQuery } from "../../../../services/userApi";
 
 const StatusSection = () => {
+
+    const { data: usersData, isLoading } = useGetAllUsersQuery();
+
+    const totalUsers = (() => {
+        const users = Array.isArray(usersData)
+            ? usersData
+            : Array.isArray(usersData?.data)
+                ? usersData.data
+                : Array.isArray(usersData?.users)
+                    ? usersData.users
+                    : [];
+        return users.length;
+    })();
+
+
     return (
+
+
         <div className="stats-container">
 
             {/* Row 1 */}
@@ -65,12 +83,13 @@ const StatusSection = () => {
                 <div className="stat-box wide">
                     <span className="label">👤 Toți utilizatorii</span>
                     <div className="sec">
-                        <h3>0</h3>
+                        <h3>{isLoading ? "..." : totalUsers}</h3>
                         <Link to="/allUser" className="gradient-btn">
                             👥 Vezi utilizatorii
                         </Link>
                     </div>
                 </div>
+
 
             <div className="stat-box wide blue-box">
                 <span className="label">💬 Mesaje necitite</span>
