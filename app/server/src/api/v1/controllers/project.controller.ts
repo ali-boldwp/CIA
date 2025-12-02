@@ -70,11 +70,12 @@ export const createProject = async (req: Request, res: Response, next: NextFunct
 
             files: [...(requestData.files || []), ...files],
 
-            createdBy: user.id,
+            // createdBy: user.id,
 
             fromRequestId: body.fromRequestId,
 
-            status: body.status || "approved"
+            status: "requested"
+
         };
 
         // FINAL SAVE
@@ -100,6 +101,20 @@ export const getAllProjects = async (_req, res, next) => {
 export const getProjectById = async (req, res, next) => {
     try {
         const project = await projectService.getProjectById(req.params.id);
+
+        if ( project.status == 'requested' && ( req.user.role !== 'admin' || req.user.role !== 'manager' ) ) {
+
+            res.json({ error: true, message: "Unauthorized" });
+
+        }
+
+        if ( project.status !== 'requested' && ( req.user.role !== 'admin' || req.user.role !== 'manager' || req.user._id !== project.fromRequestId
+            || req.user._id !== project.responsibleAnalyst  ) ) {
+
+            res.json({ error: true, message: "Unauthorized" });
+
+        }
+
         res.json(ok(project));
     } catch (err) {
         next(err);
@@ -108,8 +123,33 @@ export const getProjectById = async (req, res, next) => {
 
 export const updateProject = async (req, res, next) => {
     try {
+
         const updated = await projectService.updateProject(req.params.id, req.body);
         res.json(ok(updated));
+    } catch (err) {
+        next(err);
+    }
+};
+
+export const approveProject = async (req, res, next) => {
+    try {
+
+        if ( ( req.user.role !== 'admin' && req.user.role !== 'manager' ) ) {
+
+            res.json({ error: true, message: "Unauthorized" });
+
+        }
+
+        const user = (req as any).user;
+        const data = req.body;
+
+        data.status = 'approved';
+        data.createdBy = user._id;
+
+        const updated = await projectService.updateProject(req.params.id, data );
+
+        res.json(ok(updated));
+
     } catch (err) {
         next(err);
     }
