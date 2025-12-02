@@ -5,36 +5,23 @@ import { useGetProjectRequestsQuery } from "../../../../services/projectApi";
 import { useGetAllUsersQuery } from "../../../../services/userApi";
 
 const StatusSection = () => {
-    // ---- Projects ----
-    const { data: projectData } = useGetProjectRequestsQuery();
 
-    const projectList = Array.isArray(projectData?.data)
-        ? projectData.data
-        : Array.isArray(projectData)
-            ? projectData
-            : [];
+    // Projects Fetch
+    const { data: projectData, isLoading: loadingProjects } = useGetProjectRequestsQuery();
+    const projects = projectData?.data || [];
 
-    const approvedReq = projectList.filter(
-        (p) => p?.status?.toLowerCase() === "approved"
-    );
+    // Only Approved
+    const approvedReq = projects.filter((p) => p.status?.toLowerCase() === "approved");
 
-    // ---- Users (for total users card) ----
-    const { data: usersData, isLoading: usersLoading } = useGetAllUsersQuery();
-
-    const users = Array.isArray(usersData)
-        ? usersData
-        : Array.isArray(usersData?.data)
-            ? usersData.data
-            : Array.isArray(usersData?.users)
-                ? usersData.users
-                : [];
-
-    const totalUsers = users.length;
+    // Users Fetch (FOR TOTAL USERS)
+    const { data: userData, isLoading: loadingUsers } = useGetAllUsersQuery();
+    const allUsers = userData?.data || [];
 
     return (
         <div className="stats-container">
-            {/* Row 1 */}
+
             <div className="status1">
+
                 <div className="stat-box">
                     <span className="label">📁 Proiecte active</span>
                     <h3>{approvedReq.length}</h3>
@@ -47,9 +34,7 @@ const StatusSection = () => {
 
                 <div className="stat-box">
                     <span className="label">💻 Solicitare de proiect nou</span>
-                    <Link to="/projectRequest-list" className="gradient-btn">
-                        Adaugă
-                    </Link>
+                    <Link to="/projectRequest-list" className="gradient-btn">Adaugă</Link>
                 </div>
 
                 <div className="stat-box">
@@ -71,10 +56,11 @@ const StatusSection = () => {
                     <span className="label">💳 Costuri & performanța</span>
                     <button className="gradient-btn">KPI</button>
                 </div>
+
             </div>
 
-            {/* Row 2 */}
             <div className="status2">
+
                 <div className="stat-box wide">
                     <span className="label">📤 Solicitări proiect — de revizuit</span>
                     <div className="sec">

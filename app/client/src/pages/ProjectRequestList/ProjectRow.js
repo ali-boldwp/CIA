@@ -69,6 +69,13 @@ const ProjectRow = ({ data }) => {
                 </span>
             </div>
 
+            <div className="col deadline">
+                <span>
+                    {data.name||data.projectName}
+                </span>
+            </div>
+
+
             {/* ACTIONS ------------------------- */}
             <div className="col actions" ref={dropdownRef}>
                 <Link to={`/project/${data._id}`} className="action-btn-request">

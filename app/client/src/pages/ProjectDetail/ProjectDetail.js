@@ -4,50 +4,75 @@ import styles from "./ProjectDetail.module.css";
 import ProjectDetailHeader from "./ProjectDetailHeader";
 import ProjectBilling from "./ProjectBilling";
 import ProjectDetailButton from "./ProjectDetailButton";
+import { useGetProjectRequestByIdQuery } from "../../services/projectApi";
+import {useParams} from "react-router-dom";
+import {useGetAllUsersQuery} from "../../services/userApi";
 
 const ProjectDetail = () => {
-    const project = {
-        name: "Due Diligence: Societatea ABC",
-        subject: "Societatea ABC",
-        reportType: "Enhanced Due Diligence",
-        entityType: "Societate",
-        deadline: "2025-12-20",
 
-        createdAt: "2025-12-01 09:20",
-        startDate: "2025-12-02 10:15",
-        status: "În lucru",
+    const { id } = useParams();  // URL se ID mil gayi
 
-        priority: "Normal",
-        language: "Română",
-        services: "OSINT, HUMINT",
-        description: "Scop, contexte preexistente, interdependențe, etc.",
+    const { data, isLoading } = useGetProjectRequestByIdQuery(id);
+    const { data: usersData } = useGetAllUsersQuery();
+    const project = data?.data || {};  // backend se project
+    if (isLoading) return <p>Loading...</p>;
 
-        files: [
-            "Contract_ABC.pdf – 1.2 MB",
-            "Lista_interna_client.docx – 86 KB",
-        ],
 
-        responsible: "Analist C",
-        team: ["Analist A", "Analist B"],
+    const users = usersData?.data || [];
 
-        clientName: "ZZZ SRL",
-        contactPerson: "Ana Popescu",
-        contactRole: "Director Achiziții",
-        email: "ana.popescu@zzz.ro",
-        phone: "+40 7xx xxx xxx",
+// Get responsible name
+    const responsible = users.find(
+        u => u._id === project.responsibleAnalyst
+    );
 
-        contractNumber: "CTR-2025-014",
-        annexNumber: "ANX-03",
-        price: "3.500",
-        currency: "EUR",
+// Assigned analysts (IDs → names)
+    const assigned = project.assignedAnalysts?.map(id =>
+        users.find(u => u._id === id)?.name || "Analist"
+    );
 
-        referenceRequest:
-            "De menționat persoanele care ar putea deține informații despre speță.",
-        contractNotes:
-            "Informații contractuale confidențiale, termeni, clauze, etc.",
-        internalNotes:
-            "Alte informații confidențiale despre proiect, recomandări interne, etc.",
-    };
+
+    // const project = {
+    //     name: "Due Diligence: Societatea ABC",
+    //     subject: "Societatea ABC",
+    //     reportType: "Enhanced Due Diligence",
+    //     entityType: "Societate",
+    //     deadline: "2025-12-20",
+    //
+    //     createdAt: "2025-12-01 09:20",
+    //     startDate: "2025-12-02 10:15",
+    //     status: "În lucru",
+    //
+    //     priority: "Normal",
+    //     language: "Română",
+    //     services: "OSINT, HUMINT",
+    //     description: "Scop, contexte preexistente, interdependențe, etc.",
+    //
+    //     files: [
+    //         "Contract_ABC.pdf – 1.2 MB",
+    //         "Lista_interna_client.docx – 86 KB",
+    //     ],
+    //
+    //     responsible: "Analist C",
+    //     team: ["Analist A", "Analist B"],
+    //
+    //     clientName: "ZZZ SRL",
+    //     contactPerson: "Ana Popescu",
+    //     contactRole: "Director Achiziții",
+    //     email: "ana.popescu@zzz.ro",
+    //     phone: "+40 7xx xxx xxx",
+    //
+    //     contractNumber: "CTR-2025-014",
+    //     annexNumber: "ANX-03",
+    //     price: "3.500",
+    //     currency: "EUR",
+    //
+    //     referenceRequest:
+    //         "De menționat persoanele care ar putea deține informații despre speță.",
+    //     contractNotes:
+    //         "Informații contractuale confidențiale, termeni, clauze, etc.",
+    //     internalNotes:
+    //         "Alte informații confidențiale despre proiect, recomandări interne, etc.",
+    // };
 
     const handleBack = () => {
         window.history.back();
@@ -68,7 +93,7 @@ const ProjectDetail = () => {
         <div className={styles.page}>
             {/* PAGE HEADER */}
             <ProjectDetailHeader
-                title={`Proiect: ${project.name}`}
+                title={`Proiect: ${project.projectName}`}
                 onBack={handleBack}
             />
 
@@ -86,10 +111,8 @@ const ProjectDetail = () => {
                             <span className={styles.label}>Denumire proiect</span>
 
                             <div className={styles.valueWrapper}>
-                                <div className={styles.nameValueBox}>{project.name}</div>
-                                <span className={styles.autoChipInside}>
-                                    auto din solicitare
-                                </span>
+                                <div className={styles.nameValueBox}>{project.projectName}</div>
+
                             </div>
                         </div>
 
@@ -99,14 +122,14 @@ const ProjectDetail = () => {
                                 className={`${styles.statusPill} ${styles.statusCreated}`}
                             >
                                 <span className={styles.statusBold}>Creat la:</span>{" "}
-                                {project.createdAt}
+                                {new Date(project.createdAt).toLocaleString("ro-RO")}
                             </span>
 
                             <span
                                 className={`${styles.statusPill} ${styles.statusStart}`}
                             >
                                 <span className={styles.statusBold}>Start proiect:</span>{" "}
-                                {project.startDate}
+                                {new Date(project.createdAt).toLocaleString("ro-RO")}
                             </span>
 
                             <span
@@ -123,10 +146,8 @@ const ProjectDetail = () => {
                         <div className={styles.metaField}>
                             <span className={styles.label}>Subiect proiect</span>
                             <div className={styles.valueWrapper}>
-                                <div className={styles.metaValueBox}>{project.subject}</div>
-                                <span className={styles.autoChipInside}>
-                                    auto din solicitare
-                                </span>
+                                <div className={styles.metaValueBox}>{project.projectSubject}</div>
+
                             </div>
                         </div>
 
@@ -136,9 +157,7 @@ const ProjectDetail = () => {
                                 <div className={styles.metaValueBox}>
                                     {project.reportType}
                                 </div>
-                                <span className={styles.autoChipInside}>
-                                    auto din solicitare
-                                </span>
+
                             </div>
                         </div>
 
@@ -148,9 +167,7 @@ const ProjectDetail = () => {
                                 <div className={styles.metaValueBox}>
                                     {project.entityType}
                                 </div>
-                                <span className={styles.autoChipInside}>
-                                    auto din solicitare
-                                </span>
+
                             </div>
                         </div>
 
@@ -160,11 +177,11 @@ const ProjectDetail = () => {
                                 <div
                                     className={`${styles.metaValueBox} ${styles.metaValueBold}`}
                                 >
-                                    {project.deadline}
+                                    {project.deadline
+                                        ? new Date(project.deadline).toLocaleDateString("ro-RO")
+                                        : "Fără deadline"}
                                 </div>
-                                <span className={styles.autoChipInside}>
-                                    auto din solicitare
-                                </span>
+
                             </div>
                         </div>
                     </div>
@@ -175,29 +192,28 @@ const ProjectDetail = () => {
                             <span className={styles.label}>Prioritate</span>
                             <div className={styles.valueWrapper}>
                                 <div className={styles.metaValueBox}>{project.priority}</div>
-                                <span className={styles.autoChipInside}>
-                                    auto din solicitare
-                                </span>
+
                             </div>
                         </div>
 
                         <div className={styles.metaField}>
                             <span className={styles.label}>Limba livrabilă</span>
                             <div className={styles.valueWrapper}>
-                                <div className={styles.metaValueBox}>{project.language}</div>
-                                <span className={styles.autoChipInside}>
-                                    auto din solicitare
-                                </span>
+                                <div className={styles.metaValueBox}>{project.deliverableLanguage}</div>
+
                             </div>
                         </div>
 
                         <div className={styles.metaField}>
                             <span className={styles.label}>Se dorește (tipuri)</span>
                             <div className={styles.valueWrapper}>
-                                <div className={styles.metaValueBox}>{project.services}</div>
-                                <span className={styles.autoChipInside}>
-                                    auto din solicitare
-                                </span>
+                                <div className={styles.metaValueBox}>
+                                    {project.servicesRequested?.length > 0
+                                    ? project.servicesRequested.join(", ")
+                                    : "—"
+                                }
+                                </div>
+
                             </div>
                         </div>
                     </div>
@@ -210,12 +226,10 @@ const ProjectDetail = () => {
 
                             <div className={styles.bigInputWrapper}>
                                 <div className={styles.bigInputBox}>
-                                    {project.description}
+                                    {project.projectDescription}
                                 </div>
 
-                                <span className={styles.autoChipInsideBig}>
-                                    auto din solicitare
-                                </span>
+
                             </div>
                         </div>
 
@@ -225,16 +239,18 @@ const ProjectDetail = () => {
 
                             <div className={styles.filesWrapper}>
                                 <div className={styles.filesBox}>
-                                    {project.files.map((file, idx) => (
-                                        <div key={idx} className={styles.fileRow}>
-                                            {file}
-                                        </div>
-                                    ))}
+                                    {project.files?.length > 0 ? (
+                                        project.files.map((file, idx) => (
+                                            <div key={idx} className={styles.fileRow}>
+                                                {file}
+                                            </div>
+                                        ))
+                                    ) : (
+                                        <div className={styles.fileRow}>Niciun fișier</div>
+                                    )}
                                 </div>
 
-                                <span className={styles.autoChipInsideBig}>
-                                    auto din solicitare
-                                </span>
+
                             </div>
                         </div>
 
@@ -245,17 +261,23 @@ const ProjectDetail = () => {
                             <div className={styles.chipRow}>
                                 <span className={styles.chipLabel}>Responsabil:</span>
                                 <span className={styles.chipPrimary}>
-                                    {project.responsible}
+                                    {responsible?.name || "Nespecificat"}
                                 </span>
                             </div>
 
                             <div className={styles.chipRow}>
                                 <span className={styles.chipLabel}>Analiști alocați:</span>
-                                {project.team.map((member) => (
-                                    <span key={member} className={styles.chipGhost}>
-                                        {member}
-                                    </span>
-                                ))}
+                                {assigned?.length > 0 ? (
+                                    assigned.map((name, idx) => (
+                                        <span key={idx} className={styles.chipGhost}>
+                        {name}
+                    </span>
+                                    ))
+                                ) : (
+                                    <span className={styles.chipGhost}>
+                    Niciun analist asignat
+                </span>
+                                )}
                             </div>
                         </div>
                     </div>
@@ -277,9 +299,7 @@ const ProjectDetail = () => {
                                 <div className={styles.metaValueBox}>
                                     {project.clientName}
                                 </div>
-                                <span className={styles.autoChipInside}>
-                                    auto din solicitare
-                                </span>
+
                             </div>
                         </div>
 
@@ -287,11 +307,9 @@ const ProjectDetail = () => {
                             <span className={styles.label}>Persoană de contact</span>
                             <div className={styles.valueWrapper}>
                                 <div className={styles.metaValueBox}>
-                                    {project.contactPerson}
+                                    {project.clientContactPerson}
                                 </div>
-                                <span className={styles.autoChipInside}>
-                                    auto din solicitare
-                                </span>
+
                             </div>
                         </div>
 
@@ -299,11 +317,9 @@ const ProjectDetail = () => {
                             <span className={styles.label}>Funcție (opțional)</span>
                             <div className={styles.valueWrapper}>
                                 <div className={styles.metaValueBox}>
-                                    {project.contactRole}
+                                    {project.clientPosition || "—"}
                                 </div>
-                                <span className={styles.autoChipInside}>
-                                    auto din solicitare
-                                </span>
+
                             </div>
                         </div>
 
@@ -311,20 +327,16 @@ const ProjectDetail = () => {
                         <div className={styles.clientItemHalf}>
                             <span className={styles.label}>Email</span>
                             <div className={styles.valueWrapper}>
-                                <div className={styles.metaValueBox}>{project.email}</div>
-                                <span className={styles.autoChipInside}>
-                                    auto din solicitare
-                                </span>
+                                <div className={styles.metaValueBox}>{project.clientEmail}</div>
+
                             </div>
                         </div>
 
                         <div className={styles.clientItemHalf}>
                             <span className={styles.label}>Telefon</span>
                             <div className={styles.valueWrapper}>
-                                <div className={styles.metaValueBox}>{project.phone}</div>
-                                <span className={styles.autoChipInside}>
-                                    auto din solicitare
-                                </span>
+                                <div className={styles.metaValueBox}>{project.clientPhone}</div>
+
                             </div>
                         </div>
 
@@ -333,11 +345,9 @@ const ProjectDetail = () => {
                             <span className={styles.label}>Nr. contract</span>
                             <div className={styles.valueWrapper}>
                                 <div className={styles.metaValueBox}>
-                                    {project.contractNumber}
+                                    {project.contractNumber || "—"}
                                 </div>
-                                <span className={styles.autoChipInside}>
-                                    auto din solicitare
-                                </span>
+
                             </div>
                         </div>
 
@@ -345,11 +355,9 @@ const ProjectDetail = () => {
                             <span className={styles.label}>Nr. anexă</span>
                             <div className={styles.valueWrapper}>
                                 <div className={styles.metaValueBox}>
-                                    {project.annexNumber}
+                                    {project.annexNumber || "—"}
                                 </div>
-                                <span className={styles.autoChipInside}>
-                                    auto din solicitare
-                                </span>
+
                             </div>
                         </div>
 
@@ -357,11 +365,9 @@ const ProjectDetail = () => {
                             <span className={styles.label}>Preț proiect</span>
                             <div className={styles.valueWrapper}>
                                 <div className={styles.metaValueBox}>
-                                    {project.price} {project.currency}
+                                    {project.projectPrice} {project.currency}
                                 </div>
-                                <span className={styles.autoChipInside}>
-                                    auto din solicitare
-                                </span>
+
                             </div>
                         </div>
 
@@ -369,9 +375,7 @@ const ProjectDetail = () => {
                             <span className={styles.label}>Monedă</span>
                             <div className={styles.valueWrapper}>
                                 <div className={styles.metaValueBox}>{project.currency}</div>
-                                <span className={styles.autoChipInside}>
-                                    auto din solicitare
-                                </span>
+
                             </div>
                         </div>
 
@@ -382,11 +386,9 @@ const ProjectDetail = () => {
                             </span>
                             <div className={styles.bigInputWrapper}>
                                 <div className={styles.bigInputBox}>
-                                    {project.contractNotes}
+                                    {project.contractInfo}
                                 </div>
-                                <span className={styles.autoChipInsideBig}>
-                                    auto din solicitare
-                                </span>
+
                             </div>
                         </div>
 
@@ -398,9 +400,7 @@ const ProjectDetail = () => {
                                 <div className={styles.bigInputBox}>
                                     {project.referenceRequest}
                                 </div>
-                                <span className={styles.autoChipInsideBig}>
-                                    auto din solicitare
-                                </span>
+
                             </div>
                         </div>
 
@@ -414,9 +414,7 @@ const ProjectDetail = () => {
                                 <div className={styles.bigInputBox}>
                                     {project.internalNotes}
                                 </div>
-                                <span className={styles.autoChipInsideBig}>
-                                    auto din solicitare
-                                </span>
+
                             </div>
                         </div>
                     </div>
