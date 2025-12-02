@@ -1,9 +1,17 @@
 import { useState, useRef, useEffect } from "react";
 import {Link} from "react-router-dom";
+import {useGetAllUsersQuery} from "../../services/userApi";
 
 const ProjectRow = ({ data }) => {
     const [open, setOpen] = useState(false);
     const dropdownRef = useRef();
+
+    const { data: usersData } = useGetAllUsersQuery();
+    const users = usersData?.data || [];
+
+    const responsibleUser = users.find(
+        (u) => u._id === data.responsibleAnalyst
+    );
 
     // Close when clicking outside
     useEffect(() => {
@@ -22,13 +30,13 @@ const ProjectRow = ({ data }) => {
             {/* INFO SECTION -------------------- */}
             <div className="col project-info">
                 <h4 style={{ marginBottom: "5px" }}>
-                    {data.name || "Fără nume proiect"}
+                    {data.name || data.projectName || "Fără nume proiect"}
                 </h4>
 
                 <p>
                     Responsabil:{" "}
                     <b>
-                        {data.responsibleAnalyst?.name || "Nespecificat"}
+                        {responsibleUser?.name || "Nespecificat"}
                     </b>
                 </p>
 

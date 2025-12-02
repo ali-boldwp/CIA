@@ -1,9 +1,15 @@
 import { useState, useRef, useEffect } from "react";
+import { useGetAllUsersQuery } from "../../../../services/userApi";
 
-const ProjectRow = ({ data }) => {
+const ProjectRow = ({ project }) => {
   const [open, setOpen] = useState(false);
   const dropdownRef = useRef();
+    const { data: usersData } = useGetAllUsersQuery();
+    const users = usersData?.data || [];
 
+    const responsibleUser = users.find(
+        (u) => u._id === project.responsibleAnalyst
+    );
   // Close when clicking outside
   useEffect(() => {
     const handler = (e) => {
@@ -20,35 +26,44 @@ const ProjectRow = ({ data }) => {
 
       {/* INFO SECTION -------------------- */}
       <div className="col project-info">
-        <h4 style={{ marginBottom: "5px" }}>{data.name}</h4>
-        <p>Responsabil: <b>{data.responsible}</b></p>
-        <p>
-          Echipa asignata:{" "}
-          {data.team.map((t, i) => (
-            <span key={i} className="team-badge">{t}</span>
-          ))}
-        </p>
+        <h4 style={{ marginBottom: "5px" }}>{project.projectName || project.name }</h4>
+        <p>Responsabil: <b>{responsibleUser?.name || "Nespecificat"}</b></p>
+          <p>
+              Echipa asignată:{" "}
+              {project.assignedAnalysts?.length > 0 ? (
+                  project.assignedAnalysts.map((a, i) => (
+                      <span key={i} className="team-badge">
+                { responsibleUser?.name.slice(0,2).toUpperCase() || "AN"}
+              </span>
+                  ))
+              ) : (
+                  <span className="team-empty">Nicio persoană asignată</span>
+              )}
+          </p>
       </div>
 
       {/* DEADLINE ------------------------ */}
-      <div className="col deadline">
-        <span className={`deadline-date ${data.expired ? "expired" : ""}`}>
-          {data.deadline} • {data.deadlineBadge}
+        <div className="col deadline">
+        <span className="deadline-date">
+          {project.deadline
+              ? new Date(project.deadline).toLocaleDateString("ro-RO")
+              : "Fără deadline"}
         </span>
-      </div>
+        </div>
 
-      {/* PROGRESS ------------------------ */}
+
+        {/* PROGRESS ------------------------ */}
       <div className="col progress">
         <div className="progress-bar1">
-          <div className="progress-fill1" style={{ width: `${data.progress}%` }}></div>
+          <div className="progress-fill1" style={{ width: `${project.progress}%` }}></div>
         </div>
-        <span className="progress-text">{data.progressText}</span>
+        <span className="progress-text">{project.progressText}</span>
       </div>
 
       {/* STATUS -------------------------- */}
       <div className="col status">
-        <span className={`status-badge ${data.statusColor}`}>
-          {data.status}
+        <span className={`status-badge orange ${project.statusColor}`}>
+          S-a solicitat HUMINT
         </span>
       </div>
 
