@@ -6,7 +6,7 @@ const NewProjectConfig = {
             config: {}
         }
     },
-
+    auth: [ 'admin', 'manager' ],
     routes: [
         {
             path: '/project',
