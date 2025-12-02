@@ -1,5 +1,6 @@
-import React from "react";
+import React , { useEffect } from "react";
 import "../MessengerPage.css";
+import socket from "../../../socket";
 import {
     FiDownload,
     FiSettings,
@@ -40,6 +41,23 @@ function Header() {
 }
 
 function MessengerPage() {
+
+    useEffect(() => {
+        const CHAT_ID = "692f0cbee1afd5908152efd9";
+
+        console.log("Joining chat:", CHAT_ID);
+        socket.emit("join_chat", CHAT_ID);
+
+        socket.on("new_message", (msg) => {
+            console.log("📩 New message received:", msg);
+            alert("📩 New message: " + msg.text);
+        });
+
+        return () => {
+            socket.off("new_message");
+        };
+    }, []);
+
     return (
         <div className="app-bg">
             <div className="app-shell">
