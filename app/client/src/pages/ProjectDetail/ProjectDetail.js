@@ -1,82 +1,58 @@
 // /home/ubaid/workspace/app/client/src/pages/ProjectDetail/ProjectDetail.js
-import React from "react";
+import React, { useState } from "react";
 import styles from "./ProjectDetail.module.css";
 import ProjectDetailHeader from "./ProjectDetailHeader";
 import ProjectBilling from "./ProjectBilling";
 import ProjectDetailButton from "./ProjectDetailButton";
-import { useGetProjectRequestByIdQuery } from "../../services/projectApi";
-import {useParams} from "react-router-dom";
-import {useGetAllUsersQuery} from "../../services/userApi";
 
 const ProjectDetail = () => {
+    const [project, setProject] = useState({
+        name: "Due Diligence: Societatea ABC",
+        subject: "Societatea ABC",
+        reportType: "Enhanced Due Diligence",
+        entityType: "Societate",
+        deadline: "2025-12-20",
 
-    const { id } = useParams();  // URL se ID mil gayi
+        createdAt: "2025-12-01 09:20",
+        startDate: "2025-12-02 10:15",
+        status: "În lucru",
 
-    const { data, isLoading } = useGetProjectRequestByIdQuery(id);
-    const { data: usersData } = useGetAllUsersQuery();
-    const project = data?.data || {};  // backend se project
-    if (isLoading) return <p>Loading...</p>;
+        priority: "Normal",
+        language: "Română",
+        services: "OSINT, HUMINT",
+        description: "Scop, contexte preexistente, interdependențe, etc.",
 
+        files: [
+            "Contract_ABC.pdf – 1.2 MB",
+            "Lista_interna_client.docx – 86 KB",
+        ],
 
-    const users = usersData?.data || [];
+        responsible: "Analist C",
+        team: ["Analist A", "Analist B"],
 
-// Get responsible name
-    const responsible = users.find(
-        u => u._id === project.responsibleAnalyst
-    );
+        clientName: "ZZZ SRL",
+        contactPerson: "Ana Popescu",
+        contactRole: "Director Achiziții",
+        email: "ana.popescu@zzz.ro",
+        phone: "+40 7xx xxx xxx",
 
-// Assigned analysts (IDs → names)
-    const assigned = project.assignedAnalysts?.map(id =>
-        users.find(u => u._id === id)?.name || "Analist"
-    );
+        contractNumber: "CTR-2025-014",
+        annexNumber: "ANX-03",
+        price: "3.500",
+        currency: "EUR",
 
-
-    // const project = {
-    //     name: "Due Diligence: Societatea ABC",
-    //     subject: "Societatea ABC",
-    //     reportType: "Enhanced Due Diligence",
-    //     entityType: "Societate",
-    //     deadline: "2025-12-20",
-    //
-    //     createdAt: "2025-12-01 09:20",
-    //     startDate: "2025-12-02 10:15",
-    //     status: "În lucru",
-    //
-    //     priority: "Normal",
-    //     language: "Română",
-    //     services: "OSINT, HUMINT",
-    //     description: "Scop, contexte preexistente, interdependențe, etc.",
-    //
-    //     files: [
-    //         "Contract_ABC.pdf – 1.2 MB",
-    //         "Lista_interna_client.docx – 86 KB",
-    //     ],
-    //
-    //     responsible: "Analist C",
-    //     team: ["Analist A", "Analist B"],
-    //
-    //     clientName: "ZZZ SRL",
-    //     contactPerson: "Ana Popescu",
-    //     contactRole: "Director Achiziții",
-    //     email: "ana.popescu@zzz.ro",
-    //     phone: "+40 7xx xxx xxx",
-    //
-    //     contractNumber: "CTR-2025-014",
-    //     annexNumber: "ANX-03",
-    //     price: "3.500",
-    //     currency: "EUR",
-    //
-    //     referenceRequest:
-    //         "De menționat persoanele care ar putea deține informații despre speță.",
-    //     contractNotes:
-    //         "Informații contractuale confidențiale, termeni, clauze, etc.",
-    //     internalNotes:
-    //         "Alte informații confidențiale despre proiect, recomandări interne, etc.",
-    // };
+        referenceRequest:
+            "De menționat persoanele care ar putea deține informații despre speță.",
+        contractNotes:
+            "Informații contractuale confidențiale, termeni, clauze, etc.",
+        internalNotes:
+            "Alte informații confidențiale despre proiect, recomandări interne, etc.",
+    });
 
     const handleBack = () => {
         window.history.back();
     };
+
     const billingData = {
         price: 3500,
         fixed: 300,
@@ -88,12 +64,32 @@ const ProjectDetail = () => {
         percentage: 41.3,
     };
 
+    const handleFieldChange = (field) => (e) => {
+        const value = e.target.value;
+        setProject((prev) => ({
+            ...prev,
+            [field]: value,
+        }));
+    };
+
+    const handleFilesChange = (e) => {
+        const filesArray = Array.from(e.target.files || []);
+        setProject((prev) => ({
+            ...prev,
+            files: filesArray.map((f) => f.name),
+        }));
+    };
+
+    const handleSave = () => {
+        // yahan backend call wire karna hai (PUT/POST)
+        console.log("SAVE PAYLOAD:", project);
+    };
 
     return (
         <div className={styles.page}>
             {/* PAGE HEADER */}
             <ProjectDetailHeader
-                title={`Proiect: ${project.projectName}`}
+                title={`Proiect: ${project.name}`}
                 onBack={handleBack}
             />
 
@@ -106,30 +102,34 @@ const ProjectDetail = () => {
 
                     {/* ROW 1 – Denumire + status pills */}
                     <div className={styles.detailTop}>
-                        {/* Denumire proiect */}
+                        {/* Denumire proiect (EDITABLE) */}
                         <div className={styles.nameBlock}>
                             <span className={styles.label}>Denumire proiect</span>
 
                             <div className={styles.valueWrapper}>
-                                <div className={styles.nameValueBox}>{project.projectName}</div>
-
+                                <input
+                                    type="text"
+                                    className={styles.nameValueBox}
+                                    value={project.name}
+                                    onChange={handleFieldChange("name")}
+                                />
                             </div>
                         </div>
 
-                        {/* Created / Start / Status */}
+                        {/* Created / Start / Status (READ ONLY) */}
                         <div className={styles.statusBlock}>
                             <span
                                 className={`${styles.statusPill} ${styles.statusCreated}`}
                             >
                                 <span className={styles.statusBold}>Creat la:</span>{" "}
-                                {new Date(project.createdAt).toLocaleString("ro-RO")}
+                                {project.createdAt}
                             </span>
 
                             <span
                                 className={`${styles.statusPill} ${styles.statusStart}`}
                             >
                                 <span className={styles.statusBold}>Start proiect:</span>{" "}
-                                {new Date(project.createdAt).toLocaleString("ro-RO")}
+                                {project.startDate}
                             </span>
 
                             <span
@@ -146,42 +146,48 @@ const ProjectDetail = () => {
                         <div className={styles.metaField}>
                             <span className={styles.label}>Subiect proiect</span>
                             <div className={styles.valueWrapper}>
-                                <div className={styles.metaValueBox}>{project.projectSubject}</div>
-
+                                <input
+                                    type="text"
+                                    className={styles.metaValueBox}
+                                    value={project.subject}
+                                    onChange={handleFieldChange("subject")}
+                                />
                             </div>
                         </div>
 
                         <div className={styles.metaField}>
                             <span className={styles.label}>Tip raport</span>
                             <div className={styles.valueWrapper}>
-                                <div className={styles.metaValueBox}>
-                                    {project.reportType}
-                                </div>
-
+                                <input
+                                    type="text"
+                                    className={styles.metaValueBox}
+                                    value={project.reportType}
+                                    onChange={handleFieldChange("reportType")}
+                                />
                             </div>
                         </div>
 
                         <div className={styles.metaField}>
                             <span className={styles.label}>Tip entitate</span>
                             <div className={styles.valueWrapper}>
-                                <div className={styles.metaValueBox}>
-                                    {project.entityType}
-                                </div>
-
+                                <input
+                                    type="text"
+                                    className={styles.metaValueBox}
+                                    value={project.entityType}
+                                    onChange={handleFieldChange("entityType")}
+                                />
                             </div>
                         </div>
 
                         <div className={styles.metaField}>
                             <span className={styles.label}>Deadline</span>
                             <div className={styles.valueWrapper}>
-                                <div
+                                <input
+                                    type="date"
                                     className={`${styles.metaValueBox} ${styles.metaValueBold}`}
-                                >
-                                    {project.deadline
-                                        ? new Date(project.deadline).toLocaleDateString("ro-RO")
-                                        : "Fără deadline"}
-                                </div>
-
+                                    value={project.deadline}
+                                    onChange={handleFieldChange("deadline")}
+                                />
                             </div>
                         </div>
                     </div>
@@ -191,93 +197,100 @@ const ProjectDetail = () => {
                         <div className={styles.metaField}>
                             <span className={styles.label}>Prioritate</span>
                             <div className={styles.valueWrapper}>
-                                <div className={styles.metaValueBox}>{project.priority}</div>
-
+                                <input
+                                    type="text"
+                                    className={styles.metaValueBox}
+                                    value={project.priority}
+                                    onChange={handleFieldChange("priority")}
+                                />
                             </div>
                         </div>
 
                         <div className={styles.metaField}>
                             <span className={styles.label}>Limba livrabilă</span>
                             <div className={styles.valueWrapper}>
-                                <div className={styles.metaValueBox}>{project.deliverableLanguage}</div>
-
+                                <input
+                                    type="text"
+                                    className={styles.metaValueBox}
+                                    value={project.language}
+                                    onChange={handleFieldChange("language")}
+                                />
                             </div>
                         </div>
 
                         <div className={styles.metaField}>
                             <span className={styles.label}>Se dorește (tipuri)</span>
                             <div className={styles.valueWrapper}>
-                                <div className={styles.metaValueBox}>
-                                    {project.servicesRequested?.length > 0
-                                    ? project.servicesRequested.join(", ")
-                                    : "—"
-                                }
-                                </div>
-
+                                <input
+                                    type="text"
+                                    className={styles.metaValueBox}
+                                    value={project.services}
+                                    onChange={handleFieldChange("services")}
+                                />
                             </div>
                         </div>
                     </div>
 
                     {/* ===== Descriere, Fișiere, Echipă ===== */}
                     <div className={styles.detailGrid}>
-                        {/* Descriere proiect – full width text */}
+                        {/* Descriere proiect – TEXTAREA */}
                         <div className={styles.itemFull}>
                             <div className={styles.label}>Descriere proiect</div>
 
                             <div className={styles.bigInputWrapper}>
-                                <div className={styles.bigInputBox}>
-                                    {project.projectDescription}
-                                </div>
-
-
+                                <textarea
+                                    className={styles.bigInputBox}
+                                    value={project.description}
+                                    onChange={handleFieldChange("description")}
+                                />
                             </div>
                         </div>
 
-                        {/* Fișiere atașate – full width light box */}
+                        {/* Fișiere atașate – FILE DROP + LIST */}
                         <div className={styles.itemFull}>
                             <div className={styles.label}>Fișiere atașate</div>
 
                             <div className={styles.filesWrapper}>
+                                <label className={styles.fileDrop}>
+                                    <input
+                                        type="file"
+                                        multiple
+                                        onChange={handleFilesChange}
+                                        className={styles.fileInput}
+                                    />
+                                    <span>
+                                        Trage fișierele aici sau fă click pentru a le selecta
+                                    </span>
+                                </label>
+
                                 <div className={styles.filesBox}>
-                                    {project.files?.length > 0 ? (
-                                        project.files.map((file, idx) => (
-                                            <div key={idx} className={styles.fileRow}>
-                                                {file}
-                                            </div>
-                                        ))
-                                    ) : (
-                                        <div className={styles.fileRow}>Niciun fișier</div>
-                                    )}
+                                    {project.files.map((file, idx) => (
+                                        <div key={idx} className={styles.fileRow}>
+                                            {file}
+                                        </div>
+                                    ))}
                                 </div>
-
-
                             </div>
                         </div>
 
-                        {/* Echipă proiect – full width */}
+                        {/* Echipă proiect – READ ONLY */}
                         <div className={styles.itemFull}>
                             <span className={styles.label}>Echipă proiect</span>
 
                             <div className={styles.chipRow}>
                                 <span className={styles.chipLabel}>Responsabil:</span>
                                 <span className={styles.chipPrimary}>
-                                    {responsible?.name || "Nespecificat"}
+                                    {project.responsible}
                                 </span>
                             </div>
 
                             <div className={styles.chipRow}>
                                 <span className={styles.chipLabel}>Analiști alocați:</span>
-                                {assigned?.length > 0 ? (
-                                    assigned.map((name, idx) => (
-                                        <span key={idx} className={styles.chipGhost}>
-                        {name}
-                    </span>
-                                    ))
-                                ) : (
-                                    <span className={styles.chipGhost}>
-                    Niciun analist asignat
-                </span>
-                                )}
+                                {project.team.map((member) => (
+                                    <span key={member} className={styles.chipGhost}>
+                                        {member}
+                                    </span>
+                                ))}
                             </div>
                         </div>
                     </div>
@@ -285,7 +298,7 @@ const ProjectDetail = () => {
                     {/* bottom thin line inside card */}
                     <div className={styles.sectionDivider} />
 
-                    {/* ========== Detalii client & contract ========== */}
+                    {/* ========== Detalii client & contract (EDITABLE) ========== */}
                     <h2 className={styles.subSectionTitle}>
                         Detalii client & contract (confidențiale — vizibile doar
                         manageri)
@@ -296,30 +309,36 @@ const ProjectDetail = () => {
                         <div className={styles.clientItem3}>
                             <span className={styles.label}>Nume client</span>
                             <div className={styles.valueWrapper}>
-                                <div className={styles.metaValueBox}>
-                                    {project.clientName}
-                                </div>
-
+                                <input
+                                    type="text"
+                                    className={styles.metaValueBox}
+                                    value={project.clientName}
+                                    onChange={handleFieldChange("clientName")}
+                                />
                             </div>
                         </div>
 
                         <div className={styles.clientItem3}>
                             <span className={styles.label}>Persoană de contact</span>
                             <div className={styles.valueWrapper}>
-                                <div className={styles.metaValueBox}>
-                                    {project.clientContactPerson}
-                                </div>
-
+                                <input
+                                    type="text"
+                                    className={styles.metaValueBox}
+                                    value={project.contactPerson}
+                                    onChange={handleFieldChange("contactPerson")}
+                                />
                             </div>
                         </div>
 
                         <div className={styles.clientItem3}>
                             <span className={styles.label}>Funcție (opțional)</span>
                             <div className={styles.valueWrapper}>
-                                <div className={styles.metaValueBox}>
-                                    {project.clientPosition || "—"}
-                                </div>
-
+                                <input
+                                    type="text"
+                                    className={styles.metaValueBox}
+                                    value={project.contactRole}
+                                    onChange={handleFieldChange("contactRole")}
+                                />
                             </div>
                         </div>
 
@@ -327,16 +346,24 @@ const ProjectDetail = () => {
                         <div className={styles.clientItemHalf}>
                             <span className={styles.label}>Email</span>
                             <div className={styles.valueWrapper}>
-                                <div className={styles.metaValueBox}>{project.clientEmail}</div>
-
+                                <input
+                                    type="email"
+                                    className={styles.metaValueBox}
+                                    value={project.email}
+                                    onChange={handleFieldChange("email")}
+                                />
                             </div>
                         </div>
 
                         <div className={styles.clientItemHalf}>
                             <span className={styles.label}>Telefon</span>
                             <div className={styles.valueWrapper}>
-                                <div className={styles.metaValueBox}>{project.clientPhone}</div>
-
+                                <input
+                                    type="text"
+                                    className={styles.metaValueBox}
+                                    value={project.phone}
+                                    onChange={handleFieldChange("phone")}
+                                />
                             </div>
                         </div>
 
@@ -344,38 +371,48 @@ const ProjectDetail = () => {
                         <div className={styles.clientItemQuarter}>
                             <span className={styles.label}>Nr. contract</span>
                             <div className={styles.valueWrapper}>
-                                <div className={styles.metaValueBox}>
-                                    {project.contractNumber || "—"}
-                                </div>
-
+                                <input
+                                    type="text"
+                                    className={styles.metaValueBox}
+                                    value={project.contractNumber}
+                                    onChange={handleFieldChange("contractNumber")}
+                                />
                             </div>
                         </div>
 
                         <div className={styles.clientItemQuarter}>
                             <span className={styles.label}>Nr. anexă</span>
                             <div className={styles.valueWrapper}>
-                                <div className={styles.metaValueBox}>
-                                    {project.annexNumber || "—"}
-                                </div>
-
+                                <input
+                                    type="text"
+                                    className={styles.metaValueBox}
+                                    value={project.annexNumber}
+                                    onChange={handleFieldChange("annexNumber")}
+                                />
                             </div>
                         </div>
 
                         <div className={styles.clientItemQuarter}>
                             <span className={styles.label}>Preț proiect</span>
                             <div className={styles.valueWrapper}>
-                                <div className={styles.metaValueBox}>
-                                    {project.projectPrice} {project.currency}
-                                </div>
-
+                                <input
+                                    type="text"
+                                    className={styles.metaValueBox}
+                                    value={project.price}
+                                    onChange={handleFieldChange("price")}
+                                />
                             </div>
                         </div>
 
                         <div className={styles.clientItemQuarter}>
                             <span className={styles.label}>Monedă</span>
                             <div className={styles.valueWrapper}>
-                                <div className={styles.metaValueBox}>{project.currency}</div>
-
+                                <input
+                                    type="text"
+                                    className={styles.metaValueBox}
+                                    value={project.currency}
+                                    onChange={handleFieldChange("currency")}
+                                />
                             </div>
                         </div>
 
@@ -385,10 +422,11 @@ const ProjectDetail = () => {
                                 Alte informații despre contract
                             </span>
                             <div className={styles.bigInputWrapper}>
-                                <div className={styles.bigInputBox}>
-                                    {project.contractInfo}
-                                </div>
-
+                                <textarea
+                                    className={styles.bigInputBox}
+                                    value={project.contractNotes}
+                                    onChange={handleFieldChange("contractNotes")}
+                                />
                             </div>
                         </div>
 
@@ -397,32 +435,35 @@ const ProjectDetail = () => {
                                 Solicitare referințe / informații suplimentare
                             </span>
                             <div className={styles.bigInputWrapper}>
-                                <div className={styles.bigInputBox}>
-                                    {project.referenceRequest}
-                                </div>
-
+                                <textarea
+                                    className={styles.bigInputBox}
+                                    value={project.referenceRequest}
+                                    onChange={handleFieldChange("referenceRequest")}
+                                />
                             </div>
                         </div>
 
-                        {/* ROW 5 – Note interne (confidențiale) in same section */}
+                        {/* ROW 5 – Note interne (confidențiale) */}
                         <div className={styles.clientItemFull}>
                             <span className={styles.label}>Note interne (confidențiale)</span>
                         </div>
 
                         <div className={styles.clientItemFull}>
                             <div className={styles.bigInputWrapper}>
-                                <div className={styles.bigInputBox}>
-                                    {project.internalNotes}
-                                </div>
-
+                                <textarea
+                                    className={styles.bigInputBox}
+                                    value={project.internalNotes}
+                                    onChange={handleFieldChange("internalNotes")}
+                                />
                             </div>
                         </div>
                     </div>
                 </div>
 
                 <ProjectBilling billing={billingData} />
+
                 <ProjectDetailButton
-                    onSave={() => console.log("save clicked")}
+                    onSave={handleSave}
                     onGoToTask={() => console.log("go to task clicked")}
                     onViewCosts={() => console.log("view costs clicked")}
                 />
