@@ -7,6 +7,7 @@ const ProjectDetailConfig = {
         }
     },
 
+
     routes: [
         {
             path: '/messenger',

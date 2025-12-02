@@ -8,6 +8,8 @@ const DashboardConfig = {
         }
     },
 
+    auth: [ 'analyst' ],
+
     routes: [
         {
             path: '/dashboard/analyst',

@@ -6,7 +6,7 @@ const AnalstListConfig  = {
             config: {}
         }
     },
-
+    auth: [ 'admin', 'manager' ],
     routes: [
         {
             path: '/AnalystList',
