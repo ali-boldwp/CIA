@@ -7,6 +7,7 @@ import { authApi } from "../services/authApi";   // ⬅ ADD THIS
 import { createdProjectApi } from "../services/createProject";
 import { userApi } from "../services/userApi";
 import { analystApi } from "../services/analystApi";
+import {messageApi} from "../services/messageApi";
 
 const store = configureStore({
     reducer: {
@@ -18,6 +19,8 @@ const store = configureStore({
         [createdProjectApi.reducerPath]: createdProjectApi.reducer,
         [userApi.reducerPath]: userApi.reducer,
         [analystApi.reducerPath]: analystApi.reducer,
+        [messageApi.reducerPath]:messageApi.reducer
+
 
     },
 
@@ -28,7 +31,8 @@ const store = configureStore({
             authApi.middleware,
             createdProjectApi.middleware,
             userApi.middleware,
-            analystApi.middleware
+            analystApi.middleware,
+            messageApi.middleware
         ),
 });
 

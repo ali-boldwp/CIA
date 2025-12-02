@@ -1,6 +1,7 @@
-import React , { useEffect } from "react";
+import React, {useEffect, useState} from "react";
 import "../MessengerPage.css";
-// import socket from "../../../socket";
+import socket from "../../../socket";
+import { useGetMessagesQuery , useSendMessageMutation} from "../../../services/messageApi";
 import {
     FiDownload,
     FiSettings,
@@ -42,21 +43,69 @@ function Header() {
 
 function MessengerPage() {
 
-    /*useEffect(() => {
+    const { data, isLoading } = useGetMessagesQuery();
+    const [ chat, setChat ] = useState( 'open' );
+    const [ messages, setMessages ] = useState([]);
+
+    const [oldmessage, setOldMessage] = useState([]);
+    const [text, setText] = useState("");
+
+    const [sendMessage] = useSendMessageMutation();
+
+
+    useEffect(() => {
+        if (data) {
+            setOldMessage(data);
+        }
+    }, [data]);
+
+    useEffect(() => {
         const CHAT_ID = "692f0cbee1afd5908152efd9";
 
         console.log("Joining chat:", CHAT_ID);
         socket.emit("join_chat", CHAT_ID);
 
         socket.on("new_message", (msg) => {
-            console.log("📩 New message received:", msg);
-            alert("📩 New message: " + msg.text);
+
+            // console.log( [ ...messages, msg ] );
+
+            // console.log("📩 New message received:", msg);
+            // alert("📩 New message: " + msg.text);
+
+            setMessages(prev => {
+                const updated = [...prev, msg];
+                console.log("UPDATED LIST:", updated);
+                return updated;
+            });
+
         });
 
         return () => {
             socket.off("new_message");
         };
-    }, []);*/
+    }, []);
+
+
+    const handleSend = async () => {
+        if (!text.trim()) return;
+
+        const CHAT_ID = "692f0cbee1afd5908152efd9";
+
+        try {
+            // 1️⃣ API پر message save کرو
+            const res = await sendMessage({
+                chatId: CHAT_ID,
+                text: text
+            }).unwrap();
+
+            setText("");
+
+        } catch (err) {
+            console.error("Send Error:", err);
+        }
+    };
+
+
 
     return (
         <div className="app-bg">
@@ -126,6 +175,26 @@ function MessengerPage() {
                         </div>
 
                         <div className="conversation-list"  >
+                            <div
+                                className={
+                                    "conversation-item" +
+                                    ( chat === 'open' ? " conversation-item-active" : "")
+                                }
+                                onClick={ () => setChat( 'open' ) }
+                            >
+                                <div className="conversation-avatar" />
+                                <div className="conversation-main">
+                                    <div className="conversation-name">{ 'General' }</div>
+                                    <div className="conversation-sub">
+                                        Toate conversațiile
+                                    </div>
+                                </div>
+                                <div className="conversation-meta">
+                                    <span className="dot green" />
+                                    <span className="dot orange" />
+                                    <span className="dot red" />
+                                </div>
+                            </div>
                             {[
                                 "Grup: DD ABC",
                                 "DM: I. Barlu",
@@ -142,6 +211,7 @@ function MessengerPage() {
                                         (idx === 0 ? " conversation-item-active" : "")
                                     }
                                     key={name}
+                                    onClick={ () => setChat( '692f0cbee1afd5908152efd9' ) }
                                 >
                                     <div className="conversation-avatar" />
                                     <div className="conversation-main">
@@ -209,9 +279,22 @@ function MessengerPage() {
                                     </div>
                                 ))}
                             </div>
-                            <div className="message message-out">
-                                Mulțumesc, oferiți acum.
-                            </div>
+                            {
+                                oldmessage.map( message => ( // zubair messages
+
+                                    <div className="message message-out">
+                                        { message.text }
+                                    </div>
+                                ))
+                            }
+                            {
+                                messages.map( message => (
+
+                                    <div className="message message-out">
+                                        { message.text }
+                                    </div>
+                                ))
+                            }
                         </div>
 
                         {/* composer */}
@@ -219,14 +302,19 @@ function MessengerPage() {
                             <div className="chat-composer-left">
                                 <input
                                     className="input composer-input"
-                                    placeholder="Scrie un mesaj… + Atașează + Upload + Caută"
+                                    placeholder="Scrie un mesaj…"
+                                    value={text}
+                                    onChange={(e) => setText(e.target.value)}
+                                    onKeyDown={(e) => e.key === "Enter" && handleSend()}
                                 />
                             </div>
-                            <button className="btn-primary composer-send">
+
+                            <button className="btn-primary composer-send" onClick={handleSend}>
                                 <FiSend className="btn-icon" />
                                 Trimite
                             </button>
                         </div>
+
                     </main>
 
                     {/* RIGHT: details */}
