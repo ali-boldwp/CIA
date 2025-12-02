@@ -1,23 +1,11 @@
 import "./StatusSection.css";
 import { Link } from "react-router-dom";
-import { useGetAllUsersQuery } from "../../../../services/userApi";
+import { useGetProjectRequestsQuery } from "../../../../services/projectApi";
 
 const StatusSection = () => {
-
-    const { data: usersData, isLoading } = useGetAllUsersQuery();
-
-    const totalUsers = (() => {
-        const users = Array.isArray(usersData)
-            ? usersData
-            : Array.isArray(usersData?.data)
-                ? usersData.data
-                : Array.isArray(usersData?.users)
-                    ? usersData.users
-                    : [];
-        return users.length;
-    })();
-
-
+const {data}=useGetProjectRequestsQuery();
+const users=data?.data ||[];
+const approvedReq=users.filter((p)=>p?.status.toLowerCase()==="approved")
     return (
 
 
@@ -27,7 +15,7 @@ const StatusSection = () => {
             <div className="status1">
             <div className="stat-box">
                 <span className="label">📁 Proiecte active</span>
-                <h3>6</h3>
+                <h3>{approvedReq.length}</h3>
             </div>
 
             <div className="stat-box">

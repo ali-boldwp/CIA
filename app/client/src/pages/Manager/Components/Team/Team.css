@@ -36,18 +36,32 @@
   margin-bottom: 5px;
   border-radius: 10px;
   align-items: center;
-}
 
+}
+.teamBody{
+height:350px;
+    overflow: auto;
+}
 .team-row:last-child {
   border-bottom: none;
 }
 
 /* Name section */
+.purple{
+    background: #6D28D9;
+    color:white;
+    padding: 12px 8px;
+    border-radius: 50%;
+    font-size: 10px;
+    margin-right: 10px;
+    font-weight: 600;
+}
 .initial-badge {
-  background: #eef1ff;
-  padding: 8px 12px;
+  background:#94A3B8;
+    color:white;
+  padding: 12px 8px;
   border-radius: 50%;
-  font-size: 13px;
+  font-size: 10px;
   margin-right: 10px;
   font-weight: 600;
 }
