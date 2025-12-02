@@ -8,6 +8,7 @@ import {
 } from "../../services/projectApi";
 import { useGetAnalystsQuery } from "../../services/userApi";
 import "./NewProjectstyle.css";
+import {toast} from "react-toastify";
 
 const NewProject = () => {
 
@@ -147,7 +148,7 @@ const NewProject = () => {
     // API MUTATIONS
     // ============================
     const [createProject] = useCreateProjectMutation();
-    const [updateProject] = useUpdateProjectMutation();
+
     const [updateStatus] = useUpdateProjectStatusMutation();
 
     // ============================
@@ -189,18 +190,15 @@ const NewProject = () => {
         const payload = buildPayload();
 
         try {
-            if (id) {
-                // 1️⃣ Update fields
-                await updateProject({ id, data: payload }).unwrap();
 
+                // 1️⃣ Update fields
+
+            await createProject(payload).unwrap();
                 // 2️⃣ Update status -> approved
                 await updateStatus({ id, status: "approved" }).unwrap();
 
-                alert("Solicitarea a fost actualizată și aprobată!");
-            } else {
-                await createProject(payload).unwrap();
-                alert("Proiect creat cu succes!");
-            }
+                toast.success("Proiect creat cu succes!");
+
         } catch (err) {
             console.log(err);
             alert("Eroare la salvare!");
@@ -390,7 +388,7 @@ const NewProject = () => {
                         </div>
 
                     </div>
-                    <div className="button-row"> <button className="submit-btn">Creează Task Proiect</button> <button className="submit-btn">Mergi la Task Proiect</button> </div>
+
                 </div>
 
                 {/* ----------------------------- */}

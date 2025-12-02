@@ -56,6 +56,7 @@ const ProjectRequestList = () => {
                     <div className="projects-table-header1">
                         <span>Nume proiect / Responsabili & echipă</span>
                         <span>Deadline</span>
+                        <span>Solicitant</span>
                         <span>Acțiuni</span>
                     </div>
 
