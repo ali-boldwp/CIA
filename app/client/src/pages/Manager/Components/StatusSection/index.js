@@ -7,6 +7,8 @@ const {data}=useGetProjectRequestsQuery();
 const users=data?.data ||[];
 const approvedReq=users.filter((p)=>p?.status.toLowerCase()==="approved")
     return (
+
+
         <div className="stats-container">
 
             {/* Row 1 */}
@@ -69,12 +71,13 @@ const approvedReq=users.filter((p)=>p?.status.toLowerCase()==="approved")
                 <div className="stat-box wide">
                     <span className="label">👤 Toți utilizatorii</span>
                     <div className="sec">
-                        <h3>0</h3>
+                        <h3>{isLoading ? "..." : totalUsers}</h3>
                         <Link to="/allUser" className="gradient-btn">
                             👥 Vezi utilizatorii
                         </Link>
                     </div>
                 </div>
+
 
             <div className="stat-box wide blue-box">
                 <span className="label">💬 Mesaje necitite</span>
