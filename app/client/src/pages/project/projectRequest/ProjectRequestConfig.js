@@ -6,7 +6,7 @@ const ProjectRequestConfig = {
             config: {}
         }
     },
-    
+    auth: [ 'admin', 'manager', 'sales' ],
     routes: [
         {
             path: '/projectRequest',

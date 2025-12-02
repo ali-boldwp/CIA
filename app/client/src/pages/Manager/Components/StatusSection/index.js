@@ -1,3 +1,4 @@
+// src/pages/Manager/Components/StatusSection/index.js
 import "./StatusSection.css";
 import { Link } from "react-router-dom";
 import { useGetProjectRequestsQuery } from "../../../../services/projectApi";
@@ -76,10 +77,11 @@ const StatusSection = () => {
                     </div>
                 </div>
 
+                {/* Total Users card */}
                 <div className="stat-box wide">
                     <span className="label">👤 Toți utilizatorii</span>
                     <div className="sec">
-                        <h3>{loadingUsers ? "..." : allUsers.length}</h3>
+                        <h3>{usersLoading ? "..." : totalUsers}</h3>
                         <Link to="/allUser" className="gradient-btn">
                             👥 Vezi utilizatorii
                         </Link>
@@ -93,9 +95,7 @@ const StatusSection = () => {
                         <button className="gradient-btn">Deschide messenger</button>
                     </div>
                 </div>
-
             </div>
-
         </div>
     );
 };

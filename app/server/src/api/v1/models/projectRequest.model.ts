@@ -93,13 +93,13 @@ const projectRequestSchema = new Schema<IProjectRequest>(
 
         createdBy: {
             type: Schema.Types.ObjectId,
-            ref: "User",
-            required: true
+            ref: "User"
         },
 
         fromRequestId: {
             type: Schema.Types.ObjectId,
-            ref: "User"
+            ref: "User",
+            required: false
         },
 
         status: {
