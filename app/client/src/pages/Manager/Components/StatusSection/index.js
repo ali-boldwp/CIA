@@ -13,6 +13,19 @@ const StatusSection = () => {
     // Only Approved
     const approvedReq = projects.filter((p) => p.status?.toLowerCase() === "approved");
 
+
+    const { data: usersData, isLoading: usersLoading } = useGetAllUsersQuery();
+
+    const users = Array.isArray(usersData)
+        ? usersData
+        : Array.isArray(usersData?.data)
+            ? usersData.data
+            : Array.isArray(usersData?.users)
+                ? usersData.users
+                : [];
+
+    const totalUsers = users.length;
+
     // Users Fetch (FOR TOTAL USERS)
     const { data: userData, isLoading: loadingUsers } = useGetAllUsersQuery();
     const allUsers = userData?.data || [];
