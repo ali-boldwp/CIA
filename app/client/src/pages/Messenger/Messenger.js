@@ -1,11 +1,11 @@
 import React from 'react';
-import Header from "./components/Header";
+import MessengerPage from "./components/Header";
 
 const Messenger = () => {
     return (
         <div>
 
-            <Header />
+            <MessengerPage />
         </div>
     );
 };

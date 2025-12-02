@@ -37,7 +37,7 @@ router.put(
 );
 
 router.put(
-    "/:id",
+    "/:id/approve",
     auth,
     projectController.approveProject
 );

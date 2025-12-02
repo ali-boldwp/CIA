@@ -78,6 +78,12 @@ export const createProject = async (req: Request, res: Response, next: NextFunct
 
         };
 
+        if ( req.user.role !== 'admin' || req.user.role !== 'manager' ) {
+
+            payload.status = "approved";
+
+        }
+
         // FINAL SAVE
         const project = await projectService.createProject(payload);
 
