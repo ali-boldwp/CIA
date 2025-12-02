@@ -1,0 +1,189 @@
+/* === LAYOUT === */
+.task-container {
+    /*display: flex;*/
+    /*flex-direction: column;*/
+    gap: 20px;
+    padding: 20px;
+    font-family: Arial, sans-serif;
+}
+
+.flex-center {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+}
+
+/* === LEFT SIDEBAR === */
+.sidebar {
+    max-width: 280px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    background: white;
+    padding: 13px;
+    border-radius: 12px;
+    box-shadow: 0 0 6px rgba(0,0,0,0.1);
+
+}
+
+.back-btn {
+    background: #e6e6e6;
+    border: none;
+    padding: 10px;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+
+.detail-item {
+    font-size: 14px;
+    margin: 5px 0;
+}
+
+/* Sidebar buttons */.red-btn {
+                         background: #cc0000;      /* darker red */
+                         color: white;
+                         padding: 8px 14px;        /* smaller */
+                         border-radius: 12px;      /* more rounded */
+                         border: none;
+                         cursor: pointer;
+                     }
+
+.black-btn {
+    background: #111;         /* darker black */
+    color: white;
+    padding: 8px 14px;
+    border-radius: 12px;
+    border: none;
+    cursor: pointer;
+}
+
+.green-btn {
+    background: #198754;      /* darker green */
+    color: white;
+    padding: 8px 14px;
+    border-radius: 12px;
+    border: none;
+    cursor: pointer;
+}
+
+.yellow-btn {
+    background: #c79300;      /* darker yellow/gold */
+    color: white;
+    padding: 8px 14px;
+    border-radius: 12px;
+    border: none;
+    cursor: pointer;
+}
+
+.pink-btn {
+    background: #cc4f82;      /* darker pink */
+    color: white;
+    padding: 8px 14px;
+    border-radius: 12px;
+    border: none;
+    cursor: pointer;
+}
+
+
+/* === MAIN AREA === */
+.main-area {
+    flex: 1;
+}
+
+.header-row {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 10px;
+}
+
+.analysis-info {
+    color: #555;
+    font-size: 14px;
+}
+
+/* Progress */
+.progress-wrapper {
+    margin: 15px 0;
+}
+
+.progress-label {
+    margin-bottom: 6px;
+    font-weight: bold;
+}
+
+.progress-bar {
+    height: 10px;
+    width: 100%;
+    background: #e5e5e5;
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    background: #4a8bff;
+}
+
+.progress-value {
+    margin-top: 4px;
+    font-size: 14px;
+    color: #555;
+}
+
+/* Task Section */
+.task-box {
+    background: white;
+    padding: 20px;
+    border-radius: 14px;
+    box-shadow: 0 0 6px rgba(0,0,0,0.08);
+}
+
+.task-header{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+
+}
+
+.task-info {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+}
+
+.checklist {
+    list-style: none;
+    padding-left: 0;
+}
+
+.checklist li {
+    margin: 6px 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.add-btn {
+    background: #3183ff;
+    color: white;
+    border-radius: 1rem;
+    border: none;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.editable-box {
+    margin-top: 12px;
+    background: #f4f4f4;
+    padding: 12px;
+    border-radius: 10px;
+    border: 1px solid #ddd;
+}
+
+.bottom-save {
+    margin-top: 15px;
+    width: 200px;
+}
