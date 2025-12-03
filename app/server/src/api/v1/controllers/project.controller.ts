@@ -2,6 +2,8 @@ import { Request, Response, NextFunction } from "express";
 import * as projectService from "../services/project.service";
 import { ok } from "../../../utils/ApiResponse";
 import ProjectRequest from "../models/projectRequest.model";
+import * as requestedService from "../services/requested.service";
+import Requested from "../models/requested.model";
 
 
 export const requestProject = async (req: Request, res: Response, next: NextFunction) => {
@@ -57,7 +59,7 @@ export const requestProject = async (req: Request, res: Response, next: NextFunc
 
         console.log( user );
 
-        const projectRequest = await ProjectRequest.create(payload);
+        const projectRequest = await Requested.create(payload);
 
         return res.json(ok(projectRequest));
 
@@ -170,6 +172,49 @@ export const deleteProject = async (req, res, next) => {
     try {
         const deleted = await projectService.deleteProject(req.params.id);
         res.json(ok(deleted));
+    } catch (err) {
+        next(err);
+    }
+};
+
+
+export const getRequestedProjectById = async (req, res, next) => {
+    try {
+        const requestedProject = await requestedService.getRequestedProjectById(req.params.id);
+
+        res.json(ok(requestedProject));
+    } catch (err) {
+        next(err);
+    }
+};
+
+export const getAllRequestedProjects = async ( req, res, next) => {
+
+    const user = (req as any).user;
+
+    try {
+
+        if ( user.role == 'sales' ) {
+
+            const projects = await requestedService.getAllRequestedProjects({ fromRequestId: user.id });
+            res.json(ok(projects));
+
+        } else if ( user.role == 'analyst' ) {
+
+            const projects = await requestedService.getAllRequestedProjects({ responsibleAnalyst: user.id });
+            res.json(ok(projects));
+
+        } else if ( user.role == 'admin' || user.role == 'manager' ) {
+
+            const projects = await requestedService.getAllRequestedProjects({});
+            res.json(ok(projects));
+
+        } else {
+
+            res.json(ok([]));
+
+        }
+
     } catch (err) {
         next(err);
     }
