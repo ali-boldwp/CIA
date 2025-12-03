@@ -2,6 +2,8 @@ import { Request, Response, NextFunction } from "express";
 import * as projectService from "../services/project.service";
 import { ok } from "../../../utils/ApiResponse";
 import ProjectRequest from "../models/projectRequest.model";
+import User from "../models/user.model"
+import Chat from "../models/chat.model";
 
 export const createProject = async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -87,7 +89,33 @@ export const createProject = async (req: Request, res: Response, next: NextFunct
         // FINAL SAVE
         const project = await projectService.createProject(payload);
 
+
+
+        const admins = await User.find({ role: "admin" }).select("_id");
+        const managers = await User.find({ role: "manager" }).select("_id");
+
+
+        const groupMembers = new Set<string>();
+
+        admins.forEach(a => groupMembers.add(String(a._id)));
+        managers.forEach(m => groupMembers.add(String(m._id)));
+
+        if (payload.responsibleAnalyst)
+            groupMembers.add(String(payload.responsibleAnalyst));
+
+        (payload.assignedAnalysts || []).forEach(a =>
+            groupMembers.add(String(a))
+        );
+
+        await Chat.create({
+            participants: Array.from(groupMembers),
+            isGroup: true,
+            groupName: `Project: ${payload.projectName}`
+        });
+
+
         res.json(ok(project));
+
     } catch (err) {
         next(err);
     }

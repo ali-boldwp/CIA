@@ -34,8 +34,21 @@ export const updateChapter = async (req: Request, res: Response, next: NextFunct
 
 export const getChapterByProjectId = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const chapter = await chapterService.getChapterByProjectId(req.params.id);
-        res.json(ok(chapter));
+        const projectId = req.params.id;
+
+        // Validate ID
+        if (!projectId) {
+            return res.status(400).json({ success: false, message: "Project ID is required" });
+        }
+
+        const chapters = await chapterService.getChapterByProjectId(projectId);
+
+        // If no chapter found
+        if (!chapters || chapters.length === 0) {
+            return res.status(404).json({ success: false, message: "No chapters found for this project" });
+        }
+
+        return res.json(ok(chapters));
     } catch (err) {
         next(err);
     }
