@@ -29,14 +29,17 @@ const SalesDashboard = () => {
 
     const approvedProject=data?.data || [];
 
-    const formatDate = (date) =>
-        new Date(date).toISOString().split("T")[0];
+    const formatDate = (date) => {
+        if (!date) return "—";
 
-    const humintData = [
-        { project: "KSTE RO", status: "In analiza", statusClass: "yellow", deadline: "13.11.2025" },
-        { project: "KLM", status: "Aprobat", statusClass: "green", deadline: "18.11.2025" },
-        { project: "QRS", status: "Finalizat", statusClass: "gray", deadline: "—" }
-    ];
+        const d = new Date(date);
+        if (isNaN(d)) return "—";
+
+        return d.toISOString().split("T")[0];
+    };
+
+
+
 
     return (
         <div className="dashboard">
