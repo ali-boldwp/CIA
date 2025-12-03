@@ -180,6 +180,20 @@
     color: #ffffff !important;
 }
 
+/* Hover for + Adaugă analist */
+.addBtn:hover {
+    filter: brightness(1.06);
+    transform: translateY(-1px);
+    transition: all 0.2s ease;
+}
+
+/* Hover for Vezi lista angajați */
+.listBtn:hover {
+    filter: brightness(1.06);
+    transform: translateY(-1px);
+    transition: all 0.2s ease;
+}
+
 /* Responsive */
 @media (max-width: 992px) {
     .teamHeader,
