@@ -108,7 +108,8 @@ const StatusSection = () => {
                     <span className="label">💬 Mesaje necitite</span>
                     <div className="sec">
                         <h3>5</h3>
-                        <button className="gradient-btn">Deschide messenger</button>
+                        <Link to="/messenger" className="gradient-btn">Deschide messenger</Link>
+
                     </div>
                 </div>
             </div>
