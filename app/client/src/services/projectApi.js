@@ -5,7 +5,7 @@ export const projectApi = createApi({
     reducerPath: "projectApi",
     baseQuery: fetchBaseQuery({
         baseUrl: process.env.REACT_APP_API_BASE_URL,
-        prepareHeaders: (headers, { getState }) => {
+        prepareHeaders: (headers) => {
             const token = localStorage.getItem("token");
             if (token) {
                 headers.set("Authorization", `Bearer ${token}`);
@@ -13,6 +13,7 @@ export const projectApi = createApi({
             return headers;
         },
     }),
+
     endpoints: (builder) => ({
         createProject: builder.mutation({
             query: (formData) => ({
@@ -21,12 +22,15 @@ export const projectApi = createApi({
                 body: formData,
             }),
         }),
+
         getProjectRequests: builder.query({
             query: () => "/projects",
         }),
+
         getProjectRequestById: builder.query({
             query: (id) => `/projects/${id}`,
         }),
+
         updateProject: builder.mutation({
             query: ({ id, data }) => ({
                 url: `/projects/${id}/approve`,
@@ -34,6 +38,7 @@ export const projectApi = createApi({
                 body: data,
             }),
         }),
+
         updateProjectStatus: builder.mutation({
             query: ({ id, status }) => ({
                 url: `/projects/${id}/status`,
@@ -41,6 +46,7 @@ export const projectApi = createApi({
                 body: status,
             }),
         }),
+
         createChapter: builder.mutation({
             query: ({ name, projectId }) => ({
                 url: "/chapter",
@@ -48,9 +54,19 @@ export const projectApi = createApi({
                 body: { name, projectId },
             }),
         }),
-        // ✅ New endpoint to get tasks by chapterId
+
+        // Get Tasks by chapter
         getTasksByChapterId: builder.query({
             query: (chapterId) => `/task/${chapterId}`,
+        }),
+
+        // ✅ New: Create Task
+        createTask: builder.mutation({
+            query: ({ name, chapterId }) => ({
+                url: "/task",
+                method: "POST",
+                body: { name, chapterId },
+            }),
         }),
     }),
 });
@@ -62,5 +78,6 @@ export const {
     useUpdateProjectMutation,
     useUpdateProjectStatusMutation,
     useCreateChapterMutation,
-    useGetTasksByChapterIdQuery, // ✅ export the new hook
+    useGetTasksByChapterIdQuery,
+    useCreateTaskMutation, // ✅ export hook
 } = projectApi;
