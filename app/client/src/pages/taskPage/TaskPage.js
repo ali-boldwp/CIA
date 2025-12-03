@@ -66,6 +66,64 @@ const TaskPage = () => {
 
             </div>
 
+            <div className="top-wrapper">
+
+                {/* LEFT SIDE */}
+                <div className="left-side">
+
+                    <div className="control-box">
+                        <p className="label">CONTROL PROJECT</p>
+                        <p className="status-text">
+                            Status proiect: <strong>În derulare</strong>
+                        </p>
+
+                        <div className="buttons-row">
+                            <button className="btn start">▶ Start</button>
+                            <button className="btn pause">⏸ Pauză</button>
+                            <button className="btn finalize">✔ Finalizează</button>
+                        </div>
+                    </div>
+
+                    {/* OVERVIEW */}
+                    <div className="overview-box">
+                        <p className="label">OVERVIEW PROJECT</p>
+                        <p className="progress-title">Progres general</p>
+
+                        <div className="progress-bar">
+                            <div className="progress-fill" style={{ width: "54%" }}></div>
+                        </div>
+
+                        <p className="progress-info">6 / 11 taskuri finalizate (54%)</p>
+                    </div>
+
+                </div>
+
+                {/* RIGHT SIDE – TIME BOX */}
+                <div className="right-side">
+                    <div className="time-box">
+
+                        <p className="time-title">REZUMAT TIMP LUCRU</p>
+
+                        <p className="time-info">
+                            Timp total lucrat: <strong>3h 05m</strong> · Estimare ramas: <strong>2h 15m</strong>
+                        </p>
+
+                        <p className="analyst-times">
+                            AP - 1h35m | BI - 1h30m | CM - 0h20m | DR - 0h00m
+                        </p>
+
+                    </div>
+
+                    <div className="edit-row">
+                        <span className="edit-label">Mod editare:</span>
+                        <div className="toggle-switch">
+                            <span className="toggle-on">ON</span>
+                            <span className="toggle-off">OFF</span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
 
             <ChapterCreation projectId={projectId} createChapter={createChapter} />
 

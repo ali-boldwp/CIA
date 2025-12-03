@@ -536,3 +536,208 @@
 .delete-icon:hover {
     color: #ff4d4d;
 }
+
+.task-container {
+    padding: 30px;
+    font-family: "Inter", sans-serif;
+}
+
+/* ---------------- TOP CONTROL ---------------- */
+.top-control {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+}
+
+.status-label {
+    font-size: 10px;
+    color: #8a8a8a;
+    text-transform: uppercase;
+}
+
+.project-status {
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+.button-row .btn {
+    margin-right: 10px;
+    padding: 7px 18px;
+    border-radius: 7px;
+    font-size: 14px;
+    cursor: pointer;
+    border: none;
+}
+
+.start { background: #2563eb; color: white; }
+.pause { background: #0ea5e9; color: white; }
+.finalize { background: #111; color: #00ff36; }
+
+/* ---------------- EDIT MODE TOGGLE ---------------- */
+.edit-mode {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.toggle {
+    width: 55px;
+    height: 25px;
+    background: #c7f9cc;
+    border-radius: 20px;
+    position: relative;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    padding-left: 7px;
+    font-size: 12px;
+}
+
+.toggle .circle {
+    width: 20px;
+    height: 20px;
+    background: white;
+    border-radius: 50%;
+    position: absolute;
+    right: 3px;
+    top: 2px;
+}
+
+/* ---------------- OVERVIEW ---------------- */
+.overview-title {
+    font-size: 10px;
+    color: #8a8a8a;
+    text-transform: uppercase;
+}
+
+.progress-label {
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.progress-bar {
+    width: 350px;
+    height: 8px;
+    background: #eee;
+    border-radius: 10px;
+    margin: 5px 0;
+}
+
+.progress-inner {
+    height: 8px;
+    background: #3b82f6;
+    border-radius: 10px;
+}
+
+.task-count {
+    font-size: 12px;
+    margin-bottom: 15px;
+}
+
+.legend {
+    display: grid;
+    grid-template-columns: repeat(2, auto);
+    gap: 8px;
+    font-size: 12px;
+}
+
+.dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    display: inline-block;
+    margin-right: 5px;
+}
+
+.blue { background: #2563eb; }
+.purple { background: #a855f7; }
+.green { background: #22c55e; }
+.red { background: #ef4444; }
+
+/* ---------------- TIME BOX ---------------- */
+.time-box {
+    margin-top: 25px;
+    padding: 18px;
+    background: #f9fafb;
+    border-radius: 10px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    width: 350px;
+}
+
+.time-title {
+    font-size: 11px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+}
+
+/* ---------------- BOTTOM ACTIONS ---------------- */
+.bottom-actions {
+    margin-top: 25px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.btn.blue { background: #2563eb; color: white; }
+.btn.gray { background: #e5e7eb; }
+.humint {
+    background: #fff7e6;
+    border: 1px solid #facc15;
+    position: relative;
+}
+
+.humint .badge {
+    background: #facc15;
+    padding: 2px 6px;
+    border-radius: 6px;
+    font-size: 10px;
+    margin-left: 5px;
+}
+
+/* ---------------- EXPORT DROPDOWN ---------------- */
+.dropdown {
+    position: relative;
+}
+
+.btn.export {
+    background: #e5e7eb;
+}
+
+.dropdown-menu {
+    position: absolute;
+    background: white;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    padding: 8px;
+    top: 35px;
+    right: 0;
+    border-radius: 8px;
+    display: none;
+}
+
+.dropdown:hover .dropdown-menu {
+    display: block;
+}
+
+.dropdown-menu button {
+    display: block;
+    width: 120px;
+    padding: 6px;
+    border: none;
+    background: white;
+    cursor: pointer;
+    text-align: left;
+}
+
+/* ---------------- CHAPTER BOX ---------------- */
+.chapter-box {
+    margin-top: 40px;
+}
+
+.add-chapter {
+    background: transparent;
+    border: 1px dashed #bbb;
+    padding: 6px 14px;
+    border-radius: 7px;
+    cursor: pointer;
+}
