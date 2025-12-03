@@ -1,74 +1,122 @@
 import "./style.css";
+import { useState } from "react";
+import {Link} from "react-router-dom";
 import ProjectRow from "./ProjectRow";
 import { useGetProjectRequestsQuery } from "../../services/projectApi";
-import { useState } from "react";
 
 const ProjectRequestList = () => {
-    const { data, isLoading, error } = useGetProjectRequestsQuery();
+
+    const { data ,isLoading }=useGetProjectRequestsQuery();
+    const project=data?.data || [];
+    const projectRequest=project.filter((p)=>p.status=== "requested")
+
     const [search, setSearch] = useState("");
+    const [sortBy, setSortBy] = useState("deadline");
+    const [priorityFilter, setPriorityFilter] = useState("all");
+    const [languageFilter, setLanguageFilter] = useState("all");
 
-    const allProjects = data?.data || [];
-    const projects=allProjects.filter((p)=>p.status?.toLowerCase() === "requested")
+    const filtered = projectRequest
+        .filter((p) => {
+            // Search
+            const searchText = search.toLowerCase();
+            return (
+                p.projectName?.toLowerCase().includes(searchText) ||
+                p.projectSubject?.toLowerCase().includes(searchText) ||
+                p.clientContactPerson?.toLowerCase().includes(searchText)
+            );
+        })
+        .filter((p) => {
+            // Priority Filter
+            if (priorityFilter === "all") return true;
+            return p.priority?.toLowerCase() === priorityFilter.toLowerCase();
+        })
+        .filter((p) => {
+            // Language Filter
+            if (languageFilter === "all") return true;
+            return p.deliverableLanguage?.toLowerCase() === languageFilter.toLowerCase();
+        })
+        .sort((a, b) => {
+            // Sorting
+            if (sortBy === "deadline") {
+                return new Date(a.deadline) - new Date(b.deadline);
+            }
+            if (sortBy === "name") {
+                return a.projectName.localeCompare(b.projectName);
+            }
+            return 0;
+        });
 
-    // --- SAFE FILTER (Does NOT modify your data structure) ---
-    const filteredProjects = projects.filter((project) => {
-        const projectName = project.name || "";               // safe fallback
-        return projectName.toLowerCase().includes(search.toLowerCase());
-    });
-    // ----------------------------------------------------------
+    const isFiltering =
+        search.trim() !== "" ||
+        priorityFilter !== "all" ||
+        languageFilter !== "all" ||
+        sortBy !== "deadline";
 
-    if (isLoading) return <div className="loading">Se încarcă proiectele...</div>;
-    if (error) return <div className="error">Eroare la încărcarea proiectelor</div>;
+    const finalData = isFiltering ? filtered : projectRequest;
 
     return (
-        <div className="page-wrapper">
+       <div className="RequestList">
+           <div className="top-header-box">
+               <Link to="/manager/dashboard" className="back-gradient-btn">
+                   ← Înapoi la Dashboard
+               </Link>
 
-            <div className="RequestContainer">
-                <div className="project-header-box">
-          <span className="project-header-back">
-            <a href="/manager/dashboard">← Înapoi la solicitare</a>
-          </span>
-                    <h1 className="project-header-title">Listă solicitări de proiecte</h1>
-                </div>
-            </div>
+               <h2 className="header-title">
+                   Solicitări proiect — <span>De revizuit</span>
+               </h2>
+           </div>
 
-            <div className="main">
+           <div className="filter-header-box">
 
-                {/* 🔍 SEARCH BAR */}
-                <div className="search-container">
-                    <span className="search-icon">🔍</span>
-                    <input
-                        type="text"
-                        placeholder="Caută proiect după nume..."
-                        className="search-input"
-                        value={search}
-                        onChange={(e) => setSearch(e.target.value)}
-                    />
-                </div>
+               {/* Search Bar */}
+               <div className="search-box1">
+                   <span className="search-icon">🔍</span>
+                   <input
+                       type="text"
+                       placeholder="Caută: persoană / tip / subiect"
+                       className="search-input1"
+                       value={search}
+                       onChange={(e) => setSearch(e.target.value)}
+                   />
+               </div>
 
-                <div className="projects-header">
-                    <h3>Proiecte active în derulare</h3>
-                    <span className="count">{filteredProjects.length} proiecte</span>
-                </div>
+               {/* Dropdown Filters */}
+               <div className="filters">
 
-                <div className="projects-wrapper-request">
+                   <select
+                       className="filter-select"
+                       value={sortBy}
+                       onChange={(e) => setSortBy(e.target.value)}
+                   >
+                       <option value="deadline">După deadline</option>
+                       <option value="name">După nume</option>
+                   </select>
 
-                    <div className="projects-table-header1">
-                        <span>Nume proiect / Responsabili & echipă</span>
-                        <span>Deadline</span>
-                        <span>Solicitant</span>
-                        <span>Acțiuni</span>
-                    </div>
+                   <select
+                       className="filter-select"
+                       value={priorityFilter}
+                       onChange={(e) => setPriorityFilter(e.target.value)}
+                   >
+                       <option value="all">Toate prioritățile</option>
+                       <option value="Urgent">Urgent</option>
+                       <option value="Normal">Normal</option>
+                       <option value="Confidențial">Confidențial</option>
+                   </select>
 
-                    <div className="projects-list">
-                        {filteredProjects.map((project, index) => (
-                            <ProjectRow key={index} data={project} />
-                        ))}
-                    </div>
+                   <select
+                       className="filter-select"
+                       value={languageFilter}
+                       onChange={(e) => setLanguageFilter(e.target.value)}
+                   >
+                       <option value="all">Toate limbile</option>
+                       <option value="RO">Română</option>
+                       <option value="EN">Engleză</option>
+                   </select>
+               </div>
+           </div>
+           <ProjectRow projects={finalData} />
 
-                </div>
-            </div>
-        </div>
+       </div>
     );
 };
 

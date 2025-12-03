@@ -72,12 +72,22 @@
   font-size: 13px;
 }
 
-.team-badge {
-  padding: 3px 8px;
+.team-badge-approved:first-child {
+  padding: 8px 6px;
   background: #14B8A6;
-  border-radius: 8px;
-  font-size: 12px;
+  border-radius: 50%;
+    color:white;
+  font-size: 10px;
   margin-right: 5px;
+}
+
+.team-badge-approved  {
+    padding: 8px 6px;
+    background: #6D28D9;
+    border-radius: 50%;
+    color:white;
+    font-size: 10px;
+    margin-right: 5px;
 }
 
 /* Deadline */
@@ -113,7 +123,7 @@
 }
 
 /* Status */
-.status-badge {
+.status-badge-approved {
   padding: 6px 10px;
   border-radius: 10px;
   font-size: 13px;

@@ -1,87 +1,75 @@
-import { useState, useRef, useEffect } from "react";
+
 import {Link} from "react-router-dom";
-import {useGetAllUsersQuery} from "../../services/userApi";
 
-const ProjectRow = ({ data }) => {
-    const [open, setOpen] = useState(false);
-    const dropdownRef = useRef();
 
-    const { data: usersData } = useGetAllUsersQuery();
-    const users = usersData?.data || [];
+const ProjectRow = ({ projects }) => {
 
-    const responsibleUser = users.find(
-        (u) => u._id === data.responsibleAnalyst
-    );
-
-    // Close when clicking outside
-    useEffect(() => {
-        const handler = (e) => {
-            if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
-                setOpen(false);
-            }
-        };
-        document.addEventListener("mousedown", handler);
-        return () => document.removeEventListener("mousedown", handler);
-    }, []);
 
     return (
-        <div className="project-row1">
+        <div className="request-list-wrapper">
 
-            {/* INFO SECTION -------------------- */}
-            <div className="col project-info">
-                <h4 style={{ marginBottom: "5px" }}>
-                    {data.name || data.projectName || "Fără nume proiect"}
-                </h4>
+            <h3 className="section-title1">Solicitări înregistrate</h3>
 
-                <p>
-                    Responsabil:{" "}
-                    <b>
-                        {responsibleUser?.name || "Nespecificat"}
-                    </b>
-                </p>
+            <div className="request-card">
+                {projects.map((p) => (
+                    <div className="request-row" key={p._id}>
 
-                <p>
-                    Echipa asignată:{" "}
-                    {(data.assignedAnalysts || []).length > 0 ? (
-                        (data.assignedAnalysts || []).map((a, i) => (
-                            <span key={i} className="team-badge">
-                                {a?.initials || a?.name || "AN"}
-                            </span>
-                        ))
-                    ) : (
-                        <span className="team-empty">Nicio persoană asignată</span>
-                    )}
-                </p>
+                        {/* LEFT BLOCK */}
+                        <div className="left-side">
+                            <h4 className="project-title">{p.projectName}</h4>
+                            <p className="project-subject">{p.projectSubject}</p>
+                            <p className="solicitant">Solicitant: {p.clientContactPerson}</p>
+                        </div>
+
+                        {/* CENTER GRID */}
+                        <div className="middle-grid">
+
+                            <div className="grid-item">
+                                <span className="label">Client</span>
+                                <span className="value">{p.clientName}</span>
+                            </div>
+
+                            <div className="grid-item">
+                                <span className="label">Se dorește:</span>
+                                <div className="tag-row">
+                                    {p.servicesRequested.map((s, i) => (
+                                        <span key={i} className="tag">{s}</span>
+                                    ))}
+                                </div>
+                            </div>
+
+                            <div className="grid-item">
+                                <span className="label">Prioritate</span>
+                                <span className={`priority-tag ${p.priority.toLowerCase()}`}>
+                                    {p.priority}
+                                </span>
+                            </div>
+
+                            <div className="grid-item">
+                                <span className="label">Deadline</span>
+                                <span className="deadlineRequest">
+                                    {p.deadline.split("T")[0]} · 30 zile
+                                </span>
+                            </div>
+
+                            <div className="grid-item">
+                                <span className="label">Livrabil</span>
+                                <span className="value prop">Limba: {p.deliverableLanguage}</span>
+                            </div>
+
+                        </div>
+
+                        {/* ACTION BUTTON */}
+                        <div className="action-col">
+                            <Link to={`/project/${p._id}`} className="open-btn">
+                                Deschide solicitarea
+                            </Link>
+                        </div>
+
+                    </div>
+                ))}
             </div>
 
-            {/* DEADLINE ------------------------ */}
-            <div className="col deadline">
-                <span
-                    className={`deadline-date ${
-                        data.deadline && new Date(data.deadline) < new Date()
-                            ? "expired"
-                            : ""
-                    }`}
-                >
-                    {data.deadline
-                        ? new Date(data.deadline).toLocaleDateString("ro-RO")
-                        : "Fără termen"}
-                </span>
-            </div>
-
-            <div className="col deadline">
-                <span>
-                    {data.name||data.projectName}
-                </span>
-            </div>
-
-
-            {/* ACTIONS ------------------------- */}
-            <div className="col actions" ref={dropdownRef}>
-                <Link to={`/project/${data._id}`} className="action-btn-request">
-                    + Creează proiect nou
-                </Link>
-            </div>
         </div>
     );
 };

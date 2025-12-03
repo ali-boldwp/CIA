@@ -37,7 +37,7 @@ const ProjectRow = ({ project }) => {
               Echipa asignată:{" "}
               {project.assignedAnalysts?.length > 0 ? (
                   project.assignedAnalysts.map((a, i) => (
-                      <span key={i} className="team-badge">
+                      <span key={i} className="team-badge-approved">
                 { responsibleUser?.name.slice(0,2).toUpperCase() || "AN"}
               </span>
                   ))
@@ -67,7 +67,7 @@ const ProjectRow = ({ project }) => {
 
       {/* STATUS -------------------------- */}
       <div className="col status">
-        <span className={`status-badge orange ${project.statusColor}`}>
+        <span className={`status-badge-approved orange ${project.statusColor}`}>
           S-a solicitat HUMINT
         </span>
       </div>
