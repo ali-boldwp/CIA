@@ -30,7 +30,7 @@ const ProjectRow = ({ project }) => {
     <div className="project-row">
 
       {/* INFO SECTION -------------------- */}
-      <div className="col project-info">
+      <div className="col project-infoDash">
         <h4 style={{ marginBottom: "5px" }}>{project.projectName || project.name }</h4>
         <p>Responsabil: <b>{responsibleUser?.name || "Nespecificat"}</b></p>
           <p>
