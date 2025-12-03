@@ -1,4 +1,5 @@
 import React from "react";
+import { useForm } from "react-hook-form";
 import styles from "./AddEmployeeModal.module.css";
 
 const sectionNames = {
@@ -8,43 +9,103 @@ const sectionNames = {
 };
 
 const AddEmployeeModal = ({ isOpen, sectionKey, onClose }) => {
-    if (!isOpen) return null;
-
     const sectionLabel = sectionNames[sectionKey] || "Angajat";
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        // yahan baad me real API call aa sakti hai
+    // React Hook Form – same style as AddAnalystForm
+    const {
+        register,
+        handleSubmit,
+        watch,
+        reset,
+    } = useForm({
+        defaultValues: {
+            name: "",
+            role: "",
+            salary: "",
+            hoursMonth: 160,
+            hoursDay: 8,
+            bonus: "",
+            date: "",
+            remember: false,
+        },
+    });
+
+    // agar modal closed ho to render hi mat karo
+    if (!isOpen) return null;
+
+    // auto-cost (same logic as AddAnalystForm)
+    const salary = watch("salary");
+    const hoursMonth = watch("hoursMonth");
+    const hoursDay = watch("hoursDay");
+
+    const costHour =
+        salary && hoursMonth ? (Number(salary) / Number(hoursMonth)).toFixed(1) : 0;
+    const costDay = (Number(costHour) * Number(hoursDay || 0)).toFixed(0);
+
+    const onSubmit = (data) => {
+        const payload = {
+            name: data.name,
+            role: data.role,
+            monthlySalary: Number(data.salary),
+            hoursPerMonth: Number(data.hoursMonth),
+            hoursPerDay: Number(data.hoursDay),
+            bonus: Number(data.bonus),
+            hiringDate: data.date,
+            remember: data.remember,
+            costPerHour: Number(costHour),
+            costPerDay: Number(costDay),
+        };
+
+        console.log("EMPLOYEE FORM PAYLOAD:", payload);
+        // yahan baad me real API call laga sakta hai
         onClose();
     };
 
     return (
         <div className={styles.modalOverlay}>
             <div className={styles.modal}>
-                <div className={styles.modalHeader}>
-                    <h3>Adaugă angajat – {sectionLabel}</h3>
-                    <button
-                        type="button"
-                        className={styles.modalClose}
-                        onClick={onClose}
-                    >
-                        ✕
-                    </button>
-                </div>
+                {/* CLOSE BTN */}
+                <button
+                    type="button"
+                    className={styles.modalClose}
+                    onClick={onClose}
+                >
+                    ✕
+                </button>
 
-                <form className={styles.modalForm} onSubmit={handleSubmit}>
-                    <div className={styles.modalRow}>
-                        <div className={styles.modalField}>
+                <form className={styles.formContainer} onSubmit={handleSubmit(onSubmit)}>
+                    <h3 className={styles.formTitle}>
+                        Adaugă angajat – {sectionLabel}
+                    </h3>
+
+                    <p className={styles.formSubtitle}>
+                        Completează câmpurile. Costurile se calculează automat.
+                    </p>
+
+                    <div className={styles.formGrid}>
+                        {/* NUME */}
+                        <div className={`${styles.field} ${styles.fieldLeft}`}>
                             <label>Nume</label>
-                            <input type="text" placeholder="ex: Analist D" />
+                            <input
+                                placeholder="ex: Iulia Barbu"
+                                {...register("name")}
+                            />
                         </div>
 
-                        <div className={styles.modalField}>
+                        {/* SALARIU */}
+                        <div className={`${styles.field} ${styles.fieldRightWide}`}>
+                            <label>Salariu lunăr</label>
+                            <input
+                                type="number"
+                                {...register("salary")}
+                            />
+                        </div>
+
+                        {/* FUNCȚIE (employee roles) */}
+                        <div className={`${styles.field} ${styles.fieldLeft}`}>
                             <label>Funcție</label>
-                            <select defaultValue="">
-                                <option value="" disabled>
-                                    selectează...
-                                </option>
+                            <select {...register("role")}>
+                                <option value="">Selectează funcția</option>
                                 <option value="ceo">CEO</option>
                                 <option value="analist">Analist</option>
                                 <option value="manager">Manager</option>
@@ -52,37 +113,70 @@ const AddEmployeeModal = ({ isOpen, sectionKey, onClose }) => {
                             </select>
                         </div>
 
-                        <div className={styles.modalField}>
+                        {/* ORE/LUNĂ */}
+                        <div className={styles.fieldSmall}>
+                            <label>Ore/lună</label>
+                            <input type="number" {...register("hoursMonth")} />
+                        </div>
+
+                        {/* ORE/ZI */}
+                        <div className={styles.fieldSmall}>
+                            <label>Ore/zi</label>
+                            <input type="number" {...register("hoursDay")} />
+                        </div>
+
+                        {/* DATA ANGAJĂRII */}
+                        <div className={`${styles.field} ${styles.fieldLeft}`}>
                             <label>Data angajării</label>
-                            <input type="date" />
+                            <input type="date" {...register("date")} />
                         </div>
 
-                        <div className={styles.modalField}>
-                            <label>Salariu brut/lună (RON)</label>
-                            <input type="number" defaultValue={0} />
+                        {/* BONUS – lunar RON */}
+                        <div className={styles.fieldSmall}>
+                            <label>Bonus lunar </label>
+                            <input type="number" {...register("bonus")} />
                         </div>
 
-                        <div className={styles.modalField}>
-                            <label>Bonus lunar (RON)</label>
-                            <input type="number" defaultValue={0} />
+                        {/* COSTURI (automat) – DISABLED fields */}
+                        <div className={styles.fieldCosts}>
+                            <label>Costuri</label>
+                            <div className={styles.costGrid}>
+                                <input
+                                    value={costHour}
+                                    readOnly
+                                    disabled
+                                    className={styles.costInput}
+                                />
+                                <input
+                                    value={costDay}
+                                    readOnly
+                                    disabled
+                                    className={styles.costInput}
+                                />
+                            </div>
                         </div>
 
-                        <div className={`${styles.modalField} ${styles.modalFieldWide}`}>
-                            <label>Note (opțional)</label>
-                            <input type="text" placeholder="observații..." />
+                        {/* CHECKBOX – in place of NOTES */}
+                        <div className={`${styles.fieldFull} ${styles.checkboxRow}`}>
+                            <label className={styles.checkboxLabel}>
+                                <input type="checkbox" {...register("remember")} />
+                                <span>este logat</span>
+
+                            </label>
                         </div>
                     </div>
 
-                    <div className={styles.modalActions}>
-                        <button type="submit" className={styles.saveBtn}>
-                            Salvează angajat
-                        </button>
+                    <div className={styles.buttons}>
                         <button
                             type="button"
-                            className={styles.cancelBtn}
-                            onClick={onClose}
+                            className={styles.resetBtn}
+                            onClick={() => reset()}
                         >
-                            Anulează
+                            Reset
+                        </button>
+
+                        <button className={styles.saveBtn} type="submit">
+                            Salvează angajat
                         </button>
                     </div>
                 </form>

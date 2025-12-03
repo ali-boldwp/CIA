@@ -1,3 +1,4 @@
+/* === OVERLAY & MODAL (same feel as analyst modal) === */
 .modalOverlay {
     position: fixed;
     inset: 0;
@@ -5,32 +6,25 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    z-index: 50;
+    z-index: 9999;
 }
 
 .modal {
-    width: 90%;
-    max-width: 1100px;
     background: #ffffff;
+    width: 1100px;
+    max-width: 96vw;
+    padding: 32px;
     border-radius: 20px;
-    padding: 20px 22px 18px;
-    box-shadow: 0 20px 60px rgba(15, 23, 42, 0.35);
+    box-shadow: 0 30px 60px rgba(15, 23, 42, 0.14);
+    position: relative;
+    font-family: Inter, sans-serif;
 }
 
-.modalHeader {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 12px;
-}
-
-.modalHeader h3 {
-    font-size: 18px;
-    font-weight: 600;
-    color: #111827;
-}
-
+/* close button */
 .modalClose {
+    position: absolute;
+    top: 16px;
+    right: 16px;
     border: none;
     background: none;
     font-size: 18px;
@@ -38,73 +32,183 @@
     color: #6b7280;
 }
 
-.modalForm {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
+/* === FORM INSIDE MODAL (GRID) === */
+.formContainer {
+    width: 100%;
 }
 
-.modalRow {
+.formTitle {
+    font-size: 18px;
+    font-weight: 700;
+    color: #111827;
+    margin-bottom: 8px;
+}
+
+.formSubtitle {
+    font-size: 12px;
+    color: #6b7280;
+    margin-bottom: 18px;
+}
+
+/* 3-column grid: col1 wide, col2+3 equal */
+.formGrid {
     display: grid;
-    grid-template-columns: 1.3fr 1.2fr 1.1fr 1.2fr 1.2fr 2fr;
-    gap: 10px;
+    grid-template-columns: 2fr 1.1fr 1.1fr;
+    gap: 16px 18px;
+    align-items: flex-start;
 }
 
-.modalField {
+/* base field groups */
+.field,
+.fieldSmall,
+.fieldCosts {
     display: flex;
     flex-direction: column;
-    gap: 4px;
+}
+
+/* left column (Nume, Funcție, Data) */
+.fieldLeft {
+    grid-column: 1 / 2;
+}
+
+/* top right wide (Salariu) spans col2+3 */
+.fieldRightWide {
+    grid-column: 2 / 4;
+}
+
+/* small fields (Ore/lună, Ore/zi, Bonus) */
+.fieldSmall {
+    flex: 1;
+}
+
+/* cost block */
+.fieldCosts {
+    flex: 1;
+}
+
+/* full width row (checkbox) */
+.fieldFull {
+    grid-column: 1 / 4;
+}
+
+/* labels */
+.field label,
+.fieldSmall label,
+.fieldCosts > label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: 600;
     font-size: 12px;
     color: #4b5563;
 }
 
-.modalFieldWide {
-    grid-column: span 2;
-}
-
-.modalField input,
-.modalField select {
-    padding: 8px 10px;
-    border-radius: 10px;
-    border: 1px solid #e5e7eb;
-    font-size: 13px;
+/* inputs / selects */
+.field input,
+.field select,
+.fieldSmall input {
+    width: 100%;
+    padding: 11px 14px;
+    background: #ffffff;
+    border: 1px solid #ddd;
+    border-radius: 12px;
     outline: none;
+    font-size: 14px;
+    color: #111827;
 }
 
-.modalField input:focus,
-.modalField select:focus {
-    border-color: #4f46e5;
-    box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.15);
+.field input:focus,
+.field select:focus,
+.fieldSmall input:focus {
+    border-color: #2D9CDB;
+    box-shadow: 0 0 0 2px rgba(45,156,219,0.15);
 }
 
-.modalActions {
-    margin-top: 10px;
+/* cost grid & auto fields */
+.costGrid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+    margin-top: 0;
+}
+
+.costInput {
+    width: 100%;
+    padding: 11px 14px;
+    background: #f9fafb;
+    border: 1px solid #ddd;
+    border-radius: 12px;
+    font-size: 14px;
+    color: #111827;
+}
+
+/* focus state (for completeness, though disabled won't focus) */
+.costInput:focus {
+    border-color: #2D9CDB;
+    box-shadow: 0 0 0 2px rgba(45,156,219,0.15);
+}
+
+/* readonly + disabled auto fields */
+.costInput[readonly],
+.costInput[disabled] {
+    background: #f9fafb !important;
+    border: 1px solid #ddd !important;
+    color: #6b7280 !important;
+    cursor: not-allowed;
+}
+
+.costInput[readonly]:focus,
+.costInput[disabled]:focus {
+    border-color: #2D9CDB !important;
+    box-shadow: 0 0 0 2px rgba(45,156,219,0.15) !important;
+    outline: none !important;
+}
+
+/* === CHECKBOX (login remember-me style) === */
+.checkboxRow {
+    margin-top: 4px;
+}
+
+.checkboxLabel {
     display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    font-style: italic;
+    color: #6B7280;
+}
+
+.checkboxLabel input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+}
+
+/* === FORM BUTTONS (same as analyst) === */
+.buttons {
+    display: flex;
+    justify-content: flex-end;
     gap: 10px;
+    margin-top: 20px;
+}
+
+.resetBtn {
+    background: #e5e7eb;
+    color: #111827;
+    padding: 10px 22px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
 }
 
 .saveBtn {
-    padding: 9px 18px;
-    border-radius: 12px;
-    border: none;
-    background: #10b981;
+    background: #22c55e;
     color: #ffffff;
-    font-size: 14px;
-    font-weight: 500;
-    cursor: pointer;
-}
-
-.saveBtn:hover {
-    background: #059669;
-}
-
-.cancelBtn {
-    padding: 9px 18px;
-    border-radius: 12px;
+    padding: 10px 24px;
+    border-radius: 8px;
     border: none;
-    background: #111827;
-    color: #ffffff;
-    font-size: 14px;
-    font-weight: 500;
     cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
 }

@@ -113,7 +113,7 @@ export default function AddAnalystForm({ closeModal, editData }) {
 
                 {/* SALARY */}
                 <div className={`${styles.field} ${styles.fieldRightWide}`}>
-                    <label>Salariu lunar (RON)</label>
+                    <label>Salariu lunar</label>
                     <input type="number" {...register("salary")} />
                 </div>
 
@@ -154,7 +154,7 @@ export default function AddAnalystForm({ closeModal, editData }) {
 
                 {/* COSTS */}
                 <div className={styles.fieldCosts}>
-                    <label>Costuri (automat)</label>
+                    <label>Costuri</label>
                     <div className={styles.costGrid}>
                         <input readOnly value={costHour} className={styles.costInput} />
                         <input readOnly value={costDay} className={styles.costInput} />
