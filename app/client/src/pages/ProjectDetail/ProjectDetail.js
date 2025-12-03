@@ -6,9 +6,9 @@ import ProjectBilling from "./ProjectBilling";
 import ProjectDetailButton from "./ProjectDetailButton";
 import { useParams } from "react-router-dom";
 import {
-    useGetProjectRequestByIdQuery,
+
     useCreateProjectMutation,
-    useUpdateProjectMutation,
+    useUpdateProjectMutation, useGetCreateProjectByIdQuery,
 } from "../../services/projectApi";
 
 // ✅ DEFAULT VALUES — sab upar rakho!
@@ -49,7 +49,7 @@ const ProjectDetail = () => {
     const [createProject] = useCreateProjectMutation();
     const [updateProject] = useUpdateProjectMutation();
 
-    const { data, isLoading } = useGetProjectRequestByIdQuery(id, {
+    const { data, isLoading } = useGetCreateProjectByIdQuery(id, {
         skip: !id,
     });
 
