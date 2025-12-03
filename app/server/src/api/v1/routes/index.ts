@@ -8,6 +8,7 @@ import projectDetailsRoutes from "./projectDetails.routes";
 import taskRoutes from "./task.routes";
 import chatRoutes from "./chat.routes";
 import chapterRoutes from "./chapter.routes";
+import requestedRoutes from "./requested.routes";
 
 const router = Router();
 
@@ -20,5 +21,6 @@ router.use("/project-details", projectDetailsRoutes);
 router.use("/task", taskRoutes);
 router.use("/chats" , chatRoutes)
 router.use("/chapter",chapterRoutes)
+router.use("/" , requestedRoutes)
 
 export default router;
