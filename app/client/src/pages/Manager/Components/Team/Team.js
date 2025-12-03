@@ -51,50 +51,62 @@ const Team = () => {
                         <span>Acțiuni</span>
                     </div>
                     <div className="teamBody">
-                    {analysts.map((a) => {
-                        const status = getAnalystStatus(a._id);
-                        const progress = getAnalystProgress(a._id);
+                        {analysts.map((a) => {
+                            const status = getAnalystStatus(a._id);
+                            const progress = getAnalystProgress(a._id);
 
-                        return (
-                            <div className="team-row" key={a._id}>
-                                <div className="col name">
-                  <span   className={status === "în lucru" ? "purple" : "initial-badge"}>
-                    {a.initials || a.name?.slice(0, 2).toUpperCase()}
-                  </span>
-                                    <span>{a.name}</span>
-                                </div>
-
-                                <div className="col score">{a.score || 0}</div>
-
-                                <div className="col state">
-                  <span
-                      className={`state-badge ${
-                          status === "liber" ? "free" : "work"
-                      }`}
-                  >
-                    {status}
-                  </span>
-                                </div>
-
-                                <div className="col progress">
-                                    <div className="progres-bar">
-                                        <div
-                                            className="progres-fill"
-                                            style={{ width: `${progress}%` }}
-                                        ></div>
+                            return (
+                                <div className="team-row" key={a._id}>
+                                    <div className="col name">
+                                        <span className={status === "în lucru" ? "purple" : "initial-badge"}>
+                                            {a.initials || a.name?.slice(0, 2).toUpperCase()}
+                                        </span>
+                                        <span>{a.name}</span>
                                     </div>
-                                    <span className="progress-number">{progress}%</span>
-                                </div>
 
-                                <div className="col actions">
-                                    <button className="open-btn">Deschide</button>
-                                    <button className="delete-btn">🗑 Șterge</button>
+                                    <div className="col score">{a.score || 0}</div>
+
+                                    <div className="col state">
+                                        <span
+                                            className={`state-badge ${
+                                                status === "liber" ? "free" : "work"
+                                            }`}
+                                        >
+                                            {status}
+                                        </span>
+                                    </div>
+
+                                    <div className="col progress">
+                                        <div className="progres-bar">
+                                            <div
+                                                className="progres-fill"
+                                                style={{ width: `${progress}%` }}
+                                            ></div>
+                                        </div>
+                                        <span className="progress-number">{progress}%</span>
+                                    </div>
+
+                                    <div className="col actions">
+                                        <button className="open-btn">Deschide</button>
+                                        <button className="delete-btn">🗑 Șterge</button>
+                                    </div>
                                 </div>
-                            </div>
-                        );
-                    })}
+                            );
+                        })}
                     </div>
                 </div>
+            </div>
+
+            {/* ✅ Buttons table ke neeche, wrapper se bahar */}
+            <div className="team-footer-actions">
+                <button className="add-btn">
+                    <span className="add-icon">＋</span>
+                    <span>Adaugă analist</span>
+                </button>
+
+                <button className="list-btn">
+                    Vezi lista angajați
+                </button>
             </div>
         </div>
     );
