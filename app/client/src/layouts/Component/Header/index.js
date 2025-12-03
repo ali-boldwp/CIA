@@ -5,16 +5,22 @@ import {Link,useLocation} from "react-router-dom";
 const Header = () => {
 
     const location=useLocation();
-    const isSale=location.pathname.includes("sales");
+    const isSale=location.pathname.includes("sales") ;
+    const isAnalyst=location.pathname.includes("analyst");
+    let dashboardTitle = "Dashboard Manager";
 
+    if (isSale) {
+        dashboardTitle = "Dashboard Sales";
+    } else if (isAnalyst) {
+        dashboardTitle = "Dashboard Analist";
+    }
   return (
     <header className="header">
         <div className="firstSec">
-            {!isSale ?
-                <h3 className="logo">Dashboard Manager</h3>:
-                <h3 className="logo">Dashboard Sales</h3>
 
-            }
+                    <h3 className="logo">{dashboardTitle}</h3>
+
+
 
 
       <div className="search-box">
@@ -23,7 +29,8 @@ const Header = () => {
       </div>
       </div>
        <div className="secSec">
-      <Link to="/project" className="new-project-btn">+ Creeeaza proiect nou</Link>
+           {isSale ? "" : isAnalyst? "":     <Link to="/project" className="new-project-btn">+ Creeeaza proiect nou</Link>}
+
 
       <div className="right-buttons">
         <button className="icon-btn">🔔 Alarme</button>
