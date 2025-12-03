@@ -138,6 +138,11 @@
   margin-right: 5px;
 }
 
+a{
+    color:black;
+
+}
+
 .dropdown-btn {
   font-weight: 600;
 }

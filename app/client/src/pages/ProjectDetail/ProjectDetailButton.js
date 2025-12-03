@@ -1,11 +1,13 @@
 // /home/ubaid/workspace/app/client/src/pages/ProjectDetail/ProjectDetailButton.js
 import React from "react";
 import styles from "./ProjectDetailButton.module.css";
+import {Link} from "react-router-dom";
 
 const ProjectDetailButton = ({
                                  onSave,
                                  onGoToTask,
                                  onViewCosts,
+                                    id
                              }) => {
     return (
         <div className={styles.wrapper}>
@@ -18,13 +20,13 @@ const ProjectDetailButton = ({
                     Salvează modificările
                 </button>
 
-                <button
+                <Link  to={`/project/${id}/tasks`}
                     type="button"
-                    className={styles.taskBtn}
+                    className={styles.taskBtna}
                     onClick={onGoToTask}
                 >
                     Mergi la Task Proiect
-                </button>
+                </Link>
 
                 <button
                     type="button"
