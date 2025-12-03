@@ -84,7 +84,11 @@ const ProjectDetail = () => {
 
                 files: raw.files || [],
 
-                responsible: raw.responsibleAnalyst,
+                responsible:
+                    typeof raw.responsibleAnalyst === "object" && raw.responsibleAnalyst !== null
+                        ? raw.responsibleAnalyst.name
+                        : raw.responsibleAnalyst || "—",
+
                 team: raw.assignedAnalysts || [],
 
                 contractNotes: raw.contractInfo,

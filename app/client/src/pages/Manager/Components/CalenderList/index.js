@@ -17,7 +17,7 @@ const CalendarList = () => {
             <span className="date-badge"> {item.deadline
                 ? new Date(item.deadline).toLocaleDateString("ro-RO")
                 : "Fără deadline"}</span>
-            <span className="task-title">{item.name}</span>
+            <span className="task-title">{ item.projectName}</span>
             <span className="status-dot"></span>
           </div>
         ))}

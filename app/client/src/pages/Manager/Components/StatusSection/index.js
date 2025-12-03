@@ -13,6 +13,7 @@ const StatusSection = () => {
 
     // Only Approved
     const approvedReq = projects.filter((p) => p.status?.toLowerCase() === "approved");
+    const requestedReq = projects.filter((p) => p.status?.toLowerCase() === "requested");
 
 
 
@@ -49,7 +50,7 @@ const StatusSection = () => {
 
                 <div className="stat-box">
                     <span className="label">💻 Solicitare de proiect nou</span>
-                    <Link to="/projectRequest-list" className="gradient-btn">Adaugă</Link>
+                    <Link to="" className="gradient-btn">Adaugă</Link>
                 </div>
 
                 <div className="stat-box">
@@ -79,8 +80,8 @@ const StatusSection = () => {
                 <div className="stat-box wide">
                     <span className="label">📤 Solicitări proiect — de revizuit</span>
                     <div className="sec">
-                        <h3>4</h3>
-                        <button className="gradient-btn">Deschide lista</button>
+                        <h3>{requestedReq.length}</h3>
+                        <Link to="/projectRequest-list" className="gradient-btn">Deschide lista</Link>
                     </div>
                 </div>
 
