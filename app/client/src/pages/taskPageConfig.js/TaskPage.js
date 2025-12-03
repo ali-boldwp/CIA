@@ -1,91 +1,115 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
+import { BiTrash } from "react-icons/bi";
+import { useGetProjectRequestByIdQuery } from "../../services/projectApi";
 import "./TaskPage.css";
 
 const TaskPage = () => {
+    // Get projectId from URL
+    const { id: projectId } = useParams();
+
+    // Fetch project data by ID
+    const { data, isLoading, isError } = useGetProjectRequestByIdQuery(projectId, {
+        skip: !projectId,
+    });
+
+    // Local state for tasks
+    const [tasks, setTasks] = useState([]);
+
+    useEffect(() => {
+        if (data && data.tasks) {
+            setTasks(
+                data.tasks.map((t, index) => ({
+                    id: t.id || index + 1,
+                    title: t.title || `Task ${index + 1}`,
+                    status: t.status || "Assigned",
+                    checked: t.checked || false,
+                }))
+            );
+        }
+    }, [data]);
+
+    const deleteTask = (id) => setTasks(tasks.filter((t) => t.id !== id));
+
+    if (!projectId) return <p>No project selected.</p>;
+    if (isLoading) return <p>Loading project tasks...</p>;
+    if (isError) return <p>Error fetching project data!</p>;
+
     return (
         <div className="task-container">
-            <div className="task-header" >
+            {/* HEADER */}
+            <div className="header flex-between">
+                <div className="flex-column text-white">
+                    <button className="p-10 semibold rounded-20 border-none italic">
+                        TASK INDIVIDUAL
+                    </button>
+                    <p className="fs-24 semibold m-10">
+                        Proiect: {data?.data.projectName || "N/A"}
+                    </p>
+                </div>
 
-<div className="flex-center" >
-
-
-    <button className="back-btn">← Înapoi la Dashboard</button>
-    <div className="header-row">
-        <h2>Task Individual — Societatea ABC</h2>
-        <div className="analysis-info">Analist: X | Deadline: 12.11.2025 | Status: În derulare</div>
-    </div>
-</div>
-
-                {/* Progress Bar */}
-                <div className="progress-wrapper">
-                    <div className="progress-label">Progres general</div>
-                    <div className="progress-bar">
-                        <div className="progress-fill" style={{ width: "68%" }}></div>
-                    </div>
-                    <div className="progress-value">68%</div>
+                <div className="header-right flex-column text-white">
+                    <button className="p-10 semibold rounded-20 border-none text-gray min-w-300">
+                        Responsabil proiect: {data?.responsibleAnalyst || "N/A"}
+                    </button>
+                    <p className="fs-14 m-10 min-w-300 text-center">
+                        Alti analisti asignati:{" "}
+                        {data?.assignedAnalysts?.length > 0
+                            ? data.assignedAnalysts.join(", ")
+                            : "N/A"}
+                    </p>
                 </div>
             </div>
 
-            <div className="task-info">
+            {/* TASK TABLE */}
+            <div className="task-table-box">
+                <table className="task-table">
+                    <thead>
+                    <tr>
+                        <th></th>
+                        <th>Task Title</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                    </thead>
 
-                {/* =========== LEFT SIDEBAR =========== */}
-
-                <div className="sidebar">
-
-                    <div className="sidebar-box">
-                        <h3>Detalii Task</h3>
-
-                        <div className="detail-item"><strong>Tip task:</strong> Societate</div>
-                        <div className="detail-item"><strong>Responsabil:</strong> Analist A</div>
-                        <div className="detail-item"><strong>Status:</strong> În derulare</div>
-                        <div className="detail-item"><strong>Deadline:</strong> 12.11.2025</div>
-                        <div className="detail-item"><strong>Ultima actualizare:</strong> 30.10.2025</div>
-                        <div className="detail-item"><strong>Total puncte:</strong> 24</div>
-                        <div className="detail-item"><strong>Puncte completate:</strong> 17/24 (68%)</div>
-                    </div>
-
-                    <button className="red-btn">⏱ Start proiect</button>
-                    <button className="black-btn">⏸ Pauza proiect</button>
-                    <button className="green-btn">💾 Salveaza progres</button>
-                    <button className="yellow-btn">🔍 Cauta in Notes App</button>
-                    <button className="pink-btn">📩 Solicita HUMINT</button>
-                </div>
-
-                {/* =========== MAIN AREA =========== */}
-                <div className="main-area">
-
-
-                    {/* Sections List */}
-                    <div className="task-box">
-                        <h3>I. SOCIETATEA ABC</h3>
-
-                        <ul className="checklist">
-                            <li><input type="checkbox" checked readOnly/> Informatii generale</li>
-                            <li><input type="checkbox" checked readOnly/> Istoric societate</li>
-                            <li><input type="checkbox" checked readOnly/> Date financiare</li>
-                            <li><input type="checkbox" checked readOnly/> Parteneri contractuali</li>
-                            <li><input type="checkbox" checked readOnly/> Datorii si inscrieri mobiliare</li>
-                            <li><input type="checkbox" /> Achizitii SEAP</li>
-                            <li><input type="checkbox" /> Proprietate intelectuala / Marci OSIM</li>
-                            <li><input type="checkbox" /> Litigii societate</li>
-                            <li><input type="checkbox" /> Participatii in alte societati</li>
-                            <li><input type="checkbox" /> Controverse si aspecte de interes public</li>
-                            <li><input type="checkbox" /> Informatii din HUMINT</li>
-                            <li><input type="checkbox" /> Informatii suplimentare (editabil)</li>
-                        </ul>
-
-                        <button className="add-btn">+ Adauga punct nou</button>
-
-                        <div className="editable-box">
-                            Informatii suplimentare (titlu editabil)
-                        </div>
-
-                        <button className="green-btn bottom-save">💾 Salveaza progres</button>
-                    </div>
-                </div>
-
+                    <tbody>
+                    {tasks.map((task, index) => (
+                        <tr key={task.id} className={index % 2 === 0 ? "even-row" : "odd-row"}>
+                            <td>
+                                <input
+                                    className="checkbox"
+                                    type="checkbox"
+                                    checked={task.checked}
+                                    onChange={() =>
+                                        setTasks(
+                                            tasks.map((t) =>
+                                                t.id === task.id ? { ...t, checked: !t.checked } : t
+                                            )
+                                        )
+                                    }
+                                />
+                            </td>
+                            <td>{task.title}</td>
+                            <td>
+                  <span
+                      className={`status-badge ${task.status.replace(" ", "").toLowerCase()}`}
+                  >
+                    {task.status}
+                  </span>
+                            </td>
+                            <td>
+                                <BiTrash
+                                    className="delete-icon"
+                                    onClick={() => deleteTask(task.id)}
+                                />
+                            </td>
+                        </tr>
+                    ))}
+                    </tbody>
+                </table>
             </div>
-           </div>
+        </div>
     );
 };
 
