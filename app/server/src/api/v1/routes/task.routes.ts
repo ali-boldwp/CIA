@@ -20,24 +20,24 @@ router.get(
 router.get("/:id", auth, taskController.getTaskById);
 
 
-router.put("/:id", auth, taskController.updateTask);
-
-
-router.patch("/:id/finalize", auth, taskController.finalizeTask);
-
-
-router.delete(
-    "/:id",
-    auth,
-    // authorizeRoles(Role.ADMIN, Role.MANAGER),
-    taskController.deleteTask
-);
-
-router.get(
-    "/project/:projectId",
-    auth,
-    taskController.getTasksByProjectId
-);
+// router.put("/:id", auth, taskController.updateTask);
+//
+//
+// router.patch("/:id/finalize", auth, taskController.finalizeTask);
+//
+//
+// router.delete(
+//     "/:id",
+//     auth,
+//     // authorizeRoles(Role.ADMIN, Role.MANAGER),
+//     taskController.deleteTask
+// );
+//
+// router.get(
+//     "/project/:projectId",
+//     auth,
+//     taskController.getTasksByProjectId
+// );
 
 
 export default router;
