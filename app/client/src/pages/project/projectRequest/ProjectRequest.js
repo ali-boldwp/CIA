@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import styles from "./ProjectRequest.module.css";
 import { useSelector } from "react-redux";
-import { useCreateProjectMutation } from "../../../services/projectApi";
+import {useCreateProjectMutation, useRequestProjectMutation} from "../../../services/projectApi";
 import { Link } from "react-router-dom";
 
 import { toast } from "react-toastify";
@@ -45,7 +45,7 @@ const ProjectRequest = () => {
 
     const [files, setFiles] = useState([]);
 
-    const [createProject, { isLoading }] = useCreateProjectMutation();
+    const [requestProject, { isLoading }] = useRequestProjectMutation();
 
     const { data  } = useGetAnalystsQuery();
     const analystData=data?.data || [];
@@ -126,7 +126,7 @@ const ProjectRequest = () => {
         formData.append("status", "requested");
 
         try {
-            const response = await createProject(formData).unwrap();
+            const response = await requestProject(formData).unwrap();
             toast.success("Proiect creat cu succes!");
             console.log(response);
         } catch (err) {

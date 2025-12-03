@@ -17,7 +17,15 @@ export const projectApi = createApi({
     endpoints: (builder) => ({
         createProject: builder.mutation({
             query: (formData) => ({
-                url: "/projects",
+                url: "/created-project",
+                method: "POST",
+                body: formData,
+            }),
+        }),
+
+        requestProject: builder.mutation({
+            query: (formData) => ({
+                url: "/project-request",
                 method: "POST",
                 body: formData,
             }),
@@ -78,6 +86,7 @@ export const projectApi = createApi({
 
 export const {
     useCreateProjectMutation,
+    useRequestProjectMutation,
     useGetProjectRequestsQuery,
     useGetProjectCreateQuery,
     useGetCreateProjectByIdQuery,
