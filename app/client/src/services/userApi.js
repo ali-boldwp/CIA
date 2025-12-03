@@ -25,7 +25,7 @@ export const userApi = createApi({
 
 
         getAnalysts: builder.query({
-            query: () => "/users?role=Analyst",
+            query: () => "/users?role=analyst",
             providesTags: ["Analysts"]
         }),
 

@@ -3,8 +3,9 @@ import styles from "./ProjectRequest.module.css";
 import { useSelector } from "react-redux";
 import { useCreateProjectMutation } from "../../../services/projectApi";
 import { Link } from "react-router-dom";
-import { useGetAnalystsQuery } from "../../../services/userApi";
+
 import { toast } from "react-toastify";
+import {useGetAnalystsQuery} from "../../../services/userApi";
 
 const ProjectRequest = () => {
     const user = useSelector((state) => state.auth.user);
@@ -46,23 +47,15 @@ const ProjectRequest = () => {
 
     const [createProject, { isLoading }] = useCreateProjectMutation();
 
-    const { data: userData } = useGetAnalystsQuery();
+    const { data  } = useGetAnalystsQuery();
+    const analystData=data?.data || [];
+    const analyst=analystData.filter((p)=>p.role==="analyst");
 
-    // Normalize user list
-    const analysts = Array.isArray(userData)
-        ? userData
-        : Array.isArray(userData?.data)
-            ? userData.data
-            : Array.isArray(userData?.users)
-                ? userData.users
-                : Array.isArray(userData?.analysts)
-                    ? userData.analysts
-                    : [];
 
-    // ✅ Filter only analysts (role === "analyst")
-    const filteredAnalysts = analysts.filter((a) => a.role === "analyst");
 
-    // MULTI SELECT SERVICES
+
+
+
     const toggleService = (name) => {
         setServices((prev) =>
             prev.includes(name)
@@ -501,7 +494,7 @@ const ProjectRequest = () => {
                                             Selectează analist -
                                         </option>
 
-                                        {filteredAnalysts.map((a) => (
+                                        {analyst.map((a) => (
                                             <option
                                                 key={a._id}
                                                 value={a._id}
