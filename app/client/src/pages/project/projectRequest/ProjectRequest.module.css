@@ -428,6 +428,16 @@
     box-shadow: 0 5px 14px rgba(46, 58, 84, 0.3);
 }
 
+.error-input {
+    border: 1px solid red !important;
+}
+
+.errorText {
+    color: red;
+    font-size: 12px;
+    margin-top: 3px;
+}
+
 /* ============== RESPONSIVE ============== */
 
 @media (max-width: 960px) {

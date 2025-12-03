@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import {
     useGetProjectRequestByIdQuery,
@@ -10,6 +10,7 @@ import {
 import { useGetAnalystsQuery } from "../../services/userApi";
 import "./NewProjectstyle.css";
 import {toast} from "react-toastify";
+import styles from "../project/projectRequest/ProjectRequest.module.css";
 
 const NewProject = () => {
 
@@ -28,7 +29,10 @@ const NewProject = () => {
                     ? analystsData.analysts
                     : [];
 
-    const analystOptions = analysts.map(a => ({ id: a._id, name: a.name }));
+    const analystOptions = analysts.map(a => ({
+        id: String(a._id),
+        name: a.name
+    }));
 
 
     // LOAD REQUEST BY ID
@@ -41,10 +45,12 @@ const NewProject = () => {
     // ============================
     // FORM STATES
     // ============================
+    const [errors, setErrors] = useState({});
     const [projectName, setProjectName] = useState("");
     const [projectSubject, setProjectSubject] = useState("");
     const [reportType, setReportType] = useState("");
     const [entityType, setEntityType] = useState("");
+    const [category, setCategory] = useState("");
     const [deadline, setDeadline] = useState("");
     const [priority, setPriority] = useState("");
     const [language, setLanguage] = useState("");
@@ -68,7 +74,7 @@ const NewProject = () => {
     const [files, setFiles] = useState([]);
 
     const [respOpen, setRespOpen] = useState(false);
-    const [responsible, setResponsible] = useState("Selectează responsabilul");
+    const [responsible, setResponsible] = useState("");
 
     const [multiOpen, setMultiOpen] = useState(false);
     const [selectedAnalysts, setSelectedAnalysts] = useState([]);
@@ -105,8 +111,60 @@ const NewProject = () => {
             setContractInfo(request.contractInfo || "");
             setReferenceRequest(request.referenceRequest || "");
             setInternalNotes(request.internalNotes || "");
+            setFiles(request.files || []);
+            setResponsible(
+                request?.responsibleAnalyst?._id
+                    ? String(request.responsibleAnalyst._id)
+                    : ""
+            );
+
+
+            // ⭐ FIX: convert arrays of IDs to strings
+            setSelectedAnalysts(
+                Array.isArray(request.assignedAnalysts)
+                    ? request.assignedAnalysts.map(a =>
+                        typeof a === "object" ? String(a._id) : String(a)
+                    )
+                    : []
+            );
+
         }
     }, [request, id]);
+
+    const validateForm = () => {
+        let newErrors = {};
+
+        if (!projectName.trim()) newErrors.projectName = "Numele proiectului este obligatoriu";
+        if (!projectSubject.trim()) newErrors.projectSubject = "Subiectul proiectului este obligatoriu";
+        if (!category.trim()) newErrors.category = "Tipul raportului este obligatoriu";
+        if (!entityType.trim()) newErrors.entityType = "Tipul entității este obligatoriu";
+        if (!deadline) newErrors.deadline = "Termenul limită este obligatoriu";
+        if (!priority.trim()) newErrors.priority = "Prioritatea este obligatorie";
+        if (!language.trim()) newErrors.language = "Limba livrabilului este obligatorie";
+        if (!projectDescription.trim()) newErrors.projectDescription = "Descrierea proiectului este obligatorie";
+
+        if (!clientName.trim()) newErrors.clientName = "Client name is required";
+        if (!clientPerson.trim()) newErrors.clientPerson = "Persoana de contact este obligatorie";
+        if (!clientEmail.trim()) newErrors.clientEmail = "Client email is required";
+        if (!clientPhone.trim()) newErrors.clientPhone = "Telefonul clientului este obligatoriu";
+        if (!clientPosition.trim()) newErrors.clientPosition = "Funcția este obligatorie";
+
+        if (!contractNo.trim()) newErrors.contractNo = "Contract number is required";
+        if (!services.trim()) newErrors.services = "Services are required";
+        if (!projectPrice || projectPrice === "") newErrors.projectPrice = "Prețul proiectului este obligatoriu"
+        if (!annexNo.trim()) newErrors.annexNo = "Annex No is required";
+        if (!contractInfo.trim()) newErrors.contractInfo = "Informațiile despre contract sunt obligatorii";
+        if (!internalNotes.trim()) newErrors.internalNotes = "InternalNotes is required";
+        if (!referenceRequest.trim()) newErrors.referenceRequest = "InternalNotes is required";
+        // if (!projectPrice.trim()) newErrors.projectPrice = "Project price is required";
+
+        if (!responsible.trim()) newErrors.responsible = "Responsible analyst is required";
+
+        setErrors(newErrors);
+
+        return Object.keys(newErrors).length === 0;
+    };
+
 
     // ============================
     // DROPDOWN HANDLERS
@@ -183,31 +241,40 @@ const NewProject = () => {
         assignedAnalysts: selectedAnalysts,
 
         deadline,
-        fromRequestId: id || undefined
+        fromRequestId: id || undefined,
+
     });
 
     // ============================
     // SAVE HANDLER
     // ============================
     const handleSave = async () => {
+        if (!validateForm()) {
+            toast.error("Please fill all required fields!");
+            return;
+        }
+
         const payload = buildPayload();
 
         try {
             if (id) {
-                // Convert Request → Final Project
                 await createProject(payload).unwrap();
                 toast.success("Proiect final creat cu succes!");
             } else {
-                // Create NEW Request Project
                 await requestProject(payload).unwrap();
                 toast.success("Solicitare proiect creată cu succes!");
             }
-
         } catch (err) {
             console.log(err);
             toast.error("Eroare la salvare!");
         }
     };
+
+
+    const removeFile = (index) => {
+        setFiles(files.filter((_, i) => i !== index));
+    };
+
 
     // ============================
     // LOADING
@@ -244,6 +311,7 @@ const NewProject = () => {
                             <label>Denumire proiect</label>
                             <input className="input-box" value={projectName}
                                    onChange={(e) => setProjectName(e.target.value)} />
+                            {errors.projectName && <p className={styles.errorText}>{errors.projectName}</p>}
                         </div>
 
                         <div className="form-field">
@@ -251,7 +319,7 @@ const NewProject = () => {
                             <div className="input-wrapper">
                                 <input className="input-box" value={projectSubject}
                                        onChange={(e) => setProjectSubject(e.target.value)} />
-
+                                {errors.projectSubject && <p className={styles.errorText}>{errors.projectSubject}</p>}
                             </div>
                         </div>
                     </div>
@@ -260,26 +328,90 @@ const NewProject = () => {
                     <div className="row-four">
                         <div className="form-field">
                             <label>Tip raport</label>
-                            <input className="input-box" value={reportType}
-                                   onChange={(e) => setReportType(e.target.value)} />
+                            <select
+                                className={`${styles.input} ${styles.selectAnalyst}`}
+                                value={category}
+                                onChange={(e) =>
+                                    setCategory(e.target.value)
+                                }
+                            >
+                                <option value="">
+                                    Enhanced Due Diligence
+                                </option>
+                                <option value="Enhanced Due Diligence (Societate / Grup)">
+                                    Enhanced Due Diligence (Societate /
+                                    Grup)
+                                </option>
+                                <option value="Preliminary Due Diligence">
+                                    Preliminary Due Diligence
+                                </option>
+                                <option value="Background Check">
+                                    Background Check
+                                </option>
+                                <option value="Preliminary Background Check">
+                                    Preliminary Background Check
+                                </option>
+                                <option value="Fraud Investigation">
+                                    Fraud Investigation
+                                </option>
+                                <option value="Audit reputational">
+                                    Audit reputational
+                                </option>
+                                <option value="Raport de informare">
+                                    Raport de informare
+                                </option>
+                                <option value="Altele (Custom)">
+                                    Altele (Custom)
+                                </option>
+                            </select>
+                            {errors.category && <p className={styles.errorText}>{errors.category}</p>}
                         </div>
 
                         <div className="form-field">
                             <label>Tip entitate</label>
-                            <input className="input-box" value={entityType}
-                                   onChange={(e) => setEntityType(e.target.value)} />
+                            <select
+                                className={`${styles.input} ${styles.selectAnalyst}`}
+                                value={entityType}
+                                onChange={(e) =>
+                                    setEntityType(e.target.value)
+                                }
+                            >
+                                <option value="">
+                                    Societate (include persoane cheie)
+                                </option>
+                                <option value="Persoana">
+                                    Persoana
+                                </option>
+                                <option value="ONG">ONG</option>
+                                <option value="Investigatie frauda">
+                                    Investigatie frauda
+                                </option>
+                                <option value="Analiza de piata">
+                                    Analiza de piata
+                                </option>
+                                <option value="Supraveghere operativa">
+                                    Supraveghere operativa
+                                </option>
+                                <option value="TCSM">TCSM</option>
+                                <option value="Protectie supraveghere clandestina">
+                                    Protectie supraveghere clandestina
+                                </option>
+                            </select>
+                            {errors.entity && <p className={styles.errorText}>{errors.entityType}</p>}
                         </div>
 
                         <div className="form-field">
                             <label>Termen limită</label>
                             <input type="date" className="input-box bold" value={deadline}
                                    onChange={(e) => setDeadline(e.target.value)} />
+                            {errors.deadline && <p className={styles.errorText}>{errors.deadline}</p>}
                         </div>
 
                         <div className="form-field">
                             <label>Prioritate</label>
                             <input className="input-box" value={priority}
                                    onChange={(e) => setPriority(e.target.value)} />
+                            {errors.priority && <p className={styles.errorText}>{errors.priority}</p>}
                         </div>
                     </div>
 
@@ -289,6 +421,7 @@ const NewProject = () => {
                             <label>Limbă livrabil</label>
                             <input className="input-box" value={language}
                                    onChange={(e) => setLanguage(e.target.value)} />
+                            {errors.language && <p className={styles.errorText}>{errors.language}</p>}
                         </div>
 
                         <div className="form-field">
@@ -305,9 +438,18 @@ const NewProject = () => {
 
                             {files.map((file, i) => (
                                 <div className="file-item" key={i}>
-                                    📄 {file.name} • {(file.size / 1024).toFixed(1)} KB
+                                    📄 {typeof file === "string" ? file : file.name}
+
+                                    <span
+                                        className="delete-file"
+                                        onClick={() => removeFile(i)}
+                                    >
+            ✖
+        </span>
                                 </div>
                             ))}
+
+
                         </div>
                     </div>
 
@@ -315,6 +457,7 @@ const NewProject = () => {
                         <label>Descriere proiect</label>
                         <textarea className="textarea-box" value={projectDescription}
                                   onChange={(e) => setProjectDescription(e.target.value)} />
+                        {errors.projectDescription && <p className={styles.errorText}>{errors.projectDescription}</p>}
                     </div>
                 </div>
 
@@ -332,7 +475,8 @@ const NewProject = () => {
 
                             <div className="dropdown-box" onClick={() => setRespOpen(!respOpen)}>
                                <span>
-  {analystOptions.find(a => a.id === responsible)?.name || "Selectează responsabilul"} ▾
+  {analystOptions.find(a => a.id === responsible)?.name || "Selectează responsabilul"}
+
 </span>
 
                             </div>
@@ -407,18 +551,21 @@ const NewProject = () => {
                             <label>Nume client</label>
                             <input className="input-box" value={clientName}
                                    onChange={(e) => setClientName(e.target.value)} />
+                            {errors.clientName && <p className={styles.errorText}>{errors.clientName}</p>}
                         </div>
 
                         <div className="form-field">
                             <label>Persoană de contact</label>
                             <input className="input-box" value={clientPerson}
                                    onChange={(e) => setClientPerson(e.target.value)} />
+                            {errors.clientPerson && <p className={styles.errorText}>{errors.clientPerson}</p>}
                         </div>
 
                         <div className="form-field">
                             <label>Funcție</label>
                             <input className="input-box" value={clientPosition}
                                    onChange={(e) => setClientPosition(e.target.value)} />
+                            {<errors className="clientPosition"></errors> && <p className={styles.errorText}>{errors.clientPosition}</p>}
                         </div>
                     </div>
 
@@ -428,12 +575,14 @@ const NewProject = () => {
                             <label>Email</label>
                             <input className="input-box" value={clientEmail}
                                    onChange={(e) => setClientEmail(e.target.value)} />
+                            {errors.clientEmail && <p className={styles.errorText}>{errors.clientEmail}</p>}
                         </div>
 
                         <div className="form-field">
                             <label>Telefon</label>
                             <input className="input-box" value={clientPhone}
                                    onChange={(e) => setClientPhone(e.target.value)} />
+                            {errors.clientPhone && <p className={styles.errorText}>{errors.clientPhone}</p>}
                         </div>
                     </div>
 
@@ -443,18 +592,21 @@ const NewProject = () => {
                             <label>Nr. contract</label>
                             <input className="input-box" value={contractNo}
                                    onChange={(e) => setContractNo(e.target.value)} />
+                            {errors.contractNo && <p className={styles.errorText}>{errors.contractNo}</p>}
                         </div>
 
                         <div className="form-field">
                             <label>Nr. anexă</label>
                             <input className="input-box" value={annexNo}
                                    onChange={(e) => setAnnexNo(e.target.value)} />
+                            {errors.annexNo && <p className={styles.errorText}>{errors.annexNo}</p>}
                         </div>
 
                         <div className="form-field">
                             <label>Se dorește</label>
                             <input className="input-box" value={services}
                                    onChange={(e) => setServices(e.target.value)} />
+                            {errors.services && <p className={styles.errorText}>{errors.services}</p>}
                         </div>
                     </div>
 
@@ -464,6 +616,7 @@ const NewProject = () => {
                             <label>Preț proiect</label>
                             <input className="input-box" value={projectPrice}
                                    onChange={(e) => setProjectPrice(e.target.value)} />
+                            {errors.projectPrice && <p className={styles.errorText}>{errors.projectPrice}</p>}
                         </div>
 
                         <div className="form-field">
@@ -478,12 +631,14 @@ const NewProject = () => {
                             <label>Alte informații despre contract</label>
                             <textarea className="textarea-box" value={contractInfo}
                                       onChange={(e) => setContractInfo(e.target.value)} />
+                            {errors.contractInfo && <p className={styles.errorText}>{errors.contractInfo}</p>}
                         </div>
 
                         <div className="form-field">
                             <label>Solicitare referințe</label>
                             <textarea className="textarea-box" value={referenceRequest}
                                       onChange={(e) => setReferenceRequest(e.target.value)} />
+                            {errors.referenceRequest && <p className={styles.errorText}>{errors.referenceRequest}</p>}
                         </div>
                     </div>
 
@@ -492,6 +647,7 @@ const NewProject = () => {
                         <label>Note interne</label>
                         <textarea className="textarea-box" value={internalNotes}
                                   onChange={(e) => setInternalNotes(e.target.value)} />
+                        {errors.internalNotes && <p className={styles.errorText}>{errors.internalNotes}</p>}
                     </div>
 
                     {/* SAVE BUTTON */}

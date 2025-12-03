@@ -318,6 +318,31 @@ html, body {
 .draftProject:hover {
     background: #0f172a;
 }
+.file-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #f4f4f4;
+    padding: 8px 12px;
+    margin-top: 5px;
+    border-radius: 6px;
+    font-size: 14px;
+}
+
+.delete-file {
+    cursor: pointer;
+    color: #ff4d4d;
+    font-weight: bold;
+    margin-left: 10px;
+    font-size: 16px;
+    transition: 0.2s;
+}
+
+.delete-file:hover {
+    color: red;
+    transform: scale(1.2);
+}
+
 
 
 @media (max-width: 1100px) {
