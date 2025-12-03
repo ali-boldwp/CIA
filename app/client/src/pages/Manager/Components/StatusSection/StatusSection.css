@@ -54,7 +54,7 @@
   color: white;
   cursor: pointer;
   font-weight: 600;
-  background: linear-gradient(90deg, #6a5af9, #1ec6cd);
+    background: linear-gradient(90deg, #1ec6cd, #4f46e5);
 }
 
 /* For larger lower-row boxes */
