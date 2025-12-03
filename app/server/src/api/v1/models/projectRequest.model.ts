@@ -33,7 +33,6 @@ export interface IProjectRequest extends Document {
 
     files?: string[];
 
-    createdBy: Types.ObjectId;
     fromRequestId?: Types.ObjectId;
 
     status: "draft" | "requested" | "approved" | "finished" | "cancelled";
@@ -91,10 +90,6 @@ const projectRequestSchema = new Schema<IProjectRequest>(
             default: []
         },
 
-        createdBy: {
-            type: Schema.Types.ObjectId,
-            ref: "User"
-        },
 
         fromRequestId: {
             type: Schema.Types.ObjectId,

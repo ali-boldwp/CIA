@@ -1,28 +1,26 @@
-import CreatedProject from "../models/createdProjects.model";
+import projectRequest from "../models/projectRequest.model";
 
 export const createProject = async (data: any) => {
-    return await CreatedProject.create(data);
+    return await projectRequest.create(data);
 };
 
 export const getAllProjects = async () => {
-    return CreatedProject.find()
-        .populate("createdBy", "name email role")
-        .populate("responsibleAnalyst", "name email")
-        .populate("assignedAnalysts", "name email")
+    return projectRequest.find()
+        .populate("responsibleAnalyst", "name email role")
+        .populate("assignedAnalysts", "name email role")
         .sort({ createdAt: -1 });
 };
 
 export const getProjectById = async (id: string) => {
-    return CreatedProject.findById(id)
-        .populate("createdBy", "name email role")
-        .populate("responsibleAnalyst", "name email")
-        .populate("assignedAnalysts", "name email");
+    return projectRequest.findById(id)
+        .populate("responsibleAnalyst", "name email role")
+        .populate("assignedAnalysts", "name email role");
 };
 
 export const updateProject = async (id: string, data: any) => {
-    return CreatedProject.findByIdAndUpdate(id, data, { new: true });
+    return projectRequest.findByIdAndUpdate(id, data, { new: true });
 };
 
 export const deleteProject = async (id: string) => {
-    return CreatedProject.findByIdAndDelete(id);
+    return projectRequest.findByIdAndDelete(id);
 };

@@ -2,10 +2,9 @@ import { Request, Response, NextFunction } from "express";
 import * as projectService from "../services/project.service";
 import { ok } from "../../../utils/ApiResponse";
 import ProjectRequest from "../models/projectRequest.model";
-import User from "../models/user.model"
-import Chat from "../models/chat.model";
 
-export const createProject = async (req: Request, res: Response, next: NextFunction) => {
+
+export const requestProject = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const user = (req as any).user;
         const body = req.body;
@@ -19,109 +18,51 @@ export const createProject = async (req: Request, res: Response, next: NextFunct
             return Array.isArray(v) ? v : [v];
         };
 
-        // STEP 1 → Load RequestProject if provided
-        let requestData: any = {};
-        if (body.fromRequestId) {
-            const reqProject = await ProjectRequest.findById(body.fromRequestId);
-            if (reqProject) {
-                requestData = reqProject.toObject();
-            }
-        }
-
-        // STEP 2 → Merge: Form2 fields override Form1 fields
+        // Client request form → Only simple save
         const payload: any = {
-            // Required fields auto-filled
-            projectName: body.projectName || requestData.projectName,
-            projectSubject: body.projectSubject || requestData.projectSubject,
-            reportType: body.reportType || requestData.reportType,
-            entityType: body.entityType || requestData.entityType,
-            priority: body.priority || requestData.priority,
-            deliverableLanguage: body.deliverableLanguage || requestData.deliverableLanguage,
-            projectDescription: body.projectDescription || requestData.projectDescription,
+            projectName: body.projectName,
+            projectSubject: body.projectSubject,
+            reportType: body.reportType,
+            entityType: body.entityType,
+            priority: body.priority,
+            deliverableLanguage: body.deliverableLanguage,
+            projectDescription: body.projectDescription,
 
-            clientName: body.clientName || requestData.clientName,
-            clientContactPerson: body.clientContactPerson || requestData.clientContactPerson,
-            clientEmail: body.clientEmail || requestData.clientEmail,
-            clientPhone: body.clientPhone || requestData.clientPhone,
+            clientName: body.clientName,
+            clientContactPerson: body.clientContactPerson,
+            clientEmail: body.clientEmail,
+            clientPhone: body.clientPhone,
 
-            projectPrice: body.projectPrice
-                ? Number(body.projectPrice)
-                : Number(requestData.projectPrice),
+            projectPrice: body.projectPrice ? Number(body.projectPrice) : 0,
+            currency: body.currency || "EUR",
 
-            currency: body.currency || requestData.currency || "EUR",
+            deadline: body.deadline ? new Date(body.deadline) : undefined,
+            clientPosition: body.clientPosition,
+            responsibleAnalyst: body.responsibleAnalyst,
 
-            // Optional fields
-            deadline: body.deadline
-                ? new Date(body.deadline)
-                : requestData.deadline,
+            assignedAnalysts: toArray(body.assignedAnalysts),
+            contractNumber: body.contractNumber,
+            annexNumber: body.annexNumber,
 
-            clientPosition: body.clientPosition || requestData.clientPosition,
+            servicesRequested: toArray(body.servicesRequested),
+            contractInfo: body.contractInfo,
+            referenceRequest: body.referenceRequest,
+            internalNotes: body.internalNotes,
 
-            responsibleAnalyst: body.responsibleAnalyst || requestData.responsibleAnalyst,
+            files: files,
+            fromRequestId: user._id,
 
-            assignedAnalysts: toArray(body.assignedAnalysts || requestData.assignedAnalysts),
-
-            contractNumber: body.contractNumber || requestData.contractNumber,
-            annexNumber: body.annexNumber || requestData.annexNumber,
-
-            servicesRequested: toArray(body.servicesRequested || requestData.servicesRequested),
-
-            contractInfo: body.contractInfo || requestData.contractInfo,
-            referenceRequest: body.referenceRequest || requestData.referenceRequest,
-            internalNotes: body.internalNotes || requestData.internalNotes,
-
-            files: [...(requestData.files || []), ...files],
-
-            // createdBy: user.id,
-
-            fromRequestId: body.fromRequestId,
-
-            status: "requested"
-
+            status: "requested",
         };
 
-        if ( req.user.role == 'admin' || req.user.role == 'manager' ) {
+        const projectRequest = await ProjectRequest.create(payload);
 
-            payload.status = "approved";
-
-        }
-
-        // FINAL SAVE
-        const project = await projectService.createProject(payload);
-
-
-
-        const admins = await User.find({ role: "admin" }).select("_id");
-        const managers = await User.find({ role: "manager" }).select("_id");
-
-
-        const groupMembers = new Set<string>();
-
-        admins.forEach(a => groupMembers.add(String(a._id)));
-        managers.forEach(m => groupMembers.add(String(m._id)));
-
-        if (payload.responsibleAnalyst)
-            groupMembers.add(String(payload.responsibleAnalyst));
-
-        (payload.assignedAnalysts || []).forEach(a =>
-            groupMembers.add(String(a))
-        );
-
-        await Chat.create({
-            participants: Array.from(groupMembers),
-            isGroup: true,
-            groupName: `Project: ${payload.projectName}`
-        });
-
-
-        res.json(ok(project));
+        return res.json(ok(projectRequest));
 
     } catch (err) {
         next(err);
     }
 };
-
-
 
 export const getAllProjects = async (_req, res, next) => {
     try {
@@ -174,11 +115,11 @@ export const approveProject = async (req, res, next) => {
 
         }
 
-        const user = (req as any).user;
+        // const user = (req as any).user;
         const data = req.body;
 
         data.status = 'approved';
-        data.createdBy = user._id;
+        // data.createdBy = user._id;
 
         const updated = await projectService.updateProject(req.params.id, data );
 
