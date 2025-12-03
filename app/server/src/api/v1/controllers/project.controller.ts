@@ -50,10 +50,12 @@ export const requestProject = async (req: Request, res: Response, next: NextFunc
             internalNotes: body.internalNotes,
 
             files: files,
-            fromRequestId: user._id,
+            fromRequestId: user.id,
 
             status: "requested",
         };
+
+        console.log( user );
 
         const projectRequest = await ProjectRequest.create(payload);
 
@@ -64,10 +66,33 @@ export const requestProject = async (req: Request, res: Response, next: NextFunc
     }
 };
 
-export const getAllProjects = async (_req, res, next) => {
+export const getAllProjects = async ( req, res, next) => {
+
+    const user = (req as any).user;
+
     try {
-        const projects = await projectService.getAllProjects();
-        res.json(ok(projects));
+
+        if ( user.role == 'sales' ) {
+
+            const projects = await projectService.getAllProjects({ fromRequestId: user.id });
+            res.json(ok(projects));
+
+        } else if ( user.role == 'analyst' ) {
+
+            const projects = await projectService.getAllProjects({ responsibleAnalyst: user.id });
+            res.json(ok(projects));
+
+        } else if ( user.role == 'admin' || user.role == 'manager' ) {
+
+            const projects = await projectService.getAllProjects({});
+            res.json(ok(projects));
+
+        } else {
+
+            res.json(ok([]));
+
+        }
+
     } catch (err) {
         next(err);
     }

@@ -4,8 +4,8 @@ export const createProject = async (data: any) => {
     return await projectRequest.create(data);
 };
 
-export const getAllProjects = async () => {
-    return projectRequest.find()
+export const getAllProjects = async ( query = {} ) => {
+    return projectRequest.find( query )
         .populate("responsibleAnalyst", "name email role")
         .populate("assignedAnalysts", "name email role")
         .sort({ createdAt: -1 });

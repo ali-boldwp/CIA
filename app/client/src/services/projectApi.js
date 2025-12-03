@@ -17,10 +17,14 @@ export const projectApi = createApi({
     endpoints: (builder) => ({
         createProject: builder.mutation({
             query: (formData) => ({
-                url: "/created-project",
+                url: "/project",
                 method: "POST",
                 body: formData,
             }),
+        }),
+
+        getProjects:builder.query({
+            query: () => "/project",
         }),
 
         requestProject: builder.mutation({
@@ -35,13 +39,13 @@ export const projectApi = createApi({
             query: () => "/project-request",
         }),
         getProjectCreate: builder.query({
-            query: () => "/created-project",
+            query: () => "/project",
         }),
         getProjectRequestById: builder.query({
             query: (id) => `/project-request/${id}`,
         }),
         getCreateProjectById: builder.query({
-            query: (id) => `/created-project/${id}`,
+            query: (id) => `/project/${id}`,
         }),
 
         updateProject: builder.mutation({
@@ -87,6 +91,7 @@ export const projectApi = createApi({
 export const {
     useCreateProjectMutation,
     useRequestProjectMutation,
+    useGetProjectsQuery,
     useGetProjectRequestsQuery,
     useGetProjectCreateQuery,
     useGetCreateProjectByIdQuery,

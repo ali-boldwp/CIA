@@ -1,10 +1,10 @@
 import "./Project.css";
 import ProjectRow from "./ProjectRow";
-import {useGetProjectCreateQuery} from "../../../../services/projectApi";
+import {useGetProjectsQuery} from "../../../../services/projectApi";
 
 const Projects = () => {
 
-    const { data,isLoading } = useGetProjectCreateQuery();
+    const { data,isLoading } = useGetProjectsQuery();
     const approvedProjects=data?.data || [];
 
 

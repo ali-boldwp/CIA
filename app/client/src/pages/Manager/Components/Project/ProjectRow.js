@@ -32,13 +32,13 @@ const ProjectRow = ({ project }) => {
       {/* INFO SECTION -------------------- */}
       <div className="col project-info">
         <h4 style={{ marginBottom: "5px" }}>{project.projectName || project.name }</h4>
-        <p>Responsabil: <b>{responsibleUser?.name || "Nespecificat"}</b></p>
+        <p>Responsabil: <b>{project?.responsibleAnalyst?.name || "Nespecificat"}</b></p>
           <p>
               Echipa asignată:{" "}
               {project.assignedAnalysts?.length > 0 ? (
                   project.assignedAnalysts.map((a, i) => (
                       <span key={i} className="team-badge-approved">
-                { responsibleUser?.name.slice(0,2).toUpperCase() || "AN"}
+                { responsibleUser?.name.slice(0,2).toUpperCase() || "-"}
               </span>
                   ))
               ) : (

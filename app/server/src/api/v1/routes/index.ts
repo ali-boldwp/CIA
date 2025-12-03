@@ -14,7 +14,7 @@ const router = Router();
 router.use("/auth", authRoutes);
 router.use("/users", userRoutes);
 router.use("/project-request", projectRequestRoutes);
-router.use("/created-project", createdProjectRoutes);
+router.use("/project", createdProjectRoutes);
 router.use("/humint", humintRoutes);
 router.use("/project-details", projectDetailsRoutes);
 router.use("/task", taskRoutes);

@@ -15,7 +15,7 @@ export const createdProjectApi = createApi({
     endpoints: (builder) => ({
         createProject: builder.mutation({
             query: (formData) => ({
-                url: "/created-project", // backend route
+                url: "/project", // backend route
                 method: "POST",
                 body: formData,
             }),

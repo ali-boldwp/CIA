@@ -93,8 +93,7 @@ const projectRequestSchema = new Schema<IProjectRequest>(
 
         fromRequestId: {
             type: Schema.Types.ObjectId,
-            ref: "User",
-            required: false
+            ref: "User"
         },
 
         status: {
