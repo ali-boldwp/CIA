@@ -24,13 +24,13 @@ export const projectApi = createApi({
         }),
 
         getProjectRequests: builder.query({
-            query: () => "/projects",
+            query: () => "/project-request",
         }),
         getProjectCreate: builder.query({
             query: () => "/created-project",
         }),
         getProjectRequestById: builder.query({
-            query: (id) => `/projects/${id}`,
+            query: (id) => `/project-request/${id}`,
         }),
         getCreateProjectById: builder.query({
             query: (id) => `/created-project/${id}`,
