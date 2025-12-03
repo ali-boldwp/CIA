@@ -1,9 +1,9 @@
 import "./Calendar.css";
-import { useGetProjectRequestsQuery } from "../../../../services/projectApi";
+import {useGetProjectCreateQuery} from "../../../../services/projectApi";
 
 const CalendarList = () => {
 
-    const {data,isLoading}=useGetProjectRequestsQuery()
+    const {data,isLoading}=useGetProjectCreateQuery()
     const items=data?.data || [];
 
 

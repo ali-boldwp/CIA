@@ -26,9 +26,14 @@ export const projectApi = createApi({
         getProjectRequests: builder.query({
             query: () => "/projects",
         }),
-
+        getProjectCreate: builder.query({
+            query: () => "/created-project",
+        }),
         getProjectRequestById: builder.query({
             query: (id) => `/projects/${id}`,
+        }),
+        getCreateProjectById: builder.query({
+            query: (id) => `/created-project/${id}`,
         }),
 
         updateProject: builder.mutation({
@@ -74,6 +79,8 @@ export const projectApi = createApi({
 export const {
     useCreateProjectMutation,
     useGetProjectRequestsQuery,
+    useGetProjectCreateQuery,
+    useGetCreateProjectByIdQuery,
     useGetProjectRequestByIdQuery,
     useUpdateProjectMutation,
     useUpdateProjectStatusMutation,

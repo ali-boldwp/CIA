@@ -1,13 +1,13 @@
 import "./Project.css";
 import ProjectRow from "./ProjectRow";
-import {useGetProjectRequestsQuery} from "../../../../services/projectApi";
+import {useGetProjectCreateQuery} from "../../../../services/projectApi";
 
 const Projects = () => {
 
-    const { data,isLoading } = useGetProjectRequestsQuery();
-    const projects=data?.data || [];
+    const { data,isLoading } = useGetProjectCreateQuery();
+    const approvedProjects=data?.data || [];
 
-    const approvedProjects=projects.filter((p)=>p.status?.toLowerCase()==="approved")
+
     if (isLoading) return <p>Loading...</p>;
 
 

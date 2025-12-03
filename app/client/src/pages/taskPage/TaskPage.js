@@ -2,20 +2,20 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import {
-    useGetProjectRequestByIdQuery,
+
     useCreateChapterMutation,
-    useGetTasksByChapterIdQuery,
+    useGetTasksByChapterIdQuery, useGetCreateProjectByIdQuery,
 } from "../../services/projectApi";
 import "./TaskPage.css";
-import TaskTable from "./components/TaskTable";
+
 import ChapterCreation from "./components/ChapterCreation";
-import TaskCreation from "./components/TaskCreation";
+
 
 const TaskPage = () => {
     const { id: projectId } = useParams();
 
     // Fetch project info
-    const { data: projectData, isLoading, isError } = useGetProjectRequestByIdQuery(projectId);
+    const { data: projectData, isLoading, isError } = useGetCreateProjectByIdQuery(projectId);
     const project = projectData?.data;
 
     const [createChapter] = useCreateChapterMutation();
@@ -66,9 +66,9 @@ const TaskPage = () => {
 
             </div>
 
-            <TaskTable tasks={tasks} setTasks={setTasks} />
+
             <ChapterCreation projectId={projectId} createChapter={createChapter} />
-            <TaskCreation chapterId={hardcodedChapterId} addTaskToState={(task) => setTasks((prev) => [...prev, task])} />
+
         </div>
     );
 };
