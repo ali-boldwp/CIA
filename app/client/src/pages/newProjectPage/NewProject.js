@@ -5,15 +5,13 @@ import {
     useRequestProjectMutation,
     useCreateProjectMutation,
     useUpdateProjectMutation,
-
 } from "../../services/projectApi";
 import { useGetAnalystsQuery } from "../../services/userApi";
 import "./NewProjectstyle.css";
-import {toast} from "react-toastify";
+import { toast } from "react-toastify";
 import styles from "../project/projectRequest/ProjectRequest.module.css";
 
 const NewProject = () => {
-
     const { id } = useParams();
 
     // LOAD ANALYSTS
@@ -29,11 +27,10 @@ const NewProject = () => {
                     ? analystsData.analysts
                     : [];
 
-    const analystOptions = analysts.map(a => ({
+    const analystOptions = analysts.map((a) => ({
         id: String(a._id),
-        name: a.name
+        name: a.name,
     }));
-
 
     // LOAD REQUEST BY ID
     const { data, isLoading } = useGetProjectRequestByIdQuery(id, {
@@ -85,7 +82,6 @@ const NewProject = () => {
     // ============================
     // AUTOFILL from Request
     // ============================
-
     useEffect(() => {
         if (request && id) {
             setProjectName(request.projectName || "");
@@ -112,72 +108,97 @@ const NewProject = () => {
             setReferenceRequest(request.referenceRequest || "");
             setInternalNotes(request.internalNotes || "");
             setFiles(request.files || []);
+
             setResponsible(
                 request?.responsibleAnalyst?._id
                     ? String(request.responsibleAnalyst._id)
                     : ""
             );
 
-
-            // ⭐ FIX: convert arrays of IDs to strings
             setSelectedAnalysts(
                 Array.isArray(request.assignedAnalysts)
-                    ? request.assignedAnalysts.map(a =>
+                    ? request.assignedAnalysts.map((a) =>
                         typeof a === "object" ? String(a._id) : String(a)
                     )
                     : []
             );
-
         }
     }, [request, id]);
 
+    // ============================
+    // VALIDATION
+    // ============================
     const validateForm = () => {
         let newErrors = {};
 
-        if (!projectName.trim()) newErrors.projectName = "Numele proiectului este obligatoriu";
-        if (!projectSubject.trim()) newErrors.projectSubject = "Subiectul proiectului este obligatoriu";
-        if (!category.trim()) newErrors.category = "Tipul raportului este obligatoriu";
-        if (!entityType.trim()) newErrors.entityType = "Tipul entității este obligatoriu";
-        if (!deadline) newErrors.deadline = "Termenul limită este obligatoriu";
-        if (!priority.trim()) newErrors.priority = "Prioritatea este obligatorie";
-        if (!language.trim()) newErrors.language = "Limba livrabilului este obligatorie";
-        if (!projectDescription.trim()) newErrors.projectDescription = "Descrierea proiectului este obligatorie";
+        // PROJECT DETAILS
+        if (!projectName.trim())
+            newErrors.projectName = "Numele proiectului este obligatoriu";
+        if (!projectSubject.trim())
+            newErrors.projectSubject = "Subiectul proiectului este obligatoriu";
+        if (!category.trim())
+            newErrors.category = "Tipul raportului este obligatoriu";
+        if (!entityType.trim())
+            newErrors.entityType = "Tipul entității este obligatoriu";
+        if (!deadline)
+            newErrors.deadline = "Termenul limită este obligatoriu";
+        if (!priority.trim())
+            newErrors.priority = "Prioritatea este obligatorie";
+        if (!language.trim())
+            newErrors.language = "Limba livrabilului este obligatorie";
+        if (!projectDescription.trim())
+            newErrors.projectDescription =
+                "Descrierea proiectului este obligatorie";
 
-        if (!clientName.trim()) newErrors.clientName = "Client name is required";
-        if (!clientPerson.trim()) newErrors.clientPerson = "Persoana de contact este obligatorie";
-        if (!clientEmail.trim()) newErrors.clientEmail = "Client email is required";
-        if (!clientPhone.trim()) newErrors.clientPhone = "Telefonul clientului este obligatoriu";
-        if (!clientPosition.trim()) newErrors.clientPosition = "Funcția este obligatorie";
+        // CLIENT INFO
+        if (!clientName.trim())
+            newErrors.clientName = "Numele clientului este obligatoriu";
+        if (!clientPerson.trim())
+            newErrors.clientPerson =
+                "Persoana de contact este obligatorie";
+        if (!clientEmail.trim())
+            newErrors.clientEmail = "Emailul clientului este obligatoriu";
+        if (!clientPhone.trim())
+            newErrors.clientPhone = "Telefonul clientului este obligatoriu";
+        if (!clientPosition.trim())
+            newErrors.clientPosition = "Funcția este obligatorie";
 
-        if (!contractNo.trim()) newErrors.contractNo = "Contract number is required";
-        if (!services.trim()) newErrors.services = "Services are required";
-        if (!projectPrice || projectPrice === "") newErrors.projectPrice = "Prețul proiectului este obligatoriu"
-        if (!annexNo.trim()) newErrors.annexNo = "Annex No is required";
-        if (!contractInfo.trim()) newErrors.contractInfo = "Informațiile despre contract sunt obligatorii";
-        if (!internalNotes.trim()) newErrors.internalNotes = "InternalNotes is required";
-        if (!referenceRequest.trim()) newErrors.referenceRequest = "InternalNotes is required";
-        // if (!projectPrice.trim()) newErrors.projectPrice = "Project price is required";
+        // CONTRACT
+        if (!contractNo.trim())
+            newErrors.contractNo = "Numărul contractului este obligatoriu";
+        if (!annexNo.trim())
+            newErrors.annexNo = "Numărul anexei este obligatoriu";
+        if (!services.trim())
+            newErrors.services = "Serviciile solicitate sunt obligatorii";
+        if (!projectPrice || projectPrice === "")
+            newErrors.projectPrice = "Prețul proiectului este obligatoriu";
 
-        if (!responsible.trim()) newErrors.responsible = "Responsible analyst is required";
+        if (!contractInfo.trim())
+            newErrors.contractInfo =
+                "Informațiile despre contract sunt obligatorii";
+        if (!referenceRequest.trim())
+            newErrors.referenceRequest = "Solicitarea de referințe este obligatorie";
+        if (!internalNotes.trim())
+            newErrors.internalNotes = "Notele interne sunt obligatorii";
+
+        // RESPONSIBLE
+        if (!responsible.trim())
+            newErrors.responsible = "Responsabilul proiectului este obligatoriu";
 
         setErrors(newErrors);
-
         return Object.keys(newErrors).length === 0;
     };
-
 
     // ============================
     // DROPDOWN HANDLERS
     // ============================
-
     const toggleAnalyst = (id) => {
         if (selectedAnalysts.includes(id)) {
-            setSelectedAnalysts(selectedAnalysts.filter(a => a !== id));
+            setSelectedAnalysts(selectedAnalysts.filter((a) => a !== id));
         } else {
             setSelectedAnalysts([...selectedAnalysts, id]);
         }
     };
-
 
     // ============================
     // FILE HANDLERS
@@ -193,11 +214,13 @@ const NewProject = () => {
 
     const handleDragOver = (e) => e.preventDefault();
 
-    // Close dropdown
+    // Close dropdowns on outside click
     useEffect(() => {
         const handler = (e) => {
-            if (respRef.current && !respRef.current.contains(e.target)) setRespOpen(false);
-            if (multiRef.current && !multiRef.current.contains(e.target)) setMultiOpen(false);
+            if (respRef.current && !respRef.current.contains(e.target))
+                setRespOpen(false);
+            if (multiRef.current && !multiRef.current.contains(e.target))
+                setMultiOpen(false);
         };
         document.addEventListener("mousedown", handler);
         return () => document.removeEventListener("mousedown", handler);
@@ -207,9 +230,7 @@ const NewProject = () => {
     // API MUTATIONS
     // ============================
     const [createProject] = useCreateProjectMutation();
-
     const [requestProject] = useRequestProjectMutation();
-
 
     // ============================
     // FINAL PAYLOAD
@@ -231,7 +252,7 @@ const NewProject = () => {
 
         contractNumber: contractNo,
         annexNumber: annexNo,
-        servicesRequested: services.split(",").map(s => s.trim()),
+        servicesRequested: services.split(",").map((s) => s.trim()),
         projectPrice,
 
         contractInfo,
@@ -242,13 +263,13 @@ const NewProject = () => {
 
         deadline,
         fromRequestId: id || undefined,
-
     });
 
     // ============================
     // SAVE HANDLER
     // ============================
-    const handleSave = async () => {
+    const handleSave = async (e) => {
+        e.preventDefault(); // safety
         if (!validateForm()) {
             toast.error("Please fill all required fields!");
             return;
@@ -270,11 +291,9 @@ const NewProject = () => {
         }
     };
 
-
     const removeFile = (index) => {
         setFiles(files.filter((_, i) => i !== index));
     };
-
 
     // ============================
     // LOADING
@@ -284,24 +303,21 @@ const NewProject = () => {
     // ============================
     // RENDER UI
     // ============================
-
     return (
         <div className="page-wrapper1">
-
             <div className="page-container">
-
                 <div className="project-header-box">
                     <span className="project-header-back">
                         <a href="/manager/dashboard">← Înapoi</a>
                     </span>
                     <h1 className="project-header-title">
-                        {id ? "Creează proiect din solicitare" : "Creează proiect nou"}
+                        {id
+                            ? "Creează proiect din solicitare"
+                            : "Creează proiect nou"}
                     </h1>
                 </div>
 
-                {/* ----------------------------- */}
                 {/* PROJECT DETAILS */}
-                {/* ----------------------------- */}
                 <div className="form-card">
                     <h2 className="form-title">Detalii proiect</h2>
 
@@ -309,17 +325,35 @@ const NewProject = () => {
                     <div className="row-two">
                         <div className="form-field">
                             <label>Denumire proiect</label>
-                            <input className="input-box" value={projectName}
-                                   onChange={(e) => setProjectName(e.target.value)} />
-                            {errors.projectName && <p className={styles.errorText}>{errors.projectName}</p>}
+                            <input
+                                className="input-box"
+                                value={projectName}
+                                onChange={(e) =>
+                                    setProjectName(e.target.value)
+                                }
+                            />
+                            {errors.projectName && (
+                                <p className={styles.errorText}>
+                                    {errors.projectName}
+                                </p>
+                            )}
                         </div>
 
                         <div className="form-field">
                             <label>Subiect proiect</label>
                             <div className="input-wrapper">
-                                <input className="input-box" value={projectSubject}
-                                       onChange={(e) => setProjectSubject(e.target.value)} />
-                                {errors.projectSubject && <p className={styles.errorText}>{errors.projectSubject}</p>}
+                                <input
+                                    className="input-box"
+                                    value={projectSubject}
+                                    onChange={(e) =>
+                                        setProjectSubject(e.target.value)
+                                    }
+                                />
+                                {errors.projectSubject && (
+                                    <p className={styles.errorText}>
+                                        {errors.projectSubject}
+                                    </p>
+                                )}
                             </div>
                         </div>
                     </div>
@@ -331,16 +365,13 @@ const NewProject = () => {
                             <select
                                 className={`${styles.input} ${styles.selectAnalyst}`}
                                 value={category}
-                                onChange={(e) =>
-                                    setCategory(e.target.value)
-                                }
+                                onChange={(e) => setCategory(e.target.value)}
                             >
                                 <option value="">
                                     Enhanced Due Diligence
                                 </option>
                                 <option value="Enhanced Due Diligence (Societate / Grup)">
-                                    Enhanced Due Diligence (Societate /
-                                    Grup)
+                                    Enhanced Due Diligence (Societate / Grup)
                                 </option>
                                 <option value="Preliminary Due Diligence">
                                     Preliminary Due Diligence
@@ -364,7 +395,11 @@ const NewProject = () => {
                                     Altele (Custom)
                                 </option>
                             </select>
-                            {errors.category && <p className={styles.errorText}>{errors.category}</p>}
+                            {errors.category && (
+                                <p className={styles.errorText}>
+                                    {errors.category}
+                                </p>
+                            )}
                         </div>
 
                         <div className="form-field">
@@ -379,9 +414,7 @@ const NewProject = () => {
                                 <option value="">
                                     Societate (include persoane cheie)
                                 </option>
-                                <option value="Persoana">
-                                    Persoana
-                                </option>
+                                <option value="Persoana">Persoana</option>
                                 <option value="ONG">ONG</option>
                                 <option value="Investigatie frauda">
                                     Investigatie frauda
@@ -397,21 +430,42 @@ const NewProject = () => {
                                     Protectie supraveghere clandestina
                                 </option>
                             </select>
-                            {errors.entity && <p className={styles.errorText}>{errors.entityType}</p>}
+                            {errors.entityType && (
+                                <p className={styles.errorText}>
+                                    {errors.entityType}
+                                </p>
+                            )}
                         </div>
 
                         <div className="form-field">
                             <label>Termen limită</label>
-                            <input type="date" className="input-box bold" value={deadline}
-                                   onChange={(e) => setDeadline(e.target.value)} />
-                            {errors.deadline && <p className={styles.errorText}>{errors.deadline}</p>}
+                            <input
+                                type="date"
+                                className="input-box bold"
+                                value={deadline}
+                                onChange={(e) => setDeadline(e.target.value)}
+                            />
+                            {errors.deadline && (
+                                <p className={styles.errorText}>
+                                    {errors.deadline}
+                                </p>
+                            )}
                         </div>
 
                         <div className="form-field">
                             <label>Prioritate</label>
-                            <input className="input-box" value={priority}
-                                   onChange={(e) => setPriority(e.target.value)} />
-                            {errors.priority && <p className={styles.errorText}>{errors.priority}</p>}
+                            <input
+                                className="input-box"
+                                value={priority}
+                                onChange={(e) =>
+                                    setPriority(e.target.value)
+                                }
+                            />
+                            {errors.priority && (
+                                <p className={styles.errorText}>
+                                    {errors.priority}
+                                </p>
+                            )}
                         </div>
                     </div>
 
@@ -419,72 +473,106 @@ const NewProject = () => {
                     <div className="row-two">
                         <div className="form-field">
                             <label>Limbă livrabil</label>
-                            <input className="input-box" value={language}
-                                   onChange={(e) => setLanguage(e.target.value)} />
-                            {errors.language && <p className={styles.errorText}>{errors.language}</p>}
+                            <input
+                                className="input-box"
+                                value={language}
+                                onChange={(e) =>
+                                    setLanguage(e.target.value)
+                                }
+                            />
+                            {errors.language && (
+                                <p className={styles.errorText}>
+                                    {errors.language}
+                                </p>
+                            )}
                         </div>
 
                         <div className="form-field">
                             <label>Fișiere atașate</label>
 
-                            <div className="dropzone"
-                                 onDrop={handleDrop}
-                                 onDragOver={handleDragOver}
-                                 onClick={() => document.getElementById("fileInput").click()}>
+                            <div
+                                className="dropzone"
+                                onDrop={handleDrop}
+                                onDragOver={handleDragOver}
+                                onClick={() =>
+                                    document
+                                        .getElementById("fileInput")
+                                        .click()
+                                }
+                            >
                                 <p>📁 Click sau trage fișiere aici</p>
                             </div>
 
-                            <input id="fileInput" type="file" hidden multiple onChange={handleFileUpload} />
+                            <input
+                                id="fileInput"
+                                type="file"
+                                hidden
+                                multiple
+                                onChange={handleFileUpload}
+                            />
 
                             {files.map((file, i) => (
                                 <div className="file-item" key={i}>
-                                    📄 {typeof file === "string" ? file : file.name}
-
+                                    📄{" "}
+                                    {typeof file === "string"
+                                        ? file
+                                        : file.name}
                                     <span
                                         className="delete-file"
                                         onClick={() => removeFile(i)}
                                     >
-            ✖
-        </span>
+                                        ✖
+                                    </span>
                                 </div>
                             ))}
-
-
                         </div>
                     </div>
 
                     <div className="form-field full-width">
                         <label>Descriere proiect</label>
-                        <textarea className="textarea-box" value={projectDescription}
-                                  onChange={(e) => setProjectDescription(e.target.value)} />
-                        {errors.projectDescription && <p className={styles.errorText}>{errors.projectDescription}</p>}
+                        <textarea
+                            className="textarea-box"
+                            value={projectDescription}
+                            onChange={(e) =>
+                                setProjectDescription(e.target.value)
+                            }
+                        />
+                        {errors.projectDescription && (
+                            <p className={styles.errorText}>
+                                {errors.projectDescription}
+                            </p>
+                        )}
                     </div>
                 </div>
 
-                {/* ----------------------------- */}
                 {/* RESPONSIBLES */}
-                {/* ----------------------------- */}
                 <div className="form-card">
                     <h2 className="form-title">Responsabili proiect</h2>
 
                     <div className="row-two">
-
                         {/* RESPONSIBLE */}
                         <div className="form-field" ref={respRef}>
                             <label>Responsabil (1)</label>
 
-                            <div className="dropdown-box" onClick={() => setRespOpen(!respOpen)}>
-                               <span>
-  {analystOptions.find(a => a.id === responsible)?.name || "Selectează responsabilul"}
-
-</span>
-
+                            <div
+                                className="dropdown-box"
+                                onClick={() => setRespOpen(!respOpen)}
+                            >
+                                <span>
+                                    {analystOptions.find(
+                                            (a) => a.id === responsible
+                                        )?.name ||
+                                        "Selectează responsabilul"}
+                                </span>
                             </div>
 
                             {respOpen && (
                                 <div className="dropdown-list">
                                     {analystOptions.map((a) => (
-                                        <label className="radio-item" key={a.id}>
+                                        <label
+                                            className="radio-item"
+                                            key={a.id}
+                                        >
                                             <input
                                                 type="radio"
                                                 checked={responsible === a.id}
@@ -496,8 +584,13 @@ const NewProject = () => {
                                             {a.name}
                                         </label>
                                     ))}
-
                                 </div>
+                            )}
+
+                            {errors.responsible && (
+                                <p className={styles.errorText}>
+                                    {errors.responsible}
+                                </p>
                             )}
                         </div>
 
@@ -509,63 +602,100 @@ const NewProject = () => {
                                 className="dropdown-box"
                                 onClick={() => setMultiOpen(!multiOpen)}
                             >
-  <span>
-    {selectedAnalysts.length
-        ? selectedAnalysts
-            .map(id => analystOptions.find(a => a.id === id)?.name || "")
-            .join(", ")
-        : "Selectează ▾"}
-  </span>
+                                <span>
+                                    {selectedAnalysts.length
+                                        ? selectedAnalysts
+                                            .map(
+                                                (id) =>
+                                                    analystOptions.find(
+                                                        (a) => a.id === id
+                                                    )?.name || ""
+                                            )
+                                            .filter(Boolean)
+                                            .join(", ")
+                                        : "Selectează ▾"}
+                                </span>
                             </div>
-
 
                             {multiOpen && (
                                 <div className="dropdown-list">
                                     {analystOptions.map((a) => (
-                                        <label className="checkbox-item" key={a.id}>
+                                        <label
+                                            className="checkbox-item"
+                                            key={a.id}
+                                        >
                                             <input
                                                 type="checkbox"
-                                                checked={selectedAnalysts.includes(a.id)}
-                                                onChange={() => toggleAnalyst(a.id)}   // 👈 store ID
+                                                checked={selectedAnalysts.includes(
+                                                    a.id
+                                                )}
+                                                onChange={() =>
+                                                    toggleAnalyst(a.id)
+                                                }
                                             />
-                                            {a.name}  {/* 👈 show name */}
+                                            {a.name}
                                         </label>
                                     ))}
                                 </div>
                             )}
                         </div>
-
                     </div>
-
                 </div>
 
-                {/* ----------------------------- */}
-                {/* CLIENT CONTRACT DETAILS */}
-                {/* ----------------------------- */}
+                {/* CLIENT & CONTRACT DETAILS */}
                 <div className="form-card">
-                    <h2 className="form-title">Detalii contract & client</h2>
+                    <h2 className="form-title">
+                        Detalii contract & client
+                    </h2>
 
                     {/* ROW 1 */}
                     <div className="row-two">
                         <div className="form-field">
                             <label>Nume client</label>
-                            <input className="input-box" value={clientName}
-                                   onChange={(e) => setClientName(e.target.value)} />
-                            {errors.clientName && <p className={styles.errorText}>{errors.clientName}</p>}
+                            <input
+                                className="input-box"
+                                value={clientName}
+                                onChange={(e) =>
+                                    setClientName(e.target.value)
+                                }
+                            />
+                            {errors.clientName && (
+                                <p className={styles.errorText}>
+                                    {errors.clientName}
+                                </p>
+                            )}
                         </div>
 
                         <div className="form-field">
                             <label>Persoană de contact</label>
-                            <input className="input-box" value={clientPerson}
-                                   onChange={(e) => setClientPerson(e.target.value)} />
-                            {errors.clientPerson && <p className={styles.errorText}>{errors.clientPerson}</p>}
+                            <input
+                                className="input-box"
+                                value={clientPerson}
+                                onChange={(e) =>
+                                    setClientPerson(e.target.value)
+                                }
+                            />
+                            {errors.clientPerson && (
+                                <p className={styles.errorText}>
+                                    {errors.clientPerson}
+                                </p>
+                            )}
                         </div>
 
                         <div className="form-field">
                             <label>Funcție</label>
-                            <input className="input-box" value={clientPosition}
-                                   onChange={(e) => setClientPosition(e.target.value)} />
-                            {<errors className="clientPosition"></errors> && <p className={styles.errorText}>{errors.clientPosition}</p>}
+                            <input
+                                className="input-box"
+                                value={clientPosition}
+                                onChange={(e) =>
+                                    setClientPosition(e.target.value)
+                                }
+                            />
+                            {errors.clientPosition && (
+                                <p className={styles.errorText}>
+                                    {errors.clientPosition}
+                                </p>
+                            )}
                         </div>
                     </div>
 
@@ -573,16 +703,34 @@ const NewProject = () => {
                     <div className="row-two">
                         <div className="form-field">
                             <label>Email</label>
-                            <input className="input-box" value={clientEmail}
-                                   onChange={(e) => setClientEmail(e.target.value)} />
-                            {errors.clientEmail && <p className={styles.errorText}>{errors.clientEmail}</p>}
+                            <input
+                                className="input-box"
+                                value={clientEmail}
+                                onChange={(e) =>
+                                    setClientEmail(e.target.value)
+                                }
+                            />
+                            {errors.clientEmail && (
+                                <p className={styles.errorText}>
+                                    {errors.clientEmail}
+                                </p>
+                            )}
                         </div>
 
                         <div className="form-field">
                             <label>Telefon</label>
-                            <input className="input-box" value={clientPhone}
-                                   onChange={(e) => setClientPhone(e.target.value)} />
-                            {errors.clientPhone && <p className={styles.errorText}>{errors.clientPhone}</p>}
+                            <input
+                                className="input-box"
+                                value={clientPhone}
+                                onChange={(e) =>
+                                    setClientPhone(e.target.value)
+                                }
+                            />
+                            {errors.clientPhone && (
+                                <p className={styles.errorText}>
+                                    {errors.clientPhone}
+                                </p>
+                            )}
                         </div>
                     </div>
 
@@ -590,23 +738,50 @@ const NewProject = () => {
                     <div className="row-two">
                         <div className="form-field">
                             <label>Nr. contract</label>
-                            <input className="input-box" value={contractNo}
-                                   onChange={(e) => setContractNo(e.target.value)} />
-                            {errors.contractNo && <p className={styles.errorText}>{errors.contractNo}</p>}
+                            <input
+                                className="input-box"
+                                value={contractNo}
+                                onChange={(e) =>
+                                    setContractNo(e.target.value)
+                                }
+                            />
+                            {errors.contractNo && (
+                                <p className={styles.errorText}>
+                                    {errors.contractNo}
+                                </p>
+                            )}
                         </div>
 
                         <div className="form-field">
                             <label>Nr. anexă</label>
-                            <input className="input-box" value={annexNo}
-                                   onChange={(e) => setAnnexNo(e.target.value)} />
-                            {errors.annexNo && <p className={styles.errorText}>{errors.annexNo}</p>}
+                            <input
+                                className="input-box"
+                                value={annexNo}
+                                onChange={(e) =>
+                                    setAnnexNo(e.target.value)
+                                }
+                            />
+                            {errors.annexNo && (
+                                <p className={styles.errorText}>
+                                    {errors.annexNo}
+                                </p>
+                            )}
                         </div>
 
                         <div className="form-field">
                             <label>Se dorește</label>
-                            <input className="input-box" value={services}
-                                   onChange={(e) => setServices(e.target.value)} />
-                            {errors.services && <p className={styles.errorText}>{errors.services}</p>}
+                            <input
+                                className="input-box"
+                                value={services}
+                                onChange={(e) =>
+                                    setServices(e.target.value)
+                                }
+                            />
+                            {errors.services && (
+                                <p className={styles.errorText}>
+                                    {errors.services}
+                                </p>
+                            )}
                         </div>
                     </div>
 
@@ -614,14 +789,27 @@ const NewProject = () => {
                     <div className="row-two">
                         <div className="form-field">
                             <label>Preț proiect</label>
-                            <input className="input-box" value={projectPrice}
-                                   onChange={(e) => setProjectPrice(e.target.value)} />
-                            {errors.projectPrice && <p className={styles.errorText}>{errors.projectPrice}</p>}
+                            <input
+                                className="input-box"
+                                value={projectPrice}
+                                onChange={(e) =>
+                                    setProjectPrice(e.target.value)
+                                }
+                            />
+                            {errors.projectPrice && (
+                                <p className={styles.errorText}>
+                                    {errors.projectPrice}
+                                </p>
+                            )}
                         </div>
 
                         <div className="form-field">
                             <label>Monedă</label>
-                            <input className="input-box" value="EUR" disabled />
+                            <input
+                                className="input-box"
+                                value="EUR"
+                                disabled
+                            />
                         </div>
                     </div>
 
@@ -629,35 +817,66 @@ const NewProject = () => {
                     <div className="row-two">
                         <div className="form-field">
                             <label>Alte informații despre contract</label>
-                            <textarea className="textarea-box" value={contractInfo}
-                                      onChange={(e) => setContractInfo(e.target.value)} />
-                            {errors.contractInfo && <p className={styles.errorText}>{errors.contractInfo}</p>}
+                            <textarea
+                                className="textarea-box"
+                                value={contractInfo}
+                                onChange={(e) =>
+                                    setContractInfo(e.target.value)
+                                }
+                            />
+                            {errors.contractInfo && (
+                                <p className={styles.errorText}>
+                                    {errors.contractInfo}
+                                </p>
+                            )}
                         </div>
 
                         <div className="form-field">
                             <label>Solicitare referințe</label>
-                            <textarea className="textarea-box" value={referenceRequest}
-                                      onChange={(e) => setReferenceRequest(e.target.value)} />
-                            {errors.referenceRequest && <p className={styles.errorText}>{errors.referenceRequest}</p>}
+                            <textarea
+                                className="textarea-box"
+                                value={referenceRequest}
+                                onChange={(e) =>
+                                    setReferenceRequest(e.target.value)
+                                }
+                            />
+                            {errors.referenceRequest && (
+                                <p className={styles.errorText}>
+                                    {errors.referenceRequest}
+                                </p>
+                            )}
                         </div>
                     </div>
 
                     {/* ROW 6 */}
                     <div className="form-field full-width">
                         <label>Note interne</label>
-                        <textarea className="textarea-box" value={internalNotes}
-                                  onChange={(e) => setInternalNotes(e.target.value)} />
-                        {errors.internalNotes && <p className={styles.errorText}>{errors.internalNotes}</p>}
+                        <textarea
+                            className="textarea-box"
+                            value={internalNotes}
+                            onChange={(e) =>
+                                setInternalNotes(e.target.value)
+                            }
+                        />
+                        {errors.internalNotes && (
+                            <p className={styles.errorText}>
+                                {errors.internalNotes}
+                            </p>
+                        )}
                     </div>
 
                     {/* SAVE BUTTON */}
                     <div className="button-row">
-                        <button className="createProject" onClick={handleSave}>
-                            {id ? "Actualizează & aprobă" : "Creează pagina proiect"}
+                        <button
+                            className="createProject"
+                            onClick={handleSave}
+                        >
+                            {id
+                                ? "Actualizează & aprobă"
+                                : "Creează pagina proiect"}
                         </button>
                     </div>
                 </div>
-
             </div>
         </div>
     );
