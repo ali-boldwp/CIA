@@ -41,14 +41,16 @@ export const projectApi = createApi({
                 body: status,
             }),
         }),
-
-        // ✅ Add chapter creation endpoint
         createChapter: builder.mutation({
             query: ({ name, projectId }) => ({
                 url: "/chapter",
                 method: "POST",
                 body: { name, projectId },
             }),
+        }),
+        // ✅ New endpoint to get tasks by chapterId
+        getTasksByChapterId: builder.query({
+            query: (chapterId) => `/task/${chapterId}`,
         }),
     }),
 });
@@ -59,5 +61,6 @@ export const {
     useGetProjectRequestByIdQuery,
     useUpdateProjectMutation,
     useUpdateProjectStatusMutation,
-    useCreateChapterMutation, // ✅ Export the new hook
+    useCreateChapterMutation,
+    useGetTasksByChapterIdQuery, // ✅ export the new hook
 } = projectApi;
