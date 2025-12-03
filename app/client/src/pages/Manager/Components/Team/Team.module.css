@@ -1,5 +1,5 @@
-.team-wrapper {
-    background: white;
+.teamWrapper {
+    background: #ffffff;
     padding: 20px;
     border-radius: 12px;
     box-shadow: 0 3px 12px rgba(0, 0, 0, 0.07);
@@ -7,16 +7,16 @@
     font-weight: bold;
 }
 
-.team-title {
+.teamTitle {
     margin-bottom: 15px;
     font-size: 20px;
 }
 
-.team-table {
+.teamTable {
     width: 100%;
 }
 
-.team-header {
+.teamHeader {
     display: grid;
     grid-template-columns: 30% 10% 15% 30% 15%;
     font-size: 14px;
@@ -29,7 +29,7 @@
     font-weight: bold;
 }
 
-.team-row {
+.teamRow {
     display: grid;
     grid-template-columns: 30% 10% 15% 30% 15%;
     padding: 12px 10px;
@@ -44,10 +44,15 @@
     overflow: auto;
 }
 
+/* Generic col */
+.col {
+    font-size: 14px;
+}
+
 /* Name section */
 .purple {
-    background: #6D28D9;
-    color: white;
+    background: #6d28d9;
+    color: #ffffff;
     padding: 12px 8px;
     border-radius: 50%;
     font-size: 10px;
@@ -55,9 +60,9 @@
     font-weight: 600;
 }
 
-.initial-badge {
-    background: #94A3B8;
-    color: white;
+.initialBadge {
+    background: #94a3b8;
+    color: #ffffff;
     padding: 12px 8px;
     border-radius: 50%;
     font-size: 10px;
@@ -65,20 +70,20 @@
     font-weight: 600;
 }
 
-.col.name {
+.name {
     display: flex;
     align-items: center;
     font-size: 14px;
 }
 
 /* Score */
-.col.score {
+.score {
     font-size: 14px;
     font-weight: 600;
 }
 
 /* Status */
-.state-badge {
+.stateBadge {
     padding: 6px 12px;
     border-radius: 12px;
     font-size: 13px;
@@ -91,11 +96,11 @@
 
 .free {
     background: #e6e6ee;
-    color: #666;
+    color: #666666;
 }
 
 /* Progress */
-.progres-bar {
+.progresBar {
     width: 50%;
     height: 13px;
     background: #e9e9e9;
@@ -103,89 +108,89 @@
     margin-bottom: 4px;
 }
 
-.progres-fill {
+.progresFill {
     height: 13px;
     background: linear-gradient(90deg, #6a5af9, #1ec6cd);
     border-radius: 10px;
 }
 
-.progress-number {
+.progressNumber {
     font-size: 13px;
     opacity: 0.8;
 }
 
 /* Actions */
-.open-btn,
-.delete-btn {
+.openBtn,
+.deleteBtn {
     padding: 6px 10px;
     border-radius: 10px;
-    border: 1px solid #ddd;
-    background: white;
+    border: 1px solid #dddddd;
+    background: #ffffff;
     font-size: 13px;
     cursor: pointer;
 }
 
-.delete-btn {
+.deleteBtn {
     margin-left: 6px;
 }
 
-/* ✅ Footer buttons container (table ke neeche) */
-.team-footer-actions {
+/* Footer buttons container */
+.teamFooterActions {
     margin-top: 20px;
     display: flex;
     gap: 14px;
 }
 
-/* + Adaugă analist button */
-.add-btn {
+/* Common pill style */
+.pillBtn {
     width: 230px;
     height: 40px;
     border-radius: 999px;
-    background: linear-gradient(90deg, #6a5af9, #1ec6cd);
-    color: #ffffff;
-    border: none;
-    font-size: 14px;
-    font-weight: 600;
-    cursor: pointer;
-    display: flex;                /* icon + text center */
-    align-items: center;          /* vertical alignment */
-    justify-content: center;      /* horizontal alignment */
-    gap: 6px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.15); /* smaller shadow */
-}
-
-.add-icon {
-    font-size: 16px;
-}
-
-/* Vezi lista angajați button (same pill style, thoda blue tone) */
-.list-btn {
-    width: 230px;
-    height: 40px;
-    border-radius: 999px;
-    background: linear-gradient(90deg, #1ec6cd, #4f46e5);
-    color: #ffffff;
-    border: none;
     font-size: 14px;
     font-weight: 600;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.15); /* smaller shadow */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+    font-family: inherit;
+    box-sizing: border-box;
+    outline: none;
+}
+
+/* + Adaugă analist – white + dashed */
+.addBtn {
+    background: linear-gradient(90deg, #1ec6cd, #4f46e5) ;
+    border: none;
+    color: #ffffff;
+    gap: 6px;
+    box-shadow: 0 3px 8px rgba(15, 23, 42, 0.08) !important;
+
+}
+
+
+.addIcon {
+    font-size: 16px;
+}
+
+/* Vezi lista angajați – gradient primary */
+.listBtn {
+    background: linear-gradient(90deg, #1ec6cd, #4f46e5) !important;
+    border: none !important;
+    color: #ffffff !important;
 }
 
 /* Responsive */
 @media (max-width: 992px) {
-    .team-header,
-    .team-row {
+    .teamHeader,
+    .teamRow {
         grid-template-columns: 1fr;
         gap: 10px;
         padding: 15px 0;
     }
 
-    .team-footer-actions {
+    .teamFooterActions {
         flex-direction: column;
-        align-items: flex-start; /* ya center karna ho to center */
+        align-items: flex-start;
     }
 }
