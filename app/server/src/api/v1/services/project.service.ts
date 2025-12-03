@@ -12,7 +12,9 @@ export const getAllProjects = async () => {
 
 export const getProjectById = async (id: string) => {
     return ProjectRequest.findById(id)
-        .populate("createdBy", "name email role");
+        .populate("createdBy", "name email role")
+        .populate("responsibleAnalyst","name" )
+        .populate("assignedAnalysts","name" );
 };
 
 export const updateProject = async (id: string, data: any) => {
