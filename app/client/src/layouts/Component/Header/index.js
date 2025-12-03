@@ -1,11 +1,21 @@
 import "./Header.css";
-import {Link} from "react-router-dom";
+import {Link,useLocation} from "react-router-dom";
+
 
 const Header = () => {
+
+    const location=useLocation();
+    const isSale=location.pathname.includes("sales");
+
   return (
     <header className="header">
         <div className="firstSec">
-      <h3 className="logo">Dashboard Manager</h3>
+            {!isSale ?
+                <h3 className="logo">Dashboard Manager</h3>:
+                <h3 className="logo">Dashboard Sales</h3>
+
+            }
+
 
       <div className="search-box">
         <span className="search-icon">🔍</span>
