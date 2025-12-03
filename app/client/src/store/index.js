@@ -8,6 +8,7 @@ import { createdProjectApi } from "../services/createProject";
 import { userApi } from "../services/userApi";
 import { analystApi } from "../services/analystApi";
 import {messageApi} from "../services/messageApi";
+import {chatApi} from "../services/chatApi";
 
 const store = configureStore({
     reducer: {
@@ -19,7 +20,8 @@ const store = configureStore({
         [createdProjectApi.reducerPath]: createdProjectApi.reducer,
         [userApi.reducerPath]: userApi.reducer,
         [analystApi.reducerPath]: analystApi.reducer,
-        [messageApi.reducerPath]:messageApi.reducer
+        [messageApi.reducerPath]:messageApi.reducer,
+        [chatApi.reducerPath]:chatApi.reducer
 
 
     },
@@ -32,7 +34,8 @@ const store = configureStore({
             createdProjectApi.middleware,
             userApi.middleware,
             analystApi.middleware,
-            messageApi.middleware
+            messageApi.middleware,
+            chatApi.middleware
         ),
 });
 
