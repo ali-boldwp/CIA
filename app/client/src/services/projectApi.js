@@ -72,6 +72,11 @@ export const projectApi = createApi({
             }),
         }),
 
+        getChapterById: builder.query({
+            query: (id) => `/chapter/${id}`,
+        }),
+
+
         // Get Tasks by chapter
         getTasksByChapterId: builder.query({
             query: (chapterId) => `/task/${chapterId}`,
@@ -94,6 +99,7 @@ export const {
     useGetProjectsQuery,
     useGetProjectRequestsQuery,
     useGetProjectCreateQuery,
+    useGetChapterByIdQuery,
     useGetCreateProjectByIdQuery,
     useGetProjectRequestByIdQuery,
     useUpdateProjectMutation,

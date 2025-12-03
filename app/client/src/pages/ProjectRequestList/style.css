@@ -264,7 +264,7 @@
 
 /* ACTION BUTTON */
 .action-col {
-    width: 20%;
+    width: 15%;
     display: flex;
     justify-content: flex-end;
     align-items: center;
@@ -284,6 +284,161 @@
 .open-btn:hover {
     opacity: 0.9;
     transform: translateY(-1px);
+}
+
+/* main wrapper */
+.top-wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 5px 10px;
+    font-family: "Inter", sans-serif;
+}
+
+/* LEFT SIDE */
+.left-sideList {
+    width: 15%;
+}
+
+/* labels */
+.label {
+    font-size: 10px;
+    font-weight: 600;
+    color: #8c8c8c;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+}
+
+/* status */
+.status-text {
+    font-size: 13px;
+    margin-bottom: 12px;
+}
+
+/* buttons row */
+.buttons-row {
+    display: flex;
+    gap: 10px;
+}
+
+.btn {
+    padding: 6px 18px;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 500;
+}
+
+.start {
+    background: #3b82f6;
+    color: white;
+}
+
+.pause {
+    background: #0ea5e9;
+    color: white;
+}
+
+.finalize {
+    background: #0f172a;
+    color: #22c55e;
+}
+
+/* overview area */
+.overview-box {
+    margin-top: 25px;
+}
+
+.progress-title {
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.progress-bar {
+    width: 300px;
+    height: 8px;
+    background: #ebebeb;
+    border-radius: 10px;
+    margin: 8px 0;
+}
+
+.progress-fill {
+    height: 100%;
+    background: #3b82f6;
+    border-radius: 10px;
+}
+
+.progress-info {
+    font-size: 11px;
+    color: #777;
+}
+
+/* RIGHT SIDE */
+.right-sideList {
+    width: 38%;
+    text-align: left;
+}
+
+.time-box {
+    background: #f8fafc;
+    padding: 18px;
+    border-radius: 12px;
+    width: 100%;
+    border: 1px solid #e5e7eb;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.06);
+}
+
+.time-title {
+    font-size: 11px;
+    font-weight: 600;
+    color: #7a7a7a;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+}
+
+.time-info {
+    font-size: 13px;
+    margin-bottom: 5px;
+}
+
+.analyst-times {
+    font-size: 12px;
+    color: #555;
+}
+
+/* edit toggle */
+.edit-row {
+    margin-top: 12px;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+}
+
+.edit-label {
+    font-size: 13px;
+    color: #444;
+}
+
+.toggle-switch {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+}
+
+.toggle-on {
+    background: #22c55e;
+    color: white;
+    padding: 3px 10px;
+    border-radius: 20px;
+}
+
+.toggle-off {
+    background: #d1d5db;
+    color: #555;
+    padding: 3px 10px;
+    border-radius: 20px;
 }
 
 /* RESPONSIVE FIXES */

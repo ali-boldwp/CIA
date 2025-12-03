@@ -2,8 +2,14 @@
 import {Link} from "react-router-dom";
 
 
-const ProjectRow = ({ projects }) => {
+const ProjectRow = ({ projects , safe }) => {
 
+    const safeDate = (date) => {
+        if (!date) return "Fără termen";
+        const d = new Date(date);
+        if (isNaN(d)) return "Fără termen";
+        return d.toISOString().split("T")[0];
+    };
 
     return (
         <div className="request-list-wrapper">
@@ -15,7 +21,7 @@ const ProjectRow = ({ projects }) => {
                     <div className="request-row" key={p._id}>
 
                         {/* LEFT BLOCK */}
-                        <div className="left-side">
+                        <div className="left-sideList">
                             <h4 className="project-title">{p.projectName}</h4>
                             <p className="project-subject">{p.projectSubject}</p>
                             <p className="solicitant">Solicitant: {p.clientContactPerson}</p>
@@ -48,7 +54,7 @@ const ProjectRow = ({ projects }) => {
                             <div className="grid-item">
                                 <span className="label">Deadline</span>
                                 <span className="deadlineRequest">
-                                    {p.deadline.split("T")[0]} · 30 zile
+                                    {safe(p.deadline)} · 30 zile
                                 </span>
                             </div>
 

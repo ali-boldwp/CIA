@@ -46,6 +46,14 @@ const ProjectRequestList = () => {
             return 0;
         });
 
+    const safeDate = (date) => {
+        if (!date) return "Fără termen";
+        const d = new Date(date);
+        if (isNaN(d)) return "Fără termen";
+        return d.toISOString().split("T")[0];
+    };
+
+
     const isFiltering =
         search.trim() !== "" ||
         priorityFilter !== "all" ||
@@ -114,7 +122,7 @@ const ProjectRequestList = () => {
                    </select>
                </div>
            </div>
-           <ProjectRow projects={finalData} />
+           <ProjectRow projects={finalData} safe={safeDate} />
 
        </div>
     );

@@ -537,207 +537,443 @@
     color: #ff4d4d;
 }
 
-.task-container {
-    padding: 30px;
+/* main wrapper */
+.top-wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 5px 10px;
     font-family: "Inter", sans-serif;
 }
 
-/* ---------------- TOP CONTROL ---------------- */
-.top-control {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 25px;
+/* LEFT SIDE */
+.left-side {
+    width: 60%;
 }
 
-.status-label {
+/* labels */
+.label {
     font-size: 10px;
-    color: #8a8a8a;
-    text-transform: uppercase;
-}
-
-.project-status {
     font-weight: 600;
-    margin-bottom: 10px;
+    color: #8c8c8c;
+    text-transform: uppercase;
+    margin-bottom: 4px;
 }
 
-.button-row .btn {
-    margin-right: 10px;
-    padding: 7px 18px;
-    border-radius: 7px;
-    font-size: 14px;
-    cursor: pointer;
-    border: none;
+/* status */
+.status-text {
+    font-size: 13px;
+    margin-bottom: 12px;
 }
 
-.start { background: #2563eb; color: white; }
-.pause { background: #0ea5e9; color: white; }
-.finalize { background: #111; color: #00ff36; }
-
-/* ---------------- EDIT MODE TOGGLE ---------------- */
-.edit-mode {
+/* buttons row */
+.buttons-row {
     display: flex;
-    align-items: center;
     gap: 10px;
 }
 
-.toggle {
-    width: 55px;
-    height: 25px;
-    background: #c7f9cc;
-    border-radius: 20px;
-    position: relative;
+.btn {
+    padding: 6px 18px;
+    border-radius: 6px;
+    border: none;
     cursor: pointer;
-    display: flex;
-    align-items: center;
-    padding-left: 7px;
-    font-size: 12px;
+    font-size: 13px;
+    font-weight: 500;
 }
 
-.toggle .circle {
-    width: 20px;
-    height: 20px;
-    background: white;
-    border-radius: 50%;
-    position: absolute;
-    right: 3px;
-    top: 2px;
+.start {
+    background: #3b82f6;
+    color: white;
 }
 
-/* ---------------- OVERVIEW ---------------- */
-.overview-title {
-    font-size: 10px;
-    color: #8a8a8a;
-    text-transform: uppercase;
+.pause {
+    background: #0ea5e9;
+    color: white;
 }
 
-.progress-label {
-    font-size: 14px;
+.finalize {
+    background: #0f172a;
+    color: #22c55e;
+}
+
+/* overview area */
+.overview-box {
+    margin-top: 25px;
+}
+
+.progress-title {
+    font-size: 13px;
     font-weight: 600;
 }
 
 .progress-bar {
-    width: 350px;
+    width: 300px;
     height: 8px;
-    background: #eee;
+    background: #ebebeb;
     border-radius: 10px;
-    margin: 5px 0;
+    margin: 8px 0;
 }
 
-.progress-inner {
-    height: 8px;
+.progress-fill {
+    height: 100%;
     background: #3b82f6;
     border-radius: 10px;
 }
 
-.task-count {
-    font-size: 12px;
-    margin-bottom: 15px;
+.progress-info {
+    font-size: 11px;
+    color: #777;
 }
 
-.legend {
-    display: grid;
-    grid-template-columns: repeat(2, auto);
-    gap: 8px;
-    font-size: 12px;
+/* RIGHT SIDE */
+.right-side {
+    width: 38%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    text-align: left;
+    gap:20px;
 }
 
-.dot {
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    display: inline-block;
-    margin-right: 5px;
-}
-
-.blue { background: #2563eb; }
-.purple { background: #a855f7; }
-.green { background: #22c55e; }
-.red { background: #ef4444; }
-
-/* ---------------- TIME BOX ---------------- */
 .time-box {
-    margin-top: 25px;
+    background: #f8fafc;
     padding: 18px;
-    background: #f9fafb;
-    border-radius: 10px;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
-    width: 350px;
+    border-radius: 12px;
+    width: 100%;
+    border: 1px solid #e5e7eb;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.06);
 }
 
 .time-title {
     font-size: 11px;
+    font-weight: 600;
+    color: #7a7a7a;
     text-transform: uppercase;
-    margin-bottom: 8px;
+    margin-bottom: 6px;
 }
 
-/* ---------------- BOTTOM ACTIONS ---------------- */
-.bottom-actions {
-    margin-top: 25px;
+.time-info {
+    font-size: 13px;
+    margin-bottom: 5px;
+}
+
+.analyst-times {
+    font-size: 12px;
+    color: #555;
+}
+
+/* edit toggle */
+.edit-row {
+    margin-top: 12px;
     display: flex;
     align-items: center;
-    gap: 15px;
+    gap: 7px;
 }
 
-.btn.blue { background: #2563eb; color: white; }
-.btn.gray { background: #e5e7eb; }
+.edit-label {
+    font-size: 13px;
+    color: #444;
+}
+
+.toggle-switch {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+}
+
+.toggle-on {
+    background: #22c55e;
+    color: white;
+    padding: 3px 10px;
+    border-radius: 20px;
+}
+
+.toggle-off {
+    background: #d1d5db;
+    color: #555;
+    padding: 3px 10px;
+    border-radius: 20px;
+}
+.legend-actions-wrapper {
+    margin-top: 25px;
+    padding:10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    font-family: "Inter", sans-serif;
+}
+
+/* ------- LEGEND LEFT SIDE ------- */
+
+.legend-box {
+    width: 55%;
+}
+
+.legend-title {
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+    color: #8c8c8c;
+}
+
+.legend-grid {
+    display: flex;
+    gap:50px;
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+}
+
+.doted{
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.blue { background: #2563eb; }
+.purple { background: #6366f1;padding: 0; }
+.green { background: #16a34a; }
+.red { background: #dc2626; }
+
+/* ------- RIGHT SIDE ACTION BUTTONS ------- */
+
+.actions-box {
+    width: 45%;
+    display: flex;
+    justify-content: flex-end;
+    gap: 14px;
+    align-items: center;
+}
+
+.btn {
+    padding: 7px 18px;
+    font-size: 13px;
+    font-weight: 500;
+    border-radius: 8px;
+    border: 1px solid #dcdcdc;
+    background: white;
+    cursor: pointer;
+    transition: 0.2s;
+    color:black;
+}
+
+.btn:hover {
+    background: #f3f4f6;
+}
+
+.save {
+    background: #3b82f6;
+    color: white;
+    border: none;
+}
+
+.humint-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
 .humint {
-    background: #fff7e6;
-    border: 1px solid #facc15;
-    position: relative;
+    background: #f5f5f5;
 }
 
-.humint .badge {
-    background: #facc15;
+.approval-badge {
+    margin-top: 2px;
+    font-size: 10px;
     padding: 2px 6px;
     border-radius: 6px;
-    font-size: 10px;
-    margin-left: 5px;
+    background: #fff3cd;
+    color: #8a6d3b;
 }
 
-/* ---------------- EXPORT DROPDOWN ---------------- */
-.dropdown {
+/* -------- EXPORT DROPDOWN -------- */
+
+.export-dropdown {
     position: relative;
 }
 
-.btn.export {
-    background: #e5e7eb;
+.export {
+    background: #ffffff;
 }
 
 .dropdown-menu {
-    position: absolute;
-    background: white;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
-    padding: 8px;
-    top: 35px;
-    right: 0;
-    border-radius: 8px;
     display: none;
+    position: absolute;
+    right: 0;
+    top: 38px;
+    background: white;
+    border: 1px solid #dcdcdc;
+    border-radius: 6px;
+    padding: 5px 0;
+    width: 130px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
 }
 
-.dropdown:hover .dropdown-menu {
+.export-dropdown:hover .dropdown-menu {
     display: block;
 }
 
-.dropdown-menu button {
-    display: block;
-    width: 120px;
-    padding: 6px;
+.dropdown-item {
+    width: 100%;
+    background: transparent;
     border: none;
+    padding: 8px 12px;
+    font-size: 13px;
+    text-align: left;
+    cursor: pointer;
+}
+
+.dropdown-item:hover {
+    background: #f3f4f6;
+}
+.chapter-wrapper {
+    width: 100%;
+    margin-top: 40px;
+    font-family: "Inter", sans-serif;
+}
+
+/* Chapter Header */
+.chapter-title-row {
+
+
+}
+
+.chapter-label {
+    font-size: 11px;
+    font-weight: 600;
+    color: #8f8f8f;
+}
+
+.chapter-name {
+    flex: 1;
+    font-size: 18px;
+    font-weight: 600;
+    margin-left: 15px;
+}
+
+.edit-title-btn {
+    margin-left: 10px;
+    font-size: 12px;
+    padding: 3px 10px;
+    border-radius: 6px;
+    border: 1px solid #ddd;
     background: white;
     cursor: pointer;
-    text-align: left;
 }
 
-/* ---------------- CHAPTER BOX ---------------- */
-.chapter-box {
-    margin-top: 40px;
-}
-
-.add-chapter {
-    background: transparent;
-    border: 1px dashed #bbb;
-    padding: 6px 14px;
-    border-radius: 7px;
+.export-btn {
+    font-size: 12px;
+    padding: 6px 15px;
+    border-radius: 6px;
+    background: white;
+    border: 1px solid #ddd;
     cursor: pointer;
+}
+
+/* Header Row */
+.task-table-header {
+    margin-top: 20px;
+    display: grid;
+    grid-template-columns: 60px 1.5fr 140px 160px 100px;
+    font-size: 11px;
+    font-weight: 600;
+    color: #8b8b8b;
+}
+
+/* Task rows */
+.task-row {
+    display: grid;
+    grid-template-columns: 60px 1.5fr 140px 160px 100px;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid #efefef;
+}
+
+.col {
+    display: flex;
+    align-items: center;
+}
+
+.number {
+    font-size: 13px;
+    opacity: 0.7;
+}
+
+.description {
+    gap: 8px;
+}
+
+.description .bold {
+    font-weight: 600;
+}
+
+.status-pill {
+    padding: 4px 14px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 600;
+}
+
+.status-pill.auto {
+    background: #cfd3dc;
+    color: #4f5564;
+}
+
+.status-pill.done {
+    background: #caffd8;
+    color: #3a714e;
+}
+
+.status-pill.progress {
+    background: #ffe89e;
+    color: #9c7b1a;
+}
+
+.status-pill.assigned {
+    background: #e4e6ea;
+    color: #6b6f77;
+}
+
+.analyst-pill {
+    padding: 4px 12px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 600;
+}
+
+.analyst-blue { background: #e6edff; color: #4e6eff; }
+.analyst-purple { background: #f0eaff; color: #8b5cf6; }
+.analyst-green { background: #e1ffe8; color: #0f8f3f; }
+.analyst-red { background: #ffe6e6; color: #c52727; }
+
+/* Actions */
+.icon {
+    font-size: 16px;
+    cursor: pointer;
+    margin-right: 10px;
+}
+
+.icon.delete {
+    color: #c23b3b;
+}
+
+/* Add New Point */
+.add-row {
+    padding: 25px 0;
+}
+
+.add-btn {
+    border: 1px dashed #b6b6b6;
+    padding: 10px 20px;
+    border-radius: 8px;
+    background: #f8faff;
+    cursor: pointer;
+    font-size: 14px;
 }
