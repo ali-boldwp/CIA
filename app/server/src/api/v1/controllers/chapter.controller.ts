@@ -4,6 +4,7 @@ import { ok } from "../../../utils/ApiResponse";
 
 
 
+
 export const createChapter = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const chapter = await chapterService.createChapter(req.body);
@@ -26,6 +27,15 @@ export const updateChapter = async (req: Request, res: Response, next: NextFunct
     try {
         const updateChapter = await chapterService.updateChapter(req.params.id, req.body);
         res.json(ok(updateChapter));
+    } catch (err) {
+        next(err);
+    }
+};
+
+export const getChapterByProjectId = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const chapter = await chapterService.getChapterByProjectId(req.params.id);
+        res.json(ok(chapter));
     } catch (err) {
         next(err);
     }

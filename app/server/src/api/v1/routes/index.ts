@@ -17,7 +17,7 @@ router.use("/projects", projectRequestRoutes);
 router.use("/created-project", createdProjectRoutes);
 router.use("/humint", humintRoutes);
 router.use("/project-details", projectDetailsRoutes);
-router.use("/tasks", taskRoutes);
+router.use("/task", taskRoutes);
 router.use("/chats" , chatRoutes)
 router.use("/chapter",chapterRoutes)
 

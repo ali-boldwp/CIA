@@ -1,5 +1,6 @@
 import Chapter ,{ IChapter } from "../models/chapter.model";
 
+
 export const createChapter = async (data: Partial<IChapter>) => {
     return await Chapter.create(data);
 };
@@ -10,4 +11,8 @@ export const getAllChapter = async () => {
 
 export const updateChapter = async (id: string, data: Partial<IChapter>) => {
     return await Chapter.findByIdAndUpdate(id, data, { new: true });
+};
+
+export const getChapterByProjectId = async (projectId: string) => {
+    return await Chapter.find({ projectId }).sort({ createdAt: -1 });
 };
