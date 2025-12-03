@@ -27,6 +27,8 @@ const AddEmployeeModal = ({ isOpen, sectionKey, onClose }) => {
             bonus: "",
             date: "",
             remember: false,
+            rememberUser: "",
+            rememberPassword: "",
         },
     });
 
@@ -42,6 +44,9 @@ const AddEmployeeModal = ({ isOpen, sectionKey, onClose }) => {
         salary && hoursMonth ? (Number(salary) / Number(hoursMonth)).toFixed(1) : 0;
     const costDay = (Number(costHour) * Number(hoursDay || 0)).toFixed(0);
 
+    // checkbox watch karein
+    const rememberChecked = watch("remember");
+
     const onSubmit = (data) => {
         const payload = {
             name: data.name,
@@ -54,6 +59,8 @@ const AddEmployeeModal = ({ isOpen, sectionKey, onClose }) => {
             remember: data.remember,
             costPerHour: Number(costHour),
             costPerDay: Number(costDay),
+            rememberUser: data.rememberUser || "",
+            rememberPassword: data.rememberPassword || "",
         };
 
         console.log("EMPLOYEE FORM PAYLOAD:", payload);
@@ -161,9 +168,34 @@ const AddEmployeeModal = ({ isOpen, sectionKey, onClose }) => {
                             <label className={styles.checkboxLabel}>
                                 <input type="checkbox" {...register("remember")} />
                                 <span>este logat</span>
-
                             </label>
                         </div>
+
+                        {/* USER & PASSWORD jab checkbox tick ho */}
+                        {rememberChecked && (
+                            <div className={`${styles.fieldLeft} ${styles.loginRow}`}>
+
+                            <div className={styles.loginGrid}>
+                                    <div className={styles.field}>
+                                        <label>User</label>
+                                        <input
+                                            type="text"
+                                            placeholder="Username"
+                                            {...register("rememberUser")}
+                                        />
+                                    </div>
+
+                                    <div className={styles.field}>
+                                        <label>Parolă</label>
+                                        <input
+                                            type="password"
+                                            placeholder="Password"
+                                            {...register("rememberPassword")}
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+                        )}
                     </div>
 
                     <div className={styles.buttons}>
@@ -172,7 +204,7 @@ const AddEmployeeModal = ({ isOpen, sectionKey, onClose }) => {
                             className={styles.resetBtn}
                             onClick={() => reset()}
                         >
-                            Reset
+                            Resetează
                         </button>
 
                         <button className={styles.saveBtn} type="submit">
