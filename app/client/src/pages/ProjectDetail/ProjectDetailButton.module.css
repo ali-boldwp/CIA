@@ -36,7 +36,21 @@
 .saveBtn {
     background: #22c55e;
 }
+.taskBtna{
+    border: none;
+    border-radius: 10px;   /* 👈 rectangle with soft corners (INPUT FIELD STYLE) */
+    padding: 14px 28px;    /* 👈 bigger height & width */
+    min-width: 170px;      /* 👈 width increased */
+    font-size: 15px;       /* 👈 bigger text */
+    font-weight: 600;
+    cursor: pointer;
+    color: #ffffff;
 
+    /* Subtle shadow */
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.12);
+    transition: all 0.15s ease;
+    background: #2563eb;
+}
 .taskBtn {
     background: #2563eb;
 }
