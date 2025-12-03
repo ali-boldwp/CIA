@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import {
     useGetProjectRequestByIdQuery,
+    useRequestProjectMutation,
     useCreateProjectMutation,
     useUpdateProjectMutation,
 
@@ -149,7 +150,7 @@ const NewProject = () => {
     // ============================
     const [createProject] = useCreateProjectMutation();
 
-    const [updateProject] = useUpdateProjectMutation();
+    const [requestProject] = useRequestProjectMutation();
 
 
     // ============================
@@ -182,6 +183,7 @@ const NewProject = () => {
         assignedAnalysts: selectedAnalysts,
 
         deadline,
+        fromRequestId: id || undefined
     });
 
     // ============================
@@ -192,14 +194,13 @@ const NewProject = () => {
 
         try {
             if (id) {
-                // UPDATE PROJECT
-                await updateProject({ id, ...payload }).unwrap();
-                toast.success("Proiect actualizat cu succes!");
-            }
-            else {
-                // CREATE PROJECT
+                // Convert Request → Final Project
                 await createProject(payload).unwrap();
-                toast.success("Proiect creat cu succes!");
+                toast.success("Proiect final creat cu succes!");
+            } else {
+                // Create NEW Request Project
+                await requestProject(payload).unwrap();
+                toast.success("Solicitare proiect creată cu succes!");
             }
 
         } catch (err) {
