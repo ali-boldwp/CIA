@@ -10,7 +10,7 @@ const TaskPageConfig = {
 
     routes: [
         {
-            path: '/task-page',
+            path: '/project/:id/tasks',
             element: <TaskPage />
         }
     ]
