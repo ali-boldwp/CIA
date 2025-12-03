@@ -7,6 +7,7 @@ import humintRoutes from "./humint.routes";
 import projectDetailsRoutes from "./projectDetails.routes";
 import taskRoutes from "./task.routes";
 import chatRoutes from "./chat.routes";
+import chapterRoutes from "./chapter.routes";
 
 const router = Router();
 
@@ -18,5 +19,6 @@ router.use("/humint", humintRoutes);
 router.use("/project-details", projectDetailsRoutes);
 router.use("/tasks", taskRoutes);
 router.use("/chats" , chatRoutes)
+router.use("/chapter",chapterRoutes)
 
 export default router;

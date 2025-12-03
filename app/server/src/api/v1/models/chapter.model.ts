@@ -1,12 +1,11 @@
 import {Schema, model, Document, Types} from "mongoose";
 
-export interface ITask extends Document {
+export interface IChapter extends Document {
     name: string;
-    chapterId:Types.ObjectId;
-    completed:Boolean,
+    projectId:Types.ObjectId;
 }
 
-const taskSchema = new Schema<ITask>(
+const chapterSchema = new Schema<IChapter>(
     {
         name: {
             type: String,
@@ -14,16 +13,11 @@ const taskSchema = new Schema<ITask>(
             trim: true
         },
 
-        chapterId: {
+        projectId: {
             type: Schema.Types.ObjectId,
-            ref: "chapter",
+           ref: "ProjectRequest",
 
-        },
-        completed:{
-            type : Boolean,
-            required :false,
-
-        },
+        }
     },
     {
         timestamps: true,
@@ -36,6 +30,6 @@ const taskSchema = new Schema<ITask>(
     }
 );
 
-const Task = model<ITask>("Task", taskSchema);
+const Chapter = model<IChapter>("Chapter", chapterSchema);
 
-export default Task;
+export default Chapter;
