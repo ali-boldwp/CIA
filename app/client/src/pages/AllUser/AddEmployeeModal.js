@@ -11,12 +11,12 @@ const sectionNames = {
 const AddEmployeeModal = ({ isOpen, sectionKey, onClose }) => {
     const sectionLabel = sectionNames[sectionKey] || "Angajat";
 
-    // React Hook Form – same style as AddAnalystForm
     const {
         register,
         handleSubmit,
         watch,
         reset,
+        formState: { errors },
     } = useForm({
         defaultValues: {
             name: "",
@@ -35,17 +35,15 @@ const AddEmployeeModal = ({ isOpen, sectionKey, onClose }) => {
     // agar modal closed ho to render hi mat karo
     if (!isOpen) return null;
 
-    // auto-cost (same logic as AddAnalystForm)
+    // auto-cost
     const salary = watch("salary");
     const hoursMonth = watch("hoursMonth");
     const hoursDay = watch("hoursDay");
+    const rememberChecked = watch("remember");
 
     const costHour =
         salary && hoursMonth ? (Number(salary) / Number(hoursMonth)).toFixed(1) : 0;
     const costDay = (Number(costHour) * Number(hoursDay || 0)).toFixed(0);
-
-    // checkbox watch karein
-    const rememberChecked = watch("remember");
 
     const onSubmit = (data) => {
         const payload = {
@@ -64,7 +62,6 @@ const AddEmployeeModal = ({ isOpen, sectionKey, onClose }) => {
         };
 
         console.log("EMPLOYEE FORM PAYLOAD:", payload);
-        // yahan baad me real API call laga sakta hai
         onClose();
     };
 
@@ -95,8 +92,13 @@ const AddEmployeeModal = ({ isOpen, sectionKey, onClose }) => {
                             <label>Nume</label>
                             <input
                                 placeholder="ex: Iulia Barbu"
-                                {...register("name")}
+                                {...register("name", {
+                                    required: "Numele este obligatoriu",
+                                })}
                             />
+                            {errors.name && (
+                                <p className={styles.error}>{errors.name.message}</p>
+                            )}
                         </div>
 
                         {/* SALARIU */}
@@ -104,41 +106,96 @@ const AddEmployeeModal = ({ isOpen, sectionKey, onClose }) => {
                             <label>Salariu lunăr</label>
                             <input
                                 type="number"
-                                {...register("salary")}
+                                {...register("salary", {
+                                    required: "Salariul este obligatoriu",
+                                    min: {
+                                        value: 1,
+                                        message:
+                                            "Salariul trebuie să fie mai mare decât 0",
+                                    },
+                                })}
                             />
+                            {errors.salary && (
+                                <p className={styles.error}>{errors.salary.message}</p>
+                            )}
                         </div>
 
                         {/* FUNCȚIE (employee roles) */}
                         <div className={`${styles.field} ${styles.fieldLeft}`}>
                             <label>Funcție</label>
-                            <select {...register("role")}>
+                            <select
+                                {...register("role", {
+                                    required: "Funcția este obligatorie",
+                                })}
+                            >
                                 <option value="">Selectează funcția</option>
                                 <option value="ceo">CEO</option>
                                 <option value="analist">Analist</option>
                                 <option value="manager">Manager</option>
                                 <option value="alt">Alt rol</option>
                             </select>
+                            {errors.role && (
+                                <p className={styles.error}>{errors.role.message}</p>
+                            )}
                         </div>
 
                         {/* ORE/LUNĂ */}
                         <div className={styles.fieldSmall}>
                             <label>Ore/lună</label>
-                            <input type="number" {...register("hoursMonth")} />
+                            <input
+                                type="number"
+                                {...register("hoursMonth", {
+                                    required: "Ore/lună este obligatoriu",
+                                    min: {
+                                        value: 1,
+                                        message:
+                                            "Orele pe lună trebuie să fie mai mari decât 0",
+                                    },
+                                })}
+                            />
+                            {errors.hoursMonth && (
+                                <p className={styles.error}>
+                                    {errors.hoursMonth.message}
+                                </p>
+                            )}
                         </div>
 
                         {/* ORE/ZI */}
                         <div className={styles.fieldSmall}>
                             <label>Ore/zi</label>
-                            <input type="number" {...register("hoursDay")} />
+                            <input
+                                type="number"
+                                {...register("hoursDay", {
+                                    required: "Ore/zi este obligatoriu",
+                                    min: {
+                                        value: 1,
+                                        message:
+                                            "Orele pe zi trebuie să fie mai mari decât 0",
+                                    },
+                                })}
+                            />
+                            {errors.hoursDay && (
+                                <p className={styles.error}>
+                                    {errors.hoursDay.message}
+                                </p>
+                            )}
                         </div>
 
                         {/* DATA ANGAJĂRII */}
                         <div className={`${styles.field} ${styles.fieldLeft}`}>
                             <label>Data angajării</label>
-                            <input type="date" {...register("date")} />
+                            <input
+                                type="date"
+                                {...register("date", {
+                                    required: "Data angajării este obligatorie",
+                                })}
+                            />
+                            {errors.date && (
+                                <p className={styles.error}>{errors.date.message}</p>
+                            )}
                         </div>
 
-                        {/* BONUS – lunar RON */}
+                        {/* BONUS – optional */}
                         <div className={styles.fieldSmall}>
                             <label>Bonus lunar </label>
                             <input type="number" {...register("bonus")} />
@@ -163,7 +220,7 @@ const AddEmployeeModal = ({ isOpen, sectionKey, onClose }) => {
                             </div>
                         </div>
 
-                        {/* CHECKBOX – in place of NOTES */}
+                        {/* CHECKBOX */}
                         <div className={`${styles.fieldFull} ${styles.checkboxRow}`}>
                             <label className={styles.checkboxLabel}>
                                 <input type="checkbox" {...register("remember")} />
@@ -174,15 +231,24 @@ const AddEmployeeModal = ({ isOpen, sectionKey, onClose }) => {
                         {/* USER & PASSWORD jab checkbox tick ho */}
                         {rememberChecked && (
                             <div className={`${styles.fieldLeft} ${styles.loginRow}`}>
-
-                            <div className={styles.loginGrid}>
+                                <div className={styles.loginGrid}>
                                     <div className={styles.field}>
                                         <label>User</label>
                                         <input
                                             type="text"
                                             placeholder="Username"
-                                            {...register("rememberUser")}
+                                            {...register("rememberUser", {
+                                                validate: (value) =>
+                                                    !rememberChecked ||
+                                                    value.trim() !== "" ||
+                                                    "Userul este obligatoriu",
+                                            })}
                                         />
+                                        {errors.rememberUser && (
+                                            <p className={styles.error}>
+                                                {errors.rememberUser.message}
+                                            </p>
+                                        )}
                                     </div>
 
                                     <div className={styles.field}>
@@ -190,8 +256,18 @@ const AddEmployeeModal = ({ isOpen, sectionKey, onClose }) => {
                                         <input
                                             type="password"
                                             placeholder="Password"
-                                            {...register("rememberPassword")}
+                                            {...register("rememberPassword", {
+                                                validate: (value) =>
+                                                    !rememberChecked ||
+                                                    value.trim() !== "" ||
+                                                    "Parola este obligatorie",
+                                            })}
                                         />
+                                        {errors.rememberPassword && (
+                                            <p className={styles.error}>
+                                                {errors.rememberPassword.message}
+                                            </p>
+                                        )}
                                     </div>
                                 </div>
                             </div>
