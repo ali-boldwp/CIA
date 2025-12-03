@@ -1,10 +1,9 @@
 import React from "react";
-import "./Team.css";
+import styles from "./Team.module.css";
 import { useGetAnalystsQuery } from "../../../../services/userApi";
 import { useGetProjectRequestsQuery } from "../../../../services/projectApi";
 
 const Team = () => {
-
     // Fetch all analysts
     const { data: analystsData } = useGetAnalystsQuery();
     const analysts = analystsData?.data || [];
@@ -39,56 +38,69 @@ const Team = () => {
 
     return (
         <div className="main" style={{ marginBottom: "50px" }}>
-            <h3 className="team-title">Echipa de analiști</h3>
+            <h3 className={styles.teamTitle}>Echipa de analiști</h3>
 
-            <div className="team-wrapper">
-                <div className="team-table">
-                    <div className="team-header">
+            <div className={styles.teamWrapper}>
+                <div className={styles.teamTable}>
+                    <div className={styles.teamHeader}>
                         <span>Nume</span>
                         <span>Scor</span>
                         <span>Stare</span>
                         <span>Progres</span>
                         <span>Acțiuni</span>
                     </div>
-                    <div className="teamBody">
+
+                    <div className={styles.teamBody}>
                         {analysts.map((a) => {
                             const status = getAnalystStatus(a._id);
                             const progress = getAnalystProgress(a._id);
 
                             return (
-                                <div className="team-row" key={a._id}>
-                                    <div className="col name">
-                                        <span className={status === "în lucru" ? "purple" : "initial-badge"}>
+                                <div className={styles.teamRow} key={a._id}>
+                                    <div className={`${styles.col} ${styles.name}`}>
+                                        <span
+                                            className={
+                                                status === "în lucru"
+                                                    ? styles.purple
+                                                    : styles.initialBadge
+                                            }
+                                        >
                                             {a.initials || a.name?.slice(0, 2).toUpperCase()}
                                         </span>
                                         <span>{a.name}</span>
                                     </div>
 
-                                    <div className="col score">{a.score || 0}</div>
+                                    <div className={`${styles.col} ${styles.score}`}>
+                                        {a.score || 0}
+                                    </div>
 
-                                    <div className="col state">
+                                    <div className={`${styles.col} ${styles.state}`}>
                                         <span
-                                            className={`state-badge ${
-                                                status === "liber" ? "free" : "work"
+                                            className={`${styles.stateBadge} ${
+                                                status === "liber" ? styles.free : styles.work
                                             }`}
                                         >
                                             {status}
                                         </span>
                                     </div>
 
-                                    <div className="col progress">
-                                        <div className="progres-bar">
+                                    <div className={`${styles.col} ${styles.progress}`}>
+                                        <div className={styles.progresBar}>
                                             <div
-                                                className="progres-fill"
+                                                className={styles.progresFill}
                                                 style={{ width: `${progress}%` }}
-                                            ></div>
+                                            />
                                         </div>
-                                        <span className="progress-number">{progress}%</span>
+                                        <span className={styles.progressNumber}>
+                                            {progress}%
+                                        </span>
                                     </div>
 
-                                    <div className="col actions">
-                                        <button className="open-btn">Deschide</button>
-                                        <button className="delete-btn">🗑 Șterge</button>
+                                    <div className={`${styles.col} ${styles.actions}`}>
+                                        <button className={styles.openBtn}>Deschide</button>
+                                        <button className={styles.deleteBtn}>
+                                            🗑 Șterge
+                                        </button>
                                     </div>
                                 </div>
                             );
@@ -97,14 +109,14 @@ const Team = () => {
                 </div>
             </div>
 
-            {/* ✅ Buttons table ke neeche, wrapper se bahar */}
-            <div className="team-footer-actions">
-                <button className="add-btn">
-                    <span className="add-icon">＋</span>
+            {/* Buttons table ke neeche, wrapper se bahar */}
+            <div className={styles.teamFooterActions}>
+                <button className={`${styles.pillBtn} ${styles.addBtn}`}>
+                    <span className={styles.addIcon}>＋</span>
                     <span>Adaugă analist</span>
                 </button>
 
-                <button className="list-btn">
+                <button className={`${styles.pillBtn} ${styles.listBtn}`}>
                     Vezi lista angajați
                 </button>
             </div>
