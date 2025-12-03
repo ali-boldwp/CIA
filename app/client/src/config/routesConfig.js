@@ -16,7 +16,7 @@ import ProjectCostsPageConfig from "../pages/ProjectCostsPage/ProjectCostsPageCo
 import AllUserConfig from "../pages/AllUser/AllUserConfig";
 import RequestListConfig from "../pages/ProjectRequestList/RequestListConfig";
 import MessengerConfig from "../pages/Messenger/MessengerConfig";
-import TaskPageConfig from "../pages/taskPageConfig.js/TaskPageConfig";
+import TaskPageConfig from "../pages/taskPage/TaskPageConfig";
 
 
 const routeConfigs = [

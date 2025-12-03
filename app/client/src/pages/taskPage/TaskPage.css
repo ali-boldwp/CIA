@@ -293,12 +293,6 @@
 .priority.low { background: #6c757d; }
 
 /* Delete Icon */
-.delete-icon {
-    font-size: 18px;
-    color: #cc0000;
-    cursor: pointer;
-    transition: 0.2s;
-}
 
 .delete-icon:hover {
     color: #ff4d4d;
@@ -411,3 +405,134 @@
 }
 
 
+/* Table box */
+.task-table-box {
+    margin-top: 20px;
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 0 6px rgba(0,0,0,0.08);
+}
+
+/* Table */
+.task-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.task-table th {
+    text-align: left;
+    padding: 12px;
+    color: #777;
+    font-weight: 700;
+    border-bottom: 2px solid #eee;
+}
+
+.task-table td {
+    padding: 14px 12px;
+}
+
+/* Striped rows */
+.task-table tbody tr:nth-child(odd) {
+    background: #fafafa;
+}
+
+.task-table tbody tr:hover {
+    background: #eef4ff;
+}
+
+/* Number */
+.index-number {
+    font-weight: 600;
+    color: #333;
+}
+
+/* Parent row (bold, no checkbox) */
+.parent-row {
+    font-weight: bold;
+    font-size: 15px;
+}
+
+/* Child row (indented) */
+.child-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding-left: 20px;
+}
+
+/* Custom Checkbox */
+.checkbox {
+    appearance: none;
+    width: 18px;
+    height: 18px;
+    border-radius: 4px;
+    border: 2px solid #5b8cff;
+    position: relative;
+    cursor: pointer;
+}
+
+.checkbox:checked::after {
+    content: "✔";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 13px;
+    color: #2563eb;
+    font-weight: bold;
+}
+
+/* Status badges */
+.status-badge {
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+/* Colors matching screenshot */
+.status-badge.auto {
+    background: #9ba3af;
+    color: white;
+}
+
+.status-badge.done {
+    background: #a5efc1;
+    color: #0a5130;
+}
+
+.status-badge.inprogress {
+    background: #ffeaa7;
+    color: #8d6b00;
+}
+
+/* Analyst badge */
+.analyst-badge {
+    padding: 6px 14px;
+    border-radius: 14px;
+    background: #e0e7ff;
+    color: #4b54d2;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+/* Action icons */
+.edit-icon,
+.delete-icon {
+    font-size: 18px;
+    margin-right: 12px;
+    cursor: pointer;
+}
+
+.edit-icon {
+    color: #475569;
+}
+
+.delete-icon {
+    color: #475569;
+}
+
+.delete-icon:hover {
+    color: #ff4d4d;
+}
