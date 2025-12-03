@@ -48,6 +48,14 @@ export const projectApi = createApi({
             query: (id) => `/project/${id}`,
         }),
 
+        getAllRequestedProjects: builder.query({
+            query: () => `/getAllRequestedProjects`,
+        }),
+
+        getRequestedProjectById: builder.query({
+            query: (id) => `/getRequestedProjectById/${id}`,
+        }),
+
         updateProject: builder.mutation({
             query: ({ id, data }) => ({
                 url: `/projects/${id}/approve`,
@@ -97,6 +105,8 @@ export const {
     useCreateProjectMutation,
     useRequestProjectMutation,
     useGetProjectsQuery,
+    useGetAllRequestedProjectsQuery,
+    useGetRequestedProjectByIdQuery,
     useGetProjectRequestsQuery,
     useGetProjectCreateQuery,
     useGetChapterByIdQuery,

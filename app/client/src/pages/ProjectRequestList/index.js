@@ -2,11 +2,11 @@ import "./style.css";
 import { useState } from "react";
 import {Link} from "react-router-dom";
 import ProjectRow from "./ProjectRow";
-import { useGetProjectRequestsQuery } from "../../services/projectApi";
+import { useGetAllRequestedProjectsQuery } from "../../services/projectApi";
 
 const ProjectRequestList = () => {
 
-    const { data ,isLoading }=useGetProjectRequestsQuery();
+    const { data ,isLoading } = useGetAllRequestedProjectsQuery();
     const project=data?.data || [];
     const projectRequest=project.filter((p)=>p.status=== "requested")
 
