@@ -21,6 +21,7 @@ import {
     FiShield,
     FiLogOut,
 } from "react-icons/fi";
+import {useGetMyChatsQuery} from "../../../services/chatApi";
 
 function Header() {
     return (
@@ -42,20 +43,26 @@ function Header() {
 }
 
 function MessengerPage() {
+    const CHAT_ID = "692f0cbee1afd5908152efd9";
 
-    const { data, isLoading } = useGetMessagesQuery();
     const [ chat, setChat ] = useState( 'open' );
+
     const [ messages, setMessages ] = useState([]);
-
     const [oldmessage, setOldMessage] = useState([]);
-    const [text, setText] = useState("");
 
+    const [text, setText] = useState("");
     const [sendMessage] = useSendMessageMutation();
+
+    const { data, isLoading } = useGetMessagesQuery(chat, { skip: chat === "open" });
+    const { data: chats, isLoading: chatsLoading } = useGetMyChatsQuery();
+
+
 
 
     useEffect(() => {
         if (data) {
-            setOldMessage(data);
+            console.log("API RESPONSE:", data);
+            setOldMessage(Array.isArray(data.messages) ? data.messages : []);
         }
     }, [data]);
 
@@ -195,38 +202,34 @@ function MessengerPage() {
                                     <span className="dot red" />
                                 </div>
                             </div>
-                            {[
-                                "Grup: DD ABC",
-                                "DM: I. Barlu",
-                                "Grup: HUNMET Team",
-                                "DM: A. Pep",
-                                "DM: C. Vasilescu",
-                                "Grup: Sales-Ops",
-                                "DM: V. Georgescu",
-                                "DM: R. Petrescu",
-                            ].map((name, idx) => (
-                                <div
-                                    className={
-                                        "conversation-item" +
-                                        (idx === 0 ? " conversation-item-active" : "")
-                                    }
-                                    key={name}
-                                    onClick={ () => setChat( '692f0cbee1afd5908152efd9' ) }
-                                >
-                                    <div className="conversation-avatar" />
-                                    <div className="conversation-main">
-                                        <div className="conversation-name">{name}</div>
-                                        <div className="conversation-sub">
-                                            Toate conversațiile
+                            {
+                                (chats?.data || []).map((c) => (
+                                    <div
+                                        className={
+                                            "conversation-item" +
+                                            (c._id === chat ? " conversation-item-active" : "")
+                                        }
+                                        key={c._id}
+                                        onClick={() => setChat(c._id)}
+                                    >
+                                        <div className="conversation-avatar" />
+
+                                        <div className="conversation-main">
+                                            <div className="conversation-name">
+                                                {c.isGroup ? c.groupName : c.participants.map(p => p.name).join(", ")}
+                                            </div>
+
+                                            <div className="conversation-sub">
+                                                {c.lastMessage ? c.lastMessage.text : "No messages yet"}
+                                            </div>
                                         </div>
                                     </div>
-                                    <div className="conversation-meta">
-                                        <span className="dot green" />
-                                        <span className="dot orange" />
-                                        <span className="dot red" />
-                                    </div>
-                                </div>
-                            ))}
+                                ))
+                            }
+
+
+
+
                         </div>
                     </aside>
 
@@ -280,13 +283,12 @@ function MessengerPage() {
                                 ))}
                             </div>
                             {
-                                oldmessage.map( message => ( // zubair messages
+                                oldmessage.map(message => (
+                                <div className="message message-out">{message.text}</div>
+                               ))
 
-                                    <div className="message message-out">
-                                        { message.text }
-                                    </div>
-                                ))
                             }
+
                             {
                                 messages.map( message => (
 

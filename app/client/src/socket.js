@@ -1,6 +1,10 @@
 import { io } from "socket.io-client";
 
-const SOCKET_URL = "https://cia.devregion.com";
+const SOCKET_URL =
+    window.location.hostname === "localhost"
+        ? "http://localhost:4000"
+        : "https://cia.devregion.com";
+
 
 // 🔥 Create single socket instance
 export const socket = io(SOCKET_URL, {

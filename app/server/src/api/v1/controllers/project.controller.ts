@@ -78,7 +78,7 @@ export const createProject = async (req: Request, res: Response, next: NextFunct
 
         };
 
-        if ( req.user.role !== 'admin' || req.user.role !== 'manager' ) {
+        if ( req.user.role == 'admin' || req.user.role == 'manager' ) {
 
             payload.status = "approved";
 
@@ -108,18 +108,18 @@ export const getProjectById = async (req, res, next) => {
     try {
         const project = await projectService.getProjectById(req.params.id);
 
-        if ( project.status == 'requested' && ( req.user.role !== 'admin' || req.user.role !== 'manager' ) ) {
-
-            res.json({ error: true, message: "Unauthorized" });
-
-        }
-
-        if ( project.status !== 'requested' && ( req.user.role !== 'admin' || req.user.role !== 'manager' || req.user._id !== project.fromRequestId
-            || req.user._id !== project.responsibleAnalyst  ) ) {
-
-            res.json({ error: true, message: "Unauthorized" });
-
-        }
+        // if ( project.status == 'requested' && ( req.user.role !== 'admin' || req.user.role !== 'manager' ) ) {
+        //
+        //     res.json({ error: true, message: "Unauthorized" });
+        //
+        // }
+        //
+        // if ( project.status !== 'requested' && ( req.user.role !== 'admin' || req.user.role !== 'manager' || req.user._id !== project.fromRequestId
+        //     || req.user._id !== project.responsibleAnalyst  ) ) {
+        //
+        //     res.json({ error: true, message: "Unauthorized" });
+        //
+        // }
 
         res.json(ok(project));
     } catch (err) {
