@@ -40,7 +40,7 @@ const routeConfigs = [
     MessengerConfig,
     TaskPageConfig,
     HumintConfig,
-    HumintRequestFormConfig
+    HumintRequestFormConfig,
     HumintListConfig
 
 ];
