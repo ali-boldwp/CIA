@@ -9,6 +9,7 @@ import { userApi } from "../services/userApi";
 import { analystApi } from "../services/analystApi";
 import {messageApi} from "../services/messageApi";
 import {chatApi} from "../services/chatApi";
+import { humintApi } from "../services/humintApi";
 
 const store = configureStore({
     reducer: {
@@ -21,7 +22,8 @@ const store = configureStore({
         [userApi.reducerPath]: userApi.reducer,
         [analystApi.reducerPath]: analystApi.reducer,
         [messageApi.reducerPath]:messageApi.reducer,
-        [chatApi.reducerPath]:chatApi.reducer
+        [chatApi.reducerPath]:chatApi.reducer,
+        [humintApi.reducerPath]:humintApi.reducer
 
 
     },

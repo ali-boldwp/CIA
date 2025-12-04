@@ -1,84 +1,41 @@
-// /home/ubaid/workspace/app/client/src/pages/Humint/ProjectBasePopUp.js
-
 import React, { useState } from "react";
 import styles from "./ProjectBasePopUp.module.css";
+import { useGetProjectsQuery } from "../../services/projectApi";
+import { useNavigate } from "react-router-dom";
 
 const ProjectBasePopUp = () => {
+    const navigate = useNavigate();
+
+    // Fetch projects from backend
+    const { data, isLoading } = useGetProjectsQuery();
+
+    const projects = data?.data || [];
+
+
+    // Store selected project
     const [selectedProject, setSelectedProject] = useState(null);
 
-    const projects = [
-        {
-            id: 1,
-            name: "Due Diligence: Societatea ABC",
-            type: "Enhanced DD",
-            responsible: "Analist C",
-            deadline: "2025-12-20",
-            progress: "65%",
-            humint: "Nu s-a solicitat",
-        },
-        {
-            id: 2,
-            name: "Fraud investigation: KSTE RO",
-            type: "Fraud Investigation",
-            responsible: "Analist A",
-            deadline: "2025-12-12",
-            progress: "40%",
-            humint: "Nu s-a solicitat",
-        },
-        {
-            id: 3,
-            name: "Background check: Persoana A.B.",
-            type: "Background Check",
-            responsible: "Analist B",
-            deadline: "2025-12-08",
-            progress: "55%",
-            humint: "Nu s-a solicitat",
-        },
-        {
-            id: 4,
-            name: "Raport de informare: Societatea KLM",
-            type: "Raport informare",
-            responsible: "Analist E",
-            deadline: "2025-12-18",
-            progress: "30%",
-            humint: "Nu s-a solicitat",
-        },
-    ];
+    if (isLoading) return <p>Loading projects...</p>;
 
-    const handleSelect = (id) => {
-        setSelectedProject(id);
+    const handleSelect = (project) => {
+        setSelectedProject(project);
+    };
+
+    const handleContinue = () => {
+        if (!selectedProject) {
+            return alert("Selectează un proiect!");
+        }
+
+        navigate("/humint/create", {
+            state: { project: selectedProject }
+        });
     };
 
     return (
         <div className={styles.wrapper}>
             <div className={styles.box}>
-                {/* TITLE */}
+
                 <h3 className={styles.title}>Alege proiectul (în lucru)</h3>
-
-                {/* SEARCH + FILTERS */}
-                <div className={styles.topRow}>
-                    <div className={styles.searchGroup}>
-                        <span className={styles.label}>Caută proiect</span>
-                        <div className={styles.searchWrapper}>
-                            <input
-                                placeholder="🔎 Caută după nume / client / responsabil"
-                                className={styles.searchInput}
-                            />
-                        </div>
-                    </div>
-
-                    <div className={styles.filterGroup}>
-                        <span className={styles.label}>Filtre</span>
-                        <div className={styles.filterBtns}>
-                            <button className={styles.filterBtn}>
-                                Doar proiecte în lucru ▾
-                            </button>
-                            <button className={styles.filterBtn}>
-                                Cu Start setat ▾
-                            </button>
-                        </div>
-                    </div>
-                </div>
 
                 {/* TABLE */}
                 <div className={styles.tableWrapper}>
@@ -98,26 +55,27 @@ const ProjectBasePopUp = () => {
                         <tbody>
                         {projects.map((p) => (
                             <tr
-                                key={p.id}
+                                key={p._id}
                                 className={styles.row}
-                                onClick={() => handleSelect(p.id)}
+                                onClick={() => handleSelect(p)}
                             >
                                 <td className={styles.radioCell}>
                                     <input
                                         type="radio"
-                                        checked={selectedProject === p.id}
-                                        onChange={() => handleSelect(p.id)}
+                                        checked={selectedProject?._id === p._id}
+                                        onChange={() => handleSelect(p)}
                                     />
                                 </td>
-                                <td className={styles.projectCell}>{p.name}</td>
-                                <td>{p.type}</td>
-                                <td>{p.responsible}</td>
-                                <td>{p.deadline}</td>
-                                <td>{p.progress}</td>
+
+                                <td>{p.projectName}</td>
+                                <td>{p.reportType}</td>
+                                <td>{p.responsibleAnalyst?.name}</td>
+                                <td>{p.deadline?.slice(0, 10)}</td>
+                                <td>{p.progress || "—"}</td>
                                 <td>
-                                        <span className={styles.statusPill}>
-                                            {p.humint}
-                                        </span>
+                                    <span className={styles.statusPill}>
+                                        {p.humintStatus || "Nu s-a solicitat"}
+                                    </span>
                                 </td>
                             </tr>
                         ))}
@@ -125,31 +83,35 @@ const ProjectBasePopUp = () => {
                     </table>
                 </div>
 
-                {/* CONTEXT LINE */}
+                {/* CONTEXT — AUTO FROM SELECTED PROJECT */}
                 <div className={styles.contextWrapper}>
                     <p className={styles.contextTitle}>
-                        Context (auto din proiect) — se va precompleta în pasul următor
+                        Context (auto din proiect)
                     </p>
 
                     <div className={styles.contextRow}>
                         <span className={styles.contextTag}>
-                            Denumire: <span className={styles.contextValue}>—</span>
+                            Denumire: <span className={styles.contextValue}>{selectedProject?.projectName || "—"}</span>
                         </span>
                         <span className={styles.contextTag}>
-                            Tip: <span className={styles.contextValue}>—</span>
+                            Tip: <span className={styles.contextValue}>{selectedProject?.reportType || "—"}</span>
                         </span>
                         <span className={styles.contextTag}>
-                            Responsabil: <span className={styles.contextValue}>—</span>
+                            Responsabil: <span className={styles.contextValue}>{selectedProject?.responsibleAnalyst?.name || "—"}</span>
                         </span>
                         <span className={styles.contextTag}>
-                            Deadline: <span className={styles.contextValue}>—</span>
+                            Deadline: <span className={styles.contextValue}>
+                                {selectedProject?.deadline?.slice(0, 10) || "—"}
+                            </span>
                         </span>
                     </div>
                 </div>
 
                 {/* BUTTON */}
                 <div className={styles.buttonRow}>
-                    <button className={styles.continueBtn}>Continuă</button>
+                    <button className={styles.continueBtn} onClick={handleContinue}>
+                        Continuă
+                    </button>
                 </div>
             </div>
         </div>
