@@ -1,11 +1,12 @@
 import React, {
     useState,
     forwardRef,
-    useImperativeHandle
+    useImperativeHandle,
+    useEffect
 } from "react";
 import styles from "./RequestForm.module.css";
 
-const RequestForm = forwardRef((props, ref) => {
+const RequestForm = forwardRef(({projects}, ref) => {
     const [values, setValues] = useState({
         projectName: "",
         deadline: "",
@@ -18,6 +19,31 @@ const RequestForm = forwardRef((props, ref) => {
         locations: "",
         restrictions: "",
     });
+
+
+    useEffect(() => {
+        if (projects) {
+
+            const backendToUi = {
+                Normal: "Normal",
+                Ridicată: "Ridicată",
+                Urgentă: "Urgentă",
+                Confidențial: "Confidențial",
+            };
+
+
+
+            setValues((prev) => ({
+                ...prev,
+                projectName: projects.projectName || "",
+                deadline: projects.deadline ? projects.deadline.split("T")[0] : "",
+                reportType: projects.reportType || "",
+                projectOwner: projects.responsibleAnalyst?.name || "",
+                priority: backendToUi[projects.priority] || "",
+            }));
+        }
+    }, [projects]);
+
 
     const [errors, setErrors] = useState({});
 
@@ -39,7 +65,7 @@ const RequestForm = forwardRef((props, ref) => {
         const newErrors = {};
 
         Object.entries(values).forEach(([key, value]) => {
-            if (!value.trim()) {
+            if (typeof value === "string" && !value.trim()) {
                 newErrors[key] = "Câmp obligatoriu";
             }
         });
@@ -101,52 +127,40 @@ const RequestForm = forwardRef((props, ref) => {
                         {/* Tip raport */}
                         <div className={styles.field}>
                             <label className={styles.label}>Tip raport</label>
-                            <div className={styles.inline}>
-                                <select
-                                    name="reportType"
-                                    value={values.reportType}
-                                    onChange={handleChange}
-                                    className={`${styles.input} ${
-                                        errors.reportType ? styles.inputError : ""
-                                    }`}
-                                >
-                                    <option value="">Selectează...</option>
-                                    <option value="Enhanced Due Diligence">
-                                        Enhanced Due Diligence
-                                    </option>
-                                    <option value="Standard Due Diligence">
-                                        Standard Due Diligence
-                                    </option>
-                                    <option value="Background Check">Background Check</option>
-                                </select>
-                            </div>
+                            <input
+                                type="text"
+                                name="reportType"
+                                value={values.reportType}
+                                onChange={handleChange}
+                                className={`${styles.input} ${
+                                    errors.reportType ? styles.inputError : ""
+                                }`}
+                                placeholder="ex.: Background Check, Due Diligence..."
+                            />
                             {errors.reportType && (
                                 <p className={styles.errorText}>{errors.reportType}</p>
                             )}
                         </div>
 
+
                         {/* Responsabil proiect */}
                         <div className={styles.field}>
                             <label className={styles.label}>Responsabil proiect</label>
-                            <div className={styles.inline}>
-                                <select
-                                    name="projectOwner"
-                                    value={values.projectOwner}
-                                    onChange={handleChange}
-                                    className={`${styles.input} ${
-                                        errors.projectOwner ? styles.inputError : ""
-                                    }`}
-                                >
-                                    <option value="">Selectează...</option>
-                                    <option value="Analist A">Analist A</option>
-                                    <option value="Analist B">Analist B</option>
-                                    <option value="Analist C">Analist C</option>
-                                </select>
-                            </div>
+                            <input
+                                type="text"
+                                name="projectOwner"
+                                value={values.projectOwner}
+                                onChange={handleChange}
+                                className={`${styles.input} ${
+                                    errors.projectOwner ? styles.inputError : ""
+                                }`}
+                                placeholder="ex.: Ioana Alina, Mihai Ion..."
+                            />
                             {errors.projectOwner && (
                                 <p className={styles.errorText}>{errors.projectOwner}</p>
                             )}
                         </div>
+
 
                         {/* Deadline */}
                         <div className={styles.field}>
@@ -174,14 +188,13 @@ const RequestForm = forwardRef((props, ref) => {
                                 name="priority"
                                 value={values.priority}
                                 onChange={handleChange}
-                                className={`${styles.input} ${
-                                    errors.priority ? styles.inputError : ""
-                                }`}
+                                className={`${styles.input} ${errors.priority ? styles.inputError : ""}`}
                             >
                                 <option value="">Selectează...</option>
                                 <option value="Normal">Normal</option>
                                 <option value="Ridicată">Ridicată</option>
                                 <option value="Urgentă">Urgentă</option>
+                                <option value="Confidențial">Confidențial</option>
                             </select>
                             {errors.priority && (
                                 <p className={styles.errorText}>{errors.priority}</p>
