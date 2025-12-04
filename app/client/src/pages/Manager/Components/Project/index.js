@@ -1,13 +1,36 @@
 import "./Project.css";
 import ProjectRow from "./ProjectRow";
-import {useGetProjectsQuery} from "../../../../services/projectApi";
+import {useGetProjectCreateQuery } from "../../../../services/projectApi";
+import {useGetAnalystsQuery} from "../../../../services/userApi";
 
 const Projects = () => {
 
-    const { data,isLoading } = useGetProjectsQuery();
+    const { data,isLoading } = useGetProjectCreateQuery();
+    const { data:analystsData }=useGetAnalystsQuery();
+    const analysts = analystsData?.data || [];
     const approvedProjects=data?.data || [];
 
+    const resolveAnalystName = (value) => {
+        if (!value) return "—";
 
+        // If backend returned full object
+        if (typeof value === "object" && value.name) {
+            return value.name;
+        }
+
+        // If it's an ID, find in analysts list
+        const found = analysts.find(a => a._id === value);
+        return found ? found.name : "—";
+    };
+
+// Helper: return multiple analyst names
+    const resolveAnalystNames = (arr) => {
+        if (!arr || arr.length === 0) return "—";
+
+        return arr
+            .map((item) => resolveAnalystName(item))
+            .join(", ");
+    };
     if (isLoading) return <p>Loading...</p>;
 
 
@@ -29,7 +52,7 @@ const Projects = () => {
 
       <div className="projects-list">
         {approvedProjects.map((project, index) => (
-          <ProjectRow key={index} project={project} />
+          <ProjectRow key={index} project={project} responsible={resolveAnalystName} responsibles={resolveAnalystNames} />
         ))}
       </div>
     </div>

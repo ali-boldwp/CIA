@@ -3,7 +3,7 @@ import { useGetAllUsersQuery } from "../../../../services/userApi";
 import {Link} from "react-router-dom";
 
 
-const ProjectRow = ({ project }) => {
+const ProjectRow = ({ project, responsible,responsibles }) => {
   const [open, setOpen] = useState(false);
   const dropdownRef = useRef();
 
@@ -25,26 +25,47 @@ const ProjectRow = ({ project }) => {
     document.addEventListener("mousedown", handler);
     return () => document.removeEventListener("mousedown", handler);
   }, []);
+    const getInitials = (idOrObj) => {
+        const fullName = responsible(idOrObj); // uses parent resolver
 
-  return (
+        if (!fullName || typeof fullName !== "string") return "_";
+
+        const parts = fullName.trim().split(" ");
+
+        // 🟡 If name has only one word → return FirstLetter + "-"
+        if (parts.length === 1) {
+            const first = parts[0].charAt(0).toUpperCase();
+            return first + "_";
+        }
+
+        // 🟢 Multi-word name → First letter of first + first letter of last
+        const first = parts[0].charAt(0).toUpperCase();
+        const last = parts[parts.length - 1].charAt(0).toUpperCase();
+
+        return first + last;
+    };
+
+
+    return (
     <div className="project-row">
 
       {/* INFO SECTION -------------------- */}
       <div className="col project-infoDash">
         <h4 style={{ marginBottom: "5px" }}>{project.projectName || project.name }</h4>
-        <p>Responsabil: <b>{project?.responsibleAnalyst?.name || "Nespecificat"}</b></p>
+        <p>Responsabil: <b>{responsible(project?.responsibleAnalyst) }</b></p>
           <p>
               Echipa asignată:{" "}
               {project.assignedAnalysts?.length > 0 ? (
-                  project.assignedAnalysts.map((a, i) => (
+                  project.assignedAnalysts.map((member, i) => (
                       <span key={i} className="team-badge-approved">
-                { responsibleUser?.name.slice(0,2).toUpperCase() || "-"}
-              </span>
+        {getInitials(member)}
+      </span>
                   ))
               ) : (
                   <span className="team-empty">Nicio persoană asignată</span>
               )}
           </p>
+
       </div>
 
       {/* DEADLINE ------------------------ */}

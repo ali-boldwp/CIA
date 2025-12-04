@@ -5,15 +5,23 @@ import { FiEdit2, FiTrash2 } from "react-icons/fi";
 import {
 
     useCreateChapterMutation,
-    useGetTasksByChapterIdQuery, useGetCreateProjectByIdQuery, useGetChapterByIdQuery,
+    useGetTasksByChapterIdQuery, useGetCreateProjectByIdQuery, useGetChapterByIdQuery, useCreateTaskMutation,
 } from "../../services/projectApi";
 import "./TaskPage.css";
 
 import ChapterCreation from "./components/ChapterCreation";
+import {toast} from "react-toastify";
 
 
 const TaskPage = () => {
     const { id: projectId } = useParams();
+    const [showTaskForm, setShowTaskForm] = useState(false);
+    const [newTaskName, setNewTaskName] = useState("");
+    const [activeChapterId, setActiveChapterId] = useState(null);
+
+    const [tasksByChapter, setTasksByChapter] = useState({});
+
+    const [createTask, { isLoading: isCreatingTask }] = useCreateTaskMutation();
 
     const {data:chapter}=useGetChapterByIdQuery(projectId, {
         skip: !projectId,
@@ -28,50 +36,60 @@ const TaskPage = () => {
 
     const [createChapter] = useCreateChapterMutation();
 
-    // Hardcoded Chapter ID
-    const hardcodedChapterId = "69303f67c161bd9b5bac8d7d";
-
-    // Tasks
-    const { data: taskData } = useGetTasksByChapterIdQuery(hardcodedChapterId);
-    const [tasks, setTasks] = useState([]);
 
     useEffect(() => {
-        if (taskData?.data) {
-            setTasks(
-                taskData.data.map((t) => ({
-                    id: t._id,
-                    title: t.name,
-                    status: t.completed ? "Completed" : "Assigned",
-                    checked: t.completed,
-                }))
-            );
+        const fetchAll = async () => {
+            let result = {};
+
+            for (const ch of chapterData) {
+                const res = await fetch(`${process.env.REACT_APP_API_BASE_URL}/task/${ch._id}`, {
+                    headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
+                });
+                const json = await res.json();
+
+                result[ch._id] = json.data || [];
+            }
+
+            setTasksByChapter(result);
+        };
+
+        if (chapterData.length > 0) {
+            fetchAll();
         }
-    }, [taskData]);
+    }, [chapterData]);
+
+
+    const handleCreateTask = async (chapterId) => {
+        if (!newTaskName.trim()) return;
+
+        try {
+            const response = await createTask({
+                name: newTaskName,
+                chapterId,
+            }).unwrap();
+
+            // Add task to UI immediately
+            setTasksByChapter((prev) => ({
+                ...prev,
+                [chapterId]: [...(prev[chapterId] || []), response.data],
+            }));
+
+            // Close form
+            setShowTaskForm(false);
+            setNewTaskName("");
+            toast.success("Task adăugat cu succes!");
+        } catch (error) {
+            toast.error("Eroare la adăugarea taskului!");
+        }
+    };
+
+
+
 
     if (!projectId) return <p>No project selected.</p>;
     if (isLoading) return <p>Loading project data...</p>;
     if (isError) return <p>Error fetching project data!</p>;
-    const allTasks = [
-        { number: "1.", title: "Profil general", bold: true, checked: true, status: "Auto", statusClass: "auto", analyst: "AP - 0h45m", analystColor: "analyst-blue" },
 
-        { number: "1.1.", title: "Informatii generale", checked: true, status: "Done", statusClass: "done", analyst: "BI - 1h30m", analystColor: "analyst-purple" },
-
-        { number: "1.2.", title: "Studii", checked: true, status: "Done", statusClass: "done", analyst: "CM - 0h20m", analystColor: "analyst-green" },
-
-        { number: "1.3.", title: "Experienta profesionala", checked: false, status: "In progress", statusClass: "progress", analyst: "AP - 0h00m", analystColor: "analyst-blue" },
-
-        { number: "2.", title: "Relatii de familie", checked: false, status: "Assigned", statusClass: "assigned", analyst: "BI - 0h00m", analystColor: "analyst-purple" },
-
-        { number: "3.", title: "Afaceri si structuri de proprietate", bold: true, checked: false, status: "Auto", statusClass: "auto", analyst: "CM - 0h00m", analystColor: "analyst-green" },
-
-        { number: "3.1.", title: "Implicarea in afaceri", checked: false, status: "Assigned", statusClass: "assigned", analyst: "CM - 0h00m", analystColor: "analyst-green" },
-
-        { number: "3.2.", title: "Bunuri si proprietati", checked: false, status: "Assigned", statusClass: "assigned", analyst: "CM - 0h00m", analystColor: "analyst-green" },
-
-        { number: "3.3.", title: "Datorii, credite si insolvilabilitate personala", checked: false, status: "Assigned", statusClass: "assigned", analyst: "CM - 0h00m", analystColor: "analyst-green" },
-
-        { number: "5.", title: "Proprietate intelectuala / Marci OSIM", checked: true, status: "Done", statusClass: "done", analyst: "BI - 0h00m", analystColor: "analyst-purple" },
-    ];
     return (
         <div className="task-container">
                 <div className="task-header flex-between">
@@ -214,14 +232,14 @@ const TaskPage = () => {
             </div>
 
             {chapterData?.length > 0 &&
-                chapterData.map((item) => (
+                chapterData.map((item,index) => (
 
 
             <div className="chapter-wrapper">
 
 
                 <div className="chapter-title-row">
-                    <span className="chapter-label">CAPITOL 1</span>
+                    <span className="chapter-label">CAPITOL {index + 1}</span>
                     <br/>
                     <div className="chapter-name">
                         {item.name}
@@ -240,27 +258,29 @@ const TaskPage = () => {
                 </div>
 
                 {/* Tasks */}
-                {allTasks.map((task, i) => (
-                    <div className="task-row" key={i}>
+                {tasksByChapter[item._id]?.map((task, i) => (
+                    <div  className={`task-row ${i % 2 === 0 ? "row-white" : "row-gray"}`} key={i}>
 
                         {/* Number */}
-                        <div className="col number">{task.number}</div>
+                        <div className="col number">{i+1}</div>
 
                         {/* Task Name */}
                         <div className="col description">
-                            <input type="checkbox" defaultChecked={task.checked} />
-                            <span className={task.bold ? "bold" : ""}>{task.title}</span>
+                            <input type="checkbox" defaultChecked={task.completed} />
+                            <span className={task.bold ? "bold" : ""}>{task.name}</span>
                         </div>
 
                         {/* Status */}
                         <div className="col status">
-                            <span className={`status-pill ${task.statusClass}`}>{task.status}</span>
+                            <span className={`status-pill ${task.completed ? "done" : "assigned"}`}>
+                {task.completed ? "Done" : "Assigned"}
+            </span>
                         </div>
 
                         {/* Analyst */}
                         <div className="col analyst">
             <span className={`analyst-pill ${task.analystColor}`}>
-              {task.analyst}
+              {task.assignedAnalyst?.name || "Unassigned"}
             </span>
                         </div>
 
@@ -275,10 +295,53 @@ const TaskPage = () => {
 
                 {/* Add new task */}
                 <div className="add-row">
-                    <button className="add-btn">+ Adauga punct nou in acest capitol</button>
+                    <button
+                        className="add-btn"
+                        onClick={() => {
+                            setActiveChapterId(item._id);
+                            setShowTaskForm(true);
+                        }}
+                    >
+                        + Adauga punct nou in acest capitol
+                    </button>
                 </div>
             </div>
             ))}
+            {/* BOTTOM TASK FORM */}
+            {showTaskForm && (
+                <div className="task-form-container">
+                    <div className="task-form">
+                        <h3>Adauga Task Nou</h3>
+
+                        <input
+                            type="text"
+                            className="task-input"
+                            placeholder="Introdu numele taskului"
+                            value={newTaskName}
+                            onChange={(e) => setNewTaskName(e.target.value)}
+                        />
+
+                        <div className="task-form-buttons">
+                            <button
+                                className="task-cancel-btn"
+                                onClick={() => {
+                                    setShowTaskForm(false);
+                                    setNewTaskName("");
+                                }}
+                            >
+                                Anuleaza
+                            </button>
+
+                            <button
+                                className="task-submit-btn"
+                                onClick={() => handleCreateTask(activeChapterId)}
+                            >
+                                Adauga
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
 
 
 
