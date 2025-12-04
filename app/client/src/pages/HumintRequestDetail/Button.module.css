@@ -1,0 +1,95 @@
+/* outer wrapper – same width alignment as form/cards */
+.wrapper {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-top: 8px;
+    margin-bottom: 32px;
+}
+
+/* white card container */
+.card {
+    width: 96%;
+    max-width: 1500px;
+
+    background: #ffffff;
+    border-radius: 16px;
+    padding: 16px 22px 18px;
+    box-shadow: 0 8px 20px rgba(15, 23, 42, 0.08);
+}
+
+/* title "Acțiuni" */
+.title {
+    font-size: 13px;
+    font-weight: 600;
+    color: #64748b;
+    margin-bottom: 10px;
+}
+
+/* row of buttons */
+.actionsRow {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+/* base button style */
+.btn {
+    border: none;
+    border-radius: 999px;
+    padding: 9px 22px;
+
+    font-size: 13px;
+    font-weight: 600;
+    color: #ffffff;
+
+    cursor: pointer;
+    outline: none;
+
+    box-shadow: 0 6px 16px rgba(15, 23, 42, 0.18);
+    transition: transform 0.15s ease, box-shadow 0.15s ease, opacity 0.15s ease;
+}
+
+.btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 8px 22px rgba(15, 23, 42, 0.22);
+}
+
+.btn:active {
+    transform: translateY(0);
+    box-shadow: 0 4px 12px rgba(15, 23, 42, 0.2);
+}
+
+/* specific colors – match screenshot feel */
+
+/* green "Aprobă" */
+.btnApprove {
+    background-color: #22c55e;
+}
+
+/* red "Respinge" */
+.btnReject {
+    background-color: #ef4444;
+}
+
+/* purple gradient "Solicită clarificări" */
+.btnClarify {
+    background: linear-gradient(90deg, #8b5cf6 0%, #6366f1 100%);
+}
+
+/* blue "Generează brief printabil" */
+.btnPrint {
+    background-color: #0ea5e9;
+}
+
+/* responsive */
+@media (max-width: 640px) {
+    .card {
+        padding: 14px 14px 16px;
+    }
+
+    .btn {
+        width: 100%;
+        text-align: center;
+    }
+}
