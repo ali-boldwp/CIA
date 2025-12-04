@@ -1,128 +1,125 @@
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import Header from "./Header";
 import SearchBar from "./SearchBar";
 import TableSection from "./TableSection";
-
-const initialRequests = [
-    {
-        id: 1,
-        project: "Due Diligence: Societatea ABC",
-        description: "Observarea directorul ...",
-        type: "Enhanced DD",
-        responsible: "Analist C",
-        priority: "Urgent",
-        deadline: "2025-12-10",
-        createdBy: "Analist A",
-        createdAt: "2025-12-02 11:05",
-        status: "De aprobat"
-    },
-    {
-        id: 2,
-        project: "Fraud investigation: KSTE RO",
-        description: "Verificare documente ...",
-        type: "Fraud Investigation",
-        responsible: "Analist A",
-        priority: "Urgent",
-        deadline: "2025-12-12",
-        createdBy: "Analist B",
-        createdAt: "2025-12-02 10:42",
-        status: "De aprobat"
-    },
-    {
-        id: 3,
-        project: "Background check: Persoana A.B.",
-        description: "Confirmare referințe ...",
-        type: "Background Check",
-        responsible: "Analist B",
-        priority: "Normal",
-        deadline: "2025-12-08",
-        createdBy: "Analist B",
-        createdAt: "2025-12-02 10:15",
-        status: "De aprobat"
-    },
-    {
-        id: 4,
-        project: "Independent",
-        description: "Observare perimetrue industrial ...",
-        type: "HUMINT Independent",
-        responsible: "Manager",
-        priority: "Confidențial",
-        deadline: "2025-12-08",
-        createdBy: "Manager",
-        createdAt: "2025-12-02 09:30",
-        status: "Clarificări"
-    }
-];
+import { useGetAllHumintsQuery } from "../../services/humintApi";
+import { useGetAnalystsQuery } from "../../services/userApi";
 
 const HumintList = () => {
+    const { data : AnalystData}=useGetAnalystsQuery();
+    const { data: humintsData } = useGetAllHumintsQuery();
+    const humints = humintsData?.data || [];
+
+    const analysts=AnalystData?.data || [];
+
+    const [projectsMap, setProjectsMap] = useState({});
+
+    /** 🔥 FETCH ALL PROJECTS LIKE YOUR "fetchAll()" EXAMPLE */
+    useEffect(() => {
+        const fetchAllProjects = async () => {
+            const token = localStorage.getItem("token");
+            let result = {};
+
+            for (const h of humints) {
+                if (!h.projectId) continue;
+
+                try {
+                    const id = typeof h.projectId === "object" ? h.projectId._id : h.projectId;
+                    const res = await fetch(
+                        `${process.env.REACT_APP_API_BASE_URL}/project/${id}`,
+                        {
+                            headers: {
+                                Authorization: `Bearer ${token}`,
+                            },
+                        }
+                    );
+
+                    const json = await res.json();
+                    result[h.projectId] = json.data || null;
+                } catch (err) {
+                    console.error("Project fetch error:", err);
+                }
+            }
+
+            setProjectsMap(result);
+        };
+
+        if (humints.length > 0) {
+            fetchAllProjects();
+        }
+    }, [humints]);
+
+    /** 🔥 MERGE HUMINT + PROJECT DATA */
+    const merged = humints.map((h) => {
+        const p = projectsMap[h.projectId] || {};
+
+        return {
+            id: h._id,
+
+            // 🔥 ONLY FROM PROJECT TABLE
+            projectName: p.projectName || "Independent",
+            reportType:p.reportType,
+            projectSubject: p.projectSubject || "",
+
+            // 🔥 Everything else from HUMINT table
+            responsible: h.responsible,
+            priority: h.priority,
+            deadline: h.deadline?.split("T")[0],
+            createdBy: h.createdBy,
+            createdAt: h.createdAt,
+            status: h.status
+        };
+    });
+
+    const resolveAnalystName = (value) => {
+        if (!value) return "—";
+
+        // If backend returned full object
+        if (typeof value === "object" && value.name) {
+            return value.name;
+        }
+
+        // If it's an ID, find in analysts list
+        const found = analysts.find(a => a._id === value);
+        return found ? found.name : "—";
+    };
+    // UI State
     const [searchValue, setSearchValue] = useState("");
-    const [sortBy, setSortBy] = useState("date"); // "date" | "deadline"
-    const [priorityFilter, setPriorityFilter] = useState("Toate"); // Toate | Urgent | Normal | Confidențial
+    const [sortBy, setSortBy] = useState("date");
+    const [priorityFilter, setPriorityFilter] = useState("Toate");
     const [selectedIds, setSelectedIds] = useState([]);
 
-    // filter + sort logic
+    /** Filters */
     const visibleRequests = useMemo(() => {
-        let data = [...initialRequests];
+        let data = [...merged];
 
-        // search filter
-        if (searchValue.trim() !== "") {
+        if (searchValue.trim()) {
             const q = searchValue.toLowerCase();
-            data = data.filter((item) => {
-                return (
-                    item.project.toLowerCase().includes(q) ||
-                    item.type.toLowerCase().includes(q) ||
-                    item.responsible.toLowerCase().includes(q)
-                );
-            });
+            data = data.filter(
+                (x) =>
+                    x.project?.toLowerCase().includes(q) ||
+                    x.type?.toLowerCase().includes(q) ||
+                    x.responsible?.toLowerCase().includes(q)
+            );
         }
 
-        // priority filter
         if (priorityFilter !== "Toate") {
-            data = data.filter((item) => item.priority === priorityFilter);
+            data = data.filter((x) => x.priority === priorityFilter);
         }
 
-        // sort
         if (sortBy === "date") {
-            data.sort(
-                (a, b) =>
-                    new Date(b.createdAt.replace(" ", "T")) -
-                    new Date(a.createdAt.replace(" ", "T"))
-            );
-        } else if (sortBy === "deadline") {
-            data.sort(
-                (a, b) =>
-                    new Date(a.deadline) - new Date(b.deadline)
-            );
+            data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+        } else {
+            data.sort((a, b) => new Date(a.deadline) - new Date(b.deadline));
         }
 
         return data;
-    }, [searchValue, sortBy, priorityFilter]);
-
-    // selection helpers
-    const handleToggleSelect = (id) => {
-        setSelectedIds((prev) =>
-            prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]
-        );
-    };
-
-    const handleToggleSelectAll = (visibleIds, checked) => {
-        if (checked) {
-            setSelectedIds((prev) => Array.from(new Set([...prev, ...visibleIds])));
-        } else {
-            setSelectedIds((prev) => prev.filter((id) => !visibleIds.includes(id)));
-        }
-    };
-
-    const handleApproveSelected = () => {
-        if (selectedIds.length === 0) return;
-        // yahan tum API call / action laga sakte ho
-        console.log("Approved IDs:", selectedIds);
-        alert(`Ai aprobat ${selectedIds.length} solicitări (demo).`);
-    };
+    }, [merged, searchValue, sortBy, priorityFilter]);
 
     return (
         <>
             <Header />
+
             <SearchBar
                 searchValue={searchValue}
                 onSearchChange={setSearchValue}
@@ -130,15 +127,25 @@ const HumintList = () => {
                 onSortChange={setSortBy}
                 priorityValue={priorityFilter}
                 onPriorityChange={setPriorityFilter}
-                onApproveSelected={handleApproveSelected}
                 hasSelection={selectedIds.length > 0}
+                onApproveSelected={() => alert("Approve pending")}
             />
+
             <TableSection
+                analystN={resolveAnalystName}
                 requests={visibleRequests}
                 selectedIds={selectedIds}
-                onToggleSelect={handleToggleSelect}
-                onToggleSelectAll={handleToggleSelectAll}
-                totalCount={initialRequests.length}
+                onToggleSelect={(id) =>
+                    setSelectedIds((prev) =>
+                        prev.includes(id)
+                            ? prev.filter((i) => i !== id)
+                            : [...prev, id]
+                    )
+                }
+                onToggleSelectAll={(ids, checked) =>
+                    setSelectedIds(checked ? ids : [])
+                }
+                totalCount={visibleRequests.length}
             />
         </>
     );

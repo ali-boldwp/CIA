@@ -2,13 +2,13 @@ import React, { useState } from "react";
 import styles from "./ProjectBasePopUp.module.css";
 
 import { useGetProjectsQuery } from "../../services/projectApi";
-import {Link, useNavigate} from "react-router-dom";
+import {Link } from "react-router-dom";
  
 const ProjectBasePopUp = () => {
-    const navigate = useNavigate();
+
 
     // Fetch projects from backend
-    const { data, isLoading } = useGetProjectCreateQuery();
+    const { data, isLoading } = useGetProjectsQuery();
 
     const projects = data?.data || [];
 
