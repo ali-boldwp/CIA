@@ -6,6 +6,7 @@ import Chat from "../models/chat.model";
 import Chapter from "../models/chapter.model";
 import Task from "../models/task.model";
 import projectData from "../data/data.js"
+import Requested from "../models/requested.model"
 import { ok } from "../../../utils/ApiResponse";
 
 export const createProject = async (req: Request, res: Response, next: NextFunction) => {
@@ -20,10 +21,17 @@ export const createProject = async (req: Request, res: Response, next: NextFunct
 
         let requestData: any = {};
 
+
         // Load request data if ID provided
-        if (body.fromRequestId) {
-            const reqProject = await ProjectRequest.findById(body.fromRequestId);
+        if (body.requestedId) {
+            const reqProject = await Requested.findById(body.requestedId);
+            console.log(reqProject)
+
             if (reqProject) {
+                // Update request status to "approved"
+                reqProject.status = "approved";
+                await reqProject.save();
+
                 requestData = reqProject.toObject();
                 delete requestData._id;
                 delete requestData.__v;
@@ -31,6 +39,7 @@ export const createProject = async (req: Request, res: Response, next: NextFunct
                 delete requestData.updatedAt;
             }
         }
+
 
         // Merge payload
         const payload = {
