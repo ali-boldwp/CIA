@@ -1,35 +1,70 @@
 import React from 'react';
 import "./style.css"
 import Header from "../../../layouts/Component/Header";
+import { useGetProjectCreateQuery } from "../../../services/projectApi";
+import {useGetAnalystsQuery} from "../../../services/userApi";
+import {Link} from "react-router-dom";
 
 const AnalystDashboard = () => {
+    const { data:analyst}=useGetAnalystsQuery();
+    const analysts=analyst?.data || [];
+    const { data: projectData, isLoading, isError } = useGetProjectCreateQuery();
+    const projects=projectData?.data || [];
 
-    const humintData = [
-        { project: "KSTE RO", status: "In analiza", statusClass: "yellow", deadline: "13.11.2025" },
-        { project: "KLM", status: "Aprobat", statusClass: "green", deadline: "18.11.2025" },
-        { project: "QRS", status: "Finalizat", statusClass: "gray", deadline: "—" }
-    ];
+
+    if (isLoading) return <p>Loading...</p>;
+    if (isError) return <p>Eroare la preluarea proiectelor.</p>;
+
+    // Helper: return analyst name whether ID or object
+    const resolveAnalystName = (value) => {
+        if (!value) return "—";
+
+        // If backend returned full object
+        if (typeof value === "object" && value.name) {
+            return value.name;
+        }
+
+        // If it's an ID, find in analysts list
+        const found = analysts.find(a => a._id === value);
+        return found ? found.name : "—";
+    };
+
+// Helper: return multiple analyst names
+    const resolveAnalystNames = (arr) => {
+        if (!arr || arr.length === 0) return "—";
+
+        return arr
+            .map((item) => resolveAnalystName(item))
+            .join(", ");
+    };
+
+    // Status color mapping for badge/dot
+    const statusColors = {
+        requested: "orange",
+        approved: "green",
+        in_progress: "blue",
+        completed: "gray"
+    };
 
     return (
         <div className="dashboard">
+            <Header />
 
-            <Header/>
-
-            {/* TOP SUMMARY CARDS */}
+            {/* TOP SUMMARY CARDS (dynamic counts) */}
             <div className="top-summary">
                 <div className="summary-card">
                     <div className="summary-title">
                         <span className="summary-icon">📄</span>
                         <span>Proiecte asignate</span>
                     </div>
-                    <div className="summary-value">2</div>
+                    <div className="summary-value">{projects?.length}</div>
                 </div>
 
                 <div className="summary-card">
-                    <div className="summary-title">
-                        🕵️ HUMINT in lucru
+                    <div className="summary-title">🕵️ HUMINT in lucru</div>
+                    <div className="summary-value">
+                        {projects?.filter(p => p.status === "in_progress").length}
                     </div>
-                    <div className="summary-value">1</div>
                 </div>
 
                 <div className="summary-card">
@@ -44,83 +79,50 @@ const AnalystDashboard = () => {
                         <span className="summary-icon">⏳</span>
                         <span>HUMINT in asteptare aprobare</span>
                     </div>
-                    <div className="summary-sub">2 solicitari</div>
+                    <div className="summary-sub">
+                        {projects?.filter(p => p.status === "requested").length} solicitari
+                    </div>
                 </div>
             </div>
 
-            {/* PROJECTS */}
+            {/* PROJECTS SECTION */}
             <h2 className="section-title">Proiectele mele</h2>
 
             <div className="projects-row">
-                {/* PROJECT 1 */}
-                <div className="project-card">
-                    <div className="project-header">
-                        <div className="project-name">Due Diligence: Societatea ABC</div>
-                        <div className="project-deadline-wrapper">
-                            <span className="deadline-pill">Deadline: 12.11.2025</span>
-                            <div className="status-dot-wrapper">
-                                <span className="dot green" />
-                                <span className="status-text">on track</span>
+                {projects?.map((project) => (
+                    <div className="project-card" key={project._id}>
+
+                        <div className="project-header">
+                            <div className="project-name">{project.projectName}</div>
+
+                            <div className="project-deadline-wrapper">
+                                <span className="deadline-pill">
+                                    Deadline:
+                                    {project.deadline
+                                        ? new Date(project.deadline).toLocaleDateString("ro-RO")
+                                        : "—"}
+                                </span>
+
+                                <div className="status-dot-wrapper">
+                                    <span className={`dot ${statusColors[project.status] || "gray"}`} />
+                                    <span className="status-text">{project.status}</span>
+                                </div>
                             </div>
                         </div>
-                    </div>
 
-                    <div className="project-info">
-                        <div>Responsabil proiect: Ioana Alina</div>
-                        <div>Echipa: Ioana Alina, Mihai I.</div>
-                    </div>
-
-                    <div className="progress-block">
-                        <div className="progress-header">
-                            <span>Progress (my tasks): 78%</span>
+                        <div className="project-info">
+                            <div>Responsabil proiect: {resolveAnalystName(project.responsibleAnalyst)}</div>
+                            <div>Echipa: {resolveAnalystNames(project.assignedAnalysts)}</div>
+                            <div>Progress (my tasks): 65%</div>
                         </div>
-                        <div className="progress-bar">
-                            <div className="progress-fill blue" style={{ width: "78%" }} />
-                        </div>
-                        <div className="progress-footer">10/15 taskuri efectuate</div>
-                    </div>
 
-                    <div className="project-actions">
-                        <button className="btn pill blue">Deschide</button>
-                        <button className="btn pill green">Mesaj</button>
-                        <button className="btn pill red">Verifica HUMINT</button>
-                    </div>
-                </div>
-
-                {/* PROJECT 2 */}
-                <div className="project-card">
-                    <div className="project-header">
-                        <div className="project-name">Fraud investigation: KSTE RO</div>
-                        <div className="project-deadline-wrapper">
-                            <span className="deadline-pill">Deadline: 14.11.2025</span>
-                            <div className="status-dot-wrapper">
-                                <span className="dot orange" />
-                                <span className="status-text">at risk</span>
-                            </div>
+                        <div className="project-actions">
+                            <Link to={`/projectDetail/${project._id}`} className=" pill blue">Deschide</Link>
+                            <button className=" pill green">Mesaj</button>
+                            <button className=" pill red">HUMINT</button>
                         </div>
                     </div>
-
-                    <div className="project-info">
-                        <div>Responsabil proiect: Ioana Alina</div>
-                        <div>Echipa: Ioona Alina, Elena P.</div>
-                    </div>
-
-                    <div className="progress-block">
-                        <div className="progress-header">
-                            <span>Progress (my tasks): 65%</span>
-                        </div>
-                        <div className="progress-bar">
-                            <div className="progress-fill purple" style={{ width: "65%" }} />
-                        </div>
-                        <div className="progress-footer">8/15 taskuri efectuate</div>
-                    </div>
-
-                    <div className="project-actions">
-                        <button className="btn pill blue">Deschide</button>
-                        <button className="btn pill green">Mesaj</button>
-                        <button className="btn pill violet">HUMINT incoming</button>
-                    </div>
-                </div>
+                ))}
             </div>
 
             {/* HUMINT REQUESTS TABLE */}
@@ -138,17 +140,21 @@ const AnalystDashboard = () => {
                     </thead>
 
                     <tbody>
-                    {humintData.map((item, index) => (
-                        <tr key={index}>
-                            <td>{item.project}</td>
+                    {projects?.map((item) => (
+                        <tr key={item._id}>
+                            <td>{item.projectName}</td>
 
                             <td>
-                    <span className={`status-badge ${item.statusClass}`}>
-                        {item.status}
-                    </span>
+                                    <span className={`status-badge ${statusColors[item.status] || "gray"}`}>
+                                        {item.status}
+                                    </span>
                             </td>
 
-                            <td>{item.deadline}</td>
+                            <td>
+                                {item.deadline
+                                    ? new Date(item.deadline).toLocaleDateString("ro-RO")
+                                    : "—"}
+                            </td>
 
                             <td>
                                 <button className="btn pill blue small">
@@ -161,30 +167,32 @@ const AnalystDashboard = () => {
                 </table>
             </div>
 
-            {/* BOTTOM ROW: CALENDAR + MESSENGER */}
+            {/* CALENDAR DEADLINES */}
             <div className="bottom-row">
-
                 <h2 className="section-title no-margin">Calendar Deadlines</h2>
+
                 <div className="calendar-card">
-
-
                     <ul className="calendar-list">
-                        <li>
+                        {projects?.map((p) => (
+                            <li key={p._id}>
+                                <span>
+                                    {statusColors[p.status] === "green" ? "🟢" :
+                                        statusColors[p.status] === "orange" ? "🟠" :
+                                            statusColors[p.status] === "blue" ? "🔵" : "⚪"}
 
-                            <span>🔴 12.11.2025 — Societatea ABC (78%)</span>
-                        </li>
-                        <li>
-
-                            <span>🟠 14.11.2025 — KSTE RO (65%)</span>
-                        </li>
-                        <li>
-
-                            <span>🟢 [Data] — [Proiect]  </span>
-                        </li>
+                                    {" "}
+                                    {p.deadline
+                                        ? new Date(p.deadline).toLocaleDateString("ro-RO")
+                                        : "—"}
+                                    {" — "}
+                                    {p.projectName}
+                                </span>
+                            </li>
+                        ))}
                     </ul>
                 </div>
-
             </div>
+
         </div>
     );
 };
