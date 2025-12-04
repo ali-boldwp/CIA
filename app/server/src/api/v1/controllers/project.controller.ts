@@ -196,17 +196,17 @@ export const getAllRequestedProjects = async ( req, res, next) => {
 
         if ( user.role == 'sales' ) {
 
-            const projects = await requestedService.getAllRequestedProjects({ fromRequestId: user.id });
+            const projects = await requestedService.getAllRequestedProjects({ fromRequestId: user.id , status : "requested"});
             res.json(ok(projects));
 
         } else if ( user.role == 'analyst' ) {
 
-            const projects = await requestedService.getAllRequestedProjects({ responsibleAnalyst: user.id });
+            const projects = await requestedService.getAllRequestedProjects({ responsibleAnalyst: user.id , status : "requested" });
             res.json(ok(projects));
 
         } else if ( user.role == 'admin' || user.role == 'manager' ) {
 
-            const projects = await requestedService.getAllRequestedProjects({});
+            const projects = await requestedService.getAllRequestedProjects({ status : "requested"});
             res.json(ok(projects));
 
         } else {
