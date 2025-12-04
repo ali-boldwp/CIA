@@ -1,0 +1,101 @@
+/* outer wrapper */
+.container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.row {
+    width: 96%;
+    max-width: 1500px;
+
+    display: flex;
+    gap: 16px;
+
+}
+
+/* cards (both) */
+.card {
+    flex: 1;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+
+    padding: 22px 20px;
+    border-radius: 16px;
+
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+
+    cursor: pointer;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease;
+
+    min-height: 115px;
+
+    /* ✅ bottom soft shadow like header */
+    box-shadow: 0 8px 20px rgba(15, 23, 42, 0.08);
+}
+
+
+/* active card */
+.cardActive {
+    border-color: #4f46e5;
+    background: #eef2ff;
+    box-shadow: 0 0 0 1px rgba(79, 70, 229, 0.15);
+}
+
+.card:hover {
+    border-color: #94a3b8;
+}
+
+/* radio */
+.radioWrapper {
+    margin-top: 4px;
+}
+
+.radioOuter {
+    width: 18px;
+    height: 18px;
+    border-radius: 999px;
+    border: 2px solid #cbd5f5;
+    background: #ffffff;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: border-color 0.15s ease, background-color 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.radioOuterActive {
+    border-color: #4f46e5;
+    background: #eef2ff;
+    box-shadow: 0 0 0 3px rgba(129, 140, 248, 0.35);
+}
+
+.radioInner {
+    width: 8px;
+    height: 8px;
+    border-radius: 999px;
+    background: radial-gradient(circle, #4f46e5 0%, #22c1c3 100%);
+}
+
+/* text */
+.textBlock {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.title {
+    font-size: 15px;
+    font-weight: 700;
+    color: #0f172a;
+    font-style: italic;     /* ✅ italic */
+}
+
+.subtitle {
+    font-size: 13px;
+    color: #64748b;
+    font-style: italic;     /* ✅ italic */
+}

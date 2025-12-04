@@ -55,7 +55,9 @@ const StatusSection = () => {
 
                 <div className="stat-box">
                     <span className="label">🔎 Solicitare de HUMINT</span>
-                    <button className="gradient-btn">Adaugă</button>
+
+                    <Link to="/humintRequest" className="gradient-btn">Adaugă</Link>
+
                 </div>
 
                 <div className="stat-box">

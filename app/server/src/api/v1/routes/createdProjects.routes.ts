@@ -19,7 +19,6 @@ router.post(
 router.get(
     "/",
     auth,
-    authorizeRoles(Role.ADMIN, Role.MANAGER),
     createdProjectController.getAllProjects
 );
 

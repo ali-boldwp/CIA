@@ -2,28 +2,38 @@ import React from 'react';
 import "../../analyst/dashboard/style.css"
 import Header from "../../../layouts/Component/Header";
 import { Link } from "react-router-dom";
-import { useGetProjectRequestsQuery } from "../../../services/projectApi";
+import {  useGetProjectsQuery } from "../../../services/projectApi";
 import { useGetAnalystsQuery } from "../../../services/userApi";
 
 
 const SalesDashboard = () => {
-    const { data,isLoading}=useGetProjectRequestsQuery();
+    const { data,isLoading}=useGetProjectsQuery();
     const { data: analystsData } = useGetAnalystsQuery();
 
     const analysts = analystsData?.data || [];
 
-    const getAnalystName = (id) => {
-        if (!id) return "—";
-        const found = analysts.find(a => a._id === id);
+    const resolveAnalystName = (value) => {
+        if (!value) return "—";
+
+        // If backend returned full object
+        if (typeof value === "object" && value.name) {
+            return value.name;
+        }
+
+        // If it's an ID, find in analysts list
+        const found = analysts.find(a => a._id === value);
         return found ? found.name : "—";
     };
 
-    const getAnalystNames = (ids) => {
-        if (!ids || ids.length === 0) return "—";
-        return ids
-            .map((id) => getAnalystName(id))
+// Helper: return multiple analyst names
+    const resolveAnalystNames = (arr) => {
+        if (!arr || arr.length === 0) return "—";
+
+        return arr
+            .map((item) => resolveAnalystName(item))
             .join(", ");
     };
+
 
 
 
@@ -103,11 +113,11 @@ const SalesDashboard = () => {
                         </div>
 
                         <div className="project-info">
-                            <div>Responsabil proiect: {getAnalystName(p.responsibleAnalyst)}</div>
+                            <div>Responsabil proiect: {resolveAnalystName(p.responsibleAnalyst)}</div>
 
 
                             <div>
-                                Echipa: {getAnalystNames(p.assignedAnalysts)}
+                                Echipa: {resolveAnalystNames(p.assignedAnalysts)}
 
                             </div>
                         </div>

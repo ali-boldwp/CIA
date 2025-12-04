@@ -1,0 +1,74 @@
+/* overall wrapper to match other cards width */
+.wrapper {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-top: 4px;
+    margin-bottom: 32px;
+}
+
+.card {
+    width: 96%;
+    max-width: 1500px;
+    background: #ffffff;
+    border-radius: 16px;
+    padding: 14px 22px 18px;
+    box-shadow: 0 8px 20px rgba(15, 23, 42, 0.08);
+}
+
+/* "Acțiuni" label */
+.label {
+    font-size: 13px;
+    font-weight: 600;
+    color: #0f172a;
+    margin-bottom: 10px;
+}
+
+/* row of buttons */
+.btnRow {
+    display: flex;
+    gap: 12px;
+}
+
+/* base button style */
+.btn {
+    border: none;
+    border-radius: 10px;
+    padding: 8px 20px;
+    font-size: 13px;
+    font-weight: 600;
+    font-style: italic;
+    cursor: pointer;
+    white-space: nowrap;
+    color: #ffffff;
+    box-shadow: 0 4px 10px rgba(15, 23, 42, 0.15);
+    transition: transform 0.15s ease, box-shadow 0.15s ease, filter 0.15s ease;
+}
+
+/* green primary */
+.btnPrimary {
+    background: #22c55e;
+}
+
+/* dark secondary */
+.btnSecondary {
+    background: #111827;
+}
+
+/* blue tertiary */
+.btnTertiary {
+    background: #0ea5e9;
+}
+
+.btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 14px rgba(15, 23, 42, 0.2);
+    filter: brightness(1.03);
+}
+
+/* mobile */
+@media (max-width: 640px) {
+    .btnRow {
+        flex-wrap: wrap;
+    }
+}

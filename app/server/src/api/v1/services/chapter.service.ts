@@ -6,7 +6,7 @@ export const createChapter = async (data: Partial<IChapter>) => {
 };
 
 export const getAllChapter = async () => {
-    return await Chapter.find().sort({ createdAt: -1 });
+    return await Chapter.find();
 };
 
 export const updateChapter = async (id: string, data: Partial<IChapter>) => {
@@ -16,6 +16,5 @@ export const updateChapter = async (id: string, data: Partial<IChapter>) => {
 export const getChapterByProjectId = async (projectId: string) => {
     return Chapter.find({ projectId })
         .populate("projectId")
-        .sort({ createdAt: -1 })
         .lean();
 };
