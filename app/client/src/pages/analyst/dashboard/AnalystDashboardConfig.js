@@ -8,7 +8,7 @@ const DashboardConfig = {
         }
     },
 
-    auth: [ 'admin' , 'manager','analyst' ],
+    auth: [ 'analyst' ],
 
     routes: [
         {
