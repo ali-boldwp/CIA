@@ -16,29 +16,27 @@ const NewProject = () => {
     const { id } = useParams();
 
     // LOAD ANALYSTS
-    const { data: analystsData } = useGetAnalystsQuery();
+    const { data } = useGetAnalystsQuery();
 
-    const analysts = Array.isArray(analystsData)
-        ? analystsData
-        : Array.isArray(analystsData?.data)
-            ? analystsData.data
-            : Array.isArray(analystsData?.users)
-                ? analystsData.users
-                : Array.isArray(analystsData?.analysts)
-                    ? analystsData.analysts
-                    : [];
+// API sometimes returns: { data: [...] } — so we normalize it
+    const dataAnalyst = Array.isArray(data?.data) ? data.data : [];
 
+// Filter only analysts
+    const analysts = dataAnalyst.filter((p) => p?.role === "analyst");
+
+// Build dropdown options
     const analystOptions = analysts.map((a) => ({
         id: String(a._id),
         name: a.name,
     }));
 
+
     // LOAD REQUEST BY ID
-    const { data, isLoading } = useGetRequestedProjectByIdQuery(id, {
+    const { data:main, isLoading } = useGetRequestedProjectByIdQuery(id, {
         skip: !id,
     });
 
-    const request = data?.data;
+    const request = main?.data;
 
     // ============================
     // FORM STATES
