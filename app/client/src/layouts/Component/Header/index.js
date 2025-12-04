@@ -17,12 +17,7 @@ const Header = () => {
   return (
     <header className="header">
         <div className="firstSec">
-
                     <h3 className="logo">{dashboardTitle}</h3>
-
-
-
-
       <div className="search-box">
         <span className="search-icon">🔍</span>
         <input type="text" placeholder="Caută proiect, persoană sau task..." />
@@ -31,12 +26,23 @@ const Header = () => {
        <div className="secSec">
            {isSale ? "" : isAnalyst? "":     <Link to="/project" className="new-project-btn">+ Creeeaza proiect nou</Link>}
 
+           <div className="right-buttons">
+               <button className="icon-btn">
+                   <span className="icon">🔔</span>
+                   <span className="text">Alarme</span>
+               </button>
 
-      <div className="right-buttons">
-        <button className="icon-btn">🔔 Alarme</button>
-        <button className="icon-btn">📅 Calendar</button>
-        <button className="icon-btn">👤 Utilizator</button>
-      </div>
+               <button className="icon-btn">
+                   <span className="icon">📅</span>
+                   <span className="text">Calendar</span>
+               </button>
+
+               <button className="icon-btn">
+                   <span className="icon">👤</span>
+                   <span className="text">Utilizator</span>
+               </button>
+           </div>
+
       </div> 
     </header>
   );
