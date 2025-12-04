@@ -130,6 +130,12 @@ const NewProject = () => {
     const validateForm = () => {
         let newErrors = {};
 
+        // Email validation function
+        const validateEmailFormat = (email) => {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return emailRegex.test(email);
+        };
+
         // PROJECT DETAILS
         if (!projectName.trim())
             newErrors.projectName = "Numele proiectului este obligatoriu";
@@ -155,8 +161,14 @@ const NewProject = () => {
         if (!clientPerson.trim())
             newErrors.clientPerson =
                 "Persoana de contact este obligatorie";
-        if (!clientEmail.trim())
+
+        // EMAIL VALIDATION - Check if empty AND check format
+        if (!clientEmail.trim()) {
             newErrors.clientEmail = "Emailul clientului este obligatoriu";
+        } else if (!validateEmailFormat(clientEmail)) {
+            newErrors.clientEmail = "Formatul emailului este incorect. Exemplu: nume@domeniu.com";
+        }
+
         if (!clientPhone.trim())
             newErrors.clientPhone = "Telefonul clientului este obligatoriu";
         if (!clientPosition.trim())
@@ -187,7 +199,6 @@ const NewProject = () => {
         setErrors(newErrors);
         return Object.keys(newErrors).length === 0;
     };
-
     // ============================
     // DROPDOWN HANDLERS
     // ============================
@@ -262,9 +273,9 @@ const NewProject = () => {
         assignedAnalysts: selectedAnalysts,
 
         deadline,
- 
+
         fromRequestId: id || undefined,
- 
+
     });
 
     // ============================
@@ -312,7 +323,12 @@ const NewProject = () => {
             <div className="page-container">
                 <div className="project-header-box">
                     <span className="project-header-back">
-                        <a href="/manager/dashboard">← Înapoi</a>
+                        <a href="/manager/dashboard">
+                            <button className="gradient-btn-dashboard" >
+                                ← Înapoi la Dashboard
+                            </button>
+
+                        </a>
                     </span>
                     <h1 className="project-header-title">
                         {id
@@ -724,12 +740,19 @@ const NewProject = () => {
                         <div className="form-field">
                             <label>Telefon</label>
                             <input
-                                className="input-box"
+                                type="text"
+                                className="input-box no-spin"
                                 value={clientPhone}
-                                onChange={(e) =>
-                                    setClientPhone(e.target.value)
-                                }
+                                onChange={(e) => {
+                                    const value = e.target.value;
+
+                                    // Allow digits and + only (block - and all other symbols)
+                                    if (/^[0-9+]*$/.test(value)) {
+                                        setClientPhone(value);
+                                    }
+                                }}
                             />
+
                             {errors.clientPhone && (
                                 <p className={styles.errorText}>
                                     {errors.clientPhone}
@@ -794,12 +817,19 @@ const NewProject = () => {
                         <div className="form-field">
                             <label>Preț proiect</label>
                             <input
-                                className="input-box"
+                                type="text"
+                                className="input-box no-spin"
                                 value={projectPrice}
-                                onChange={(e) =>
-                                    setProjectPrice(e.target.value)
-                                }
+                                onChange={(e) => {
+                                    const value = e.target.value;
+
+                                    // Allow digits and + (block - and any other symbol)
+                                    if (/^[0-9+]*$/.test(value)) {
+                                        setProjectPrice(value);
+                                    }
+                                }}
                             />
+
                             {errors.projectPrice && (
                                 <p className={styles.errorText}>
                                     {errors.projectPrice}
@@ -872,12 +902,19 @@ const NewProject = () => {
                     {/* SAVE BUTTON */}
                     <div className="button-row">
                         <button
+                            className="draftProject"
+                            // onClick={handleDraft}
+                        >
+                            Salvează draft
+                        </button>
+
+                        <button
                             className="createProject"
                             onClick={handleSave}
                         >
                             {id
                                 ? "Actualizează & aprobă"
-                                : "Creează pagina proiect"}
+                                : "Creează proiect"}
                         </button>
                     </div>
                 </div>

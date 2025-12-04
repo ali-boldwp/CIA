@@ -393,7 +393,7 @@ const ProjectRequest = () => {
                                             setCategory(e.target.value)
                                         }
                                     >
-                                        <option value="">
+                                        <option value="" className="option-bold" >
                                             Enhanced Due Diligence
                                         </option>
                                         <option value="Enhanced Due Diligence (Societate / Grup)">
