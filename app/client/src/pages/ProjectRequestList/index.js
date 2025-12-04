@@ -7,8 +7,7 @@ import { useGetAllRequestedProjectsQuery } from "../../services/projectApi";
 const ProjectRequestList = () => {
 
     const { data ,isLoading } = useGetAllRequestedProjectsQuery();
-    const project=data?.data || [];
-    const projectRequest=project.filter((p)=>p.status=== "requested")
+    const projectRequest=data?.data || [];
 
     const [search, setSearch] = useState("");
     const [sortBy, setSortBy] = useState("deadline");

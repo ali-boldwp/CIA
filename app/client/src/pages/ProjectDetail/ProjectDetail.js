@@ -324,11 +324,12 @@ const ProjectDetail = () => {
 
                             <div className={styles.chipRow}>
                                 <span className={styles.chipLabel}>Analiști alocați:</span>
-                                {project.team.map((m) => (
-                                    <span key={m} className={styles.chipGhost}>
-                                        {m}
-                                    </span>
+                                {project.team.map((member) => (
+                                    <span key={member._id} className={styles.chipGhost}>
+        {member.name}
+    </span>
                                 ))}
+
                             </div>
                         </div>
                     </div>
