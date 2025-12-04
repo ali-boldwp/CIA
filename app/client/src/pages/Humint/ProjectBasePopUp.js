@@ -26,10 +26,12 @@ const ProjectBasePopUp = () => {
             return alert("Selectează un proiect!");
         }
 
-        navigate("/humint/create", {
+        // ✅ Send project info to the next page
+        navigate("/humintRequest-Page", {
             state: { project: selectedProject }
         });
     };
+
 
     return (
         <div className={styles.wrapper}>

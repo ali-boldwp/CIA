@@ -2,8 +2,11 @@
 
 import React, { useState } from "react";
 import styles from "./CustumPop.module.css";
+import { useNavigate } from "react-router-dom";
 
 const CustumPopUp = () => {
+    const navigate = useNavigate();
+
     const [form, setForm] = useState({
         subject: "",
         entityType: "",
@@ -52,9 +55,10 @@ const CustumPopUp = () => {
             return;
         }
 
-        // yahan pe tum API call / next step kar sakte ho
         console.log("Form OK:", form);
-        alert("Form valid — submit kar sakte ho (frontend validation pass).");
+
+        // ✅ REDIRECT TO HUMINT REQUEST PAGE
+        navigate("/humintRequest-Page", { state: { form } });
     };
 
     return (

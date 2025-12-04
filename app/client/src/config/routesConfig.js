@@ -18,6 +18,7 @@ import RequestListConfig from "../pages/ProjectRequestList/RequestListConfig";
 import MessengerConfig from "../pages/Messenger/MessengerConfig";
 import TaskPageConfig from "../pages/taskPage/TaskPageConfig";
 import HumintConfig from "../pages/Humint/HumintConfig";
+import HumintRequestFormConfig from "../pages/HumintRequestForm/HumintRequestFormConfig";
 import HumintListConfig from "../pages/HumintList/HumintListConfig";
 
 
@@ -39,6 +40,7 @@ const routeConfigs = [
     MessengerConfig,
     TaskPageConfig,
     HumintConfig,
+    HumintRequestFormConfig
     HumintListConfig
 
 ];
