@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { FiEdit2, FiTrash2 } from "react-icons/fi";
+import { useNavigate } from "react-router-dom";
 import {
 
     useCreateChapterMutation,
@@ -82,9 +83,11 @@ const TaskPage = () => {
             toast.error("Eroare la adăugarea taskului!");
         }
     };
+    const navigate=useNavigate();
 
-
-
+    const goBack = () => {
+        navigate("/manager/dashboard");
+    };
 
     if (!projectId) return <p>No project selected.</p>;
     if (isLoading) return <p>Loading project data...</p>;
@@ -92,6 +95,10 @@ const TaskPage = () => {
 
     return (
         <div className="task-container">
+            <button className="backBtnHumint" onClick={goBack}>
+                <span className="backBtnIconHumint">⟵</span>
+                Înapoi la Dashboard
+            </button>
                 <div className="task-header flex-between">
                     <div className="flex-column text-white">
                         <button className="task-btn italic">TASK INDIVIDUAL</button>
