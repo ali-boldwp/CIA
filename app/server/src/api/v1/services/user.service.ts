@@ -27,27 +27,15 @@ export const updateUser = async (
     data: Partial<IUser>
 ): Promise<IUser | null> => {
 
-    // Do not allow email/password update if isLogin = false
+    // If login disabled, clear credentials
     if (data.isLogin === false) {
         data.email = undefined;
         data.password = undefined;
     }
 
-    // Employee can never login
-    if (data.role === "user") {
-        data.isLogin = false;
-        data.email = undefined;
-        data.password = undefined;
-    }
-
-    // Only analyst can have analyst fields
+    // Analyst-only field
     if (data.role !== "analyst") {
-        delete data.monthlySalary;
-        delete data.hoursPerMonth;
-        delete data.hoursPerDay;
-        delete data.bonus;
-        delete data.hiringDate;
-        delete data.notes;
+        delete data.analystRole;
     }
 
     return User.findByIdAndUpdate(userId, data, {

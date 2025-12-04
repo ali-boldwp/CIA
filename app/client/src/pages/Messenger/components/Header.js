@@ -22,22 +22,23 @@ import {
     FiLogOut,
 } from "react-icons/fi";
 import {useGetMyChatsQuery} from "../../../services/chatApi";
+import {FaThumbtack} from "react-icons/fa6";
 
 function Header() {
     return (
         <div className="header">
             <h2 className="header-title">💬 Messenger — Toți / Grupuri / DM</h2>
 
-            <div className="header-actions">
-                <button className="btn-outline">
-                    <FiDownload className="btn-icon" />
-                    Export chat
-                </button>
-                <button className="btn-primary">
-                    <FiSettings className="btn-icon" />
-                    Setări
-                </button>
-            </div>
+            {/*<div className="header-actions">*/}
+            {/*    <button className="btn-outline">*/}
+            {/*        <FiDownload className="btn-icon" />*/}
+            {/*        Export chat*/}
+            {/*    </button>*/}
+            {/*    <button className="btn-primary">*/}
+            {/*        <FiSettings className="btn-icon" />*/}
+            {/*        Setări*/}
+            {/*    </button>*/}
+            {/*</div>*/}
         </div>
     );
 }
@@ -123,7 +124,7 @@ function MessengerPage() {
                 <div className="toolbar">
                     <div className="toolbar-left">
                         <div className="input-with-icon">
-                            <FiSearch className="input-icon" />
+                            <FiSearch className="input-search-icon" />
                             <input
                                 className="input search-input"
                                 placeholder="Caută în mesaje..."
@@ -240,11 +241,14 @@ function MessengerPage() {
                             <div className="chat-header-left">
                                 <div className="chat-title">Grup: DD ABC</div>
                                 <div className="chat-tags">
-                                    <span className="tag tag-pin">
-                                        <span className="tag-icon">⭐</span>
-                                        Pin
-                                    </span>
-                                    <span className="tag tag-mute">
+  <span className="tag tag-pin">
+    <span className="tag-icon">
+      <FaThumbtack  style={{ color: "red" }} />
+    </span>
+    Pin
+  </span>
+
+                                <span className="tag tag-mute">
                                         <FiVolumeX className="tag-icon" />
                                         Mute
                                     </span>
@@ -257,7 +261,7 @@ function MessengerPage() {
 
                             {/* RIGHT SIDE: search input */}
                             <div className="input-with-icon chat-search-wrapper">
-                                <FiSearch className="input-icon" />
+                                <FiSearch className="input-search-icon" />
                                 <input
                                     className="input chat-search"
                                     placeholder="Caută în conversație..."

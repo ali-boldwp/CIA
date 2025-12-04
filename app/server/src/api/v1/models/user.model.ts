@@ -39,10 +39,9 @@ const userSchema = new Schema<IUser>(
         // Email & Password only required when isLogin = TRUE
         email: {
             type: String,
-            required: false,
+            sparse: true,
             lowercase: true,
-            index: true,
-            sparse: true
+            trim: true
         },
 
 
@@ -99,25 +98,24 @@ const userSchema = new Schema<IUser>(
 userSchema.pre('save', async function (next) {
     const user = this as IUser;
 
-    // ✔ HASH ONLY IF isLogin = true AND password provided
+    // Hash password only if needed
     if (user.isLogin && user.password && user.isModified('password')) {
         const salt = await bcrypt.genSalt(10);
         user.password = await bcrypt.hash(user.password, salt);
     }
 
-    // ✔ ANALYST COST CALCULATION
-    if (user.role === Role.ANALYST) {
-        if (user.monthlySalary && user.hoursPerMonth) {
-            user.costPerHour = user.monthlySalary / user.hoursPerMonth;
-        }
+    // Cost calculation for ALL roles
+    if (user.monthlySalary && user.hoursPerMonth) {
+        user.costPerHour = user.monthlySalary / user.hoursPerMonth;
+    }
 
-        if (user.costPerHour && user.hoursPerDay) {
-            user.costPerDay = user.costPerHour * user.hoursPerDay;
-        }
+    if (user.costPerHour && user.hoursPerDay) {
+        user.costPerDay = user.costPerHour * user.hoursPerDay;
     }
 
     next();
 });
+
 
 // Compare Password
 userSchema.methods.comparePassword = async function (candidate: string) {

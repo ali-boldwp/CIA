@@ -167,3 +167,7 @@
     background: #574FDB; /* darkened version of base color */
     transform: translateY(-1px);
 }
+
+.actionCell{
+    cursor: pointer;
+}

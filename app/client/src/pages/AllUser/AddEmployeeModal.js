@@ -1,6 +1,7 @@
-import React from "react";
-import { useForm } from "react-hook-form";
+import React , { useEffect } from "react";
+import { useForm , } from "react-hook-form";
 import styles from "./AddEmployeeModal.module.css";
+import { useCreateUserMutation ,useUpdateUserMutation } from "../../services/userApi"
 
 const sectionNames = {
     management: "Management",
@@ -8,7 +9,12 @@ const sectionNames = {
     auxiliar: "Personal auxiliar",
 };
 
-const AddEmployeeModal = ({ isOpen, sectionKey, onClose }) => {
+const AddEmployeeModal = ({ isOpen, sectionKey,editData, onClose }) => {
+
+    const [createUser, { isLoading }] = useCreateUserMutation();
+    const [updateUser] = useUpdateUserMutation();
+
+
     const sectionLabel = sectionNames[sectionKey] || "Angajat";
 
     const {
@@ -22,8 +28,8 @@ const AddEmployeeModal = ({ isOpen, sectionKey, onClose }) => {
             name: "",
             role: "",
             salary: "",
-            hoursMonth: 160,
-            hoursDay: 8,
+            hoursMonth: "",
+            hoursDay: "",
             bonus: "",
             date: "",
             remember: false,
@@ -31,6 +37,25 @@ const AddEmployeeModal = ({ isOpen, sectionKey, onClose }) => {
             rememberPassword: "",
         },
     });
+
+    useEffect(() => {
+        if (editData) {
+            reset({
+                name: editData.name,
+                role: editData.role,
+                analystRole: editData.analystRole,
+                salary: editData.monthlySalary,
+                hoursMonth: editData.hoursPerMonth,
+                hoursDay: editData.hoursPerDay,
+                bonus: editData.bonus,
+                date: editData.hiringDate?.slice(0, 10),
+                remember: editData.isLogin,
+                rememberUser: editData.email,
+            });
+        } else {
+            reset({});
+        }
+    }, [editData, reset]);
 
     // agar modal closed ho to render hi mat karo
     if (!isOpen) return null;
@@ -45,25 +70,77 @@ const AddEmployeeModal = ({ isOpen, sectionKey, onClose }) => {
         salary && hoursMonth ? (Number(salary) / Number(hoursMonth)).toFixed(1) : 0;
     const costDay = (Number(costHour) * Number(hoursDay || 0)).toFixed(0);
 
-    const onSubmit = (data) => {
+    const onSubmit = async (data) => {
         const payload = {
             name: data.name,
-            role: data.role,
+            role: data.role.toLowerCase(),
+
+            // For analysts
+            analystRole: data.role === "analyst" ? data.analystRole : undefined,
+
             monthlySalary: Number(data.salary),
             hoursPerMonth: Number(data.hoursMonth),
             hoursPerDay: Number(data.hoursDay),
             bonus: Number(data.bonus),
             hiringDate: data.date,
-            remember: data.remember,
-            costPerHour: Number(costHour),
-            costPerDay: Number(costDay),
-            rememberUser: data.rememberUser || "",
-            rememberPassword: data.rememberPassword || "",
+
+            isLogin: data.remember,
+            email: data.remember ? data.rememberUser : undefined,
+            password: data.remember ? data.rememberPassword : undefined,
         };
 
-        console.log("EMPLOYEE FORM PAYLOAD:", payload);
-        onClose();
+
+        try {
+            if (editData) {
+                await updateUser({ id: editData._id, data: payload }).unwrap();
+            } else {
+                await createUser(payload).unwrap();
+            }
+
+            onClose();
+            reset();
+        } catch (err) {
+            alert(err?.data?.message || "Error saving user");
+        }
     };
+
+
+    const roleOptions = {
+        management: [
+            { value: "admin", label: "Admin" },
+            { value: "manager", label: "Manager" },
+        ],
+
+        investigatii: [
+            { value: "analyst", label: "Intelligence Analyst", analystRole: "Intelligence Analyst" },
+            { value: "analyst", label: "HUMINT Detective", analystRole: "HUMINT Detective" },
+            { value: "analyst", label: "Head of Investigations", analystRole: "Head of Investigations" },
+        ],
+
+        auxiliar: [
+            { value: "sales", label: "Sales" },
+            { value: "user", label: "User / Angajat simplu" },
+        ],
+    };
+
+    // 🔥 If editing → show correct role group automatically
+    let options;
+
+    if (editData) {
+        if (["admin", "manager"].includes(editData.role)) {
+            options = roleOptions.management;
+        } else if (editData.role === "analyst") {
+            options = roleOptions.investigatii;
+        } else {
+            options = roleOptions.auxiliar;
+        }
+    } else {
+        // Normal (adding new employee)
+        options = roleOptions[sectionKey] || [];
+    }
+
+
+
 
     return (
         <div className={styles.modalOverlay}>
@@ -124,16 +201,35 @@ const AddEmployeeModal = ({ isOpen, sectionKey, onClose }) => {
                         <div className={`${styles.field} ${styles.fieldLeft}`}>
                             <label>Funcție</label>
                             <select
-                                {...register("role", {
-                                    required: "Funcția este obligatorie",
-                                })}
+                                {...register("role", { required: "Funcția este obligatorie" })}
                             >
                                 <option value="">Selectează funcția</option>
-                                <option value="ceo">CEO</option>
-                                <option value="analist">Analist</option>
-                                <option value="manager">Manager</option>
-                                <option value="alt">Alt rol</option>
+
+                                {options.map((opt, idx) => (
+                                    <option key={idx} value={opt.value}>
+                                        {opt.label}
+                                    </option>
+                                ))}
                             </select>
+
+                            {/* 🔥 Analyst Role Dropdown (only when role = 'analyst') */}
+                            {watch("role") === "analyst" && (
+                                <div className={`${styles.field} ${styles.fieldLeft}`}>
+                                    <label>Rol analist</label>
+                                    <select {...register("analystRole", { required: true })}>
+                                        <option value="">Selectează rolul analistului</option>
+                                        <option value="Head of Investigations">Head of Investigations</option>
+                                        <option value="Intelligence Analyst">Intelligence Analyst</option>
+                                        <option value="HUMINT Detective">HUMINT Detective</option>
+                                    </select>
+                                    {errors.analystRole && (
+                                        <p className={styles.error}>Rolul analist este obligatoriu</p>
+                                    )}
+                                </div>
+                            )}
+
+
+
                             {errors.role && (
                                 <p className={styles.error}>{errors.role.message}</p>
                             )}
@@ -220,57 +316,57 @@ const AddEmployeeModal = ({ isOpen, sectionKey, onClose }) => {
                             </div>
                         </div>
 
-                        {/* CHECKBOX */}
-                        <div className={`${styles.fieldFull} ${styles.checkboxRow}`}>
-                            <label className={styles.checkboxLabel}>
-                                <input type="checkbox" {...register("remember")} />
-                                <span>este logat</span>
-                            </label>
-                        </div>
 
-                        {/* USER & PASSWORD jab checkbox tick ho */}
-                        {rememberChecked && (
-                            <div className={`${styles.fieldLeft} ${styles.loginRow}`}>
-                                <div className={styles.loginGrid}>
-                                    <div className={styles.field}>
-                                        <label>User</label>
-                                        <input
-                                            type="text"
-                                            placeholder="Username"
-                                            {...register("rememberUser", {
-                                                validate: (value) =>
-                                                    !rememberChecked ||
-                                                    value.trim() !== "" ||
-                                                    "Userul este obligatoriu",
-                                            })}
-                                        />
-                                        {errors.rememberUser && (
-                                            <p className={styles.error}>
-                                                {errors.rememberUser.message}
-                                            </p>
-                                        )}
-                                    </div>
-
-                                    <div className={styles.field}>
-                                        <label>Parolă</label>
-                                        <input
-                                            type="password"
-                                            placeholder="Password"
-                                            {...register("rememberPassword", {
-                                                validate: (value) =>
-                                                    !rememberChecked ||
-                                                    value.trim() !== "" ||
-                                                    "Parola este obligatorie",
-                                            })}
-                                        />
-                                        {errors.rememberPassword && (
-                                            <p className={styles.error}>
-                                                {errors.rememberPassword.message}
-                                            </p>
-                                        )}
-                                    </div>
+                        {!editData && (
+                            <>
+                                <div className={`${styles.fieldFull} ${styles.checkboxRow}`}>
+                                    <label className={styles.checkboxLabel}>
+                                        <input type="checkbox" {...register("remember")} />
+                                        <span>este logat</span>
+                                    </label>
                                 </div>
-                            </div>
+
+                                {/* USERNAME & PASSWORD FIELDS */}
+                                {watch("remember") && (
+                                    <div className={`${styles.fieldLeft} ${styles.loginRow}`}>
+                                        <div className={styles.loginGrid}>
+                                            <div className={styles.field}>
+                                                <label>User</label>
+                                                <input
+                                                    type="text"
+                                                    placeholder="Username"
+                                                    {...register("rememberUser", {
+                                                        validate: (value) =>
+                                                            !watch("remember") ||
+                                                            value.trim() !== "" ||
+                                                            "Userul este obligatoriu",
+                                                    })}
+                                                />
+                                                {errors.rememberUser && (
+                                                    <p className={styles.error}>{errors.rememberUser.message}</p>
+                                                )}
+                                            </div>
+
+                                            <div className={styles.field}>
+                                                <label>Parolă</label>
+                                                <input
+                                                    type="password"
+                                                    placeholder="Password"
+                                                    {...register("rememberPassword", {
+                                                        validate: (value) =>
+                                                            !watch("remember") ||
+                                                            value.trim() !== "" ||
+                                                            "Parola este obligatorie",
+                                                    })}
+                                                />
+                                                {errors.rememberPassword && (
+                                                    <p className={styles.error}>{errors.rememberPassword.message}</p>
+                                                )}
+                                            </div>
+                                        </div>
+                                    </div>
+                                )}
+                            </>
                         )}
                     </div>
 
@@ -283,8 +379,8 @@ const AddEmployeeModal = ({ isOpen, sectionKey, onClose }) => {
                             Resetează
                         </button>
 
-                        <button className={styles.saveBtn} type="submit">
-                            Salvează angajat
+                        <button className={styles.saveBtn}>
+                            {editData ? "Actualizează" : "Salvează"}
                         </button>
                     </div>
                 </form>

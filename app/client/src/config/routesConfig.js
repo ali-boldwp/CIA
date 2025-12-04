@@ -20,6 +20,7 @@ import TaskPageConfig from "../pages/taskPage/TaskPageConfig";
 import HumintConfig from "../pages/Humint/HumintConfig";
 import HumintRequestFormConfig from "../pages/HumintRequestForm/HumintRequestFormConfig";
 import HumintListConfig from "../pages/HumintList/HumintListConfig";
+import HumintRequestDetailConfig from "../pages/HumintRequestDetail/HumintRequestDetailConfig";
 
 
 const routeConfigs = [
@@ -41,7 +42,8 @@ const routeConfigs = [
     TaskPageConfig,
     HumintConfig,
     HumintRequestFormConfig,
-    HumintListConfig
+    HumintListConfig,
+    HumintRequestDetailConfig
 
 ];
 

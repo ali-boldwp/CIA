@@ -67,16 +67,27 @@ const SalesDashboard = () => {
                 <Link to="/projectRequest">
                 <div className="summary-card">
                     <div className="summary-title">
-                        ➕ Adauga solicitare noua de proiect
+                        🕵️‍♀️ Adauga solicitare noua de proiect ➕
                     </div>
-
                     <div className="summary-value">1</div>
                 </div>
+                </Link>
+                <Link to="#">
+                    <div className="message-card">
+                        <div className="message-label">
+                            💬 Mesaje necitite
+                        </div>
+
+                        <div className="message-footer">
+                            <div className="message-count">5</div>
+                            <button className="message-button">Deschide messenger</button>
+                        </div>
+                    </div>
                 </Link>
             </div>
 
             {/* PROJECTS */}
-            <h2 className="section-title">Proiectele mele</h2>
+            <h2 className="section-title">Proiectele</h2>
 
             <div className="projects-row">
 
@@ -86,7 +97,6 @@ const SalesDashboard = () => {
 
                 {approvedProject.map((p) => (
                     <div key={p._id} className="project-card">
-
                         <div className="project-header">
                             <div className="project-name">{p.projectName}</div>
 
@@ -96,8 +106,8 @@ const SalesDashboard = () => {
                     </span>
 
                                 <div className="status-dot-wrapper">
+                                    <span className="status-sales-text">{p.status}</span>
                                     <span className="dot green" />
-                                    <span className="status-text">{p.status}</span>
                                 </div>
                             </div>
                         </div>
@@ -125,13 +135,13 @@ const SalesDashboard = () => {
                         <div className="project-actions">
                             <Link
                                 to={`/projectDetail/${p._id}`}
-                                className="btn pill blue"
+                                className="sales-btn pill blue"
                             >
                                 Deschide
                             </Link>
 
-                            <button className="btn pill green">Mesaj</button>
-                            <button className="btn pill violet">HUMINT incoming</button>
+                            <button className="sales-btn pill green">Mesaj</button>
+                            {/*<button className="sales-btn pill violet">HUMINT incoming</button>*/}
                         </div>
 
                     </div>
@@ -143,7 +153,7 @@ const SalesDashboard = () => {
             {/* BOTTOM ROW: CALENDAR + MESSENGER */}
             <div className="bottom-row">
 
-                <h2 className="section-title no-margin">Calendar Deadlines</h2>
+                <h2 className="section-sales-title no-margin">Calendar Deadlines</h2>
 
                 <div className="calendar-card">
                     <ul className="calendar-list">
