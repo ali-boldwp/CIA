@@ -2,12 +2,12 @@ import React from 'react';
 import "../../analyst/dashboard/style.css"
 import Header from "../../../layouts/Component/Header";
 import { Link } from "react-router-dom";
-import {useGetProjectCreateQuery,} from "../../../services/projectApi";
+import {  useGetProjectsQuery } from "../../../services/projectApi";
 import { useGetAnalystsQuery } from "../../../services/userApi";
 
 
 const SalesDashboard = () => {
-    const { data,isLoading}=useGetProjectCreateQuery();
+    const { data,isLoading}=useGetProjectsQuery();
     const { data: analystsData } = useGetAnalystsQuery();
 
     const analysts = analystsData?.data || [];

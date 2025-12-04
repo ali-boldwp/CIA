@@ -31,7 +31,9 @@ export const projectApi = createApi({
                 body: formData,
             }),
         }),
-
+        getProjects:builder.query({
+            query: () => "/project",
+        }),
         getProjectRequests: builder.query({
             query: () => "/project-request",
         }),

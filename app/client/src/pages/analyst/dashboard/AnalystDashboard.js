@@ -1,14 +1,14 @@
 import React from 'react';
 import "./style.css"
 import Header from "../../../layouts/Component/Header";
-import { useGetProjectCreateQuery } from "../../../services/projectApi";
+import { useGetProjectsQuery} from "../../../services/projectApi";
 import {useGetAnalystsQuery} from "../../../services/userApi";
 import {Link} from "react-router-dom";
 
 const AnalystDashboard = () => {
     const { data:analyst}=useGetAnalystsQuery();
     const analysts=analyst?.data || [];
-    const { data: projectData, isLoading, isError } = useGetProjectCreateQuery();
+    const { data: projectData, isLoading, isError } = useGetProjectsQuery();
     const projects=projectData?.data || [];
 
 
