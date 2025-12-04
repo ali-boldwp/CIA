@@ -165,7 +165,10 @@
 .progress-fill.blue {
     background: #3B82F6;
 }
-
+.btn:hover{
+    border:1px solid black;
+    color:black;
+}
 .progress-fill.purple {
     background: #3B82F6;
 }
@@ -186,9 +189,11 @@
 }
 
 .pill {
+    color:white;
     border-radius: 999px;
     padding: 8px 20px;
 }
+
 
 .btn.blue {
     background: #3B82F6;

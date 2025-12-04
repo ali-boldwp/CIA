@@ -1,5 +1,6 @@
 // src/pages/TaskPage/ChapterCreation.js
 import React, { useState } from "react";
+import {toast} from "react-toastify";
 
 const ChapterCreation = ({ projectId, createChapter }) => {
     const [showChapterInput, setShowChapterInput] = useState(false);
@@ -12,12 +13,12 @@ const ChapterCreation = ({ projectId, createChapter }) => {
         try {
             setIsCreating(true);
             await createChapter({ name: chapterName, projectId }).unwrap();
-            alert("Chapter added successfully!");
+           toast.success("Chapter added successfully!");
             setChapterName("");
             setShowChapterInput(false);
         } catch (err) {
             console.error(err);
-            alert("Failed to add chapter");
+            toast.error("Failed to add chapter");
         } finally {
             setIsCreating(false);
         }

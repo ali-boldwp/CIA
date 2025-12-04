@@ -12,6 +12,7 @@ export const projectApi = createApi({
             }
             return headers;
         },
+        tagTypes: ["Chapters"],
     }),
 
     endpoints: (builder) => ({
@@ -21,10 +22,6 @@ export const projectApi = createApi({
                 method: "POST",
                 body: formData,
             }),
-        }),
-
-        getProjects:builder.query({
-            query: () => "/project",
         }),
 
         requestProject: builder.mutation({
@@ -78,10 +75,12 @@ export const projectApi = createApi({
                 method: "POST",
                 body: { name, projectId },
             }),
+            invalidatesTags: ["Chapters"],
         }),
 
         getChapterById: builder.query({
             query: (id) => `/chapter/${id}`,
+            providesTags: ["Chapters"],
         }),
 
 
