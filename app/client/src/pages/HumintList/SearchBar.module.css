@@ -1,0 +1,126 @@
+/* outer wrapper - same idea as Header */
+.container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-top: 16px;
+}
+
+/* white card */
+.box {
+    width: 96%;
+    max-width: 1500px;
+
+    background: #ffffff;
+    padding: 12px 18px;
+    border-radius: 16px;
+    box-shadow: 0 8px 20px rgba(15, 23, 42, 0.06);
+
+    display: flex;
+    align-items: center;
+    gap: 24px;
+}
+
+/* left search area */
+.searchWrapper {
+    flex: 1;
+}
+
+.searchInput {
+    width: 100%;
+    padding: 10px 18px;
+    border-radius: 12px;   /* updated */
+    border: 1px solid #e5e7eb;
+    background-color: #f9fafb;
+
+    font-size: 13px;
+    color: #111827;
+    outline: none;
+    transition: 0.15s ease;
+}
+
+.searchInput::placeholder {
+    color: #9ca3af;
+}
+
+.searchInput:focus {
+    background-color: #ffffff;
+    border-color: #6366f1;
+    box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.15);
+}
+
+/* right filters area */
+.filters {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+/* label + select button block */
+.filterGroup {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.filterLabel {
+    font-size: 11px;
+    font-weight: 500;
+    color: #6b7280;
+}
+
+/* small pill buttons like dropdowns */
+.selectBtn {
+    padding: 6px 14px;
+    border-radius: 12px;   /* updated */
+    border: 1px solid #e5e7eb;
+    background-color: #ffffff;
+
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+
+    transition: 0.15s ease;
+}
+
+
+.selectBtn:hover {
+    background-color: #f3f4f6;
+    border-color: #d1d5db;
+}
+
+/* green main button */
+.approveBtn {
+    padding: 10px 18px;
+    border-radius: 12px;   /* updated */
+    border: none;
+
+    background-color: #22c55e;
+    color: #ffffff;
+    font-size: 13px;
+    font-weight: 600;
+
+    cursor: pointer;
+    transition: 0.15s ease;
+}
+
+.approveBtn:hover {
+    background-color: #16a34a;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 18px rgba(22, 163, 74, 0.4);
+}
+
+/* responsive - chhoti screen per wrap */
+@media (max-width: 900px) {
+    .box {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 12px;
+    }
+
+    .filters {
+        width: 100%;
+        justify-content: flex-start;
+        flex-wrap: wrap;
+    }
+}

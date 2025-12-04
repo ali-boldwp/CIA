@@ -1,4 +1,4 @@
-import HumintList from "./index";
+import HumintList from "./HumintList";
 
 
 const HumintListConfig = {
