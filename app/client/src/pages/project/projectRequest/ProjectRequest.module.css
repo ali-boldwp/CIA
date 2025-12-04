@@ -40,6 +40,17 @@
     font-size: 0.9rem;
     color: #6e7aa8;
     cursor: pointer;
+
+    padding: 8px 14px;
+    min-width: 12rem;
+    border-radius: 16px;
+    border: none;
+    font-size: 14px;
+    color: white;
+    cursor: pointer;
+    font-weight: 600;
+    padding-inline: 0.4rem;
+    background: linear-gradient(150deg, #4f46e5,  #1ec6cd);
 }
 
 .backLink:hover {
@@ -442,6 +453,20 @@
 
 .selectAnalyst option {
     font-weight: 600;
+}
+
+/* Add these styles to your existing ProjectRequest.module.css */
+
+.inputError {
+    border-color: #ff4444 !important;
+    background-color: #fff8f8 !important;
+}
+
+.errorMessage {
+    color: #ff4444;
+    font-size: 12px;
+    margin-top: 4px;
+    display: block;
 }
 
 

@@ -109,7 +109,7 @@
 }
 
 .section-sales-title.no-margin {
-    margin: 0 0 16px;
+    margin-top: 1.5rem;
 }
 
 /* PROJECTS */
@@ -138,9 +138,18 @@
     font-size: 15px;
 }
 
+.sales-section-title {
+    margin-bottom: 1rem;
+}
+
+.status-sales-text {
+    font-weight: bold;
+}
+
 .project-deadline-wrapper {
     display: flex;
-    align-items: center;
+    flex-direction: column;
+    align-items: end;
     gap: 12px;
 }
 

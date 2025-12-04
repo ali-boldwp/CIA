@@ -41,7 +41,7 @@
     align-items: center;
     background: #ffffff;
     padding: 10px 18px;
-    border-radius: 50px;
+    border-radius: 10px;
     border: 1px solid rgba(0,0,0,0.15);
     box-shadow: 0px 3px 8px rgba(0,0,0,0.18);
 
@@ -82,12 +82,22 @@
   background: #ffffff;
   border: 1px solid #e2e2e2;
   border-radius: 12px;
-    font-style: italic;
   cursor: pointer;
-    font-weight: 800px;
+    font-weight: 800;
   font-size: 14px;
     display: flex;
     align-items: center;
     width: 100px;
     height: 35px;
 }
+
+
+.icon-btn .text {
+    font-style: italic;   /* only text italic */
+}
+
+.icon-btn .icon {
+    font-style: normal;   /* icons stay normal */
+    margin-left: 3px;
+}
+

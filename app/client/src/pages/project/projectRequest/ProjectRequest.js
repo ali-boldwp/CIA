@@ -1,11 +1,10 @@
 import React, { useState } from "react";
 import styles from "./ProjectRequest.module.css";
 import { useSelector } from "react-redux";
-import {useCreateProjectMutation, useRequestProjectMutation} from "../../../services/projectApi";
+import { useRequestProjectMutation } from "../../../services/projectApi";
 import { Link } from "react-router-dom";
-
 import { toast } from "react-toastify";
-import {useGetAnalystsQuery} from "../../../services/userApi";
+import { useGetAnalystsQuery } from "../../../services/userApi";
 
 const ProjectRequest = () => {
     const user = useSelector((state) => state.auth.user);
@@ -44,17 +43,32 @@ const ProjectRequest = () => {
     const [internalNotes, setInternalNotes] = useState("");
 
     const [files, setFiles] = useState([]);
+    const [errors, setErrors] = useState({});
 
     const [requestProject, { isLoading }] = useRequestProjectMutation();
 
-    const { data  } = useGetAnalystsQuery();
-    const analystData=data?.data || [];
-    const analyst=analystData.filter((p)=>p.role==="analyst");
+    const { data } = useGetAnalystsQuery();
+    const analystData = data?.data || [];
+    const analyst = analystData.filter((p) => p.role === "analyst");
 
+    // Email validation function
+    const validateEmailFormat = (email) => {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return emailRegex.test(email);
+    };
 
+    // Phone validation function
+    const validatePhoneFormat = (phone) => {
+        const phoneRegex = /^[\d\s+()-]*$/;
+        return phoneRegex.test(phone) && phone.replace(/\D/g, '').length >= 8;
+    };
 
-
-
+    // Price validation function
+    const validatePriceFormat = (price) => {
+        if (!price) return false;
+        const priceValue = parseFloat(price);
+        return !isNaN(priceValue) && priceValue > 0;
+    };
 
     const toggleService = (name) => {
         setServices((prev) =>
@@ -69,9 +83,115 @@ const ProjectRequest = () => {
         setFiles((prev) => [...prev, ...Array.from(e.target.files)]);
     };
 
+    // VALIDATION FUNCTION
+    const validateForm = () => {
+        let newErrors = {};
+
+        // Nume client validation
+        if (!name.trim()) {
+            newErrors.name = "Numele clientului este obligatoriu";
+        }
+
+        // Persoană de contact validation
+        if (!contactPerson.trim()) {
+            newErrors.contactPerson = "Persoana de contact este obligatorie";
+        }
+
+        // Email validation
+        if (!email.trim()) {
+            newErrors.email = "Emailul este obligatoriu";
+        } else if (!validateEmailFormat(email)) {
+            newErrors.email = "Formatul emailului este incorect. Exemplu: nume@domeniu.com";
+        }
+
+        // Phone validation
+        if (!phone.trim()) {
+            newErrors.phone = "Telefonul este obligatoriu";
+        } else if (!validatePhoneFormat(phone)) {
+            newErrors.phone = "Formatul telefonului este incorect. Exemplu: +40 712 345 678";
+        }
+
+        // Contract number validation (only if contractDone is true)
+        if (contractDone && !contractNumber.trim()) {
+            newErrors.contractNumber = "Numărul contractului este obligatoriu dacă este bifat";
+        }
+
+        // Annex number validation (only if annexDone is true)
+        if (annexDone && !annexNumber.trim()) {
+            newErrors.annexNumber = "Numărul anexei este obligatoriu dacă este bifat";
+        }
+
+        // Project subject validation
+        if (!projectSubject.trim()) {
+            newErrors.projectSubject = "Subiectul proiectului este obligatoriu";
+        }
+
+        // Entity type validation
+        if (!entityType.trim()) {
+            newErrors.entityType = "Tipul entității este obligatoriu";
+        }
+
+        // Deadline validation
+        if (!deadline) {
+            newErrors.deadline = "Termenul limită este obligatoriu";
+        } else {
+            // Check if deadline is not in the past
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            const selectedDate = new Date(deadline);
+            if (selectedDate < today) {
+                newErrors.deadline = "Termenul limită nu poate fi în trecut";
+            }
+        }
+
+        // Category validation
+        if (!category.trim()) {
+            newErrors.category = "Categoria proiectului este obligatorie";
+        }
+
+        // Project price validation
+        if (!projectPrice) {
+            newErrors.projectPrice = "Prețul proiectului este obligatoriu";
+        } else if (!validatePriceFormat(projectPrice)) {
+            newErrors.projectPrice = "Prețul trebuie să fie un număr pozitiv";
+        }
+
+        // Reference request validation
+        if (!referenceRequest.trim()) {
+            newErrors.referenceRequest = "Solicitarea de referințe este obligatorie";
+        }
+
+        // Project description validation
+        if (!projectDescription.trim()) {
+            newErrors.projectDescription = "Descrierea proiectului este obligatorie";
+        }
+
+        // Internal notes validation
+        if (!internalNotes.trim()) {
+            newErrors.internalNotes = "Notele interne sunt obligatorii";
+        }
+
+        // Services validation (at least one service must be selected)
+        if (services.length === 0) {
+            newErrors.services = "Selectați cel puțin un serviciu";
+        }
+
+        setErrors(newErrors);
+        return Object.keys(newErrors).length === 0;
+    };
+
     // SUBMIT
     const handleSubmit = async () => {
-        if (!user?._id) return alert("User not logged in");
+        if (!user?._id) {
+            toast.error("Utilizatorul nu este autentificat");
+            return;
+        }
+
+        // Validate form before submission
+        if (!validateForm()) {
+            toast.error("Vă rugăm completați toate câmpurile obligatorii!");
+            return;
+        }
 
         const formData = new FormData();
 
@@ -129,9 +249,36 @@ const ProjectRequest = () => {
             const response = await requestProject(formData).unwrap();
             toast.success("Proiect creat cu succes!");
             console.log(response);
+
+            // Clear form after successful submission
+            setName("");
+            setContactPerson("");
+            setPosition("");
+            setEmail("");
+            setPhone("");
+            setContractNumber("");
+            setContractDone(false);
+            setAnnexNumber("");
+            setAnnexDone(false);
+            setProjectSubject("");
+            setAdditionalInfo("");
+            setEntityType("");
+            setDeadline("");
+            setCategory("");
+            setProjectPrice("");
+            setPriority("Normal");
+            setLanguage("Română");
+            setPreferredAnalyst("");
+            setReferenceRequest("");
+            setServices(["OSINT"]);
+            setProjectDescription("");
+            setInternalNotes("");
+            setFiles([]);
+            setErrors({});
+
         } catch (err) {
             console.error(err);
-            toast.error("Eroare la crearea proiectului");
+            toast.error(err?.data?.message || "Eroare la crearea proiectului");
         }
     };
 
@@ -170,7 +317,7 @@ const ProjectRequest = () => {
                                 <label className={styles.label}>
                                     Nume client
                                     <input
-                                        className={styles.input}
+                                        className={`${styles.input} ${errors.name ? styles.inputError : ''}`}
                                         value={name}
                                         onChange={(e) =>
                                             setName(e.target.value)
@@ -178,6 +325,11 @@ const ProjectRequest = () => {
                                         placeholder="ex: Societatea ABC / POPESCU Ion"
                                     />
                                 </label>
+                                {errors.name && (
+                                    <div className={styles.errorMessage}>
+                                        {errors.name}
+                                    </div>
+                                )}
                             </div>
 
                             {/* CONTACT PERSON */}
@@ -185,7 +337,7 @@ const ProjectRequest = () => {
                                 <label className={styles.label}>
                                     Persoană de contact
                                     <input
-                                        className={styles.input}
+                                        className={`${styles.input} ${errors.contactPerson ? styles.inputError : ''}`}
                                         value={contactPerson}
                                         onChange={(e) =>
                                             setContactPerson(e.target.value)
@@ -193,6 +345,11 @@ const ProjectRequest = () => {
                                         placeholder="nume"
                                     />
                                 </label>
+                                {errors.contactPerson && (
+                                    <div className={styles.errorMessage}>
+                                        {errors.contactPerson}
+                                    </div>
+                                )}
                             </div>
 
                             {/* POSITION */}
@@ -215,7 +372,7 @@ const ProjectRequest = () => {
                                 <label className={styles.label}>
                                     Email
                                     <input
-                                        className={styles.input}
+                                        className={`${styles.input} ${errors.email ? styles.inputError : ''}`}
                                         value={email}
                                         onChange={(e) =>
                                             setEmail(e.target.value)
@@ -223,6 +380,11 @@ const ProjectRequest = () => {
                                         placeholder="ex: contact@client.ro"
                                     />
                                 </label>
+                                {errors.email && (
+                                    <div className={styles.errorMessage}>
+                                        {errors.email}
+                                    </div>
+                                )}
                             </div>
 
                             {/* PHONE */}
@@ -230,7 +392,8 @@ const ProjectRequest = () => {
                                 <label className={styles.label}>
                                     Telefon
                                     <input
-                                        className={styles.input}
+                                        type="number"
+                                        className={`${styles.input} ${errors.phone ? styles.inputError : ''}`}
                                         value={phone}
                                         onChange={(e) =>
                                             setPhone(e.target.value)
@@ -238,6 +401,11 @@ const ProjectRequest = () => {
                                         placeholder="+40 7xx xxx xxx"
                                     />
                                 </label>
+                                {errors.phone && (
+                                    <div className={styles.errorMessage}>
+                                        {errors.phone}
+                                    </div>
+                                )}
                             </div>
 
                             {/* CONTRACT */}
@@ -255,7 +423,7 @@ const ProjectRequest = () => {
                                         />
                                     </span>
                                     <input
-                                        className={styles.input}
+                                        className={`${styles.input} ${errors.contractNumber ? styles.inputError : ''}`}
                                         value={contractNumber}
                                         onChange={(e) =>
                                             setContractNumber(e.target.value)
@@ -264,6 +432,11 @@ const ProjectRequest = () => {
                                         disabled={!contractDone}
                                     />
                                 </label>
+                                {errors.contractNumber && (
+                                    <div className={styles.errorMessage}>
+                                        {errors.contractNumber}
+                                    </div>
+                                )}
                             </div>
 
                             {/* ANNEX */}
@@ -281,15 +454,20 @@ const ProjectRequest = () => {
                                         />
                                     </span>
                                     <input
-                                        className={styles.input}
+                                        className={`${styles.input} ${errors.annexNumber ? styles.inputError : ''}`}
                                         value={annexNumber}
                                         onChange={(e) =>
                                             setAnnexNumber(e.target.value)
                                         }
                                         placeholder="de făcut"
-                                        disabled={!annexDone} 
+                                        disabled={!annexDone}
                                     />
                                 </label>
+                                {errors.annexNumber && (
+                                    <div className={styles.errorMessage}>
+                                        {errors.annexNumber}
+                                    </div>
+                                )}
                             </div>
 
                             {/* SUBJECT */}
@@ -299,7 +477,7 @@ const ProjectRequest = () => {
                                 <label className={styles.label}>
                                     Subiect proiect
                                     <textarea
-                                        className={`${styles.textarea} ${styles.textareaTall}`}
+                                        className={`${styles.textarea} ${styles.textareaTall} ${errors.projectSubject ? styles.inputError : ''}`}
                                         value={projectSubject}
                                         onChange={(e) =>
                                             setProjectSubject(e.target.value)
@@ -307,6 +485,11 @@ const ProjectRequest = () => {
                                         placeholder="persoană de interes, societate/societăți (nume complet / denumire)..."
                                     />
                                 </label>
+                                {errors.projectSubject && (
+                                    <div className={styles.errorMessage}>
+                                        {errors.projectSubject}
+                                    </div>
+                                )}
                             </div>
 
                             {/* ADDITIONAL INFO */}
@@ -333,13 +516,16 @@ const ProjectRequest = () => {
                                 <label className={styles.label}>
                                     Tip entitate / caz (dropdown)
                                     <select
-                                        className={`${styles.input} ${styles.selectAnalyst}`}
+                                        className={`${styles.input} ${styles.selectAnalyst} ${errors.entityType ? styles.inputError : ''}`}
                                         value={entityType}
                                         onChange={(e) =>
                                             setEntityType(e.target.value)
                                         }
                                     >
                                         <option value="">
+                                            Selectați tipul entității
+                                        </option>
+                                        <option value="Societate (include persoane cheie)">
                                             Societate (include persoane cheie)
                                         </option>
                                         <option value="Persoana">
@@ -361,6 +547,11 @@ const ProjectRequest = () => {
                                         </option>
                                     </select>
                                 </label>
+                                {errors.entityType && (
+                                    <div className={styles.errorMessage}>
+                                        {errors.entityType}
+                                    </div>
+                                )}
                             </div>
 
                             {/* DEADLINE */}
@@ -371,13 +562,19 @@ const ProjectRequest = () => {
                                     Termen limită
                                     <input
                                         type="date"
-                                        className={styles.input}
+                                        className={`${styles.input} ${errors.deadline ? styles.inputError : ''}`}
                                         value={deadline}
                                         onChange={(e) =>
                                             setDeadline(e.target.value)
                                         }
+                                        min={new Date().toISOString().split('T')[0]}
                                     />
                                 </label>
+                                {errors.deadline && (
+                                    <div className={styles.errorMessage}>
+                                        {errors.deadline}
+                                    </div>
+                                )}
                             </div>
 
                             {/* CATEGORY (Dropdown) */}
@@ -387,14 +584,14 @@ const ProjectRequest = () => {
                                 <label className={styles.label}>
                                     Categorie (dropdown)
                                     <select
-                                        className={`${styles.input} ${styles.selectAnalyst}`}
+                                        className={`${styles.input} ${styles.selectAnalyst} ${errors.category ? styles.inputError : ''}`}
                                         value={category}
                                         onChange={(e) =>
                                             setCategory(e.target.value)
                                         }
                                     >
-                                        <option value="" className="option-bold" >
-                                            Enhanced Due Diligence
+                                        <option value="" className="option-bold">
+                                            Selectați categoria
                                         </option>
                                         <option value="Enhanced Due Diligence (Societate / Grup)">
                                             Enhanced Due Diligence (Societate /
@@ -423,6 +620,11 @@ const ProjectRequest = () => {
                                         </option>
                                     </select>
                                 </label>
+                                {errors.category && (
+                                    <div className={styles.errorMessage}>
+                                        {errors.category}
+                                    </div>
+                                )}
                             </div>
 
                             {/* PRICE */}
@@ -432,7 +634,8 @@ const ProjectRequest = () => {
                                 <label className={styles.label}>
                                     Preț proiect
                                     <input
-                                        className={styles.input}
+                                        type="number"
+                                        className={`${styles.input} ${errors.projectPrice ? styles.inputError : ''}`}
                                         value={projectPrice}
                                         onChange={(e) =>
                                             setProjectPrice(e.target.value)
@@ -440,6 +643,11 @@ const ProjectRequest = () => {
                                         placeholder="ex: 3.500 EUR"
                                     />
                                 </label>
+                                {errors.projectPrice && (
+                                    <div className={styles.errorMessage}>
+                                        {errors.projectPrice}
+                                    </div>
+                                )}
                             </div>
 
                             {/* ===== ROW: Prioritate + Preferința analist ===== */}
@@ -493,7 +701,6 @@ const ProjectRequest = () => {
                                         <option value="">
                                             Selectează analist -
                                         </option>
-
                                         {analyst.map((a) => (
                                             <option
                                                 key={a._id}
@@ -543,7 +750,7 @@ const ProjectRequest = () => {
                                     suplimentare
                                     <input
                                         type="text"
-                                        className={styles.input}
+                                        className={`${styles.input} ${errors.referenceRequest ? styles.inputError : ''}`}
                                         value={referenceRequest}
                                         onChange={(e) =>
                                             setReferenceRequest(
@@ -553,6 +760,11 @@ const ProjectRequest = () => {
                                         placeholder="Introdu solicitarea de referințe..."
                                     />
                                 </label>
+                                {errors.referenceRequest && (
+                                    <div className={styles.errorMessage}>
+                                        {errors.referenceRequest}
+                                    </div>
+                                )}
                             </div>
                         </div>
 
@@ -586,6 +798,11 @@ const ProjectRequest = () => {
                                     </button>
                                 ))}
                             </div>
+                            {errors.services && (
+                                <div className={styles.errorMessage}>
+                                    {errors.services}
+                                </div>
+                            )}
                         </div>
 
                         {/* PROJECT DESCRIPTION */}
@@ -593,7 +810,7 @@ const ProjectRequest = () => {
                             <label className={styles.label}>
                                 Descriere proiect
                                 <textarea
-                                    className={`${styles.textarea} ${styles.largeTextarea}`}
+                                    className={`${styles.textarea} ${styles.largeTextarea} ${errors.projectDescription ? styles.inputError : ''}`}
                                     value={projectDescription}
                                     onChange={(e) =>
                                         setProjectDescription(e.target.value)
@@ -601,6 +818,11 @@ const ProjectRequest = () => {
                                     placeholder="ce se vrea, întrebările clientului, pe ce se pune accent..."
                                 />
                             </label>
+                            {errors.projectDescription && (
+                                <div className={styles.errorMessage}>
+                                    {errors.projectDescription}
+                                </div>
+                            )}
                         </div>
 
                         {/* INTERNAL NOTES */}
@@ -608,7 +830,7 @@ const ProjectRequest = () => {
                             <label className={styles.label}>
                                 Note interne
                                 <textarea
-                                    className={`${styles.textarea} ${styles.largeTextarea}`}
+                                    className={`${styles.textarea} ${styles.largeTextarea} ${errors.internalNotes ? styles.inputError : ''}`}
                                     value={internalNotes}
                                     onChange={(e) =>
                                         setInternalNotes(e.target.value)
@@ -616,6 +838,11 @@ const ProjectRequest = () => {
                                     placeholder="constrângeri, jurisdicții, termeni contractuali, preferințe livrare..."
                                 />
                             </label>
+                            {errors.internalNotes && (
+                                <div className={styles.errorMessage}>
+                                    {errors.internalNotes}
+                                </div>
+                            )}
                         </div>
 
                         {/* FILE UPLOAD */}
@@ -632,7 +859,6 @@ const ProjectRequest = () => {
                                         onChange={handleFileChange}
                                         className={styles.hiddenFileInput}
                                     />
-
                                     <label
                                         htmlFor="fileUpload"
                                         className={styles.uploadButton}
@@ -650,14 +876,12 @@ const ProjectRequest = () => {
                                         </span>
                                         <span>Încarcă fișiere</span>
                                     </label>
-
                                     <span className={styles.dropZoneText}>
                                         sau trage aici fișierele pentru a le
                                         încărca
                                     </span>
                                 </div>
                             </label>
-
                             {files.map((file, idx) => (
                                 <div key={idx} className={styles.fileRow}>
                                     <span className={styles.fileName}>
@@ -683,13 +907,11 @@ const ProjectRequest = () => {
                     >
                         {isLoading ? "Se trimite..." : "Adaugă"}
                     </button>
-
                     <button
                         className={`${styles.actionBtn} ${styles.actionDraft}`}
                     >
                         Salvează draft
                     </button>
-
                     <button
                         className={`${styles.actionBtn} ${styles.actionCancel}`}
                     >

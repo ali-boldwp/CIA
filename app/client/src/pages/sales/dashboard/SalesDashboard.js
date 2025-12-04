@@ -77,7 +77,7 @@ const SalesDashboard = () => {
             </div>
 
             {/* PROJECTS */}
-            <h2 className="section-title">Proiectele</h2>
+            <h2 className="sales-section-title">Proiectele</h2>
 
             <div className="projects-row">
 
@@ -88,6 +88,7 @@ const SalesDashboard = () => {
                 {approvedProject.map((p) => (
                     <div key={p._id} className="project-card">
                         <div className="project-header">
+
                             <div className="project-name">{p.projectName}</div>
 
                             <div className="project-deadline-wrapper">
@@ -143,7 +144,7 @@ const SalesDashboard = () => {
             {/* BOTTOM ROW: CALENDAR + MESSENGER */}
             <div className="bottom-row">
 
-                <h2 className="section-sales-title no-margin">Calendar Deadlines</h2>
+                <h2 className="section-sales-title no-margin">Calendar Deadlines </h2>
 
                 <div className="calendar-card">
                     <ul className="calendar-list">
