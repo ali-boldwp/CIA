@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import styles from "./ProjectBasePopUp.module.css";
 import { useGetProjectsQuery } from "../../services/projectApi";
-import { useNavigate } from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 
 const ProjectBasePopUp = () => {
     const navigate = useNavigate();
@@ -21,16 +21,7 @@ const ProjectBasePopUp = () => {
         setSelectedProject(project);
     };
 
-    const handleContinue = () => {
-        if (!selectedProject) {
-            return alert("Selectează un proiect!");
-        }
 
-        // ✅ Send project info to the next page
-        navigate("/humintRequest-Page", {
-            state: { project: selectedProject }
-        });
-    };
 
 
     return (
@@ -111,9 +102,9 @@ const ProjectBasePopUp = () => {
 
                 {/* BUTTON */}
                 <div className={styles.buttonRow}>
-                    <button className={styles.continueBtn} onClick={handleContinue}>
+                    <Link to={`/humintRequest-Page/${selectedProject?._id}`} className={styles.continueBtn}>
                         Continuă
-                    </button>
+                    </Link>
                 </div>
             </div>
         </div>

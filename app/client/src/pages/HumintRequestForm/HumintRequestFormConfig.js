@@ -14,6 +14,10 @@ const HumintRequestFormConfig = {
         {
             path: '/humintRequest-Page',
             element: <HumintRequestForm />
+        },
+        {
+            path: '/humintRequest-Page/:id',
+            element: <HumintRequestForm />
         }
     ]
 };

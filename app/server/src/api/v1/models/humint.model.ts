@@ -89,7 +89,7 @@ const humintSchema = new Schema<IHumint>(
 
         createdBy: {
             type: String,
-            required: true,
+
         },
 
         status: {
