@@ -79,7 +79,7 @@
 .input {
     border-radius: 999px;
     border: 1px solid #e5e7eb;
-    padding: 7px 14px;
+    padding: 7px 34px;
     font-size: 13px;
     outline: none;
     background: #f9fafb;
@@ -113,13 +113,13 @@
 }
 
 .input-with-icon .input {
-    padding-left: 30px;
+
     width: 100%;
 }
 
-.input-icon {
+.input-search-icon {
     position: absolute;
-    left: 10px;
+    left: 1rem;
     top: 50%;
     transform: translateY(-50%);
     font-size: 14px;
@@ -164,17 +164,18 @@
 
 /* pills */
 .pill {
-    border-radius: 999px;
     border: 1px solid #e5e7eb;
+    color:#6B7280;
     background: #ffffff;
     font-size: 10px;
+    font-weight: 500;
     padding: 6px 10px;
     cursor: pointer;
     display: inline-flex;
     align-items: center;
     justify-content: center;
     gap: 2px;
-    border-radius: 6px;
+    border-radius: 16px;
 }
 
 .pill-active {
@@ -235,8 +236,8 @@
 
 .label-muted {
     font-size: 13px;
-    font-weight: 600;
-    color: #111827;
+    font-weight: 700;
+    color: #6B7280;
 }
 
 .label-small {
@@ -528,7 +529,7 @@
 }
 
 .circle-btn {
-    width: 20px;
+    width: 30px;
     height: 20px;
     border-radius: 999px;
     border: 1px solid #e5e7eb;

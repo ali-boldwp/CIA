@@ -248,6 +248,8 @@
 /* Selects */
 .selectAnalyst {
     cursor: pointer;
+    font-size: 12px;
+    font-weight: 600;
 }
 
 /* ===== Full width blocks (Descriere + Note interne) ===== */
@@ -437,6 +439,11 @@
     font-size: 12px;
     margin-top: 3px;
 }
+
+.selectAnalyst option {
+    font-weight: 600;
+}
+
 
 /* ============== RESPONSIVE ============== */
 
