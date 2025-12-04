@@ -27,6 +27,7 @@ const statusClass = (status) => {
 
 const TableSection = ({
                           requests,
+                          analystN,
                           selectedIds,
                           onToggleSelect,
                           onToggleSelectAll,
@@ -111,15 +112,15 @@ const TableSection = ({
                                     <td>
                                         <div className={styles.projectCell}>
                                                 <span className={styles.projectTitle}>
-                                                    {item.project}
+                                                  {item?.projectName}
                                                 </span>
                                             <span className={styles.projectSubtitle}>
-                                                    {item.description}
+                                                   {item.projectSubject}
                                                 </span>
                                         </div>
                                     </td>
-                                    <td>{item.type}</td>
-                                    <td>{item.responsible}</td>
+                                    <td>{item.reportType}</td>
+                                    <td>{analystN(item.responsible)}</td>
                                     <td>
                                             <span
                                                 className={`${styles.pill} ${priorityClass(
@@ -130,7 +131,7 @@ const TableSection = ({
                                             </span>
                                     </td>
                                     <td>{item.deadline}</td>
-                                    <td>{item.createdBy}</td>
+                                    <td>12/12/12</td>
                                     <td>{item.createdAt}</td>
                                     <td>
                                             <span

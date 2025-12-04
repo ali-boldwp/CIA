@@ -37,7 +37,9 @@ const store = configureStore({
             userApi.middleware,
             analystApi.middleware,
             messageApi.middleware,
-            chatApi.middleware
+            chatApi.middleware,
+            humintApi.middleware,
+
         ),
 });
 

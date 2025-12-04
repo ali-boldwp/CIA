@@ -118,6 +118,7 @@ export const humintApi = createApi({
 export const {
     useCreateHumintMutation,
     useGetAllHumintsQuery,
+
     useGetHumintByIdQuery,
     useUpdateHumintMutation,
     useSubmitHumintMutation,
