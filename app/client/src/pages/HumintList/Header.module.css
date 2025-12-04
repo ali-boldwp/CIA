@@ -1,10 +1,13 @@
-.headerHumint{
+/* outer wrapper */
+.container {
     width: 100%;
     display: flex;
     justify-content: center;
     margin-top: 16px;
 }
-.boxHumint{
+
+/* white card */
+.box {
     width: 96%;
     max-width: 1500px;
 
@@ -17,7 +20,9 @@
     align-items: center;
     gap: 32px;
 }
-.backBtnHumint{
+
+/* BACK BUTTON */
+.backBtn {
     display: flex;
     align-items: center;
     gap: 8px;
@@ -37,14 +42,25 @@
     box-shadow: 0 4px 12px rgba(109, 40, 217, 0.25);
     transition: transform 0.15s ease, box-shadow 0.15s ease;
 }
-.backBtnHumint:hover{
+
+.backBtn:hover {
     transform: translateY(-1px);
     box-shadow: 0 6px 18px rgba(109, 40, 217, 0.3);
 }
-.backBtnIconHumint{
 
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        stroke: #ffffff;
+.backBtnIcon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    stroke: #ffffff;
 }
+
+/* TITLE */
+.title {
+    font-size: 20px;
+    font-weight: 700;
+    color: #0f172a;
+    font-style: italic;
+}
+
+
