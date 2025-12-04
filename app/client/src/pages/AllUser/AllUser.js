@@ -6,15 +6,18 @@ import EmployeeSection from "./EmployeeSection";
 import SummarySection from "./SummarySection";
 import AddEmployeeModal from "./AddEmployeeModal";
 
-import { useGetAllUsersQuery } from "../../services/userApi";
+import { useGetAllUsersQuery ,useDeleteUserMutation } from "../../services/userApi";
+import {toast} from "react-toastify";
 
 const AllUser = () => {
     const [searchTerm, setSearchTerm] = useState("");
     const [showModal, setShowModal] = useState(false);
     const [activeSection, setActiveSection] = useState(null);
+    const [editUser, setEditUser] = useState(null);
 
     // Fetch all users
     const { data: usersData, isLoading } = useGetAllUsersQuery();
+    const [deleteUser] = useDeleteUserMutation();
 
     // Normalize API response
     const users = Array.isArray(usersData)
@@ -35,41 +38,49 @@ const AllUser = () => {
     }, [searchTerm, users]);
 
     // ---- ROLE GROUPS (sirf layout ke liye) ----
-    const managementUsers = filteredUsers.filter((u) => {
-        const r = (u.role || "").toLowerCase();
-        return (
-            r.includes("ceo") ||
-            r.includes("cfo") ||
-            r.includes("manager") ||
-            r.includes("management")
-        );
-    });
-
-    const investigationsUsers = filteredUsers.filter((u) => {
-        const r = (u.role || "").toLowerCase();
-        return (
-            r.includes("analist") ||
-            r.includes("analyst") ||
-            r.includes("detectiv") ||
-            r.includes("investig")
-        );
-    });
-
-    // jo na upar aaya na yahan, wo auxiliar
-    const auxiliaryUsers = filteredUsers.filter(
-        (u) => !managementUsers.includes(u) && !investigationsUsers.includes(u)
+    const managementUsers = filteredUsers.filter(u =>
+        ["admin", "manager"].includes(u.role)
     );
 
-    // ---- Modal control ----
+    const investigationsUsers = filteredUsers.filter(u =>
+        u.role === "analyst"
+    );
+
+    const auxiliaryUsers = filteredUsers.filter(u =>
+        ["sales", "user"].includes(u.role)
+    );
+
+
     const openModal = (sectionKey) => {
+        setEditUser(null);
         setActiveSection(sectionKey);
+        setShowModal(true);
+    };
+
+    // OPEN EDIT MODAL
+    const handleEdit = (user) => {
+        setEditUser(user);
+        setActiveSection(user.role);
         setShowModal(true);
     };
 
     const closeModal = () => {
         setShowModal(false);
+        setEditUser(null);
         setActiveSection(null);
     };
+
+
+    const handleDelete = async (id) => {
+        try {
+            await deleteUser(id).unwrap();
+            toast("User deleted successfully");
+        } catch (err) {
+            toast("Failed to delete user");
+        }
+    };
+
+
 
     if (isLoading) {
         return <div className={styles.loading}>Loading users...</div>;
@@ -91,9 +102,30 @@ const AllUser = () => {
             />
 
             {/* ========= MANAGEMENT ========= */}
-            <EmployeeSection type="management" onAddClick={openModal} />
-            <EmployeeSection type="investigatii" onAddClick={openModal} />
-            <EmployeeSection type="auxiliar" onAddClick={openModal} />
+            <EmployeeSection
+                type="management"
+                onAddClick={openModal}
+                rows={managementUsers}
+                onEdit={handleEdit}
+                onDelete={handleDelete}
+            />
+
+            <EmployeeSection
+                type="investigatii"
+                onAddClick={openModal}
+                rows={investigationsUsers}
+                onEdit={handleEdit}
+                onDelete={handleDelete}
+            />
+
+            <EmployeeSection
+                type="auxiliar"
+                onAddClick={openModal}
+                rows={auxiliaryUsers}
+                onEdit={handleEdit}
+                onDelete={handleDelete}
+            />
+
 
             {/* ========= REZUMAT ========= */}
             <SummarySection
@@ -105,6 +137,7 @@ const AllUser = () => {
             <AddEmployeeModal
                 isOpen={showModal}
                 sectionKey={activeSection}
+                editData={editUser}
                 onClose={closeModal}
             />
         </div>
