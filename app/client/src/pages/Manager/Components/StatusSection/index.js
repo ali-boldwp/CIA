@@ -91,7 +91,7 @@ const StatusSection = () => {
                     <span className="label">🕵️‍♂️ Solicitări HUMINT — de aprobat</span>
                     <div className="sec">
                         <h3>2</h3>
-                        <button className="gradient-btn">Verifica acum</button>
+                        <Link to="/humintList" className="gradient-btn">Verifica acum</Link>
                     </div>
                 </div>
 

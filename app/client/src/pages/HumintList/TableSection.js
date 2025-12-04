@@ -1,5 +1,6 @@
 import React from "react";
 import styles from "./TableSection.module.css";
+import {Link} from "react-router-dom";
 
 const priorityClass = (priority) => {
     switch (priority) {
@@ -143,9 +144,9 @@ const TableSection = ({
                                             </span>
                                     </td>
                                     <td>
-                                        <button className={styles.linkButton}>
+                                        <Link to="/humintRequest-Detail" className={styles.linkButton}>
                                             Deschide →
-                                        </button>
+                                        </Link>
                                     </td>
                                 </tr>
                             );
