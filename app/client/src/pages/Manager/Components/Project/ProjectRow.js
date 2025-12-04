@@ -28,14 +28,14 @@ const ProjectRow = ({ project, responsible,responsibles }) => {
     const getInitials = (idOrObj) => {
         const fullName = responsible(idOrObj); // uses parent resolver
 
-        if (!fullName || typeof fullName !== "string") return "-";
+        if (!fullName || typeof fullName !== "string") return "_";
 
         const parts = fullName.trim().split(" ");
 
         // 🟡 If name has only one word → return FirstLetter + "-"
         if (parts.length === 1) {
             const first = parts[0].charAt(0).toUpperCase();
-            return first + "-";
+            return first + "_";
         }
 
         // 🟢 Multi-word name → First letter of first + first letter of last
