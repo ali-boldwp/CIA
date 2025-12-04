@@ -1,0 +1,185 @@
+/* outer */
+.wrapper {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-top: 16px;
+    margin-bottom: 32px;
+}
+
+/* form width match header box */
+.form {
+    width: 96%;
+    max-width: 1500px;
+}
+
+/* white cards */
+.card {
+    background: #ffffff;
+    border-radius: 16px;
+    padding: 20px 22px 24px;
+    box-shadow: 0 8px 20px rgba(15, 23, 42, 0.08);
+    margin-bottom: 16px;
+}
+
+.sectionTitle {
+    font-size: 14px;
+    font-weight: 600;
+    color: #64748b;
+    margin-bottom: 16px;
+}
+
+/* Context top grid */
+.contextGrid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 16px 24px;
+}
+
+.field {
+    display: flex;
+    flex-direction: column;
+}
+
+.span2 {
+    grid-column: span 2;
+}
+
+.label {
+    font-size: 12px;
+    font-weight: 600;
+    color: #0f172a;
+    margin-bottom: 6px;
+}
+
+.inline {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* inputs / selects */
+.input {
+    flex: 1;
+    padding: 9px 11px;
+    border-radius: 10px;
+    border: 1px solid #e2e8f0;
+    background: #f8fafc;
+    font-size: 13px;
+    outline: none;
+}
+
+/* unified focus state for inputs, selects & textareas */
+.input:focus,
+select:focus,
+textarea:focus,
+.textarea:focus {
+    border-color: #6366f1 !important;
+    box-shadow: 0 0 0 1px rgba(99, 102, 241, 0.3) !important;
+    background: #ffffff !important;
+    outline: none !important;
+}
+
+/* textareas */
+.textarea {
+    min-height: 110px;
+    padding: 14px 14px;
+    border-radius: 12px;
+    border: 1px solid #e2e8f0;
+    background: #f8fafc;
+    font-size: 13px;
+    resize: vertical;
+}
+
+/* error state */
+.inputError {
+    border-color: #ef4444 !important;
+}
+
+.errorText {
+    margin-top: 4px;
+    font-size: 11px;
+    color: #b91c1c;
+}
+
+/* textareas layout */
+.textareaGridFull {
+    display: grid;
+    grid-template-columns: 1fr;
+    margin-bottom: 24px;
+}
+
+.textareaGridTwo {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 24px;
+    margin-bottom: 24px;
+}
+
+.singleRow {
+    margin-top: 16px;
+}
+
+/* actions (if needed later) */
+.actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 8px;
+}
+
+.submitBtn {
+    padding: 10px 24px;
+    border-radius: 999px;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    color: #ffffff;
+    background: linear-gradient(90deg, #6d28d9 0%, #14b8a6 100%);
+    box-shadow: 0 8px 20px rgba(109, 40, 217, 0.3);
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.submitBtn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 10px 26px rgba(109, 40, 217, 0.35);
+}
+
+/* feedback header row in 3rd card */
+.sectionHeaderRow {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin-bottom: 16px;
+}
+
+.sectionHint {
+    font-size: 11px;
+    color: #9ca3af;
+}
+
+/* responsive */
+@media (max-width: 1024px) {
+    .contextGrid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .span2 {
+        grid-column: span 2;
+    }
+
+    .textareaGridTwo {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 640px) {
+    .form {
+        width: 100%;
+    }
+
+    .inline {
+        flex-direction: column;
+        align-items: stretch;
+    }
+}
