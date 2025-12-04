@@ -1,10 +1,10 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import {
-    useGetProjectRequestByIdQuery,
+
     useRequestProjectMutation,
     useCreateProjectMutation,
-    useUpdateProjectMutation,
+    useUpdateProjectMutation, useGetRequestedProjectByIdQuery,
 
 } from "../../services/projectApi";
 import { useGetAnalystsQuery } from "../../services/userApi";
@@ -36,7 +36,7 @@ const NewProject = () => {
 
 
     // LOAD REQUEST BY ID
-    const { data, isLoading } = useGetProjectRequestByIdQuery(id, {
+    const { data, isLoading } = useGetRequestedProjectByIdQuery(id, {
         skip: !id,
     });
 
@@ -215,6 +215,7 @@ const NewProject = () => {
     // FINAL PAYLOAD
     // ============================
     const buildPayload = () => ({
+        requestedId: id,
         projectName,
         projectSubject,
         reportType,
@@ -241,7 +242,7 @@ const NewProject = () => {
         assignedAnalysts: selectedAnalysts,
 
         deadline,
-        fromRequestId: id || undefined,
+
 
     });
 
@@ -256,10 +257,12 @@ const NewProject = () => {
 
         const payload = buildPayload();
 
+        console.log(payload)
         try {
             if (id) {
-                await createProject(payload).unwrap();
+                await createProject( payload).unwrap();
                 toast.success("Proiect final creat cu succes!");
+
             } else {
                 await requestProject(payload).unwrap();
                 toast.success("Solicitare proiect creată cu succes!");
