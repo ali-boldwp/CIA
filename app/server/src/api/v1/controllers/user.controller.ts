@@ -1,21 +1,29 @@
 import { Request, Response, NextFunction } from "express";
-import * as userService from "../services/user.service";
-import { ok } from "../../../utils/ApiResponse";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-import User from "../models/user.model";
+import User, { IUser } from "../models/user.model";
 import { Role } from "../../../constants/roles";
+import { ok } from "../../../utils/ApiResponse";
 
-
-
+// ----------------------
+// CREATE USER
+// ----------------------
 export const createUser = async (req: Request, res: Response, next: NextFunction) => {
     try {
+        const currentUser = (req as any).user;
+
+        // Only admin or manager can create users
+        if (![Role.ADMIN, Role.MANAGER].includes(currentUser.role)) {
+            return res.status(403).json({ message: "Only Admin or Manager can create users." });
+        }
+
         let {
             name,
             isLogin,
             email,
             password,
             role,
+            analystRole,
             monthlySalary,
             hoursPerMonth,
             hoursPerDay,
@@ -24,43 +32,42 @@ export const createUser = async (req: Request, res: Response, next: NextFunction
             notes
         } = req.body;
 
-
-        if (isLogin === false) {
-            email = undefined;
-            password = undefined;
-        }
-
-        if (role === Role.EMPLOYEE) {
-            isLogin = false;
-            email = undefined;
-            password = undefined;
-        }
-
-
+        // If login enabled → require credentials
         if (isLogin === true) {
             if (!email || !password) {
-                return res.status(400).json({
-                    message: "Email and password required when isLogin = true."
-                });
+                return res.status(400).json({ message: "Email and password required when isLogin = true" });
             }
+
+            const exists = await User.findOne({ email });
+            if (exists) return res.status(400).json({ message: "Email already exists" });
         }
 
-        const user = await User.create({
+        // Analyst role rule
+        if (role === Role.ANALYST) {
+            if (!analystRole) {
+                return res.status(400).json({ message: "analystRole is required for ANALYST role" });
+            }
+        } else {
+            analystRole = undefined; // remove analyst-only field
+        }
+
+        // Create user
+        const user = new User({
             name,
-            role,
             isLogin,
             email,
             password,
-
-            // Analyst Fields
-            analystRole: role === Role.ANALYST ? req.body.analystRole : undefined,
-            monthlySalary: role === Role.ANALYST ? monthlySalary : undefined,
-            hoursPerMonth: role === Role.ANALYST ? hoursPerMonth : undefined,
-            hoursPerDay: role === Role.ANALYST ? hoursPerDay : undefined,
-            bonus: role === Role.ANALYST ? bonus : 0,
-            hiringDate: role === Role.ANALYST ? hiringDate : undefined,
-            notes: role === Role.ANALYST ? notes : undefined
+            role,
+            analystRole,
+            monthlySalary,
+            hoursPerMonth,
+            hoursPerDay,
+            bonus,
+            hiringDate,
+            notes
         });
+
+        await user.save();
 
         return res.json(ok(user));
 
@@ -71,27 +78,29 @@ export const createUser = async (req: Request, res: Response, next: NextFunction
 
 
 
+
+
+// ----------------------
+// LOGIN
+// ----------------------
 export const login = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const { email, password } = req.body;
 
         const user = await User.findOne({ email }).select("+password");
-
         if (!user) return res.status(400).json({ message: "Invalid email" });
 
         if (!user.isLogin)
-            return res.status(403).json({ message: "This user cannot login" });
+            return res.status(403).json({ message: "This user is not allowed to login" });
 
         const isMatch = await bcrypt.compare(password, user.password || "");
-
-        if (!isMatch)
-            return res.status(400).json({ message: "Invalid password" });
+        if (!isMatch) return res.status(400).json({ message: "Invalid password" });
 
         const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET!, {
             expiresIn: "7d",
         });
 
-        res.json(ok({ token, user }));
+        return res.json(ok({ token, user }));
 
     } catch (err) {
         next(err);
@@ -99,12 +108,14 @@ export const login = async (req: Request, res: Response, next: NextFunction) => 
 };
 
 
-
+// ----------------------
+// GET MY PROFILE
+// ----------------------
 export const getMe = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const currentUser = (req as any).user as { id: string };
-        const user = await userService.getMe(currentUser.id);
-        res.json(ok(user));
+        const userId = (req as any).user.id;
+        const user = await User.findById(userId).select("-password");
+        return res.json(ok(user));
     } catch (err) {
         next(err);
     }
@@ -114,9 +125,17 @@ export const getMe = async (req: Request, res: Response, next: NextFunction) => 
 
 export const getUsers = async (req: Request, res: Response, next: NextFunction) => {
     try {
+        const filter: any = {};
 
-        const users = await userService.getAllUsers();
-        res.json(ok(users));
+        if (req.query.role) {
+            filter.role = req.query.role;
+        }
+
+        const users = await User.find(filter)
+            .select("-password")
+            .sort({ createdAt: -1 });
+
+        return res.json(ok(users));
     } catch (err) {
         next(err);
     }
@@ -124,39 +143,40 @@ export const getUsers = async (req: Request, res: Response, next: NextFunction) 
 
 
 
+// ----------------------
+// UPDATE USER — uses save() to trigger pre-save hook!
+// ----------------------
 export const updateUser = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const userId = req.params.id;
         const data = req.body;
 
+        let user = await User.findById(userId);
+        if (!user) return res.status(404).json({ message: "User not found" });
 
-        if (data.isLogin === false) {
-            data.email = undefined;
-            data.password = undefined;
+        // LOGIN RULES
+        if (data.isLogin === true) {
+            if (!data.email || !data.password) {
+                return res.status(400).json({ message: "Email + password required for login." });
+            }
+
+            const exists = await User.findOne({ email: data.email, _id: { $ne: userId } });
+            if (exists) return res.status(400).json({ message: "Email already exists" });
         }
 
-
-        if (data.role === Role.EMPLOYEE) {
-            data.isLogin = false;
-            data.email = undefined;
-            data.password = undefined;
+        // ANALYST RULE
+        if (data.role === Role.ANALYST) {
+            if (!data.analystRole)
+                return res.status(400).json({ message: "analystRole required for ANALYST role" });
+        } else {
+            data.analystRole = undefined; // remove analyst-only field
         }
 
+        // Merge + save → triggers pre-save for salary cost calculation
+        Object.assign(user, data);
+        await user.save();
 
-        // if (data.role !== Role.ANALYST) {
-        //     delete data.monthlySalary;
-        //     delete data.hoursPerMonth;
-        //     delete data.hoursPerDay;
-        //     delete data.bonus;
-        //     delete data.hiringDate;
-        //     delete data.notes;
-        // }
-
-        const updatedUser = await User.findByIdAndUpdate(userId, data, {
-            new: true
-        });
-
-        return res.json(ok(updatedUser));
+        return res.json(ok(user));
 
     } catch (err) {
         next(err);
@@ -164,6 +184,10 @@ export const updateUser = async (req: Request, res: Response, next: NextFunction
 };
 
 
+
+// ----------------------
+// DELETE USER
+// ----------------------
 export const deleteUser = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const userId = req.params.id;
