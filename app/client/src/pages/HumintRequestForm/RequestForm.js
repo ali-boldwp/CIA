@@ -6,14 +6,16 @@ import React, {
 } from "react";
 import styles from "./RequestForm.module.css";
 
-const RequestForm = forwardRef(({projects}, ref) => {
+const RequestForm = forwardRef((props, ref) => {
+    const { projects, independent, independentData, analysts } = props;
+
     const [values, setValues] = useState({
         projectName: "",
         deadline: "",
         reportType: "",
         projectOwner: "",
         priority: "",
-        scopeObjectives: "",
+        briefObjective: "",
         keyQuestions: "",
         targets: "",
         locations: "",
@@ -22,16 +24,41 @@ const RequestForm = forwardRef(({projects}, ref) => {
 
 
     useEffect(() => {
-        if (projects) {
+        if (independent && independentData) {
+            const priorityMap = {
+                Normal: "Normal",
+                High: "Ridicată",
+                Urgent: "Urgentă",
+                Confidential: "Confidențial",
+            };
 
+            setValues({
+                projectName: independentData.humintSubject,
+                deadline: independentData.deadline,
+                reportType: independentData.reportType || "HUMINT",
+
+                // Find analyst name from ID
+                projectOwner:
+                    analysts?.find(a => a._id === independentData.responsible)?.name || "",
+
+                priority: priorityMap[independentData.priority] || "",
+                briefObjective: "",
+                keyQuestions: "",
+                targets: "",
+                locations: "",
+                restrictions: "",
+            });
+
+            return;
+        }
+
+        if (projects) {
             const backendToUi = {
                 Normal: "Normal",
                 Ridicată: "Ridicată",
                 Urgentă: "Urgentă",
                 Confidențial: "Confidențial",
             };
-
-
 
             setValues((prev) => ({
                 ...prev,
@@ -42,7 +69,9 @@ const RequestForm = forwardRef(({projects}, ref) => {
                 priority: backendToUi[projects.priority] || "",
             }));
         }
-    }, [projects]);
+
+    }, [independent, independentData, projects, analysts]);
+
 
 
     const [errors, setErrors] = useState({});
@@ -214,16 +243,16 @@ const RequestForm = forwardRef(({projects}, ref) => {
                                 Ce se dorește (scop &amp; obiective)
                             </label>
                             <textarea
-                                name="scopeObjectives"
-                                value={values.scopeObjectives}
+                                name="briefObjective"
+                                value={values.briefObjective}
                                 onChange={handleChange}
                                 className={`${styles.textarea} ${
                                     errors.scopeObjectives ? styles.inputError : ""
                                 }`}
                                 placeholder="ex.: verificare discretă reputație locală, confirmare asocieri, risc comportamental..."
                             />
-                            {errors.scopeObjectives && (
-                                <p className={styles.errorText}>{errors.scopeObjectives}</p>
+                            {errors.briefObjective && (
+                                <p className={styles.errorText}>{errors.briefObjective}</p>
                             )}
                         </div>
                     </div>

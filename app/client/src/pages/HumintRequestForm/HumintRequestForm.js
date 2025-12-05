@@ -4,94 +4,116 @@ import RequestForm from "./RequestForm";
 import { useGetCreateProjectByIdQuery } from "../../services/projectApi";
 import { useCreateHumintMutation } from "../../services/humintApi";
 import Button from "./Button";
-import { useParams } from "react-router-dom";
-import {toast} from "react-toastify";
+import { useLocation, useParams } from "react-router-dom";
+import { toast } from "react-toastify";
+import {useGetAnalystsQuery} from "../../services/userApi";
 
 const HumintRequestForm = () => {
-    const {id}=useParams();
-    const [createHumint,isLoading]=useCreateHumintMutation();
-    const { data:projectData}=useGetCreateProjectByIdQuery(id, {
-        skip: !id,
-    })
-    const projects=projectData?.data || { };
+
+    const { id } = useParams();
+    const location = useLocation();
+    const state = location.state || {};
+
+    const isIndependent = state?.humintType === "independent";
+    const independentData = state?.data || null;
+
     const formRef = useRef(null);
 
+    const [createHumint] = useCreateHumintMutation();
+
+    const { data: analystData } = useGetAnalystsQuery();
+    const analysts = analystData?.data || [];
 
 
+    // PROJECT-BASED FETCH
+    const { data: projectData } = useGetCreateProjectByIdQuery(id, {
+        skip: isIndependent || !id,
+    });
+
+    const projects = projectData?.data || {};
+
+    // ========================================================================
+    // HANDLE APPROVE
+    // ========================================================================
     const handleApprove = async () => {
-
         const ok = formRef.current?.submitForm();
         if (!ok) return;
 
-        const values = formRef.current.getValues();
+        const formValues = formRef.current.getValues();
         const userId = localStorage.getItem("userId");
 
-        const mapPriority = {
-            "Normal": "Normal",
-            "Ridicată": "High",
-            "Urgentă": "Urgent",
-            "Confidențial": "Confidential"
-        };
+        let payload = {};
 
+        if (isIndependent) {
+            // 🔥 Independent HUMINT Payload
+            payload = {
+                ...independentData,
+                ...formValues,
+                createdBy: userId,
+                status: "Pending",
+                isLinkedToProject: false
+            };
+        }
+        else {
+            // 🔥 Project-Based HUMINT Payload
+            payload = {
+                projectId: id,
+                ...formValues,
+                createdBy: userId,
+                responsible: projects?.responsibleAnalyst?._id,
+                isLinkedToProject: true
+            };
+        }
 
         try {
-            const response = await createHumint({
-                projectId: id,
-
-                // raw values first
-                ...values,
-
-                // overwrite with backend-required fields
-                createdBy: userId,
-                responsible: projects.responsibleAnalyst?._id,
-                priority: mapPriority[values.priority],
-            }).unwrap();
-
-            toast.success("Cererea HUMINT a fost trimisă spre aprobare!");
+            await createHumint(payload).unwrap();
+            toast.success("Cererea HUMINT trimisă!");
         } catch (error) {
-            console.error("HUMINT error:", error);
-            toast.error("A apărut o eroare la trimiterea cererii!");
+            console.error(error);
+            toast.error("Eroare la trimiterea cererii!");
         }
     };
 
-
-
-
+    // ========================================================================
+    // HANDLE SAVE DRAFT
+    // ========================================================================
     const handleSaveDraft = async () => {
         const values = formRef.current.getValues();
         const userId = localStorage.getItem("userId");
 
-        try {
-            const response = await createHumint({
-                projectId: id,
-                ...values,
-                createdBy: userId,
-                responsible: projects.responsibleAnalyst?._id,
-                status: "Draft",
-                isDraft: true, // optional but useful
-            }).unwrap();
+        const payload = {
+            projectId: id,
+            ...values,
+            createdBy: userId,
+            responsible: projects.responsibleAnalyst?._id,
+            status: "Draft"
+        };
 
+        try {
+            await createHumint(payload).unwrap();
             toast.success("Draft salvat cu succes!");
         } catch (error) {
-            console.error("Draft error:", error);
-            toast.error("A apărut o eroare la salvarea draftului!");
+            console.error(error);
+            toast.error("Eroare la salvarea draftului!");
         }
-    };
-
-
-    const handleGenerateBrief = () => {
-        // printable brief generate karne ka logic yahan
-        console.log("Generează brief printabil clicked");
     };
 
     return (
         <>
             <Header />
-            <RequestForm projects={projects} ref={formRef} />
+
+            <RequestForm
+                ref={formRef}
+                projects={isIndependent ? null : projects}
+                independent={isIndependent}
+                independentData={independentData}
+                analysts={analysts}
+            />
+
             <Button
                 onApprove={handleApprove}
                 onSaveDraft={handleSaveDraft}
-                onGenerateBrief={handleGenerateBrief}
+                onGenerateBrief={() => console.log("Generate brief")}
             />
         </>
     );
