@@ -393,7 +393,13 @@ const ProjectRequest = () => {
                                     Telefon
                                     <input
                                         type="number"
-                                        className={`${styles.input} ${errors.phone ? styles.inputError : ''}`}
+                                        min="0"
+                                        onKeyDown={(e) => {
+                                            if (e.key === '-' || e.key === 'Minus') {
+                                                e.preventDefault();
+                                            }
+                                        }}
+                                        className={`${styles.input} ${styles['no-spin-project-request']} ${errors.phone ? styles.inputError : ''}`}
                                         value={phone}
                                         onChange={(e) =>
                                             setPhone(e.target.value)
@@ -635,7 +641,13 @@ const ProjectRequest = () => {
                                     Preț proiect
                                     <input
                                         type="number"
-                                        className={`${styles.input} ${errors.projectPrice ? styles.inputError : ''}`}
+                                        min="0"
+                                        onKeyDown={(e) => {
+                                            if (e.key === '-' || e.key === 'Minus') {
+                                                e.preventDefault();
+                                            }
+                                        }}
+                                        className={`${styles.input} ${styles['no-spin-project-request']} ${errors.projectPrice ? styles.inputError : ''}`}
                                         value={projectPrice}
                                         onChange={(e) =>
                                             setProjectPrice(e.target.value)
