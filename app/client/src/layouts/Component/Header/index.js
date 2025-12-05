@@ -17,7 +17,7 @@ const Header = () => {
   return (
     <header className="header">
         <div className="firstSec">
-                    <h3 className="logo">{dashboardTitle}</h3>
+            <h3 className="logo">{dashboardTitle}</h3>
       <div className="search-box">
         <span className="search-icon">🔍</span>
         <input type="text" placeholder="Caută proiect, persoană sau task..." />
