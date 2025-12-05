@@ -292,14 +292,11 @@ const NewProject = () => {
 
         console.log(payload)
         try {
-            if (id) {
+
                 await createProject( payload).unwrap();
                 toast.success("Proiect final creat cu succes!");
 
-            } else {
-                await requestProject(payload).unwrap();
-                toast.success("Solicitare proiect creată cu succes!");
-            }
+
         } catch (err) {
             console.log(err);
             toast.error("Eroare la salvare!");
