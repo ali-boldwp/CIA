@@ -4,27 +4,35 @@ import React, { useState } from "react";
 import styles from "./CustumPop.module.css";
 import { useNavigate } from "react-router-dom";
 
+// 🔥 Fetch Analysts API
+import { useGetAnalystsQuery } from "../../services/userApi";
+
 const CustumPopUp = () => {
     const navigate = useNavigate();
 
+    // GET ANALYSTS FROM BACKEND
+    const { data: AnalystData } = useGetAnalystsQuery();
+    const analysts = AnalystData?.data || [];
+
     const [form, setForm] = useState({
         subject: "",
-        entityType: "",
+        reportType: "",
         deadline: "",
         priority: "",
         responsible: "",
         createProject: "",
         notifyManager: "",
+        isLinkedToProject: false
     });
 
     const [errors, setErrors] = useState({});
 
+    // Generic change handler
     const handleChange = (field) => (e) => {
         setForm((prev) => ({
             ...prev,
             [field]: e.target.value,
         }));
-        // remove error while typing
         setErrors((prev) => {
             const copy = { ...prev };
             delete copy[field];
@@ -35,30 +43,46 @@ const CustumPopUp = () => {
     const validate = () => {
         const newErrors = {};
 
-        if (!form.subject.trim()) newErrors.subject = "Câmp obligatoriu";
-        if (!form.entityType) newErrors.entityType = "Câmp obligatoriu";
-        if (!form.deadline) newErrors.deadline = "Câmp obligatoriu";
-        if (!form.priority) newErrors.priority = "Câmp obligatoriu";
-        if (!form.responsible) newErrors.responsible = "Câmp obligatoriu";
-        if (!form.createProject) newErrors.createProject = "Câmp obligatoriu";
-        if (!form.notifyManager) newErrors.notifyManager = "Câmp obligatoriu";
+        if (!form.subject.trim()) newErrors.subject = "Required";
+        if (!form.reportType) newErrors.reportType = "Required";
+        if (!form.deadline) newErrors.deadline = "Required";
+        if (!form.priority) newErrors.priority = "Required";
+        if (!form.responsible) newErrors.responsible = "Required";
+        if (!form.createProject) newErrors.createProject = "Required";
+        if (!form.notifyManager) newErrors.notifyManager = "Required";
 
         return newErrors;
     };
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        const validationErrors = validate();
 
-        if (Object.keys(validationErrors).length > 0) {
-            setErrors(validationErrors);
+        const validation = validate();
+        if (Object.keys(validation).length) {
+            setErrors(validation);
             return;
         }
 
-        console.log("Form OK:", form);
+        // Independent Payload
+        const cleanPayload = {
+            isLinkedToProject: false,
+            humintSubject: form.subject,
+            reportType: form.reportType,
+            deadline: form.deadline,
+            priority: form.priority,    // Backend enum
+            responsible: form.responsible, // Analyst ID
+            createProjectFromRequest: form.createProject === "da",
+            notifyManager: form.notifyManager === "da",
+        };
 
-        // ✅ REDIRECT TO HUMINT REQUEST PAGE
-        navigate("/humintRequest-Page", { state: { form } });
+        console.log("Independent HUMINT →", cleanPayload);
+
+        navigate("/humintRequest-Page", {
+            state: {
+                humintType: "independent",
+                data: cleanPayload,
+            },
+        });
     };
 
     return (
@@ -67,129 +91,122 @@ const CustumPopUp = () => {
                 <h3 className={styles.title}>
                     Solicitare independentă — context minim
                 </h3>
-                <p className={styles.subtitle}>
-                    Dacă nu există un proiect asociat, completează contextul minim
-                    pentru HUMINT:
-                </p>
 
                 <form className={styles.form} onSubmit={handleSubmit}>
+
                     {/* ROW 1 */}
                     <div className={styles.row}>
-                        {/* Subiect HUMINT */}
+
+                        {/* SUBJECT */}
                         <div className={styles.field}>
                             <label className={styles.label}>Subiect HUMINT</label>
                             <input
-                                className={`${styles.input} ${
-                                    errors.subject ? styles.inputError : ""
-                                }`}
-                                placeholder="ex.: Observare discretă — sediu ABC"
+                                className={`${styles.input} ${errors.subject ? styles.inputError : ""}`}
                                 value={form.subject}
                                 onChange={handleChange("subject")}
+                                placeholder="ex.: Observare discretă — sediu ABC"
                             />
-                            {errors.subject && (
-                                <span className={styles.errorText}>
-                                    {errors.subject}
-                                </span>
-                            )}
+                            {errors.subject && <span className={styles.errorText}>{errors.subject}</span>}
                         </div>
 
-                        {/* Tip entitate */}
+                        {/* ENTITY TYPE DROPDOWN (Your list) */}
                         <div className={styles.field}>
-                            <label className={styles.label}>Tip entitate</label>
+                            <label className={styles.label}>Tip raport</label>
                             <select
-                                className={`${styles.select} ${
-                                    errors.entityType ? styles.inputError : ""
-                                }`}
-                                value={form.entityType}
-                                onChange={handleChange("entityType")}
+                                className={`${styles.select} ${errors.reportType ? styles.inputError : ""}`}
+                                value={form.reportType}
+                                onChange={handleChange("reportType")}
                             >
-                                <option value="">Selectează</option>
-                                <option value="persoana">Persoană</option>
-                                <option value="societate">Societate</option>
-                                <option value="alt">Alt</option>
+                                <option value="">Selectează...</option>
+                                <option value="Enhanced Due Diligence (Societate / Grup)">
+                                    Enhanced Due Diligence (Societate / Grup)
+                                </option>
+                                <option value="Preliminary Due Diligence">
+                                    Preliminary Due Diligence
+                                </option>
+                                <option value="Background Check">
+                                    Background Check
+                                </option>
+                                <option value="Preliminary Background Check">
+                                    Preliminary Background Check
+                                </option>
+                                <option value="Fraud Investigation">
+                                    Fraud Investigation
+                                </option>
+                                <option value="Audit reputational">
+                                    Audit reputational
+                                </option>
+                                <option value="Raport de informare">
+                                    Raport de informare
+                                </option>
+                                <option value="Altele (Custom)">
+                                    Altele (Custom)
+                                </option>
                             </select>
-                            {errors.entityType && (
-                                <span className={styles.errorText}>
-                                    {errors.entityType}
-                                </span>
+
+                            {errors.reportType && (
+                                <span className={styles.errorText}>{errors.reportType}</span>
                             )}
                         </div>
 
-                        {/* Deadline */}
+                        {/* DEADLINE */}
                         <div className={styles.field}>
                             <label className={styles.label}>Deadline</label>
                             <input
                                 type="date"
-                                className={`${styles.input} ${
-                                    errors.deadline ? styles.inputError : ""
-                                }`}
+                                className={`${styles.input} ${errors.deadline ? styles.inputError : ""}`}
                                 value={form.deadline}
                                 onChange={handleChange("deadline")}
                             />
-                            {errors.deadline && (
-                                <span className={styles.errorText}>
-                                    {errors.deadline}
-                                </span>
-                            )}
+                            {errors.deadline && <span className={styles.errorText}>{errors.deadline}</span>}
                         </div>
 
-                        {/* Prioritate */}
+                        {/* PRIORITY (backend enum) */}
                         <div className={styles.field}>
                             <label className={styles.label}>Prioritate</label>
                             <select
-                                className={`${styles.select} ${
-                                    errors.priority ? styles.inputError : ""
-                                }`}
+                                className={`${styles.select} ${errors.priority ? styles.inputError : ""}`}
                                 value={form.priority}
                                 onChange={handleChange("priority")}
                             >
-                                <option value="">Selectează</option>
-                                <option value="normal">Normal</option>
-                                <option value="ridicat">Ridicat</option>
-                                <option value="urgent">Urgent</option>
+                                <option value="">Selectează...</option>
+                                <option value="Normal">Normal</option>
+                                <option value="High">High</option>
+                                <option value="Urgent">Urgent</option>
+                                <option value="Confidential">Confidential</option>
                             </select>
-                            {errors.priority && (
-                                <span className={styles.errorText}>
-                                    {errors.priority}
-                                </span>
-                            )}
+                            {errors.priority && <span className={styles.errorText}>{errors.priority}</span>}
                         </div>
+
                     </div>
 
                     {/* ROW 2 */}
                     <div className={styles.row}>
-                        {/* Responsabil */}
+
+                        {/* RESPONSIBLE (analyst dropdown) */}
                         <div className={`${styles.field} ${styles.fieldWide}`}>
                             <label className={styles.label}>Responsabil</label>
                             <select
-                                className={`${styles.select} ${
-                                    errors.responsible ? styles.inputError : ""
-                                }`}
+                                className={`${styles.select} ${errors.responsible ? styles.inputError : ""}`}
                                 value={form.responsible}
                                 onChange={handleChange("responsible")}
                             >
-                                <option value="">Alege responsabil</option>
-                                <option value="analistA">Analist A</option>
-                                <option value="analistB">Analist B</option>
-                                <option value="analistC">Analist C</option>
-                                <option value="managerX">Manager X</option>
+                                <option value="">Selectează analist</option>
+
+                                {analysts.map((a) => (
+                                    <option key={a._id} value={a._id}>
+                                        {a.name} ({a.role})
+                                    </option>
+                                ))}
                             </select>
-                            {errors.responsible && (
-                                <span className={styles.errorText}>
-                                    {errors.responsible}
-                                </span>
-                            )}
+                            {errors.responsible && <span className={styles.errorText}>{errors.responsible}</span>}
                         </div>
 
-                        {/* Creează proiect nou din solicitare */}
+                        {/* CREATE PROJECT */}
                         <div className={styles.field}>
-                            <label className={styles.label}>
-                                Creează proiect nou din solicitare
-                            </label>
+                            <label className={styles.label}>Creează proiect nou</label>
                             <select
-                                className={`${styles.select} ${
-                                    errors.createProject ? styles.inputError : ""
-                                }`}
+                                className={`${styles.select} ${errors.createProject ? styles.inputError : ""}`}
                                 value={form.createProject}
                                 onChange={handleChange("createProject")}
                             >
@@ -197,20 +214,14 @@ const CustumPopUp = () => {
                                 <option value="da">Da</option>
                                 <option value="nu">Nu</option>
                             </select>
-                            {errors.createProject && (
-                                <span className={styles.errorText}>
-                                    {errors.createProject}
-                                </span>
-                            )}
+                            {errors.createProject && <span className={styles.errorText}>{errors.createProject}</span>}
                         </div>
 
-                        {/* Notifică manager */}
+                        {/* NOTIFY MANAGER */}
                         <div className={styles.field}>
                             <label className={styles.label}>Notifică manager</label>
                             <select
-                                className={`${styles.select} ${
-                                    errors.notifyManager ? styles.inputError : ""
-                                }`}
+                                className={`${styles.select} ${errors.notifyManager ? styles.inputError : ""}`}
                                 value={form.notifyManager}
                                 onChange={handleChange("notifyManager")}
                             >
@@ -218,20 +229,16 @@ const CustumPopUp = () => {
                                 <option value="da">Da</option>
                                 <option value="nu">Nu</option>
                             </select>
-                            {errors.notifyManager && (
-                                <span className={styles.errorText}>
-                                    {errors.notifyManager}
-                                </span>
-                            )}
+                            {errors.notifyManager && <span className={styles.errorText}>{errors.notifyManager}</span>}
                         </div>
+
                     </div>
 
-                    {/* BUTTON ROW */}
+                    {/* SUBMIT */}
                     <div className={styles.buttonRow}>
-                        <button type="submit" className={styles.continueBtn}>
-                            Continuă
-                        </button>
+                        <button type="submit" className={styles.continueBtn}>Continuă</button>
                     </div>
+
                 </form>
             </div>
         </div>

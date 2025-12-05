@@ -1,58 +1,144 @@
-// /home/ubaid/workspace/app/client/src/pages/HumintRequestDetail/HumintRequestDetail.js
+// HumintRequestDetail.js
 
 import React, { useRef } from "react";
 import Header from "./Header";
 import RequestDetailForm from "./RequestDetailForm";
 import ActionButtons from "./Button";
+import { useParams } from "react-router-dom";
+
+import {
+    useGetHumintByIdQuery,
+    useApproveHumintMutation,
+    useRejectHumintMutation,
+    useClarificationHumintMutation,
+    useUpdateHumintMutation
+} from "../../services/humintApi";
+
+import { useGetAnalystsQuery } from "../../services/userApi";
+import {toast} from "react-toastify";
 
 const HumintRequestDetail = () => {
+    const { id } = useParams();
+
+    const { data, isLoading } = useGetHumintByIdQuery(id);
+    const humint = data?.data;
+
+    const { data: analystData } = useGetAnalystsQuery();
+    const analysts = analystData?.data || [];
+
     const formRef = useRef(null);
+
+    // API MUTATIONS
+    const [approveHumint] = useApproveHumintMutation();
+    const [rejectHumint] = useRejectHumintMutation();
+    const [clarificationHumint] = useClarificationHumintMutation();
+    const [updateHumint] = useUpdateHumintMutation();
+
+    // Analyst resolver (works with object or ID)
+    const resolveAnalystName = (responsible) => {
+        if (!responsible) return "";
+
+        if (typeof responsible === "object" && responsible._id) {
+            return responsible.name;
+        }
+
+        const found = analysts.find(a => a._id === responsible);
+        return found ? found.name : "";
+    };
+
+    if (isLoading || !humint) {
+        return <h2 style={{ padding: 20 }}>Loading HUMINT…</h2>;
+    }
+
+    const enrichedHumint = {
+        ...humint,
+        responsibleName: resolveAnalystName(humint.responsible),
+    };
 
     const validateAndGetValues = () => {
         if (!formRef.current) return null;
-        const ok = formRef.current.submitForm();
-        if (!ok) return null;
+        if (!formRef.current.submitForm()) return null;
         return formRef.current.getValues();
     };
 
-    const handleApprove = () => {
+    // Approve
+    const handleApprove = async () => {
         const values = validateAndGetValues();
         if (!values) return;
-        console.log("APPROBA:", values);
-        // TODO: yahan approve API call lagao
+
+        try {
+            await approveHumint(id).unwrap();
+            toast("Aprobat!");
+        } catch (err) {
+            console.error(err);
+            toast("Eroare la aprobare");
+        }
     };
 
-    const handleReject = () => {
+    // Reject
+    const handleReject = async () => {
         const values = validateAndGetValues();
         if (!values) return;
-        console.log("RESPINGE:", values);
-        // TODO: yahan reject API call lagao
+
+        try {
+            await rejectHumint({
+                id,
+                feedback: values.managerFeedback
+            }).unwrap();
+
+            toast("Respins!");
+        } catch (err) {
+            console.error(err);
+            toast.error("Eroare la respingere");
+        }
     };
 
-    const handleClarify = () => {
+    // Clarification
+    const handleClarify = async () => {
         const values = validateAndGetValues();
         if (!values) return;
-        console.log("SOLICITĂ CLARIFICĂRI:", values);
-        // TODO: yahan clarificari request API call lagao
+
+        try {
+            await clarificationHumint({
+                id,
+                feedback: values.managerFeedback
+            }).unwrap();
+
+            toast("Solicitare trimisă!");
+        } catch (err) {
+            console.error(err);
+            toast.error("Eroare la clarificări");
+        }
     };
 
-    const handlePrintBrief = () => {
+    const handleUpdate = async () => {
         const values = validateAndGetValues();
         if (!values) return;
-        console.log("GENEREAZĂ BRIEF PRINTABIL:", values);
-        // TODO: yahan printable brief generate / open karna hai
+
+        try {
+            await updateHumint({ id, data: values }).unwrap();
+            toast("Actualizat!");
+        } catch (err) {
+            console.error(err);
+            toast.error("Eroare la actualizare");
+        }
     };
 
     return (
         <>
             <Header />
-            <RequestDetailForm ref={formRef} />
+
+            <RequestDetailForm
+                ref={formRef}
+                humint={enrichedHumint}
+                analysts={analysts}
+            />
 
             <ActionButtons
                 onApprove={handleApprove}
                 onReject={handleReject}
                 onClarify={handleClarify}
-                onPrint={handlePrintBrief}
+                onPrint={() => console.log("Print soon")}
             />
         </>
     );

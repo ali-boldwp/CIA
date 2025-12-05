@@ -5,28 +5,65 @@ export const createHumint = async (data: Partial<IHumint>) => {
 };
 
 export const getAllHumints = async (filters: any = {}) => {
-    return await Humint.find(filters)
-        .populate("projectId")
+    const humints = await Humint.find(filters)
+        .populate({
+            path: "projectId",
+            select: "projectName projectSubject reportType responsibleAnalyst",
+            model: "ProjectRequest"
+        })
+        .populate({
+            path: "responsible",
+            select: "name email role",
+            model: "User"
+        })
+        .populate({
+            path: "createdBy",
+            select: "name email role",
+            model: "User"
+        })
         .sort({ createdAt: -1 });
+
+    // ----- Attach derived project fields -----
+    return humints.map((h: any) => {
+        const obj = h.toObject();
+
+        if (h.isLinkedToProject && h.projectId) {
+            obj.projectName = h.projectId.projectName;
+            obj.reportType = h.projectId.reportType;
+
+            // Responsible analyst from project
+            obj.projectResponsible =
+                h.projectId.responsibleAnalyst?.name ||
+                h.projectId.responsibleAnalyst ||
+                "N/A";
+        } else {
+            // Independent HUMINT request
+            obj.projectName = h.humintSubject || "Independent Request";
+            obj.reportType = h.reportType || "HUMINT";
+
+            // Responsible analyst populated from User
+            obj.projectResponsible = h.responsible?.name || "N/A";
+        }
+
+        return obj;
+    });
 };
 
 export const getHumintById = async (id: string) => {
-    return await Humint.findById(id).populate("projectId");
+    return await Humint.findById(id)
+        .populate("projectId")
+        .populate("responsible", "name email role")
+        .populate("createdBy", "name email role");
 };
 
 export const updateHumint = async (id: string, data: Partial<IHumint>) => {
     return await Humint.findByIdAndUpdate(id, data, { new: true });
 };
 
-// ------------------------------
-// WORKFLOW ACTIONS BASED ON UI
-// ------------------------------
+
+// WORKFLOW ACTIONS
 export const submitHumint = async (id: string) => {
-    return await Humint.findByIdAndUpdate(
-        id,
-        { status: "Pending" },
-        { new: true }
-    );
+    return await Humint.findByIdAndUpdate(id, { status: "Pending" }, { new: true });
 };
 
 export const approveHumint = async (id: string, managerId: string) => {
@@ -40,11 +77,7 @@ export const approveHumint = async (id: string, managerId: string) => {
 export const rejectHumint = async (id: string, feedback: string, managerId: string) => {
     return await Humint.findByIdAndUpdate(
         id,
-        {
-            status: "Rejected",
-            managerFeedback: feedback,
-            managerId,
-        },
+        { status: "Rejected", managerFeedback: feedback, managerId },
         { new: true }
     );
 };
@@ -52,22 +85,13 @@ export const rejectHumint = async (id: string, feedback: string, managerId: stri
 export const clarificationHumint = async (id: string, feedback: string, managerId: string) => {
     return await Humint.findByIdAndUpdate(
         id,
-        {
-            status: "Clarification",
-            managerFeedback: feedback,
-            managerId,
-        },
+        { status: "Clarification", managerFeedback: feedback, managerId },
         { new: true }
     );
 };
 
-// Mark Completed after collection finished
 export const completeHumint = async (id: string) => {
-    return await Humint.findByIdAndUpdate(
-        id,
-        { status: "Completed" },
-        { new: true }
-    );
+    return await Humint.findByIdAndUpdate(id, { status: "Completed" }, { new: true });
 };
 
 export const deleteHumint = async (id: string) => {

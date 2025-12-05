@@ -14,6 +14,7 @@ const SearchBar = ({
     return (
         <div className={styles.container}>
             <div className={styles.box}>
+
                 {/* LEFT: SEARCH INPUT */}
                 <div className={styles.searchWrapper}>
                     <input
@@ -25,8 +26,10 @@ const SearchBar = ({
                     />
                 </div>
 
-                {/* RIGHT: FILTERS + BUTTON */}
+                {/* RIGHT: FILTERS + APPROVE BUTTON */}
                 <div className={styles.filters}>
+
+                    {/* Sort Filter */}
                     <div className={styles.filterGroup}>
                         <span className={styles.filterLabel}>Sortează</span>
                         <select
@@ -39,6 +42,7 @@ const SearchBar = ({
                         </select>
                     </div>
 
+                    {/* Priority Filter */}
                     <div className={styles.filterGroup}>
                         <span className={styles.filterLabel}>Prioritate</span>
                         <select
@@ -53,15 +57,17 @@ const SearchBar = ({
                         </select>
                     </div>
 
+                    {/* 🔥 APPROVE SELECTED BUTTON */}
                     <button
                         className={`${styles.approveBtn} ${
                             !hasSelection ? styles.approveBtnDisabled : ""
                         }`}
-                        onClick={onApproveSelected}
                         disabled={!hasSelection}
+                        onClick={onApproveSelected}
                     >
                         Aprobă selectate
                     </button>
+
                 </div>
             </div>
         </div>

@@ -1,6 +1,5 @@
 import HumintRequestDetail from "./HumintRequestDetail";
 
-
 const HumintRequestDetailConfig = {
     settings: {
         layout: {
@@ -8,11 +7,9 @@ const HumintRequestDetailConfig = {
         }
     },
 
-
-
     routes: [
         {
-            path: '/humintRequest-Detail',
+            path: '/humintRequest-Detail/:id',
             element: <HumintRequestDetail />
         }
     ]
