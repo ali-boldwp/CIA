@@ -50,7 +50,7 @@ const StatusSection = () => {
 
                 <div className="stat-box">
                     <span className="label">💻 Solicitare de proiect nou</span>
-                    <Link to="" className="gradient-btn">Adaugă</Link>
+                    <Link to="/project" className="gradient-btn">Adaugă</Link>
                 </div>
 
                 <div className="stat-box">
