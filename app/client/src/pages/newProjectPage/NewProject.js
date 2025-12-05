@@ -321,6 +321,27 @@ const NewProject = () => {
     if (isLoading) return <div className="loading">Se încarcă datele...</div>;
 
 
+// ============================
+// SAVE DRAFT HANDLER
+// ============================
+    const handleDraft = async () => {
+        const userId = localStorage.getItem("userId");
+
+        const payload = {
+            ...buildPayload(),
+            status: "draft",        // 🔥 VERY IMPORTANT
+            createdBy: userId,
+        };
+
+        try {
+            const response = await createProject(payload).unwrap();
+            toast("Draft proiect salvat!");
+            navigate(`/projectDetail/${response.data._id}`);
+        } catch (err) {
+            console.log(err);
+            toast.error("Eroare la salvarea draftului!");
+        }
+    };
 
     return (
         <div className="page-wrapper1">
@@ -926,10 +947,11 @@ const NewProject = () => {
                     <div className="button-row">
                         <button
                             className="draftProject"
-                            // onClick={handleDraft}
+                            onClick={handleDraft}
                         >
                             Salvează draft
                         </button>
+
 
                         <button
                             className="createProject"

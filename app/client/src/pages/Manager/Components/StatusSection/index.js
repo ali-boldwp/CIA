@@ -61,10 +61,16 @@ const StatusSection = () => {
                 </div>
 
                 <div className="stat-box">
+                    <div>
                     <span className="label">👥 Analiști implicați</span>
                     <h3>7/10</h3>
+                    </div>
+                    <Link to="/allUser" className="gradient-btn">
+                        👥 Vezi utilizatorii
+                    </Link>
                 </div>
-
+            </div>
+            <div className="status2">
                 <div className="stat-box">
                     <span className="label">☑️ Finalizate</span>
                     <h3>350</h3>
@@ -75,11 +81,11 @@ const StatusSection = () => {
                     <button className="gradient-btn">KPI</button>
                 </div>
 
-            </div>
 
-            <div className="status2">
 
-                <div className="stat-box wide">
+
+
+                <div className="stat-box ">
                     <span className="label">📤 Solicitări proiect — de revizuit</span>
                     <div className="sec">
                         <h3>{requestedReq.length}</h3>
@@ -87,7 +93,7 @@ const StatusSection = () => {
                     </div>
                 </div>
 
-                <div className="stat-box wide">
+                <div className="stat-box ">
                     <span className="label">🕵️‍♂️ Solicitări HUMINT — de aprobat</span>
                     <div className="sec">
                         <h3>2</h3>
@@ -95,18 +101,7 @@ const StatusSection = () => {
                     </div>
                 </div>
 
-                {/* Total Users card */}
-                <div className="stat-box wide">
-                    <span className="label">👤 Toți utilizatorii</span>
-                    <div className="sec">
-                        <h3>{usersLoading ? "..." : totalUsers}</h3>
-                        <Link to="/allUser" className="gradient-btn">
-                            👥 Vezi utilizatorii
-                        </Link>
-                    </div>
-                </div>
-
-                <div className="stat-box wide blue-box">
+                <div className="stat-box blue-box">
                     <span className="label">💬 Mesaje necitite</span>
                     <div className="sec">
                         <h3>5</h3>
