@@ -62,6 +62,47 @@ const EmployeeSection = ({ type, rows = [], onAddClick, onEdit, onDelete }) => {
     const current = config[type];
     const { title, taxLabel, columns } = current;
 
+    // Helper function to format date to YYYY-MM-DD
+    const formatDate = (dateString) => {
+        if (!dateString) return "—";
+
+        try {
+            const date = new Date(dateString);
+            // Check if date is valid
+            if (isNaN(date.getTime())) return "—";
+
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+
+            return `${year}-${month}-${day}`;
+        } catch (error) {
+            return "—";
+        }
+    };
+
+    // Helper function to format numbers with 1 decimal place
+    const formatNumberToOneDecimal = (number) => {
+        if (number === undefined || number === null || number === "—") return "—";
+        const num = Number(number);
+        if (isNaN(num)) return "—";
+        return num.toFixed(1);
+    };
+
+    // Helper function to truncate name to 2 words with ellipsis
+    const truncateName = (name) => {
+        if (!name) return "—";
+
+        const words = name.trim().split(/\s+/); // Split by any whitespace
+
+        if (words.length <= 2) {
+            return name;
+        }
+
+        // Take first two words and add ellipsis
+        return `${words[0]} ${words[1]}...`;
+    };
+
     return (
         <div className={styles.wrapper}>
             <div className={styles.card}>
@@ -121,10 +162,25 @@ const EmployeeSection = ({ type, rows = [], onAddClick, onEdit, onDelete }) => {
                                 {columns.map((col) => {
                                     let value = row[col.key] ?? "—";
 
+                                    // Name truncation
+                                    if (col.key === "name") {
+                                        value = truncateName(row.name);
+                                    }
+
+                                    // Date formatting for hiringDate
+                                    if (col.key === "hiringDate") {
+                                        value = formatDate(row.hiringDate);
+                                    }
+
                                     // Dynamic values
                                     if (col.key === "seniority") value = seniority;
                                     if (col.key === "bonusWithTax") value = bonusWithTax;
                                     if (col.key === "totalCost") value = totalCost;
+
+                                    // Format costPerDay and costPerHour to 1 decimal place
+                                    if (col.key === "costPerDay" || col.key === "costPerHour") {
+                                        value = formatNumberToOneDecimal(row[col.key]);
+                                    }
 
                                     // ACTIONS column
                                     if (col.key === "actions") {
@@ -146,7 +202,7 @@ const EmployeeSection = ({ type, rows = [], onAddClick, onEdit, onDelete }) => {
                                                         style={{ backgroundColor: row.avatarDotColor }}
                                                     />
                                                 )}
-                                                <span>{value}</span>
+                                                <span title={row.name}>{value}</span>
                                             </div>
                                         );
                                     }
