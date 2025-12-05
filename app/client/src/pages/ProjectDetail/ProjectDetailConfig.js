@@ -7,7 +7,7 @@ const ProjectDetailConfig = {
         }
     },
 
-
+   auth : [ 'admin' , 'manager'],
 
     routes: [
         {
