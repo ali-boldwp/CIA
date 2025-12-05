@@ -1,12 +1,11 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import {
-
     useRequestProjectMutation,
     useCreateProjectMutation,
-
-    useUpdateProjectMutation, useGetRequestedProjectByIdQuery,
+    useGetRequestedProjectByIdQuery,
 } from "../../services/projectApi";
+import { useNavigate } from "react-router-dom";
 import { useGetAnalystsQuery } from "../../services/userApi";
 import "./NewProjectstyle.css";
 import { toast } from "react-toastify";
@@ -83,12 +82,18 @@ const NewProject = () => {
     // ============================
     useEffect(() => {
         if (request && id) {
+            const backendToUi = {
+                "Normal": "Normal",
+                "High": "Ridicată",
+                "Urgent": "Urgentă",
+                "Confidential": "Confidențial"
+            };
             setProjectName(request.projectName || "");
             setProjectSubject(request.projectSubject || "");
             setReportType(request.reportType || "");
             setEntityType(request.entityType || "");
             setDeadline(request.deadline?.substring(0, 10) || "");
-            setPriority(request.priority || "");
+            setPriority(backendToUi[request.priority] || "");
             setLanguage(request.deliverableLanguage || "");
             setProjectDescription(request.projectDescription || "");
 
@@ -127,6 +132,7 @@ const NewProject = () => {
     // ============================
     // VALIDATION
     // ============================
+    const navigate=useNavigate();
     const validateForm = () => {
         let newErrors = {};
 
@@ -292,14 +298,12 @@ const NewProject = () => {
 
         console.log(payload)
         try {
-            if (id) {
-                await createProject( payload).unwrap();
-                toast.success("Proiect final creat cu succes!");
 
-            } else {
-                await requestProject(payload).unwrap();
-                toast.success("Solicitare proiect creată cu succes!");
-            }
+               const response= await createProject( payload).unwrap();
+                toast("Proiect final creat cu succes!");
+            navigate(`/projectDetail/${response.data._id}`);
+
+
         } catch (err) {
             console.log(err);
             toast.error("Eroare la salvare!");
@@ -315,9 +319,8 @@ const NewProject = () => {
     // ============================
     if (isLoading) return <div className="loading">Se încarcă datele...</div>;
 
-    // ============================
-    // RENDER UI
-    // ============================
+
+
     return (
         <div className="page-wrapper1">
             <div className="page-container">
@@ -475,20 +478,23 @@ const NewProject = () => {
 
                         <div className="form-field">
                             <label>Prioritate</label>
-                            <input
-                                className="input-box"
-                                placeholder="Normal"
+                            <select
+                                className={`${styles.input} ${errors.priority ? styles.inputError : ""}`}
                                 value={priority}
-                                onChange={(e) =>
-                                    setPriority(e.target.value)
-                                }
-                            />
+                                onChange={(e) => setPriority(e.target.value)}
+                            >
+                                <option value="">Selectează...</option>
+                                <option value="Normal">Normal</option>
+                                <option value="Ridicată">Ridicată</option>
+                                <option value="Urgentă">Urgentă</option>
+                                <option value="Confidențial">Confidențial</option>
+                            </select>
+
                             {errors.priority && (
-                                <p className={styles.errorText}>
-                                    {errors.priority}
-                                </p>
+                                <p className={styles.errorText}>{errors.priority}</p>
                             )}
                         </div>
+
                     </div>
 
                     {/* ROW 3 */}

@@ -112,12 +112,18 @@
     margin-top: 1.5rem;
 }
 
+
 /* PROJECTS */
 .projects-row {
     display: grid;
     grid-template-columns: 1.4fr 1.4fr;
     gap: 20px;
     margin-bottom: 28px;
+}
+
+.analyst-title {
+  margin-bottom: 0.8rem;
+    font-size: 1rem;
 }
 
 .project-card {
@@ -127,15 +133,27 @@
     box-shadow: 0 8px 18px rgba(15, 23, 42, 0.06);
 }
 
+
+.project-card-analyst {
+    background: #ffffff;
+    border-radius: 18px;
+    padding-top: 18px;
+    padding-right: 22px;
+    padding-bottom: 18px;
+    padding-left: 22px;
+    box-shadow: 0 8px 18px rgba(15, 23, 42, 0.06);
+
+}
+
 .project-header {
     display: flex;
     justify-content: space-between;
-    align-items: center;
 }
 
 .project-name {
     font-weight: 700;
     font-size: 15px;
+    text-transform: capitalize;
 }
 
 .sales-section-title {
@@ -172,11 +190,42 @@
     color: #6b7280;
 }
 
+.status-dot-wrapper-analyst {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: row;
+    gap: 4px;
+    font-size: 11px;
+    color: #6b7280;
+
+}
+
+.pill-analyst {
+
+    border: 1px solid #e5e7eb;
+    color:#fff;
+    font-size: 10px;
+    font-weight: 500;
+    padding: 6px 30px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    border-radius: 16px;
+}
+
 /* DOTS */
 .dot {
     width: 10px;
     height: 10px;
     border-radius: 999px;
+}
+
+.status-text-analyst {
+    font-size: 13px;
+    margin-right: 8px;
 }
 
 
@@ -310,21 +359,44 @@
     width: 100%;
     border-collapse: collapse;
     font-size: 13px;
+    table-layout: fixed; /* This ensures equal column width */
 }
 
 .humint-table th {
-    text-align: left;
+    text-align: center;
     color: #6b7280;
     font-weight: 600;
-    padding-bottom: 12px;
+    padding: 12px 0;
+    background: #fff ;
+    width: 25%; /* Each column gets 25% width */
 }
 
 .humint-table td {
     padding: 10px 0;
     border-top: 1px solid #f3f4f6;
-    font-weight: 700 ;
+    text-align: center;
+    font-weight: 700;
+    width: 25%; /* Each column gets 25% width */
+    vertical-align: middle; /* Center content vertically */
+
 }
 
+/* Optional: Add some horizontal padding if needed */
+.humint-table th:first-child,
+.humint-table td:first-child {
+    padding-left: 10px;
+}
+
+.humint-table th:last-child,
+.humint-table td:last-child {
+    padding-right: 10px;
+}
+
+/* To ensure buttons fit nicely */
+.humint-table .pill-analyst {
+    display: inline-block;
+    max-width: 200px; /* Adjust as needed */
+}
 .status-badge {
     padding: 4px 20px;
     border-radius: 999px;
@@ -339,7 +411,7 @@
 
 .status-badge.green {
     background: #DCFCE7;
-    color: #166534;
+    color: #000;
 }
 
 .status-badge.gray {
@@ -473,6 +545,11 @@
     display: flex;
     justify-content: space-between;
     gap: 8px;
+}
+
+
+.no-margin-analyst {
+    margin: 0;
 }
 
 /* SIMPLE RESPONSIVE BEHAVIOR */

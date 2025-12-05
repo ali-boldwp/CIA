@@ -41,7 +41,7 @@ export default function AnalystList() {
     const handleDelete = async (_id) => {
         try {
             await deleteAnalyst(_id).unwrap();
-            toast.success("Analist șters cu succes!");
+            toast("Analist șters cu succes!");
         } catch (err) {
             toast.error("Eroare la ștergere!");
         }

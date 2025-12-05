@@ -69,30 +69,40 @@ const AnalystDashboard = () => {
 
                 <div className="summary-card">
                     <div className="summary-title">
-                        <span className="summary-icon">➕</span>
-                        <span>Adauga solicitare noua de HUMINT</span>
+                        <span>🕵️‍♀️ Adauga solicitare noua de HUMINT ➕</span>
                     </div>
                 </div>
 
                 <div className="summary-card">
                     <div className="summary-title">
-                        <span className="summary-icon">⏳</span>
-                        <span>HUMINT in asteptare aprobare</span>
+                        <span>⏳ HUMINT in asteptare aprobare</span>
                     </div>
                     <div className="summary-sub">
                         {projects?.filter(p => p.status === "requested").length} solicitari
                     </div>
                 </div>
+                <Link to="#">
+                    <div className="message-card">
+                        <div className="message-label">
+                            💬 Mesaje necitite
+                        </div>
+
+                        <div className="message-footer">
+                            <div className="message-count">5</div>
+                            <button className="message-button">Deschide messenger</button>
+                        </div>
+                    </div>
+                </Link>
             </div>
 
             {/* PROJECTS SECTION */}
-            <h2 className="section-title">Proiectele mele</h2>
+            <h2 className="analyst-title">Proiectele mele</h2>
 
             <div className="projects-row">
                 {projects?.map((project) => (
-                    <div className="project-card" key={project._id}>
+                    <div className="project-card-analyst" key={project._id}>
 
-                        <div className="project-header">
+                        <div className="project-header" >
                             <div className="project-name">{project.projectName}</div>
 
                             <div className="project-deadline-wrapper">
@@ -103,9 +113,9 @@ const AnalystDashboard = () => {
                                         : "—"}
                                 </span>
 
-                                <div className="status-dot-wrapper">
+                                <div className="status-dot-wrapper-analyst">
                                     <span className={`dot ${statusColors[project.status] || "gray"}`} />
-                                    <span className="status-text">{project.status}</span>
+                                    <span className="status-text-analyst">{project.status}</span>
                                 </div>
                             </div>
                         </div>
@@ -117,16 +127,16 @@ const AnalystDashboard = () => {
                         </div>
 
                         <div className="project-actions">
-                            <Link to={`/projectDetail/${project._id}`} className=" pill blue">Deschide</Link>
-                            <button className=" pill green">Mesaj</button>
-                            <button className=" pill red">HUMINT</button>
+                            <Link to={`/projectDetail/${project._id}`} className=" pill-analyst blue">Deschide</Link>
+                            <button className=" pill-analyst green">Mesaj</button>
+                            <button className=" pill-analyst red">HUMINT Primit </button>
                         </div>
                     </div>
                 ))}
             </div>
 
             {/* HUMINT REQUESTS TABLE */}
-            <h2 className="section-title">Solicitarile mele de HUMINT</h2>
+            <h2 className="analyst-title">Solicitarile mele de HUMINT</h2>
 
             <div className="humint-card">
                 <table className="humint-table">
@@ -157,7 +167,7 @@ const AnalystDashboard = () => {
                             </td>
 
                             <td>
-                                <button className="btn pill blue small">
+                                <button className="pill-analyst blue ">
                                     Deschide solicitarea
                                 </button>
                             </td>
@@ -169,7 +179,7 @@ const AnalystDashboard = () => {
 
             {/* CALENDAR DEADLINES */}
             <div className="bottom-row">
-                <h2 className="section-title no-margin">Calendar Deadlines</h2>
+                <h2 className="analyst-title no-margin-analyst">Calendar Deadlines</h2>
 
                 <div className="calendar-card">
                     <ul className="calendar-list">

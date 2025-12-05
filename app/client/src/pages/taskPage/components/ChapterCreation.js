@@ -13,7 +13,7 @@ const ChapterCreation = ({ projectId, createChapter }) => {
         try {
             setIsCreating(true);
             await createChapter({ name: chapterName, projectId }).unwrap();
-           toast.success("Chapter added successfully!");
+           toast("Chapter added successfully!");
             setChapterName("");
             setShowChapterInput(false);
         } catch (err) {
