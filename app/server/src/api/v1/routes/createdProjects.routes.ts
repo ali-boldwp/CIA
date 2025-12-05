@@ -29,6 +29,12 @@ router.get(
     createdProjectController.getProjectById
 );
 
+router.get(
+    "/:projectId/progress",
+    auth,
+    createdProjectController.getProjectProgress
+);
+
 
 router.put(
     "/:id",

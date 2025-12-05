@@ -179,3 +179,27 @@ a{
     border-radius: 10px;
     box-shadow: 1px 1px 15px lightgray;
 }
+.progress-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 85%;
+}
+
+/* percentage text right side */
+.progress-text {
+    font-size: 13px;
+    font-weight: 700;
+    color: #0f172a;
+    margin-left: 8px;
+}
+
+/* the task text */
+.progress-subtext {
+    display: block;
+    font-size: 13px;
+    margin-top: 4px;
+    font-style: italic;
+    color: #6b7280; /* light grey */
+}
+

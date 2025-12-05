@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { useGetAllUsersQuery } from "../../../../services/userApi";
+import { useGetProjectProgressQuery } from "../../../../services/projectApi";
 import {Link} from "react-router-dom";
 
 
@@ -7,6 +8,8 @@ const ProjectRow = ({ project, responsible,responsibles }) => {
   const [open, setOpen] = useState(false);
   const dropdownRef = useRef();
 
+    const { data: progressData, isLoading: progressLoading } =
+        useGetProjectProgressQuery(project._id);
 
 
     const { data: usersData } = useGetAllUsersQuery();
@@ -15,7 +18,14 @@ const ProjectRow = ({ project, responsible,responsibles }) => {
     const responsibleUser = users.find(
         (u) => u._id === project.responsibleAnalyst
     );
-  // Close when clicking outside
+
+    const progressPercent = progressData?.data?.progress || 0;
+    const completed = progressData?.data?.completedTasks || 0;
+    const total = progressData?.data?.totalTasks || 0;
+
+
+
+    // Close when clicking outside
   useEffect(() => {
     const handler = (e) => {
       if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
@@ -79,14 +89,30 @@ const ProjectRow = ({ project, responsible,responsibles }) => {
 
 
         {/* PROGRESS ------------------------ */}
-      <div className="col progress">
-        <div className="progress-bar1">
-          <div className="progress-fill1" style={{ width: `${project.progress}%` }}></div>
-        </div>
-        <span className="progress-text">{project.progressText}</span>
-      </div>
+        <div>
+            <div className="progress-wrapper">
+                <div className="progress-bar1">
+                    <div
+                        className="progress-fill1"
+                        style={{ width: `${progressPercent}%` }}
+                    ></div>
+                </div>
 
-      {/* STATUS -------------------------- */}
+                <span className="progress-text">
+            {progressLoading ? "..." : `${progressPercent}%`}
+        </span>
+            </div>
+
+            <span className="progress-subtext">
+        {progressLoading ? "" : `${completed}/${total} taskuri`}
+    </span>
+        </div>
+
+        {/* NEW: Show completed/total tasks */}
+
+
+
+        {/* STATUS -------------------------- */}
       <div className="col status">
         <span className={`status-badge-approved orange ${project.statusColor}`}>
           S-a solicitat HUMINT

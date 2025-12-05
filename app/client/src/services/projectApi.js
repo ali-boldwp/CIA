@@ -40,6 +40,11 @@ export const projectApi = createApi({
         getProjectCreate: builder.query({
             query: () => "/project",
         }),
+
+        getProjectProgress: builder.query({
+            query: (projectId) => `/project/${projectId}/progress`,
+        }),
+
         getProjectRequestById: builder.query({
             query: (id) => `/project-request/${id}`,
         }),
@@ -114,6 +119,7 @@ export const {
     useGetProjectRequestsQuery,
     useGetProjectCreateQuery,
     useGetChapterByIdQuery,
+    useGetProjectProgressQuery,
     useGetCreateProjectByIdQuery,
     useGetProjectRequestByIdQuery,
     useUpdateProjectMutation,

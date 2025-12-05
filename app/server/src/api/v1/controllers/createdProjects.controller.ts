@@ -144,3 +144,39 @@ export const deleteProject = async (req: Request, res: Response, next: NextFunct
         next(err);
     }
 };
+
+
+export const getProjectProgress = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const { projectId } = req.params;
+
+        // 1. Get all chapters of the project
+        const chapters = await Chapter.find({ projectId }).select("_id");
+        const chapterIds = chapters.map(c => c._id);
+
+        // 2. Count tasks
+        const totalTasks = await Task.countDocuments({
+            chapterId: { $in: chapterIds }
+        });
+
+        const completedTasks = await Task.countDocuments({
+            chapterId: { $in: chapterIds },
+            completed: true
+        });
+
+        // 3. Calculate progress
+        const progress =
+            totalTasks === 0 ? 0 : Math.round((completedTasks / totalTasks) * 100);
+
+        return res.json(
+            ok({
+                totalTasks,
+                completedTasks,
+                progress
+            })
+        );
+
+    } catch (err) {
+        next(err);
+    }
+};
