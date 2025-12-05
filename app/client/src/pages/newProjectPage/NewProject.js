@@ -12,6 +12,7 @@ import { toast } from "react-toastify";
 import styles from "../project/projectRequest/ProjectRequest.module.css";
 
 const NewProject = () => {
+    const navigate=useNavigate();
     const { id } = useParams();
 
     // LOAD ANALYSTS

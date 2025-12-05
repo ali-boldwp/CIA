@@ -38,30 +38,18 @@ const TableSection = ({
                           totalCount,
                       }) => {
     /** 🔍 SEARCH INPUT */
-    const [search, setSearch] = useState("");
+
 
     /** 📄 PAGINATION */
     const [page, setPage] = useState(1);
     const [limit, setLimit] = useState(10);
 
-    /** FILTER */
-    const filtered = useMemo(() => {
-        if (!search.trim()) return requests;
-
-        const q = search.toLowerCase();
-
-        return requests.filter((r) =>
-            (r.projectName || "").toLowerCase().includes(q) ||
-            (r.projectSubject || "").toLowerCase().includes(q) ||
-            (r.reportType || "").toLowerCase().includes(q) ||
-            (analystN(r.responsible) || "").toLowerCase().includes(q)
-        );
-    }, [search, requests]);
-
     /** PAGINATION LOGIC */
-    const totalPages = Math.ceil(filtered.length / limit);
+    const totalPages = Math.ceil(requests.length / limit);
 
-    const paginated = filtered.slice((page - 1) * limit, page * limit);
+
+    const paginated = requests.slice((page - 1) * limit, page * limit);
+
 
     /** SELECT ALL */
     const visibleIds = paginated.map((r) => r.id);
