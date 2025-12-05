@@ -29,7 +29,6 @@ const RequestDetailForm = forwardRef(({ humint, analysts }, ref) => {
     // 🔥 Convert backend priority → UI format
     const priorityMap = {
         Normal: "Normal",
-        High: "Ridicată",
         Urgent: "Urgentă",
         Confidential: "Confidențial",
     };
@@ -201,9 +200,8 @@ const RequestDetailForm = forwardRef(({ humint, analysts }, ref) => {
                             >
                                 <option value="">Selectează...</option>
                                 <option value="Normal">Normal</option>
-                                <option value="Ridicată">Ridicată</option>
-                                <option value="Urgentă">Urgentă</option>
-                                <option value="Confidențial">Confidențial</option>
+                                <option value="Urgent">Urgentă</option>
+                                <option value="Confidential">Confidențial</option>
                             </select>
                             {errors.priority && <p className={styles.errorText}>{errors.priority}</p>}
                         </div>

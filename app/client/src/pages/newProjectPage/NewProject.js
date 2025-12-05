@@ -300,7 +300,7 @@ const NewProject = () => {
         try {
 
                const response= await createProject( payload).unwrap();
-                toast.success("Proiect final creat cu succes!");
+                toast("Proiect final creat cu succes!");
             navigate(`/projectDetail/${response.data._id}`);
 
 

@@ -24,7 +24,7 @@ const Login = () => {
             localStorage.setItem("user", JSON.stringify(loggedUser));
             localStorage.setItem("token", token);
 
-            toast.success("Autentificare reușită");
+            toast("Autentificare reușită");
 
             const role = loggedUser.role;
 

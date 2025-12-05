@@ -78,7 +78,7 @@ const HumintList = () => {
                 )
             );
 
-            toast.success("Solicitările selectate au fost aprobate!");
+            toast("Solicitările selectate au fost aprobate!");
             setSelectedIds([]);
 
         } catch (err) {

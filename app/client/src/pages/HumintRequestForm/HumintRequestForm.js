@@ -6,7 +6,7 @@ import { useCreateHumintMutation } from "../../services/humintApi";
 import Button from "./Button";
 import { useLocation, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
-import {useGetAnalystsQuery} from "../../services/userApi";
+import { useGetAnalystsQuery } from "../../services/userApi";
 
 const HumintRequestForm = () => {
 
@@ -67,7 +67,7 @@ const HumintRequestForm = () => {
 
         try {
             await createHumint(payload).unwrap();
-            toast.success("Cererea HUMINT trimisă!");
+            toast("Cererea HUMINT trimisă!");
         } catch (error) {
             console.error(error);
             toast.error("Eroare la trimiterea cererii!");
@@ -91,7 +91,7 @@ const HumintRequestForm = () => {
 
         try {
             await createHumint(payload).unwrap();
-            toast.success("Draft salvat cu succes!");
+            toast("Draft salvat cu succes!");
         } catch (error) {
             console.error(error);
             toast.error("Eroare la salvarea draftului!");

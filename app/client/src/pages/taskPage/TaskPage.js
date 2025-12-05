@@ -78,7 +78,7 @@ const TaskPage = () => {
             // Close form
             setShowTaskForm(false);
             setNewTaskName("");
-            toast.success("Task adăugat cu succes!");
+            toast("Task adăugat cu succes!");
         } catch (error) {
             toast.error("Eroare la adăugarea taskului!");
         }
