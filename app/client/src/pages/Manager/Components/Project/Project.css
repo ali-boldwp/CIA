@@ -9,10 +9,7 @@
 
 
 }
-.projects-list{
-    height:510px;
-    overflow: auto;
-}
+
 /* Header */
 .projects-header {
   display: flex;
@@ -153,6 +150,49 @@
   font-size: 13px;
   cursor: pointer;
   margin-right: 5px;
+}
+.projects-search {
+    margin: 15px 0;
+}
+
+.projects-search input {
+    width: 100%;
+    padding: 10px 14px;
+    border-radius: 10px;
+    border: 1px solid #dbe2f3;
+    font-size: 0.95rem;
+}
+
+.pagination {
+    display: flex;
+    justify-content: end;
+    gap: 12px;
+    align-items: center;
+    padding: 20px 0;
+}
+
+.pagination button {
+    padding: 6px 12px;
+    border: 1px solid #d1d8ee;
+    background: #fff;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.pagination button:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+.pagination select {
+    padding: 6px 10px;
+    border-radius: 6px;
+    border: 1px solid #d1d8ee;
+}
+.empty-state {
+    padding: 20px;
+    text-align: center;
+    color: #9aa3c2;
 }
 
 a{

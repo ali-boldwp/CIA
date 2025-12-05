@@ -87,27 +87,8 @@ const HumintList = () => {
         }
     };
 
-
-    // FILTERING
-    const visibleRequests = useMemo(() => {
-        let data = [...merged];
-
-        if (searchValue.trim()) {
-            const q = searchValue.toLowerCase();
-            data = data.filter(x =>
-                x.projectName.toLowerCase().includes(q) ||
-                x.reportType.toLowerCase().includes(q)
-            );
-        }
-
-        if (priorityFilter !== "Toate") {
-            data = data.filter(x => x.priority === priorityFilter);
-        }
-
-        return data;
-    }, [merged, searchValue, priorityFilter]);
-
-    if (isLoading) return <h2>Loading HUMINT…</h2>;
+    /** Filters */
+    const visibleRequests = merged;
 
     return (
         <>
@@ -140,6 +121,7 @@ const HumintList = () => {
                 }
                 totalCount={visibleRequests.length}
             />
+
         </>
     );
 };
