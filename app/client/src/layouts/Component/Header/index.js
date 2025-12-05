@@ -17,15 +17,20 @@ const Header = () => {
   return (
     <header className="header">
         <div className="firstSec">
-                    <h3 className="logo">{dashboardTitle}</h3>
-      <div className="search-box">
-        <span className="search-icon">🔍</span>
+            <h3 className="logo">{dashboardTitle}</h3>
+            <div
+                className="search-box"
+                style={{
+                    borderRadius: !isSale && !isAnalyst ? "2rem" : undefined
+                }}
+            >
+
+            <span className="search-icon">🔍</span>
         <input type="text" placeholder="Caută proiect, persoană sau task..." />
       </div>
       </div>
        <div className="secSec">
            {isSale ? "" : isAnalyst? "":     <Link to="/project" className="new-project-btn">+ Creeeaza proiect nou</Link>}
-
            <div className="right-buttons">
                <button className="icon-btn">
                    <span className="icon">🔔</span>

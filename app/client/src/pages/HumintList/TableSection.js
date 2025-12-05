@@ -21,10 +21,13 @@ const statusClass = (status) => {
             return styles.statusPending;
         case "Clarificări":
             return styles.statusClarify;
+        case "Approved":
+            return styles.statusApproved;   // NEW
         default:
             return "";
     }
 };
+
 
 const TableSection = ({
                           requests,
@@ -103,7 +106,6 @@ const TableSection = ({
                             <th>Prioritate</th>
                             <th>Deadline</th>
                             <th>Creat de</th>
-                            <th>Data</th>
                             <th>Stare</th>
                             <th>Acțiuni</th>
                         </tr>
@@ -130,24 +132,27 @@ const TableSection = ({
                                     </td>
                                     <td>{item.reportType}</td>
                                     <td>{analystN(item.responsible)}</td>
+
                                     <td>
                                             <span className={`${styles.pill} ${priorityClass(item.priority)}`}>
                                                 {item.priority}
                                             </span>
                                     </td>
                                     <td>{item.deadline}</td>
-                                    <td>—</td>
-                                    <td>{item.createdAt}</td>
+                                    <td>{item.createdBy}</td>
                                     <td>
                                             <span className={`${styles.statusPill} ${statusClass(item.status)}`}>
-                                                {item.status}
-                                            </span>
+    {item.status === "Approved" ? "Aprobat" : item.status}
+</span>
+
                                     </td>
-                                    <td>
-                                        <Link to="/humintRequest-Detail" className={styles.linkButton}>
-                                            Deschide →
-                                        </Link>
-                                    </td>
+                                    <Link
+                                        to={`/humintRequest-Detail/${item.id}`}
+                                        className={styles.linkButton}
+                                    >
+                                        Deschide →
+                                    </Link>
+
                                 </tr>
                             );
                         })}

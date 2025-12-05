@@ -2,7 +2,6 @@ import { useState, useRef, useEffect } from "react";
 import { useGetAllUsersQuery } from "../../../../services/userApi";
 import {Link} from "react-router-dom";
 
-
 const ProjectRow = ({ project, responsible,responsibles }) => {
   const [open, setOpen] = useState(false);
   const dropdownRef = useRef();
@@ -94,7 +93,7 @@ const ProjectRow = ({ project, responsible,responsibles }) => {
       </div>
 
       {/* ACTIONS + DROPDOWN -------------- */}
-      <div className="col actions" ref={dropdownRef}>
+      <div className=" " ref={dropdownRef}>
         <Link to={`/projectDetail/${project._id}`} className="action-btn">Deschide</Link>
         <button className="action-btn">Mesaj 🔒</button>
         <button className="action-btn">Costuri & KPI</button>

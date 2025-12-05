@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState,useEffect,useRef } from "react";
 import styles from "./ProjectRequest.module.css";
 import { useSelector } from "react-redux";
 import { useRequestProjectMutation } from "../../../services/projectApi";
@@ -50,6 +50,37 @@ const ProjectRequest = () => {
     const { data } = useGetAnalystsQuery();
     const analystData = data?.data || [];
     const analyst = analystData.filter((p) => p.role === "analyst");
+
+    const [respOpen, setRespOpen] = useState(false);
+    const [multiOpen, setMultiOpen] = useState(false);
+
+    const [responsibleAnalyst, setResponsibleAnalyst] = useState("");
+    const [assignedAnalysts, setAssignedAnalysts] = useState([]);
+
+    const respRef = useRef(null);
+    const multiRef = useRef(null);
+
+    const toggleAnalyst = (id) => {
+        if (assignedAnalysts.includes(id)) {
+            setAssignedAnalysts(assignedAnalysts.filter(a => a !== id));
+        } else {
+            setAssignedAnalysts([...assignedAnalysts, id]);
+        }
+    };
+
+    useEffect(() => {
+        const handler = (e) => {
+            if (respRef.current && !respRef.current.contains(e.target))
+                setRespOpen(false);
+
+            if (multiRef.current && !multiRef.current.contains(e.target))
+                setMultiOpen(false);
+        };
+
+        document.addEventListener("mousedown", handler);
+        return () => document.removeEventListener("mousedown", handler);
+    }, []);
+
 
     // Email validation function
     const validateEmailFormat = (email) => {
@@ -232,9 +263,16 @@ const ProjectRequest = () => {
         });
 
         // ANALYST FIELDS (optional)
+        // ANALYST FIELDS (optional)
         if (preferredAnalyst) {
             formData.append("responsibleAnalyst", preferredAnalyst);
         }
+
+// MULTI ANALYSTS
+        assignedAnalysts.forEach((id) => {
+            formData.append("assignedAnalysts", id);
+        });
+
 
         // FILES
         files.forEach((file) => {
@@ -247,7 +285,7 @@ const ProjectRequest = () => {
 
         try {
             const response = await requestProject(formData).unwrap();
-            toast.success("Proiect creat cu succes!");
+            toast("Proiect creat cu succes!");
             console.log(response);
 
             // Clear form after successful submission
@@ -264,6 +302,7 @@ const ProjectRequest = () => {
             setAdditionalInfo("");
             setEntityType("");
             setDeadline("");
+            setAssignedAnalysts("");
             setCategory("");
             setProjectPrice("");
             setPriority("Normal");
@@ -281,6 +320,14 @@ const ProjectRequest = () => {
             toast.error(err?.data?.message || "Eroare la crearea proiectului");
         }
     };
+    const removeFile = (index) => {
+        setFiles((prev) => prev.filter((_, i) => i !== index));
+    };
+    const analystOptions = analyst.map((a) => ({
+        id: String(a._id),
+        name: a.name
+    }));
+
 
     return (
         <div className={styles.page}>
@@ -754,6 +801,42 @@ const ProjectRequest = () => {
                                 </div>
                             </div>
 
+                            {/* MULTI SELECT ANALYSIS */}
+                            <div className={`${styles.gridItem} ${styles.span2Right}`} ref={multiRef}>
+                                <div className={styles.main2}>
+                                <label className={styles.label}>Analiști suplimentari</label>
+
+                                <div
+                                    className={`${styles.multiSelectBox} ${multiOpen ? styles.active : ""}`}
+                                    onClick={() => setMultiOpen(!multiOpen)}
+                                >
+                                    {assignedAnalysts.length
+                                        ? assignedAnalysts
+                                            .map(id => analystOptions.find(a => a.id === id)?.name)
+                                            .filter(Boolean)
+                                            .join(", ")
+                                        : "Selectează ▾"}
+                                </div>
+
+
+                                {multiOpen && (
+                                    <div className={styles.dropdownList}>
+                                        {analystOptions.map(a => (
+                                            <label key={a.id} className={styles.dropdownItem}>
+                                                <input
+                                                    type="checkbox"
+                                                    checked={assignedAnalysts.includes(a.id)}
+                                                    onChange={() => toggleAnalyst(a.id)}
+                                                />
+                                                <div>{a.name}</div>
+                                            </label>
+                                        ))}
+                                    </div>
+                                )}
+                                </div>
+                            </div>
+
+
                             <div
                                 className={`${styles.gridItem} ${styles.span2Right}`}
                             >
@@ -896,14 +979,21 @@ const ProjectRequest = () => {
                             </label>
                             {files.map((file, idx) => (
                                 <div key={idx} className={styles.fileRow}>
-                                    <span className={styles.fileName}>
-                                        {file.name}
-                                    </span>
+                                    <span className={styles.fileName}>{file.name}</span>
                                     <span className={styles.fileSize}>
-                                        {(file.size / 1024).toFixed(1)} KB
-                                    </span>
+            {(file.size / 1024).toFixed(1)} KB
+        </span>
+
+                                    <button
+                                        type="button"
+                                        className={styles.deleteFileBtn}
+                                        onClick={() => removeFile(idx)}
+                                    >
+                                        ✖
+                                    </button>
                                 </div>
                             ))}
+
                         </div>
                     </div>
                 </div>

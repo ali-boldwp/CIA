@@ -5,12 +5,20 @@ import { ok } from "../../../utils/ApiResponse";
 // CREATE
 export const createHumint = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const humint = await humintService.createHumint(req.body);
+        const userId = (req as any).user.id;
+
+        const humint = await humintService.createHumint({
+            ...req.body,
+            briefObjective: req.body.briefObjective,
+            createdBy: userId
+        });
+
         res.json(ok(humint));
     } catch (err) {
         next(err);
     }
 };
+
 
 // GET ALL
 export const getAllHumints = async (req: Request, res: Response, next: NextFunction) => {
@@ -52,31 +60,37 @@ export const submitHumint = async (req: Request, res: Response, next: NextFuncti
     }
 };
 
-// MANAGER: APPROVE
+const requireManagerOrAdmin = (req: Request, res: Response) => {
+    if (req.user.role !== "manager" && req.user.role !== "admin" && req.user.role !== "aanalyst") {
+        res.status(403).json({ message: "Only managers and admins can perform this action" });
+        return false;
+    }
+    return true;
+};
+
+/* -------------------------------------------------------
+   APPROVE
+-------------------------------------------------------- */
 export const approveHumint = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        if (req.user.role !== "manager" || req.user.role !== "admin") {
-            return res.status(403).json({ message: "Managers and admin can approve requests" });
-        }
+        if (!requireManagerOrAdmin(req, res)) return;
 
         const managerId = req.user.id;
 
         const updated = await humintService.approveHumint(req.params.id, managerId);
+        res.json(ok(updated));
 
-        return res.json(ok(updated));
     } catch (err) {
         next(err);
     }
 };
 
-
-
-// MANAGER: REJECT
+/* -------------------------------------------------------
+   REJECT
+-------------------------------------------------------- */
 export const rejectHumint = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        if (req.user.role !== "manager" || req.user.role !== "admin") {
-            return res.status(403).json({ message: "Managers and admin can reject requests" });
-        }
+        if (!requireManagerOrAdmin(req, res)) return;
 
         const managerId = req.user.id;
 
@@ -86,20 +100,19 @@ export const rejectHumint = async (req: Request, res: Response, next: NextFuncti
             managerId
         );
 
-        return res.json(ok(updated));
+        res.json(ok(updated));
+
     } catch (err) {
         next(err);
     }
 };
 
-
-
-// MANAGER: REQUEST CLARIFICATION
+/* -------------------------------------------------------
+   CLARIFICATION
+-------------------------------------------------------- */
 export const clarificationHumint = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        if (req.user.role !== "manager" || req.user.role !== "admin") {
-            return res.status(403).json({ message: "Managers and admin can request clarification" });
-        }
+        if (!requireManagerOrAdmin(req, res)) return;
 
         const managerId = req.user.id;
 
@@ -109,19 +122,23 @@ export const clarificationHumint = async (req: Request, res: Response, next: Nex
             managerId
         );
 
-        return res.json(ok(updated));
+        res.json(ok(updated));
+
     } catch (err) {
         next(err);
     }
 };
 
-
-
-// MARK COMPLETED
+/* -------------------------------------------------------
+   COMPLETE HUMINT
+-------------------------------------------------------- */
 export const completeHumint = async (req: Request, res: Response, next: NextFunction) => {
     try {
+        if (!requireManagerOrAdmin(req, res)) return;
+
         const updated = await humintService.completeHumint(req.params.id);
         res.json(ok(updated));
+
     } catch (err) {
         next(err);
     }

@@ -150,11 +150,10 @@ const SalesDashboard = () => {
 
             </div>
 
-
             {/* BOTTOM ROW: CALENDAR + MESSENGER */}
             <div className="bottom-row">
 
-                <h2 className="section-sales-title no-margin">Calendar Deadlines </h2>
+                <h2 className="section-sales-title no-margin-analyst">Calendar Deadlines </h2>
 
                 <div className="calendar-card">
                     <ul className="calendar-list">

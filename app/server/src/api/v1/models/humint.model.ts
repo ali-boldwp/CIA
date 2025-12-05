@@ -5,8 +5,8 @@ export interface IHumint extends Document {
     projectId?: Schema.Types.ObjectId;
 
     humintSubject?: string;
-    entityType?: string;
-    responsible: string;
+    reportType?: string;
+    responsible: Schema.Types.ObjectId;
     deadline: Date;
     priority: "Normal" | "High" | "Urgent" | "Confidential";
 
@@ -22,7 +22,7 @@ export interface IHumint extends Document {
     managerFeedback?: string;
     managerId?: string;
 
-    createdBy: string;
+    createdBy: Schema.Types.ObjectId;
 
     status:
         | "Draft"
@@ -50,12 +50,14 @@ const humintSchema = new Schema<IHumint>(
         },
 
         humintSubject: String,
-        entityType: String,
+        reportType: String,
 
         responsible: {
-            type: String,
-            required: true,
+            type: Schema.Types.ObjectId,
+            ref: "User",
+            required: true
         },
+
 
         deadline: {
             type: Date,
@@ -88,7 +90,8 @@ const humintSchema = new Schema<IHumint>(
         managerId: String,
 
         createdBy: {
-            type: String,
+            type: Schema.Types.ObjectId,
+            ref:'User'
 
         },
 

@@ -1,93 +1,91 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useMemo, useState ,useEffect } from "react";
 import Header from "./Header";
 import SearchBar from "./SearchBar";
 import TableSection from "./TableSection";
-import { useGetAllHumintsQuery } from "../../services/humintApi";
+
+import { useGetAllHumintsQuery, useApproveHumintMutation } from "../../services/humintApi";
 import { useGetAnalystsQuery } from "../../services/userApi";
+import { toast } from "react-toastify";
 
 const HumintList = () => {
-    const { data : AnalystData}=useGetAnalystsQuery();
-    const { data: humintsData } = useGetAllHumintsQuery();
+    const { data: AnalystData } = useGetAnalystsQuery();
+    const { data: humintsData, isLoading } = useGetAllHumintsQuery();
+
+    const [approveHumint] = useApproveHumintMutation();
+
     const humints = humintsData?.data || [];
+    const analysts = AnalystData?.data || [];
 
-    const analysts=AnalystData?.data || [];
-
-    const [projectsMap, setProjectsMap] = useState({});
-
-    /** 🔥 FETCH ALL PROJECTS LIKE YOUR "fetchAll()" EXAMPLE */
-    useEffect(() => {
-        const fetchAllProjects = async () => {
-            const token = localStorage.getItem("token");
-            let result = {};
-
-            for (const h of humints) {
-                if (!h.projectId) continue;
-
-                try {
-                    const id = typeof h.projectId === "object" ? h.projectId._id : h.projectId;
-                    const res = await fetch(
-                        `${process.env.REACT_APP_API_BASE_URL}/project/${id}`,
-                        {
-                            headers: {
-                                Authorization: `Bearer ${token}`,
-                            },
-                        }
-                    );
-
-                    const json = await res.json();
-                    result[h.projectId] = json.data || null;
-                } catch (err) {
-                    console.error("Project fetch error:", err);
-                }
-            }
-
-            setProjectsMap(result);
-        };
-
-        if (humints.length > 0) {
-            fetchAllProjects();
-        }
-    }, [humints]);
-
-    /** 🔥 MERGE HUMINT + PROJECT DATA */
-    const merged = humints.map((h) => {
-        const p = projectsMap[h.projectId] || {};
-
-        return {
-            id: h._id,
-
-            // 🔥 ONLY FROM PROJECT TABLE
-            projectName: p.projectName || "Independent",
-            reportType:p.reportType,
-            projectSubject: p.projectSubject || "",
-
-            // 🔥 Everything else from HUMINT table
-            responsible: h.responsible,
-            priority: h.priority,
-            deadline: h.deadline?.split("T")[0],
-            createdBy: h.createdBy,
-            createdAt: h.createdAt,
-            status: h.status
-        };
-    });
-
+    // Resolve analyst name
     const resolveAnalystName = (value) => {
         if (!value) return "—";
+        if (typeof value === "object" && value.name) return value.name;
 
-        // If backend returned full object
-        if (typeof value === "object" && value.name) {
-            return value.name;
-        }
-
-        // If it's an ID, find in analysts list
         const found = analysts.find(a => a._id === value);
         return found ? found.name : "—";
     };
+
+    // Merge data
+    const [merged, setMerged] = useState([]);
+
+    useEffect(() => {
+        if (humints.length > 0) {
+            setMerged(
+                humints.map((h) => {
+                    const p = h.projectId || {};
+
+                    return {
+                        id: h._id,
+                        projectName: p.projectName || h.humintSubject || "Independent",
+                        reportType: p.reportType || h.reportType || "HUMINT",
+                        projectSubject: p.projectName ? p.projectName : h.humintSubject || "—",
+                        responsible: h.responsible,
+                        priority: h.priority,
+                        deadline: h.deadline?.split("T")[0],
+                        createdBy: h.createdBy?.name || "—",
+                        status: h.status
+                    };
+                })
+            );
+        }
+    }, [humints]);
+
+
     // UI State
     const [searchValue, setSearchValue] = useState("");
     const [sortBy, setSortBy] = useState("date");
     const [priorityFilter, setPriorityFilter] = useState("Toate");
     const [selectedIds, setSelectedIds] = useState([]);
+
+    // 🔥 BULK APPROVE FUNCTION
+    const handleApproveSelected = async () => {
+        if (selectedIds.length === 0) {
+            toast.error("Nicio solicitare selectată!");
+            return;
+        }
+
+        try {
+            for (const id of selectedIds) {
+                await approveHumint(id).unwrap();
+            }
+
+            // 🔥 Update UI instantly
+            setMerged(prev =>
+                prev.map(item =>
+                    selectedIds.includes(item.id)
+                        ? { ...item, status: "Approved" }
+                        : item
+                )
+            );
+
+            toast("Solicitările selectate au fost aprobate!");
+            setSelectedIds([]);
+
+        } catch (err) {
+            console.error(err);
+            toast.error("Eroare la aprobarea solicitărilor!");
+        }
+    };
 
     /** Filters */
     const visibleRequests = useMemo(() => {
@@ -134,7 +132,7 @@ const HumintList = () => {
                 priorityValue={priorityFilter}
                 onPriorityChange={setPriorityFilter}
                 hasSelection={selectedIds.length > 0}
-                onApproveSelected={() => alert("Approve pending")}
+                onApproveSelected={handleApproveSelected}
             />
 
             <TableSection
@@ -142,9 +140,9 @@ const HumintList = () => {
                 requests={visibleRequests}
                 selectedIds={selectedIds}
                 onToggleSelect={(id) =>
-                    setSelectedIds((prev) =>
+                    setSelectedIds(prev =>
                         prev.includes(id)
-                            ? prev.filter((i) => i !== id)
+                            ? prev.filter(i => i !== id)
                             : [...prev, id]
                     )
                 }
