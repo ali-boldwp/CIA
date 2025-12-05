@@ -98,7 +98,6 @@ const ProjectRow = ({ project, responsible,responsibles }) => {
         <Link to={`/projectDetail/${project._id}`} className="action-btn">Deschide</Link>
         <button className="action-btn">Mesaj 🔒</button>
         <button className="action-btn">Costuri & KPI</button>
-
         <button
           className="dropdown-btn"
           onClick={() => setOpen((prev) => !prev)}

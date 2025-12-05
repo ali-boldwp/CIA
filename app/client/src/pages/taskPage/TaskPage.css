@@ -553,6 +553,18 @@
     width: 60%;
 }
 
+.backBtnHumint {
+    padding: 8px 14px;
+    border-radius: 18px;
+    border: none;
+    font-size: 14px;
+    color: white;
+    cursor: pointer;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    background: linear-gradient(90deg, #4f46e5  ,#1ec6cd);
+}
+
 /* labels */
 .label {
     font-size: 10px;
@@ -655,7 +667,7 @@
 }
 
 .start {
-    background: #3b82f6;
+    background: #2563EB;
     color: white;
 }
 
@@ -825,16 +837,28 @@
     align-items: center;
 }
 
+.project-btn {
+    padding: 7px 18px;
+    font-weight: 600;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: 0.2s;
+    background: #fff;
+    font-size: 0.7rem;
+    border: 1px solid gray;
+}
+
+
 .btn {
     padding: 7px 18px;
     font-size: 13px;
     font-weight: 500;
-    border-radius: 8px;
+    border-radius: 10px;
     border: 1px solid #dcdcdc;
-    background: white;
+    color: white;
     cursor: pointer;
     transition: 0.2s;
-    color:black;
+
 }
 
 .btn:hover {
@@ -851,6 +875,8 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    position: relative;
+
 }
 
 .humint {
@@ -858,12 +884,14 @@
 }
 
 .approval-badge {
-    margin-top: 2px;
+    position: absolute;
+    top: -1.5rem;
     font-size: 10px;
-    padding: 2px 6px;
+    padding: 3px 10px;
     border-radius: 6px;
     background: #fff3cd;
-    color: #8a6d3b;
+    color: #92400E;
+    border: 1px solid #FDE68A;
 }
 
 /* -------- EXPORT DROPDOWN -------- */
@@ -1044,10 +1072,11 @@
 }
 
 .add-btn {
-    border: 1px dashed #b6b6b6;
+    border: none;
     padding: 10px 20px;
-    border-radius: 8px;
-    background: #f8faff;
+    border-radius: 18px;
+    background: #2563EB;
+    color: #fff;
     cursor: pointer;
     font-size: 14px;
 }

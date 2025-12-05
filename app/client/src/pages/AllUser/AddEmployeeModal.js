@@ -144,6 +144,7 @@ const AddEmployeeModal = ({ isOpen, sectionKey,editData, onClose }) => {
 
     return (
         <div className={styles.modalOverlay}>
+            <h1>hahahhaha</h1>
             <div className={styles.modal}>
                 {/* CLOSE BTN */}
                 <button
@@ -182,6 +183,13 @@ const AddEmployeeModal = ({ isOpen, sectionKey,editData, onClose }) => {
                         <div className={`${styles.field} ${styles.fieldRightWide}`}>
                             <label>Salariu lunăr</label>
                             <input
+                                className="no-spin "
+                                min="0"
+                                onKeyDown={(e) => {
+                                    if (e.key === '-' || e.key === 'Minus') {
+                                        e.preventDefault();
+                                    }
+                                }}
                                 type="number"
                                 {...register("salary", {
                                     required: "Salariul este obligatoriu",
@@ -239,6 +247,12 @@ const AddEmployeeModal = ({ isOpen, sectionKey,editData, onClose }) => {
                         <div className={styles.fieldSmall}>
                             <label>Ore/lună</label>
                             <input
+                                min="0"
+                                onKeyDown={(e) => {
+                                    if (e.key === '-' || e.key === 'Minus') {
+                                        e.preventDefault();
+                                    }
+                                }}
                                 type="number"
                                 {...register("hoursMonth", {
                                     required: "Ore/lună este obligatoriu",
@@ -260,6 +274,12 @@ const AddEmployeeModal = ({ isOpen, sectionKey,editData, onClose }) => {
                         <div className={styles.fieldSmall}>
                             <label>Ore/zi</label>
                             <input
+                                min="0"
+                                onKeyDown={(e) => {
+                                    if (e.key === '-' || e.key === 'Minus') {
+                                        e.preventDefault();
+                                    }
+                                }}
                                 type="number"
                                 {...register("hoursDay", {
                                     required: "Ore/zi este obligatoriu",
@@ -292,9 +312,14 @@ const AddEmployeeModal = ({ isOpen, sectionKey,editData, onClose }) => {
                         </div>
 
                         {/* BONUS – optional */}
-                        <div className={styles.fieldSmall}>
+                        <div className={styles.fieldSmall}  >
                             <label>Bonus lunar </label>
-                            <input type="number" {...register("bonus")} />
+                            <input min="0"
+                                   onKeyDown={(e) => {
+                                       if (e.key === '-' || e.key === 'Minus') {
+                                           e.preventDefault();
+                                       }
+                                   }} type="number" {...register("bonus")} />
                         </div>
 
                         {/* COSTURI (automat) – DISABLED fields */}

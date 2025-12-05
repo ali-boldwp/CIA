@@ -216,17 +216,18 @@ const TaskPage = () => {
                 {/* RIGHT SIDE — ACTION BUTTONS */}
                 <div className="actions-box">
 
-                    <button className="btn save">Salveaza progres</button>
+                    <button className="project-btn save">Salveaza progres</button>
 
-                    <button className="btn notes">Cauta in Notes App</button>
+                    <button className="project-btn">Cauta in Notes App</button>
 
                     <div className="humint-wrapper">
-                        <button className="btn humint">Solicita HUMINT</button>
                         <span className="approval-badge">necesită aprobare</span>
+
+                        <button className="project-btn">Solicita HUMINT</button>
                     </div>
 
                     <div className="export-dropdown">
-                        <button className="btn export">Exporta raport ▾</button>
+                        <button className="project-btn">Exporta raport ▾</button>
 
                         <div className="dropdown-menu">
                             <button className="dropdown-item">Export Word</button>
