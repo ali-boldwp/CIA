@@ -469,6 +469,16 @@
     display: block;
 }
 
+.no-spin-project-request::-webkit-inner-spin-button,
+.no-spin-project-request::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.no-spin-project-request {
+    -moz-appearance: textfield; /* Firefox */
+}
+
 
 /* ============== RESPONSIVE ============== */
 

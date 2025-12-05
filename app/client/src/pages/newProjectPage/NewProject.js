@@ -322,14 +322,13 @@ const NewProject = () => {
         <div className="page-wrapper1">
             <div className="page-container">
                 <div className="project-header-box">
-                    <span className="project-header-back">
-                        <a href="/manager/dashboard">
-                            <button className="gradient-btn-dashboard" >
-                                ← Înapoi la Dashboard
-                            </button>
-
-                        </a>
-                    </span>
+            <span className="project-header-back">
+                <a href="/manager/dashboard">
+                    <button className="gradient-btn-dashboard" >
+                        ← Înapoi la Dashboard
+                    </button>
+                </a>
+            </span>
                     <h1 className="project-header-title">
                         {id
                             ? "Creează proiect din solicitare"
@@ -347,6 +346,7 @@ const NewProject = () => {
                             <label>Denumire proiect</label>
                             <input
                                 className="input-box"
+                                placeholder="ex: Due Diligence: Societatea ABC"
                                 value={projectName}
                                 onChange={(e) =>
                                     setProjectName(e.target.value)
@@ -364,6 +364,7 @@ const NewProject = () => {
                             <div className="input-wrapper">
                                 <input
                                     className="input-box"
+                                    placeholder="Societatea ABC"
                                     value={projectSubject}
                                     onChange={(e) =>
                                         setProjectSubject(e.target.value)
@@ -476,6 +477,7 @@ const NewProject = () => {
                             <label>Prioritate</label>
                             <input
                                 className="input-box"
+                                placeholder="Normal"
                                 value={priority}
                                 onChange={(e) =>
                                     setPriority(e.target.value)
@@ -495,6 +497,7 @@ const NewProject = () => {
                             <label>Limbă livrabil</label>
                             <input
                                 className="input-box"
+                                placeholder="Română"
                                 value={language}
                                 onChange={(e) =>
                                     setLanguage(e.target.value)
@@ -541,8 +544,8 @@ const NewProject = () => {
                                         className="delete-file"
                                         onClick={() => removeFile(i)}
                                     >
-                                        ✖
-                                    </span>
+                                ✖
+                            </span>
                                 </div>
                             ))}
                         </div>
@@ -556,6 +559,7 @@ const NewProject = () => {
                             onChange={(e) =>
                                 setProjectDescription(e.target.value)
                             }
+                            placeholder="Scop, cerintele proiectului, instructiuni, etc"
                         />
                         {errors.projectDescription && (
                             <p className={styles.errorText}>
@@ -578,12 +582,12 @@ const NewProject = () => {
                                 className="dropdown-box"
                                 onClick={() => setRespOpen(!respOpen)}
                             >
-                                <span>
-                                    {analystOptions.find(
-                                            (a) => a.id === responsible
-                                        )?.name ||
-                                        "Selectează responsabilul"}
-                                </span>
+                        <span>
+                            {analystOptions.find(
+                                    (a) => a.id === responsible
+                                )?.name ||
+                                "Selectează responsabilul"}
+                        </span>
                             </div>
 
                             {respOpen && (
@@ -622,19 +626,19 @@ const NewProject = () => {
                                 className="dropdown-box"
                                 onClick={() => setMultiOpen(!multiOpen)}
                             >
-                                <span>
-                                    {selectedAnalysts.length
-                                        ? selectedAnalysts
-                                            .map(
-                                                (id) =>
-                                                    analystOptions.find(
-                                                        (a) => a.id === id
-                                                    )?.name || ""
-                                            )
-                                            .filter(Boolean)
-                                            .join(", ")
-                                        : "Selectează ▾"}
-                                </span>
+                        <span>
+                            {selectedAnalysts.length
+                                ? selectedAnalysts
+                                    .map(
+                                        (id) =>
+                                            analystOptions.find(
+                                                (a) => a.id === id
+                                            )?.name || ""
+                                    )
+                                    .filter(Boolean)
+                                    .join(", ")
+                                : "Selectează ▾"}
+                        </span>
                             </div>
 
                             {multiOpen && (
@@ -678,6 +682,7 @@ const NewProject = () => {
                                 onChange={(e) =>
                                     setClientName(e.target.value)
                                 }
+                                placeholder="ZZZ SRL"
                             />
                             {errors.clientName && (
                                 <p className={styles.errorText}>
@@ -694,6 +699,7 @@ const NewProject = () => {
                                 onChange={(e) =>
                                     setClientPerson(e.target.value)
                                 }
+                                placeholder="Ana Popescu"
                             />
                             {errors.clientPerson && (
                                 <p className={styles.errorText}>
@@ -710,6 +716,7 @@ const NewProject = () => {
                                 onChange={(e) =>
                                     setClientPosition(e.target.value)
                                 }
+                                placeholder="Director Achiziții"
                             />
                             {errors.clientPosition && (
                                 <p className={styles.errorText}>
@@ -729,6 +736,7 @@ const NewProject = () => {
                                 onChange={(e) =>
                                     setClientEmail(e.target.value)
                                 }
+                                placeholder="ana.popescu@zzz.ro"
                             />
                             {errors.clientEmail && (
                                 <p className={styles.errorText}>
@@ -751,6 +759,7 @@ const NewProject = () => {
                                         setClientPhone(value);
                                     }
                                 }}
+                                placeholder="+40 7xx xxx xxx"
                             />
 
                             {errors.clientPhone && (
@@ -771,6 +780,7 @@ const NewProject = () => {
                                 onChange={(e) =>
                                     setContractNo(e.target.value)
                                 }
+                                placeholder="CTR-2025-014"
                             />
                             {errors.contractNo && (
                                 <p className={styles.errorText}>
@@ -787,6 +797,7 @@ const NewProject = () => {
                                 onChange={(e) =>
                                     setAnnexNo(e.target.value)
                                 }
+                                placeholder="ANX-03"
                             />
                             {errors.annexNo && (
                                 <p className={styles.errorText}>
@@ -803,6 +814,7 @@ const NewProject = () => {
                                 onChange={(e) =>
                                     setServices(e.target.value)
                                 }
+                                placeholder="OSINT, HUMINT"
                             />
                             {errors.services && (
                                 <p className={styles.errorText}>
@@ -828,6 +840,7 @@ const NewProject = () => {
                                         setProjectPrice(value);
                                     }
                                 }}
+                                placeholder="3.500"
                             />
 
                             {errors.projectPrice && (
@@ -857,6 +870,7 @@ const NewProject = () => {
                                 onChange={(e) =>
                                     setContractInfo(e.target.value)
                                 }
+                                placeholder="Informatii confidentiale, care nu sunt deschise analistilor; instructiuni etc"
                             />
                             {errors.contractInfo && (
                                 <p className={styles.errorText}>
@@ -873,6 +887,7 @@ const NewProject = () => {
                                 onChange={(e) =>
                                     setReferenceRequest(e.target.value)
                                 }
+                                placeholder="De mentionat persoanele care ar putea detine informatii despre speta"
                             />
                             {errors.referenceRequest && (
                                 <p className={styles.errorText}>
@@ -891,6 +906,7 @@ const NewProject = () => {
                             onChange={(e) =>
                                 setInternalNotes(e.target.value)
                             }
+                            placeholder="Alte informatii confidentiale despre proiect, recomandari etc"
                         />
                         {errors.internalNotes && (
                             <p className={styles.errorText}>
