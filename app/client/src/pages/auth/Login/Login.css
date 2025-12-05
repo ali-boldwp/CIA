@@ -2,6 +2,7 @@
 
 /* Full page */
 .login-page {
+    min-height: 100vh;
     background: linear-gradient(to bottom right, #eef3ff, #ffffff);
     display: flex;
     flex-direction: column;
