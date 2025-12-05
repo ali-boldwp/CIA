@@ -50,7 +50,7 @@ const HumintRequestForm = () => {
                 ...independentData,
                 ...formValues,
                 createdBy: userId,
-                status: "Pending",
+                status: "Requested",
                 isLinkedToProject: false
             };
         }
@@ -60,8 +60,10 @@ const HumintRequestForm = () => {
                 projectId: id,
                 ...formValues,
                 createdBy: userId,
+                status: "Requested",
                 responsible: projects?.responsibleAnalyst?._id,
-                isLinkedToProject: true
+                isLinkedToProject: true,
+
             };
         }
 
