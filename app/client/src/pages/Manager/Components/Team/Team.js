@@ -90,20 +90,23 @@ const Team = () => {
                                                 status === "liber" ? styles.free : styles.work
                                             }`}
                                         >
+
                                             {status}
                                         </span>
                                     </div>
 
-                                    <div className={`${styles.col} ${styles.progress}`}>
+                                    <div className={`${styles.col} ${styles.progress}`} style={{ display: "flex" } } >
                                         <div className={styles.progresBar}>
                                             <div
                                                 className={styles.progresFill}
                                                 style={{ width: `${progress}%` }}
                                             />
                                         </div>
-                                        <span className={styles.progressNumber}>
+                                        <div>
+                                            <span className={styles.progressNumber} style={{ marginLeft: "0.8rem" } } >
                                             {progress}%
                                         </span>
+                                        </div>
                                     </div>
 
                                     <div className={`${styles.col} ${styles.actions}`}>
@@ -145,11 +148,11 @@ const Team = () => {
             <div className={styles.teamFooterActions}>
                 <button className={`${styles.pillBtn} ${styles.addBtn}`}>
                     <span className={styles.addIcon}>＋</span>
-                    <span>Adaugă analist</span>
+                    <span>Vezi lista angajați</span>
                 </button>
 
                 <button className={`${styles.pillBtn} ${styles.listBtn}`}>
-                    Vezi lista angajați
+                    + Adaugă analist
                 </button>
             </div>
         </div>

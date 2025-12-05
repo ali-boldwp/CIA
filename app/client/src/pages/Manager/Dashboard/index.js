@@ -1,7 +1,6 @@
 import Header from "../../../layouts/Component/Header"
 import CalendarList from "../Components/CalenderList"
 import Projects from "../Components/Project"
- 
 import StatusSection from "../Components/StatusSection"
 import Team from "../Components/Team/Team"
 import '../style.css'
