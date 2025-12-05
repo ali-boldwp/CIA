@@ -81,10 +81,10 @@ export default function AddAnalystForm({ closeModal, editData }) {
         try {
             if (isEdit) {
                 await updateAnalyst({ id: editData._id, data: payload }).unwrap();
-                toast.success("Analist actualizat!");
+                toast("Analist actualizat!");
             } else {
                 await createAnalyst(payload).unwrap();
-                toast.success("Analist creat!");
+                toast("Analist creat!");
             }
 
             closeModal();

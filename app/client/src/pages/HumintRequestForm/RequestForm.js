@@ -221,9 +221,8 @@ const RequestForm = forwardRef((props, ref) => {
                             >
                                 <option value="">Selectează...</option>
                                 <option value="Normal">Normal</option>
-                                <option value="Ridicată">Ridicată</option>
-                                <option value="Urgentă">Urgentă</option>
-                                <option value="Confidențial">Confidențial</option>
+                                <option value="Urgent">Urgentă</option>
+                                <option value="Confidential">Confidențial</option>
                             </select>
                             {errors.priority && (
                                 <p className={styles.errorText}>{errors.priority}</p>

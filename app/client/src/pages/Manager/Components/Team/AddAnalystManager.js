@@ -104,10 +104,10 @@ const AddAnalystManager = ({ isOpen, onClose, editData }) => {
         try {
             if (isEdit) {
                 await updateUser({ id: editData._id, data: payload }).unwrap();
-                toast.success("Utilizator actualizat!");
+                toast("Utilizator actualizat!");
             } else {
                 await createUser(payload).unwrap();
-                toast.success("Utilizator creat!");
+                toast("Utilizator creat!");
             }
 
             onClose();

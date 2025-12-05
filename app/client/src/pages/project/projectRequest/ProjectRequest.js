@@ -285,7 +285,7 @@ const ProjectRequest = () => {
 
         try {
             const response = await requestProject(formData).unwrap();
-            toast.success("Proiect creat cu succes!");
+            toast("Proiect creat cu succes!");
             console.log(response);
 
             // Clear form after successful submission
