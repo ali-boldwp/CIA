@@ -90,31 +90,7 @@ const HumintList = () => {
     const [selectedIds, setSelectedIds] = useState([]);
 
     /** Filters */
-    const visibleRequests = useMemo(() => {
-        let data = [...merged];
-
-        if (searchValue.trim()) {
-            const q = searchValue.toLowerCase();
-            data = data.filter(
-                (x) =>
-                    x.project?.toLowerCase().includes(q) ||
-                    x.type?.toLowerCase().includes(q) ||
-                    x.responsible?.toLowerCase().includes(q)
-            );
-        }
-
-        if (priorityFilter !== "Toate") {
-            data = data.filter((x) => x.priority === priorityFilter);
-        }
-
-        if (sortBy === "date") {
-            data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-        } else {
-            data.sort((a, b) => new Date(a.deadline) - new Date(b.deadline));
-        }
-
-        return data;
-    }, [merged, searchValue, sortBy, priorityFilter]);
+    const visibleRequests = merged;
 
     return (
         <>
@@ -147,6 +123,7 @@ const HumintList = () => {
                 }
                 totalCount={visibleRequests.length}
             />
+
         </>
     );
 };

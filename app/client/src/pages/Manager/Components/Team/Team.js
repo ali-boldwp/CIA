@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useMemo } from "react";
 import styles from "./Team.module.css";
 import { useGetAnalystsQuery } from "../../../../services/userApi";
 import { useGetProjectRequestsQuery } from "../../../../services/projectApi";
@@ -32,12 +32,22 @@ const Team = () => {
 
         if (assignedProjects.length === 0) return 0;
 
-        // OPTIONAL: if you want progress, use your own logic
         return Math.min(100, assignedProjects.length * 20);
     };
 
+    /** 📄 === PAGINATION LOGIC === */
+    const [page, setPage] = useState(1);
+    const [limit, setLimit] = useState(10);
+
+    const totalPages = Math.ceil(analysts.length / limit);
+
+    const paginated = useMemo(() => {
+        return analysts.slice((page - 1) * limit, page * limit);
+    }, [page, limit, analysts]);
+
     return (
         <div className="main" style={{ marginBottom: "50px" }}>
+
             <h3 className={styles.teamTitle}>Echipa de analiști</h3>
 
             <div className={styles.teamWrapper}>
@@ -51,7 +61,7 @@ const Team = () => {
                     </div>
 
                     <div className={styles.teamBody}>
-                        {analysts.map((a) => {
+                        {paginated.map((a) => {
                             const status = getAnalystStatus(a._id);
                             const progress = getAnalystProgress(a._id);
 
@@ -98,18 +108,40 @@ const Team = () => {
 
                                     <div className={`${styles.col} ${styles.actions}`}>
                                         <button className={styles.openBtn}>Deschide</button>
-                                        <button className={styles.deleteBtn}>
-                                            🗑 Șterge
-                                        </button>
+                                        <button className={styles.deleteBtn}>🗑 Șterge</button>
                                     </div>
                                 </div>
                             );
                         })}
                     </div>
                 </div>
+                <div className={styles.pagination}>
+                    <button
+                        disabled={page === 1}
+                        onClick={() => setPage(page - 1)}
+                    >
+                        ← Precedent
+                    </button>
+
+                    <span>
+                    Pagina <strong>{page}</strong> din{" "}
+                        <strong>{totalPages}</strong>
+                </span>
+
+                    <button
+                        disabled={page === totalPages}
+                        onClick={() => setPage(page + 1)}
+                    >
+                        Următor →
+                    </button>
+
+                </div>
             </div>
 
-            {/* Buttons table ke neeche, wrapper se bahar */}
+
+
+
+            {/* Buttons (same as before) */}
             <div className={styles.teamFooterActions}>
                 <button className={`${styles.pillBtn} ${styles.addBtn}`}>
                     <span className={styles.addIcon}>＋</span>
