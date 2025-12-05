@@ -5,11 +5,11 @@ export const createTask = async (data: Partial<ITask>) => {
 };
 
 export const getAllTasks = async () => {
-    return await Task.find().sort({ createdAt: -1 });
+    return await Task.find();
 };
 
 export const getTaskById = async (chapterId: string) => {
-    return await Task.find({ chapterId }).sort({ createdAt: -1 });
+    return await Task.find({ chapterId });
 };
 
 // export const updateTask = async (id: string, data: Partial<ITask>) => {

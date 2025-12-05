@@ -63,7 +63,7 @@ export const updateHumint = async (id: string, data: Partial<IHumint>) => {
 
 // WORKFLOW ACTIONS
 export const submitHumint = async (id: string) => {
-    return await Humint.findByIdAndUpdate(id, { status: "Pending" }, { new: true });
+    return await Humint.findByIdAndUpdate(id, { status: "Requested" }, { new: true });
 };
 
 export const approveHumint = async (id: string, managerId: string) => {
