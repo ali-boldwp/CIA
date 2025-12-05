@@ -1,18 +1,18 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import {
-
     useRequestProjectMutation,
     useCreateProjectMutation,
-
-    useUpdateProjectMutation, useGetRequestedProjectByIdQuery,
+    useGetRequestedProjectByIdQuery,
 } from "../../services/projectApi";
+import { useNavigate } from "react-router-dom";
 import { useGetAnalystsQuery } from "../../services/userApi";
 import "./NewProjectstyle.css";
 import { toast } from "react-toastify";
 import styles from "../project/projectRequest/ProjectRequest.module.css";
 
 const NewProject = () => {
+    const navigate=useNavigate();
     const { id } = useParams();
 
     // LOAD ANALYSTS
@@ -295,6 +295,7 @@ const NewProject = () => {
             if (id) {
                 await createProject( payload).unwrap();
                 toast.success("Proiect final creat cu succes!");
+                navigate("/")
 
             } else {
                 await requestProject(payload).unwrap();
