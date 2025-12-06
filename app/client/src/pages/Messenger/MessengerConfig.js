@@ -12,6 +12,10 @@ const ProjectDetailConfig = {
         {
             path: '/messenger',
             element: <Messenger />
+        },
+        {
+            path: '/messenger/:ID',
+            element: <Messenger />
         }
     ]
 };

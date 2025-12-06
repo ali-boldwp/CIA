@@ -99,7 +99,7 @@ const humintSchema = new Schema<IHumint>(
             type: String,
             enum: [
                 "Draft",
-                "Pending",
+                "Requested",
                 "Clarification",
                 "Approved",
                 "Rejected",

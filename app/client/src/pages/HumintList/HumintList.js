@@ -87,27 +87,38 @@ const HumintList = () => {
         }
     };
 
-
-    // FILTERING
+    /** Filters */
     const visibleRequests = useMemo(() => {
         let data = [...merged];
 
+        // 🔍 SEARCH FILTER
         if (searchValue.trim()) {
             const q = searchValue.toLowerCase();
-            data = data.filter(x =>
-                x.projectName.toLowerCase().includes(q) ||
-                x.reportType.toLowerCase().includes(q)
+
+            data = data.filter((item) =>
+                (item.projectName || "").toLowerCase().includes(q) ||
+                (item.projectSubject || "").toLowerCase().includes(q) ||
+                (item.reportType || "").toLowerCase().includes(q) ||
+                (resolveAnalystName(item.responsible) || "").toLowerCase().includes(q)
             );
         }
 
+        // ⚠️ PRIORITY FILTER
         if (priorityFilter !== "Toate") {
-            data = data.filter(x => x.priority === priorityFilter);
+            data = data.filter((item) => item.priority === priorityFilter);
+        }
+
+        // 🔽 SORTING
+        if (sortBy === "date") {
+            data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+        }
+        if (sortBy === "deadline") {
+            data.sort((a, b) => new Date(a.deadline) - new Date(b.deadline));
         }
 
         return data;
-    }, [merged, searchValue, priorityFilter]);
+    }, [merged, searchValue, priorityFilter, sortBy]);
 
-    if (isLoading) return <h2>Loading HUMINT…</h2>;
 
     return (
         <>
@@ -140,6 +151,7 @@ const HumintList = () => {
                 }
                 totalCount={visibleRequests.length}
             />
+
         </>
     );
 };

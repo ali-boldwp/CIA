@@ -9,6 +9,8 @@ const Projects = () => {
     const analysts = analystsData?.data || [];
     const approvedProjects = data?.data || [];
 
+    const approvedProject = data?.data || [];
+    const approvedProjects=approvedProject.filter((p)=>p.status=== "approved")
     const resolveAnalystName = (value) => {
         if (!value) return "—";
 

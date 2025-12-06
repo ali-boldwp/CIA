@@ -1,17 +1,11 @@
-// /src/services/analystApi.js
+// /src/services/analystApi.js\
 
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import baseQuery from "./apiSlice"
 
 export const analystApi = createApi({
     reducerPath: "analystApi",
-    baseQuery: fetchBaseQuery({
-        baseUrl: process.env.REACT_APP_API_BASE_URL, // http://localhost:4000/api/v1
-        prepareHeaders: (headers) => {
-            const token = localStorage.getItem("token");
-            if (token) headers.set("Authorization", `Bearer ${token}`);
-            return headers;
-        },
-    }),
+    baseQuery: baseQuery,
 
     tagTypes: ["Analysts"],
 

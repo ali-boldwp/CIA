@@ -1,51 +1,44 @@
 import "./Header.css";
-import {Link,useLocation} from "react-router-dom";
+import {Link, useLocation} from "react-router-dom";
+import {Outlet} from "react-router-dom";
+import { useSelector } from "react-redux";
 
 
-const Header = () => {
 
-    const location=useLocation();
-    const isSale=location.pathname.includes("sales") ;
-    const isAnalyst=location.pathname.includes("analyst");
-    let dashboardTitle = "Dashboard Manager";
+const Header = ({ children }) => {
 
-    if (isSale) {
-        dashboardTitle = "Dashboard Sales";
-    } else if (isAnalyst) {
-        dashboardTitle = "Dashboard Analist";
-    }
-  return (
-    <header className="header">
-        <div className="firstSec">
-            <h3 className="logo">{dashboardTitle}</h3>
-      <div className="search-box">
-        <span className="search-icon">🔍</span>
-        <input type="text" placeholder="Caută proiect, persoană sau task..." />
-      </div>
-      </div>
-       <div className="secSec">
-           {isSale ? "" : isAnalyst? "":     <Link to="/project" className="new-project-btn">+ Creeeaza proiect nou</Link>}
+    const user = useSelector((state) => state.auth.user);
 
-           <div className="right-buttons">
-               <button className="icon-btn">
-                   <span className="icon">🔔</span>
-                   <span className="text">Alarme</span>
-               </button>
+    const location = useLocation();
+    const isSale = location.pathname.includes("sales");
+    const isAnalyst = location.pathname.includes("analyst");
+    let dashboardTitle = `Dashboard ${ user.role }`;
 
-               <button className="icon-btn">
-                   <span className="icon">📅</span>
-                   <span className="text">Calendar</span>
-               </button>
+    return (
+        <header className="header">
+            <div className="firstSec">
+                <h3 className="logo">{dashboardTitle}</h3>
+                <div
+                    className="search-box"
+                    style={{
+                        borderRadius: !isSale && !isAnalyst ? "2rem" : undefined
+                    }}
+                >
 
-               <button className="icon-btn">
-                   <span className="icon">👤</span>
-                   <span className="text">Utilizator</span>
-               </button>
-           </div>
+                    <span className="search-icon">🔍</span>
+                    <input type="text" placeholder="Caută proiect, persoană sau task..."/>
+                </div>
+            </div>
+            <div className="secSec">
+                {children}
+                <button className="icon-btn">
+                    <span className="icon">👤</span>
+                    <span className="text">Utilizator</span>
+                </button>
 
-      </div> 
-    </header>
-  );
+            </div>
+        </header>
+    );
 };
 
 export default Header;

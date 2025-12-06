@@ -187,6 +187,7 @@
     flex-direction: row-reverse;
     gap: 4px;
     font-size: 11px;
+    margin-right: 8px;
     color: #6b7280;
 }
 

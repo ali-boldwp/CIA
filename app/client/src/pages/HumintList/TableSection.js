@@ -1,6 +1,6 @@
-import React from "react";
+import React, { useMemo, useState } from "react";
 import styles from "./TableSection.module.css";
-import {Link} from "react-router-dom";
+import { Link } from "react-router-dom";
 
 const priorityClass = (priority) => {
     switch (priority) {
@@ -35,9 +35,24 @@ const TableSection = ({
                           selectedIds,
                           onToggleSelect,
                           onToggleSelectAll,
-                          totalCount
+                          totalCount,
                       }) => {
-    const visibleIds = requests.map((r) => r.id);
+    /** 🔍 SEARCH INPUT */
+
+
+    /** 📄 PAGINATION */
+    const [page, setPage] = useState(1);
+    const [limit, setLimit] = useState(10);
+
+    /** PAGINATION LOGIC */
+    const totalPages = Math.ceil(requests.length / limit);
+
+
+    const paginated = requests.slice((page - 1) * limit, page * limit);
+
+
+    /** SELECT ALL */
+    const visibleIds = paginated.map((r) => r.id);
     const allVisibleSelected =
         visibleIds.length > 0 &&
         visibleIds.every((id) => selectedIds.includes(id));
@@ -51,7 +66,11 @@ const TableSection = ({
 
     return (
         <div className={styles.container}>
-            {/* ✅ CARD 1: TABS / COUNTERS */}
+
+            {/* SEARCH BAR INSIDE TABLE */}
+
+
+            {/* TABS */}
             <div className={styles.statsCard}>
                 <div className={styles.tabsRow}>
                     <button className={`${styles.tab} ${styles.tabGhost}`}>
@@ -63,16 +82,10 @@ const TableSection = ({
                     <button className={`${styles.tab} ${styles.tabGhost}`}>
                         Clarificări: {clarCount}
                     </button>
-                    <button className={`${styles.tab} ${styles.tabGhost}`}>
-                        Aprobate: 0
-                    </button>
-                    <button className={`${styles.tab} ${styles.tabGhost}`}>
-                        Respins: 0
-                    </button>
                 </div>
             </div>
 
-            {/* ✅ CARD 2: TABLE */}
+            {/* TABLE */}
             <div className={styles.tableCard}>
                 <h3 className={styles.title}>Solicitări în așteptare</h3>
 
@@ -97,14 +110,13 @@ const TableSection = ({
                             <th>Acțiuni</th>
                         </tr>
                         </thead>
+
                         <tbody>
-                        {requests.map((item) => {
+                        {paginated.map((item) => {
                             const isSelected = selectedIds.includes(item.id);
+
                             return (
-                                <tr
-                                    key={item.id}
-                                    className={isSelected ? styles.rowSelected : ""}
-                                >
+                                <tr key={item.id} className={isSelected ? styles.rowSelected : ""}>
                                     <td className={styles.tdCheckbox}>
                                         <input
                                             type="checkbox"
@@ -114,23 +126,15 @@ const TableSection = ({
                                     </td>
                                     <td>
                                         <div className={styles.projectCell}>
-                                                <span className={styles.projectTitle}>
-                                                  {item?.projectName}
-                                                </span>
-                                            <span className={styles.projectSubtitle}>
-                                                   {item.projectSubject}
-                                                </span>
+                                            <span className={styles.projectTitle}>{item.projectName}</span>
+                                            <span className={styles.projectSubtitle}>{item.projectSubject}</span>
                                         </div>
                                     </td>
                                     <td>{item.reportType}</td>
                                     <td>{analystN(item.responsible)}</td>
 
                                     <td>
-                                            <span
-                                                className={`${styles.pill} ${priorityClass(
-                                                    item.priority
-                                                )}`}
-                                            >
+                                            <span className={`${styles.pill} ${priorityClass(item.priority)}`}>
                                                 {item.priority}
                                             </span>
                                     </td>
@@ -153,10 +157,10 @@ const TableSection = ({
                             );
                         })}
 
-                        {requests.length === 0 && (
+                        {paginated.length === 0 && (
                             <tr>
                                 <td colSpan={10} className={styles.emptyState}>
-                                    Nu există solicitări pentru filtrul selectat.
+                                    Nu există rezultate pentru această căutare.
                                 </td>
                             </tr>
                         )}
@@ -165,19 +169,29 @@ const TableSection = ({
                 </div>
             </div>
 
-            {/* ✅ CARD 3: FOOTER / PAGINATION */}
+            {/* PAGINATION FOOTER */}
             <div className={styles.footerCard}>
-                <div className={styles.footerLeft}>
-                    <span>Afișează</span>
-                    <select className={styles.footerSelect} defaultValue="10">
-                        <option value="10">10</option>
-                        <option value="20">20</option>
-                        <option value="50">50</option>
-                    </select>
-                    <span>/ pagină</span>
-                </div>
+
                 <div className={styles.footerRight}>
-                    Pagina <strong>1</strong> din <strong>1</strong>
+                    <button
+                        disabled={page === 1}
+                        onClick={() => setPage(page - 1)}
+                        className={styles.pageBtn}
+                    >
+                        ← Precedent
+                    </button>
+
+                    <span>
+                        Pagina <strong>{page}</strong> din <strong>{totalPages}</strong>
+                    </span>
+
+                    <button
+                        disabled={page === totalPages}
+                        onClick={() => setPage(page + 1)}
+                        className={styles.pageBtn}
+                    >
+                        Următor →
+                    </button>
                 </div>
             </div>
         </div>

@@ -1,5 +1,6 @@
 // src/services/authApi.js
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+import Cookies from 'js-cookie';
 
 export const authApi = createApi({
     reducerPath: 'authApi',
@@ -8,11 +9,28 @@ export const authApi = createApi({
     }),
     endpoints: (builder) => ({
         login: builder.mutation({
-            query: (body) => ({
-                url: '/login',   // 👈 THIS is your endpoint
+            query: (credentials) => ({
+                url: '/login',
                 method: 'POST',
-                body,
+                body: credentials,
             }),
+            async onQueryStarted(arg, { queryFulfilled }) {
+                try {
+                    const { data } = await queryFulfilled;
+
+                    console.log( data.data.accessToken )
+
+                    // backend should set refresh token as HttpOnly cookie
+                    // we just store the access token
+                    Cookies.set('accessToken', data.data.accessToken, {
+                        expires: 1,
+                        sameSite: 'strict',
+                        secure: true,
+                    });
+                } catch (err) {
+                    console.error('Login failed', err);
+                }
+            },
         }),
 
         getUser: builder.query({

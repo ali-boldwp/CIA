@@ -48,7 +48,7 @@ export const createProject = async (req: Request, res: Response, next: NextFunct
             assignedAnalysts: toArray(body.assignedAnalysts ?? requestData.assignedAnalysts),
             servicesRequested: toArray(body.servicesRequested ?? requestData.servicesRequested),
             files: [...(requestData.files || []), ...files],
-            status: "approved"
+            status: body.status ? body.status : "approved"
         };
 
         const project = await createdProjectService.createProject(payload);
