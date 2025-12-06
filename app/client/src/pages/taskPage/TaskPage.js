@@ -291,7 +291,6 @@ const TaskPage = () => {
               {task.assignedAnalyst?.name || "Unassigned"}
             </span>
                         </div>
-
                         {/* Actions */}
                         <div className="col actions">
                             <FiEdit2 className="icon edit" />
