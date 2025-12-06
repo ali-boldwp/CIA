@@ -1,17 +1,9 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import baseQueryWithReauth from './apiSlice';
 
 export const humintApi = createApi({
     reducerPath: "humintApi",
-    baseQuery: fetchBaseQuery({
-        baseUrl: process.env.REACT_APP_API_BASE_URL,
-        prepareHeaders: (headers) => {
-            const token = localStorage.getItem("token");
-            if (token) {
-                headers.set("Authorization", `Bearer ${token}`);
-            }
-            return headers;
-        },
-    }),
+    baseQuery: baseQueryWithReauth,
 
     endpoints: (builder) => ({
 

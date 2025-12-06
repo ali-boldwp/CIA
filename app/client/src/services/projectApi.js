@@ -1,19 +1,10 @@
 // src/services/projectApi.js
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import baseQueryWithReauth from './apiSlice';
 
 export const projectApi = createApi({
     reducerPath: "projectApi",
-    baseQuery: fetchBaseQuery({
-        baseUrl: process.env.REACT_APP_API_BASE_URL,
-        prepareHeaders: (headers) => {
-            const token = localStorage.getItem("token");
-            if (token) {
-                headers.set("Authorization", `Bearer ${token}`);
-            }
-            return headers;
-        },
-        tagTypes: ["Chapters"],
-    }),
+    baseQuery: baseQueryWithReauth,
 
     endpoints: (builder) => ({
         createProject: builder.mutation({

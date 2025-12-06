@@ -1,5 +1,7 @@
-import React from 'react';
-import {Navigate} from 'react-router-dom';
+import React, { useEffect } from "react";
+import { useSelector } from "react-redux";
+import Cookies from "js-cookie";
+import { useNavigate } from 'react-router-dom';
 import Utils from '@libs/utils';
 import DashboardConfig from '../pages/admin/dashboard/DashboardConfig';
 import LoginConfig from "../pages/auth/Login/LoginConfig";
@@ -22,9 +24,12 @@ import HumintRequestFormConfig from "../pages/HumintRequestForm/HumintRequestFor
 import HumintListConfig from "../pages/HumintList/HumintListConfig";
 import HumintRequestDetailConfig from "../pages/HumintRequestDetail/HumintRequestDetailConfig";
 
+import AdminConfig from "../pages/admin/adminConfig";
+
 
 const routeConfigs = [
     LoginConfig,
+    AdminConfig,
     DashboardConfig,
     AnalystDashboardConfig,
     SalesDashboardConfig,
@@ -47,12 +52,33 @@ const routeConfigs = [
 
 ];
 
+const CheckRole = () => {
+    const navigate = useNavigate();
+    const user = useSelector((state) => state.auth.user);
+
+    useEffect(() => {
+        // while user is still loading, do nothing
+        if (user === undefined) return;
+
+        // no user -> go login
+        if (!user) {
+            navigate("/login", { replace: true });
+            return;
+        }
+
+        // user exists -> redirect to /{role}
+        navigate(`/${user.role}`, { replace: true });
+    }, [user, navigate]);
+
+    return null;
+};
+
 
 const routes = [
     ...Utils.generateRoutesFromConfigs(routeConfigs),
     {
         path: '/',
-        element: <Navigate to="/login"/>
+        element: <CheckRole to="/login"/>
     }
 ];
 

@@ -21,8 +21,10 @@ function App() {
             >
                 <AuthProvider>
                     <BrowserRouter>
-                        <ToastContainer />
-                        <AppRoutes/>
+                        <div className={'container'} style={{ minHeight: "100vh" }}>
+                            <ToastContainer />
+                            <AppRoutes/>
+                        </div>
                     </BrowserRouter>
                 </AuthProvider>
 
