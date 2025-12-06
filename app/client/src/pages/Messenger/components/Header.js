@@ -23,6 +23,7 @@ import {
 } from "react-icons/fi";
 import {useGetMyChatsQuery} from "../../../services/chatApi";
 import {FaThumbtack} from "react-icons/fa6";
+import { useNavigate } from "react-router-dom";
 
 function Header() {
     return (
@@ -43,13 +44,27 @@ function Header() {
     );
 }
 
-function MessengerPage() {
-    const CHAT_ID = "692f0cbee1afd5908152efd9";
+const  MessengerPage =({ chatID }) => {
 
-    const [ chat, setChat ] = useState( 'open' );
+    const navigate = useNavigate();
+    const [ chat, setChat ] = useState( chatID );
 
     const [ messages, setMessages ] = useState([]);
-    const [oldmessage, setOldMessage] = useState([]);
+    const [oldmessage, setOldMessage] = useState([
+        {
+            "_id": "6933f31daa597c5c197497e1",
+            "chatId": "6930b3f85caf3f703dd36c53",
+            "sender": {
+                "_id": "692aed2e0b6a92fd1ddbd157",
+                "name": "Zubair",
+                "role": "manager"
+            },
+            "text": "holla",
+            "createdAt": "2025-12-06T09:10:53.386Z",
+            "updatedAt": "2025-12-06T09:10:53.386Z",
+            "__v": 0
+        }
+    ]);
 
     const [text, setText] = useState("");
     const [sendMessage] = useSendMessageMutation();
@@ -62,16 +77,22 @@ function MessengerPage() {
 
     useEffect(() => {
         if (data) {
-            console.log("API RESPONSE:", data);
-            setOldMessage(Array.isArray(data.messages) ? data.messages : []);
+            try {
+
+                console.log("API RESPONSE:", data.data);
+                setOldMessage( data?.data);
+                console.log("Messages:", oldmessage);
+
+            } catch (e) {
+                console.log( e )
+            }
         }
     }, [data]);
 
     useEffect(() => {
-        const CHAT_ID = "692f0cbee1afd5908152efd9";
 
-        console.log("Joining chat:", CHAT_ID);
-        socket.emit("join_chat", CHAT_ID);
+        console.log("Joining chat:", chatID);
+        socket.emit("join_chat", chatID);
 
         socket.on("new_message", (msg) => {
 
@@ -91,18 +112,25 @@ function MessengerPage() {
         return () => {
             socket.off("new_message");
         };
+
     }, []);
+
+    const openChat = ( ID ) => {
+
+        setChat( ID );
+
+        navigate(`/messenger/${ID}`);
+
+    }
 
 
     const handleSend = async () => {
         if (!text.trim()) return;
 
-        const CHAT_ID = "692f0cbee1afd5908152efd9";
-
         try {
             // 1️⃣ API پر message save کرو
             const res = await sendMessage({
-                chatId: CHAT_ID,
+                chatId: chatID,
                 text: text
             }).unwrap();
 
@@ -211,7 +239,7 @@ function MessengerPage() {
                                             (c._id === chat ? " conversation-item-active" : "")
                                         }
                                         key={c._id}
-                                        onClick={() => setChat(c._id)}
+                                        onClick={() => openChat(c._id)}
                                     >
                                         <div className="conversation-avatar" />
 
