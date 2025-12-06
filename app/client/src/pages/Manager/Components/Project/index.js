@@ -10,8 +10,8 @@ const Projects = () => {
     const { data: analystsData } = useGetAnalystsQuery();
     const analysts = analystsData?.data || [];
 
-    const approvedProjects = data?.data || [];
-
+    const approvedProject = data?.data || [];
+    const approvedProjects=approvedProject.filter((p)=>p.status=== "approved")
     const resolveAnalystName = (value) => {
         if (!value) return "—";
         if (typeof value === "object" && value.name) return value.name;
