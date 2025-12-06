@@ -11,11 +11,25 @@ import { notFoundHandler, errorHandler } from './middlewares/error.middleware';
 
 const app: Application = express();
 
+const allowedOrigins = [
+    'http://localhost:3000',
+    'https://cia.devregion.com/'
+];
+
 /* Security & basics */
 app.use(helmet());
 app.use(cors({
-    origin: 'http://localhost:3000', // your React app
-    credentials: true,               // allow cookies / auth headers
+    origin(origin, callback) {
+        // allow requests with no origin (like mobile apps, curl, Postman)
+        if (!origin) return callback(null, true);
+
+        if (allowedOrigins.includes(origin)) {
+            return callback(null, true);
+        }
+
+        return callback(new Error('Not allowed by CORS'));
+    },
+    credentials: true,
 }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
