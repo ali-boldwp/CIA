@@ -1,11 +1,11 @@
 // /src/services/userApi.js
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import baseQueryWithReauth from './apiSlice';
+import baseQuery from './apiSlice';
 
 export const userApi = createApi({
     reducerPath: 'userApi',
 
-    baseQuery: baseQueryWithReauth,
+    baseQuery: baseQuery,
 
     tagTypes: ["Users", "Analysts"],
 

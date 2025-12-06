@@ -1,9 +1,9 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import baseQueryWithReauth from './apiSlice';
+import baseQuery from './apiSlice';
 
 export const chatApi = createApi({
     reducerPath: "chatApi",
-    baseQuery: baseQueryWithReauth,
+    baseQuery: baseQuery,
 
     endpoints: (builder) => ({
 

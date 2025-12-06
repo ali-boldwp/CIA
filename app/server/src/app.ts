@@ -13,7 +13,10 @@ const app: Application = express();
 
 /* Security & basics */
 app.use(helmet());
-app.use(cors());
+app.use(cors({
+    origin: 'http://localhost:3000', // your React app
+    credentials: true,               // allow cookies / auth headers
+}));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 

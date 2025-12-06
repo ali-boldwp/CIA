@@ -1,10 +1,10 @@
 // src/services/projectApi.js
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import baseQueryWithReauth from './apiSlice';
+import baseQuery from './apiSlice';
 
 export const projectApi = createApi({
     reducerPath: "projectApi",
-    baseQuery: baseQueryWithReauth,
+    baseQuery: baseQuery,
 
     endpoints: (builder) => ({
         createProject: builder.mutation({
