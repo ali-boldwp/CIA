@@ -515,6 +515,26 @@
 .member-avatar-4 {
     background: linear-gradient(135deg, #0ea5e9, #14b8a6);
 }
+.member-avatar-5 {
+    background: linear-gradient(135deg, #ef4444, #f87171); /* Red tones */
+}
+
+.member-avatar-6 {
+    background: linear-gradient(135deg, #10b981, #34d399); /* Emerald green */
+}
+
+.member-avatar-7 {
+    background: linear-gradient(135deg, #8b5cf6, #a78bfa); /* Purple soft */
+}
+
+.member-avatar-8 {
+    background: linear-gradient(135deg, #14b8a6, #2dd4bf); /* Teal ocean */
+}
+
+.member-avatar-9 {
+    background: linear-gradient(135deg, #f43f5e, #fb7185); /* Rose pink */
+}
+
 
 .member-name {
     font-size: 12px;
@@ -539,6 +559,14 @@
 
 .full-width {
     width: 100%;
+}
+
+.rightCreateGroup{
+    display: flex;
+    justify-content: space-between;
+    width:100%;
+    align-items: center;
+    padding:10px 2px;
 }
 
 .mt-8 {

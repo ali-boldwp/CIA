@@ -5,11 +5,12 @@ import baseQuery from "./apiSlice";
 export const chatApi = createApi({
     reducerPath: "chatApi",
     baseQuery,
-
+    tagTypes: ["Chats"],
     endpoints: (builder) => ({
 
         getMyChats: builder.query({
             query: () => "/chats",
+            providesTags: ["Chats"],
         }),
 
         // DIRECT 1-to-1 chat (single mode)
@@ -37,6 +38,31 @@ export const chatApi = createApi({
                 }
             }),
         }),
+        removeMember: builder.mutation({
+            query: ({ chatId, userId }) => ({
+                url: `/chats/${chatId}/remove-member`,
+                method: "POST",
+                body: { userId },
+
+            }),
+            invalidatesTags: ["Chats"],
+        }),
+        leaveGroup: builder.mutation({
+            query: (chatId) => ({
+                url: `/chats/${chatId}/leave`,
+                method: "POST",
+            }),
+            invalidatesTags: ["Chats"], // refresh chats automatically
+        }),
+        deleteGroup: builder.mutation({
+            query: (chatId) => ({
+                url: `/chats/${chatId}/delete`,
+                method: "DELETE",
+            }),
+            invalidatesTags: ["Chats"], // auto refresh
+        }),
+
+
 
     }),
 });
@@ -45,4 +71,7 @@ export const {
     useGetMyChatsQuery,
     useCreateDirectChatMutation,
     useCreateGroupChatMutation,
+    useRemoveMemberMutation,
+    useLeaveGroupMutation,
+    useDeleteGroupMutation,
 } = chatApi;
