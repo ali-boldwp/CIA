@@ -26,6 +26,7 @@ import HumintRequestDetailConfig from "../pages/HumintRequestDetail/HumintReques
 
 import AdminConfig from "../pages/admin/adminConfig";
 import NewMessengerConfig from "../pages/NewMessenger/NewMessengerConfig";
+import SearchKeywordConfig from "../pages/Manager/SearchKeyword/SearchKeywordConfig";
 
 
 const routeConfigs = [
@@ -51,6 +52,7 @@ const routeConfigs = [
     HumintListConfig,
     HumintRequestDetailConfig,
     NewMessengerConfig
+    SearchKeywordConfig
 
 ];
 
