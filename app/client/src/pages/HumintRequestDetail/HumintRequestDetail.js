@@ -5,6 +5,7 @@ import Header from "./Header";
 import RequestDetailForm from "./RequestDetailForm";
 import ActionButtons from "./Button";
 import ClarificationSectiom from "./ClarificationSectiom";
+import clarificationStyles from "./Clarification.module.css";
 import { useParams } from "react-router-dom";
 
 import {
@@ -20,6 +21,87 @@ import {
 import { useGetAnalystsQuery } from "../../services/userApi";
 import { toast } from "react-toastify";
 
+
+// 🔹 SEPARATE CARD: shows messages only (if any)
+const ClarificationHistoryCard = ({ messages, currentUserId }) => {
+    const chatEndRef = useRef(null);
+
+    useEffect(() => {
+        if (chatEndRef.current) {
+            chatEndRef.current.scrollIntoView({ behavior: "smooth" });
+        }
+    }, [messages]);
+
+    if (!messages || messages.length === 0) {
+        return null; // koi message nahi -> card hi nahi dikhega
+    }
+
+    return (
+        <div className={clarificationStyles.wrapper}>
+            <div className={clarificationStyles.card}>
+                <h3 className={clarificationStyles.title}>Istoric clarificări</h3>
+                <p className={clarificationStyles.subtitle}>
+                    Mesaje de clarificare între tine și analist.
+                </p>
+
+                <div className={clarificationStyles.chatThread}>
+                    {messages.map((msg) => {
+                        const id = msg._id;
+                        const user = msg.userId || {};
+                        const isOwn =
+                            user._id === currentUserId ||
+                            msg.userId === currentUserId;
+
+                        const name = user.name || (isOwn ? "Tu" : "Utilizator");
+
+                        const rawDate = msg.createdAt;
+                        let formattedDate = "";
+                        if (rawDate) {
+                            try {
+                                formattedDate = new Date(rawDate).toLocaleString("ro-RO", {
+                                    day: "2-digit",
+                                    month: "2-digit",
+                                    year: "numeric",
+                                    hour: "2-digit",
+                                    minute: "2-digit",
+                                });
+                            } catch {
+                                formattedDate = rawDate;
+                            }
+                        }
+
+                        return (
+                            <div
+                                key={id}
+                                className={`${clarificationStyles.chatRow} ${
+                                    isOwn ? clarificationStyles.chatRowOwn : clarificationStyles.chatRowOther
+                                }`}
+                            >
+                                <div className={clarificationStyles.bubble}>
+                                    <div className={clarificationStyles.bubbleHeader}>
+                                        <span className={clarificationStyles.bubbleName}>{name}</span>
+                                        {formattedDate && (
+                                            <span className={clarificationStyles.bubbleTime}>
+                                                {formattedDate}
+                                            </span>
+                                        )}
+                                    </div>
+                                    <div className={clarificationStyles.bubbleMessage}>
+                                        {msg.clarificationText}
+                                    </div>
+                                </div>
+                            </div>
+                        );
+                    })}
+
+                    <div ref={chatEndRef} />
+                </div>
+            </div>
+        </div>
+    );
+};
+
+
 const HumintRequestDetail = () => {
     const { id } = useParams(); // HUMINT id
 
@@ -33,7 +115,7 @@ const HumintRequestDetail = () => {
 
     const formRef = useRef(null);
 
-    // UI: actions vs clarify chat
+    // UI: actions vs clarify form
     const [isClarifyMode, setIsClarifyMode] = useState(false);
 
     // current user id (simple) - apne project ke mutabiq adjust kar sakte ho
@@ -48,11 +130,10 @@ const HumintRequestDetail = () => {
         // ignore
     }
 
-    // CLARIFICATIONS LIST (yehi fetch karega WhatsApp chat ke messages)
+    // CLARIFICATIONS LIST (messages for chat card)
     const {
         data: clarificationData,
         refetch: refetchClarifications,
-        isLoading: isClarificationsLoading,
     } = useGetClarificationsByHumintQuery(id);
 
     const clarifications = clarificationData?.data || [];
@@ -64,7 +145,7 @@ const HumintRequestDetail = () => {
     const [updateHumint] = useUpdateHumintMutation();
     const [createClarification] = useCreateClarificationMutation();
 
-    // auto scroll jab clarify mode on ho
+    // auto scroll jab clarify mode on ho (page bottom)
     useEffect(() => {
         if (isClarifyMode) {
             const timer = setTimeout(() => {
@@ -137,7 +218,7 @@ const HumintRequestDetail = () => {
         }
     };
 
-    // "Solicită clarificări" → form validate + chat open
+    // "Solicită clarificări" → form validate + clarify form open
     const handleShowClarifyBox = () => {
         const values = validateAndGetValues();
         if (!values) return;
@@ -162,7 +243,7 @@ const HumintRequestDetail = () => {
                 clarificationText: message,
             }).unwrap();
 
-            // 3) latest list fetch
+            // 3) latest list fetch (card automatically update ho jayega)
             await refetchClarifications();
 
             toast("Solicitare trimisă!");
@@ -195,20 +276,27 @@ const HumintRequestDetail = () => {
                 analysts={analysts}
             />
 
+            {/* 🔹 Messages card – sirf jab clarifications hon */}
+            <ClarificationHistoryCard
+                messages={clarifications}
+                currentUserId={currentUserId}
+            />
+
+            {/* 🔹 Ya to clarify form, ya action buttons */}
             {isClarifyMode ? (
                 <ClarificationSectiom
                     onSubmit={handleClarifySubmit}
                     onCancel={() => setIsClarifyMode(false)}
-                    messages={clarifications}
-                    currentUserId={currentUserId}
                 />
             ) : (
                 <ActionButtons
+                    data={enrichedHumint}
                     onApprove={handleApprove}
                     onReject={handleReject}
                     onClarify={handleShowClarifyBox}
                     onPrint={() => console.log("Print soon")}
                 />
+
             )}
         </>
     );

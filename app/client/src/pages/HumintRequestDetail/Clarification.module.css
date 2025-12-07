@@ -4,7 +4,7 @@
     display: flex;
     justify-content: center;
     margin-top: 8px;
-    margin-bottom: 32px;
+    margin-bottom: 16px;
 }
 
 /* MAIN WHITE CARD */
@@ -35,15 +35,15 @@
     margin-bottom: 12px;
 }
 
-/* 🔹 CHAT THREAD (WhatsApp style message list) */
+/* 🔹 CHAT THREAD (for history card) */
 .chatThread {
     width: 100%;
     flex: 1;
-    min-height: 260px;
+    min-height: 120px;
     max-height: 350px;
 
     padding: 12px 10px;
-    margin-bottom: 12px;
+    margin-bottom: 4px;
 
     border-radius: 12px;
     border: 1px solid #e2e8f0;
@@ -123,57 +123,34 @@
     margin-top: 2px;
 }
 
-/* 🔹 WHATSAPP STYLE INPUT BAR (BOTTOM AREA) */
-.inputBar {
-    margin-top: 10px;
-    display: flex;
-    align-items: flex-end;
-    gap: 12px;
-}
-
-/* LEFT SIDE "BACK" BUTTON */
-.backBtn {
-    padding-left: 14px !important;
-    padding-right: 14px !important;
-    white-space: nowrap;
-}
-
-/* TEXTAREA + SEND BUTTON HOLDER */
-.inputWrapper {
-    flex: 1;
-    display: flex;
-    align-items: flex-end;
-    gap: 10px;
-}
-
-/* WhatsApp-style rounded message input field */
-.inputArea {
-    flex: 1;
-    min-height: 42px;
-    max-height: 120px;
-
-    padding: 10px 16px;
-    border-radius: 999px;
-    background: #f8fafc;
+/* 🔹 SIMPLE TEXTAREA (Clarify form) */
+.textarea {
+    width: 100%;
+    min-height: 110px;
+    padding: 12px 14px;
+    border-radius: 12px;
     border: 1px solid #e2e8f0;
-
-    font-size: 14px;
-    resize: none;
+    background: #f8fafc;
+    font-size: 13px;
+    resize: vertical;
     outline: none;
 
     transition: all 0.2s ease;
 }
 
-.inputArea:focus {
+.textarea:focus {
     background: #ffffff;
     border-color: #6366f1;
     box-shadow: 0 0 0 1px rgba(99, 102, 241, 0.25);
 }
 
-/* SEND BUTTON */
-.sendBtn {
-    padding: 10px 20px !important;
-    border-radius: 999px !important;
+/* BOTTOM BUTTON ROW */
+.actionsRow {
+    margin-top: 12px;
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    flex-wrap: wrap;
 }
 
 /* BUTTON BASE STYLE */
@@ -208,7 +185,7 @@
     color: #ffffff;
 }
 
-/* SEND BUTTON — Purple gradient */
+/* SEND / CLARIFY BUTTON — Purple gradient */
 .btnPrimary {
     background: linear-gradient(90deg, #8b5cf6 0%, #6366f1 100%);
     color: #ffffff;
@@ -221,24 +198,20 @@
     }
 
     .chatThread {
-        max-height: 300px;
+        max-height: 280px;
     }
 
-    .inputBar {
-        flex-direction: column;
+    .actionsRow {
+        flex-direction: column-reverse;
         align-items: stretch;
     }
 
-    .inputWrapper {
-        flex-direction: row;
-    }
-
-    .backBtn {
+    .btn {
         width: 100%;
         text-align: center;
     }
 
-    .sendBtn {
-        width: auto;
+    .bubble {
+        max-width: 100%;
     }
 }
