@@ -1,5 +1,6 @@
 import Humint, { IHumint } from "../models/humint.model";
 
+
 export const createHumint = async (data: Partial<IHumint>) => {
     return await Humint.create(data);
 };
@@ -97,3 +98,5 @@ export const completeHumint = async (id: string) => {
 export const deleteHumint = async (id: string) => {
     return await Humint.findByIdAndDelete(id);
 };
+
+
