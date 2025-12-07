@@ -43,13 +43,35 @@ export const createChat = async (req: Request, res: Response, next: NextFunction
 // Get all chats of logged-in user
 export const getMyChats = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const userId = (req as any).user.id;
+        const userId = new Types.ObjectId((req as any).user.id);
 
         const chats = await Chat.aggregate([
-            { $match: { "participants.user": new Types.ObjectId(userId) } },
 
+            // Match only chats where user is a participant
+            { $match: { "participants.user": userId } },
 
-            // Join the lastMessage document
+            // Extract pinned field for this user
+            {
+                $addFields: {
+                    currentUserInfo: {
+                        $filter: {
+                            input: "$participants",
+                            as: "p",
+                            cond: { $eq: ["$$p.user", userId] }
+                        }
+                    }
+                }
+            },
+
+            {
+                $addFields: {
+                    isPinned: {
+                        $arrayElemAt: ["$currentUserInfo.pinned", 0]
+                    }
+                }
+            },
+
+            // Lookup last message
             {
                 $lookup: {
                     from: "messages",
@@ -61,11 +83,14 @@ export const getMyChats = async (req: Request, res: Response, next: NextFunction
 
             { $unwind: { path: "$lastMessage", preserveNullAndEmptyArrays: true } },
 
-            // Sort by last message timestamp (or updatedAt fallback)
+            // 📌 Sort logic:
+            // 1. pinned first
+            // 2. inside unpinned -> latest message first
             {
                 $sort: {
-                    "lastMessage.createdAt": -1,
-                    updatedAt: -1
+                    isPinned: -1,                     // pinned first
+                    "lastMessage.createdAt": -1,      // among unpinned → latest msg first
+                    updatedAt: -1                     // fallback sorting
                 }
             }
         ]);
@@ -75,6 +100,8 @@ export const getMyChats = async (req: Request, res: Response, next: NextFunction
         next(err);
     }
 };
+
+
 
 
 // Get a single chat
@@ -93,7 +120,12 @@ export const getChatById = async (req: Request, res: Response, next: NextFunctio
 
 export const muteChat = async (req, res) => {
     try {
-        const userId = req.user._id; // from auth middleware
+        const userId = req.user?._id || req.user?.id;
+
+        if (!userId) {
+            return res.status(401).json({ message: "User not authenticated" });
+        }
+
         const { chatId } = req.params;
         const { mute } = req.body;
 
@@ -101,32 +133,132 @@ export const muteChat = async (req, res) => {
             return res.status(400).json({ message: "mute must be boolean" });
         }
 
-        const chat = await Chat.findById(chatId);
+        const userStr = userId.toString();
+
+        const chat = await Chat.findOne({
+            _id: chatId,
+            $or: [
+                { "participants.user": userStr },
+                { "participants.user": new Types.ObjectId(userStr) }
+            ]
+        });
+
         if (!chat) {
-            return res.status(404).json({ message: "Chat not found" });
+            return res.status(404).json({ message: "Chat not found or access denied" });
         }
 
-        // Find participant
         const participant = chat.participants.find(
-            (p) => p.user === userId
+            (p) => p?.user && p.user.toString() === userStr
         );
 
         if (!participant) {
             return res.status(403).json({ message: "You are not in this chat" });
         }
 
-        // Update mute state
         participant.muted = mute;
-
         await chat.save();
 
-        return res.json({
-            chatId,
-            muted: participant.muted
-        });
-    } catch (error) {
-        console.error(error);
+        return res.json({ chatId, muted: participant.muted });
+
+    } catch (err) {
+        console.error(err);
         return res.status(500).json({ message: "Server error" });
     }
 };
 
+
+
+
+export const pinChat = async (req, res) => {
+    try {
+        const userId = req.user?._id || req.user?.id;
+
+        if (!userId) {
+            return res.status(401).json({ message: "User not authenticated" });
+        }
+
+        const { chatId } = req.params;
+        const { pin } = req.body;
+
+        if (typeof pin !== "boolean") {
+            return res.status(400).json({ message: "pin must be boolean" });
+        }
+
+        const userStr = userId.toString();
+
+        // Match both string AND ObjectId stored users
+        const chat = await Chat.findOne({
+            _id: chatId,
+            $or: [
+                { "participants.user": userStr },
+                { "participants.user": new Types.ObjectId(userStr) }
+            ]
+        });
+
+        if (!chat) {
+            return res.status(404).json({ message: "Chat not found or access denied" });
+        }
+
+        // SAFE: check that p.user exists before calling toString()
+        const participant = chat.participants.find(
+            (p) => p?.user && p.user.toString() === userStr
+        );
+
+        if (!participant) {
+            return res.status(403).json({ message: "You are not in this chat" });
+        }
+
+        participant.pinned = pin;
+        await chat.save();
+
+        return res.json({
+            chatId,
+            pinned: participant.pinned
+        });
+
+    } catch (err) {
+        console.error(err);
+        return res.status(500).json({ message: "Server error" });
+    }
+};
+
+
+export const createGroupChat = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const creatorId = (req as any).user.id;
+        const { groupName, users } = req.body;
+
+        if (!groupName) {
+            return res.status(400).json({ message: "groupName is required" });
+        }
+
+        if (!users || !Array.isArray(users) || users.length < 1) {
+            return res.status(400).json({ message: "At least 1 user is required to create a group" });
+        }
+
+        // Remove duplicates + ensure creator is added
+        const uniqueUsers = Array.from(new Set([creatorId, ...users]));
+
+        // Build participants array according to your model
+        const participants = uniqueUsers.map(id => ({
+            user: new Types.ObjectId(id),
+            muted: false,
+            pinned: false
+        }));
+
+        const newGroup = await Chat.create({
+            isGroup: true,
+            groupName,
+            participants
+        });
+
+        return res.json({
+            success: true,
+            message: "Group created successfully",
+            data: newGroup
+        });
+
+    } catch (err) {
+        next(err);
+    }
+};
