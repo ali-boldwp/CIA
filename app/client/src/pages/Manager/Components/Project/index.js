@@ -7,7 +7,7 @@ const Projects = () => {
     const { data, isLoading } = useGetProjectCreateQuery();
     const { data: analystsData } = useGetAnalystsQuery();
     const analysts = analystsData?.data || [];
-    const approvedProjects = data?.data || [];
+    // const approvedProjects = data?.data || [];
 
     const approvedProject = data?.data || [];
     const approvedProjects=approvedProject.filter((p)=>p.status=== "approved")
