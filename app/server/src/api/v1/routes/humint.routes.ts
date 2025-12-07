@@ -23,7 +23,7 @@ router.put("/:id", auth, humintController.updateHumint);
 router.delete(
     "/:id",
     auth,
-    // authorizeRoles(Role.ADMIN, Role.SUPER_ADMIN),
+
     humintController.deleteHumint
 );
 

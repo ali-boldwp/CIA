@@ -6,7 +6,7 @@ const HumintRequestDetailConfig = {
             config: {}
         }
     },
-    auth : [ 'admin' , 'manager'],
+    auth : [ 'admin' , 'manager','analyst'],
     routes: [
         {
             path: '/humintRequest-Detail/:id',
