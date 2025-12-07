@@ -1,6 +1,6 @@
 // HumintRequestDetail.js
 
-import React, { useRef, useState , useEffect } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import Header from "./Header";
 import RequestDetailForm from "./RequestDetailForm";
 import ActionButtons from "./Button";
@@ -12,44 +12,73 @@ import {
     useApproveHumintMutation,
     useRejectHumintMutation,
     useClarificationHumintMutation,
-    useUpdateHumintMutation
+    useUpdateHumintMutation,
+    useGetClarificationsByHumintQuery,
+    useCreateClarificationMutation,
 } from "../../services/humintApi";
 
 import { useGetAnalystsQuery } from "../../services/userApi";
 import { toast } from "react-toastify";
 
 const HumintRequestDetail = () => {
-    const { id } = useParams();
+    const { id } = useParams(); // HUMINT id
 
+    // HUMINT detail
     const { data, isLoading } = useGetHumintByIdQuery(id);
     const humint = data?.data;
 
+    // analysts
     const { data: analystData } = useGetAnalystsQuery();
     const analysts = analystData?.data || [];
 
     const formRef = useRef(null);
 
-    // 🔹 UI state: show action buttons or clarification box
+    // UI: actions vs clarify chat
     const [isClarifyMode, setIsClarifyMode] = useState(false);
 
-    // API MUTATIONS
+    // current user id (simple) - apne project ke mutabiq adjust kar sakte ho
+    let currentUserId = "";
+    try {
+        const stored = localStorage.getItem("user");
+        if (stored) {
+            const parsed = JSON.parse(stored);
+            currentUserId = parsed._id || parsed.id || "";
+        }
+    } catch (e) {
+        // ignore
+    }
+
+    // CLARIFICATIONS LIST (yehi fetch karega WhatsApp chat ke messages)
+    const {
+        data: clarificationData,
+        refetch: refetchClarifications,
+        isLoading: isClarificationsLoading,
+    } = useGetClarificationsByHumintQuery(id);
+
+    const clarifications = clarificationData?.data || [];
+
+    // MUTATIONS
     const [approveHumint] = useApproveHumintMutation();
     const [rejectHumint] = useRejectHumintMutation();
     const [clarificationHumint] = useClarificationHumintMutation();
     const [updateHumint] = useUpdateHumintMutation();
+    const [createClarification] = useCreateClarificationMutation();
 
+    // auto scroll jab clarify mode on ho
     useEffect(() => {
         if (isClarifyMode) {
-            setTimeout(() => {
+            const timer = setTimeout(() => {
                 window.scrollTo({
                     top: document.body.scrollHeight,
                     behavior: "smooth",
                 });
             }, 100);
+
+            return () => clearTimeout(timer);
         }
     }, [isClarifyMode]);
 
-    // Analyst resolver (works with object or ID)
+    // analyst resolve
     const resolveAnalystName = (responsible) => {
         if (!responsible) return "";
 
@@ -57,7 +86,7 @@ const HumintRequestDetail = () => {
             return responsible.name;
         }
 
-        const found = analysts.find(a => a._id === responsible);
+        const found = analysts.find((a) => a._id === responsible);
         return found ? found.name : "";
     };
 
@@ -98,7 +127,7 @@ const HumintRequestDetail = () => {
         try {
             await rejectHumint({
                 id,
-                feedback: values.managerFeedback
+                feedback: values.managerFeedback,
             }).unwrap();
 
             toast("Respins!");
@@ -108,27 +137,35 @@ const HumintRequestDetail = () => {
         }
     };
 
-    // 🔹 Step 1: user ne "Solicită clarificări" dabaya → box show karo
+    // "Solicită clarificări" → form validate + chat open
     const handleShowClarifyBox = () => {
         const values = validateAndGetValues();
         if (!values) return;
         setIsClarifyMode(true);
     };
 
-    // 🔹 Step 2: Clarificare submit hui → API call
+    // "Clarifică" → status + message save + refetch messages
     const handleClarifySubmit = async (message) => {
-        // optional: form dobara validate karna hai to:
         const values = validateAndGetValues();
         if (!values) return;
 
         try {
+            // 1) HUMINT status ko "Clarification" + feedback update
             await clarificationHumint({
                 id,
-                feedback: message || values.managerFeedback || ""
+                feedback: message,
             }).unwrap();
 
+            // 2) Clarification collection me chat message save
+            await createClarification({
+                humintId: id,
+                clarificationText: message,
+            }).unwrap();
+
+            // 3) latest list fetch
+            await refetchClarifications();
+
             toast("Solicitare trimisă!");
-            setIsClarifyMode(false);
         } catch (err) {
             console.error(err);
             toast.error("Eroare la clarificări");
@@ -148,9 +185,6 @@ const HumintRequestDetail = () => {
         }
     };
 
-
-
-
     return (
         <>
             <Header />
@@ -161,11 +195,12 @@ const HumintRequestDetail = () => {
                 analysts={analysts}
             />
 
-
             {isClarifyMode ? (
                 <ClarificationSectiom
                     onSubmit={handleClarifySubmit}
                     onCancel={() => setIsClarifyMode(false)}
+                    messages={clarifications}
+                    currentUserId={currentUserId}
                 />
             ) : (
                 <ActionButtons

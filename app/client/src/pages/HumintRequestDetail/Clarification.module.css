@@ -1,6 +1,4 @@
-/* /home/ubaid/workspace/app/client/src/pages/HumintRequestDetail/Clarification.module.css */
-
-/* outer wrapper – align with other cards */
+/* OUTER WRAPPER */
 .wrapper {
     width: 100%;
     display: flex;
@@ -9,7 +7,7 @@
     margin-bottom: 32px;
 }
 
-/* white card container */
+/* MAIN WHITE CARD */
 .card {
     width: 96%;
     max-width: 1500px;
@@ -18,9 +16,12 @@
     border-radius: 16px;
     padding: 18px 22px 20px;
     box-shadow: 0 8px 20px rgba(15, 23, 42, 0.08);
+
+    display: flex;
+    flex-direction: column;
 }
 
-/* header */
+/* HEADERS */
 .title {
     font-size: 13px;
     font-weight: 600;
@@ -34,40 +35,152 @@
     margin-bottom: 12px;
 }
 
-/* chat-like textarea */
-.textarea {
+/* 🔹 CHAT THREAD (WhatsApp style message list) */
+.chatThread {
     width: 100%;
-    min-height: 110px;
-    padding: 12px 14px;
+    flex: 1;
+    min-height: 260px;
+    max-height: 350px;
+
+    padding: 12px 10px;
+    margin-bottom: 12px;
+
     border-radius: 12px;
     border: 1px solid #e2e8f0;
-    background: #f8fafc;
-    font-size: 13px;
-    resize: vertical;
-    outline: none;
+    background: #f9fafb;
+
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+
+    overflow-y: auto;
 }
 
-/* focus state */
-.textarea:focus {
+.emptyState {
+    font-size: 12px;
+    color: #9ca3af;
+    font-style: italic;
+}
+
+/* MESSAGE ALIGNMENT */
+.chatRow {
+    display: flex;
+    width: 100%;
+}
+
+/* Current user → RIGHT side */
+.chatRowOwn {
+    justify-content: flex-end;
+}
+
+/* Other user → LEFT side */
+.chatRowOther {
+    justify-content: flex-start;
+}
+
+/* MESSAGE BUBBLE DESIGN */
+.bubble {
+    max-width: 70%;
+    border-radius: 18px;
+    padding: 10px 14px;
+    font-size: 13px;
+    line-height: 1.35;
+    box-shadow: 0 2px 6px rgba(15, 23, 42, 0.15);
+}
+
+/* My messages (RIGHT — Purple) */
+.chatRowOwn .bubble {
+    background: linear-gradient(90deg, #4f46e5 0%, #6366f1 100%);
+    color: #ffffff;
+}
+
+/* Other messages (LEFT — Light gray) */
+.chatRowOther .bubble {
+    background: #e5e7eb;
+    color: #1f2937;
+}
+
+/* BUBBLE HEADER (NAME + TIME) */
+.bubbleHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 3px;
+}
+
+.bubbleName {
+    font-weight: 600;
+    font-size: 11px;
+}
+
+.bubbleTime {
+    font-size: 10px;
+    opacity: 0.8;
+}
+
+.bubbleMessage {
+    white-space: pre-wrap;
+    margin-top: 2px;
+}
+
+/* 🔹 WHATSAPP STYLE INPUT BAR (BOTTOM AREA) */
+.inputBar {
+    margin-top: 10px;
+    display: flex;
+    align-items: flex-end;
+    gap: 12px;
+}
+
+/* LEFT SIDE "BACK" BUTTON */
+.backBtn {
+    padding-left: 14px !important;
+    padding-right: 14px !important;
+    white-space: nowrap;
+}
+
+/* TEXTAREA + SEND BUTTON HOLDER */
+.inputWrapper {
+    flex: 1;
+    display: flex;
+    align-items: flex-end;
+    gap: 10px;
+}
+
+/* WhatsApp-style rounded message input field */
+.inputArea {
+    flex: 1;
+    min-height: 42px;
+    max-height: 120px;
+
+    padding: 10px 16px;
+    border-radius: 999px;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+
+    font-size: 14px;
+    resize: none;
+    outline: none;
+
+    transition: all 0.2s ease;
+}
+
+.inputArea:focus {
+    background: #ffffff;
     border-color: #6366f1;
     box-shadow: 0 0 0 1px rgba(99, 102, 241, 0.25);
-    background: #ffffff;
 }
 
-/* actions row */
-.actionsRow {
-    margin-top: 12px;
-    display: flex;
-    justify-content: flex-end;
-    gap: 10px;
-    flex-wrap: wrap;
+/* SEND BUTTON */
+.sendBtn {
+    padding: 10px 20px !important;
+    border-radius: 999px !important;
 }
 
-/* base button style */
+/* BUTTON BASE STYLE */
 .btn {
     border: none;
-    border-radius: 999px;
-    padding: 8px 20px;
+    border-radius: 12px;
+    padding: 9px 22px;
 
     font-size: 13px;
     font-weight: 600;
@@ -75,60 +188,57 @@
     outline: none;
 
     box-shadow: 0 6px 16px rgba(15, 23, 42, 0.15);
-    transition: transform 0.15s ease, box-shadow 0.15s ease, opacity 0.15s ease;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
 }
 
 .btn:disabled {
     opacity: 0.6;
     cursor: not-allowed;
-    box-shadow: none;
 }
 
+/* HOVER */
 .btn:hover:not(:disabled) {
     transform: translateY(-1px);
     box-shadow: 0 8px 22px rgba(15, 23, 42, 0.22);
 }
 
-/* secondary (cancel) button - RED GRADIENT */
+/* ❌ CANCEL BUTTON — RED GRADIENT */
 .btnSecondary {
-    background: linear-gradient(90deg, #f87171 0%, #dc2626 100%); /* light → dark red */
+    background: linear-gradient(90deg, #f87171 0%, #dc2626 100%);
     color: #ffffff;
-    border-radius: 12px;
-    border: none;
 }
 
-.btnSecondary:hover:not(:disabled) {
-    background: linear-gradient(90deg, #fb7171 0%, #b91c1c 100%);
-    transform: translateY(-1px);
-    box-shadow: 0 6px 16px rgba(220, 38, 38, 0.35);
-}
-
-.btnSecondary:active {
-    transform: translateY(0px);
-    box-shadow: none;
-}
-
-
-/* primary (Clarifică) button – purple/blue gradient */
+/* SEND BUTTON — Purple gradient */
 .btnPrimary {
-    background: linear-gradient(90deg, #6d28d9 0%, #14b8a6 100%);
+    background: linear-gradient(90deg, #8b5cf6 0%, #6366f1 100%);
     color: #ffffff;
-    border-radius: 12px;
 }
 
-/* responsive */
+/* MOBILE RESPONSIVE */
 @media (max-width: 640px) {
     .card {
-        padding: 14px 14px 16px;
+        padding: 14px;
     }
 
-    .actionsRow {
-        flex-direction: column-reverse;
+    .chatThread {
+        max-height: 300px;
+    }
+
+    .inputBar {
+        flex-direction: column;
         align-items: stretch;
     }
 
-    .btn {
+    .inputWrapper {
+        flex-direction: row;
+    }
+
+    .backBtn {
         width: 100%;
         text-align: center;
+    }
+
+    .sendBtn {
+        width: auto;
     }
 }
