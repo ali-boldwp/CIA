@@ -77,10 +77,11 @@ const AnalystDashboard = () => {
                 <div className="summary-card">
                     <div className="summary-title">🕵️ HUMINT in lucru</div>
                     <div className="summary-value"> {projects?.filter(p => p.status === "in_progress").length} </div>
+                    <Link to="/humintList" className="gradient-btn">HUMINT-ul tău</Link>
                 </div>
                 <div className="summary-card">
                     <div className="summary-title">
-                        <Link to="/humintRequest-Page">🕵️‍♀️ Adauga solicitare noua de HUMINT ➕</Link>
+                        <Link to="/humintRequest">🕵️‍♀️ Adauga solicitare noua de HUMINT ➕</Link>
                     </div>
                 </div>
                 <div className="summary-card">
