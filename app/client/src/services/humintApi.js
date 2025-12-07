@@ -1,5 +1,5 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import baseQuery from './apiSlice';
+import { createApi } from "@reduxjs/toolkit/query/react";
+import baseQuery from "./apiSlice";
 
 export const humintApi = createApi({
     reducerPath: "humintApi",
@@ -75,7 +75,7 @@ export const humintApi = createApi({
         }),
 
         // ---------------------------------
-        // MANAGER: REQUEST CLARIFICATION
+        // MANAGER: REQUEST CLARIFICATION (status + feedback in HUMINT)
         // ---------------------------------
         clarificationHumint: builder.mutation({
             query: ({ id, feedback }) => ({
@@ -104,6 +104,26 @@ export const humintApi = createApi({
                 method: "DELETE",
             }),
         }),
+
+        // ---------------------------------
+        // 🔹 GET CLARIFICATIONS FOR ONE HUMINT
+        //    GET /humint/clarification/:humintId
+        // ---------------------------------
+        getClarificationsByHumint: builder.query({
+            query: (humintId) => `/humint/clarification/${humintId}`,
+        }),
+
+        // ---------------------------------
+        // 🔹 CREATE CLARIFICATION MESSAGE
+        //    POST /humint/clarification
+        // ---------------------------------
+        createClarification: builder.mutation({
+            query: ({ humintId, clarificationText }) => ({
+                url: "/humint/clarification",
+                method: "POST",
+                body: { humintId, clarificationText },
+            }),
+        }),
     }),
 });
 
@@ -119,4 +139,8 @@ export const {
     useClarificationHumintMutation,
     useCompleteHumintMutation,
     useDeleteHumintMutation,
+
+    // 🔹 new hooks
+    useGetClarificationsByHumintQuery,
+    useCreateClarificationMutation,
 } = humintApi;

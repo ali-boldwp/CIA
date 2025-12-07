@@ -4,7 +4,10 @@ export const createClarification = async (data: Partial<IClarification>) => {
     return await Clarification.create(data);
 };
 
-export const getClarificationHumintById = async (id: string) => {
-    return await Clarification.findById(id)
-
+// 🔹 sari clarifications for given HUMINT
+export const getClarificationHumintById = async (humintId: string) => {
+    return await Clarification
+        .find({ humintId })
+        .populate("userId", "name")       
+        .sort({ createdAt: 1 });
 };
