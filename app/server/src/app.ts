@@ -13,7 +13,7 @@ const app: Application = express();
 
 const allowedOrigins = [
     'http://localhost:3000',
-    'https://cia.devregion.com/'
+    'https://cia.devregion.com'
 ];
 
 /* Security & basics */
