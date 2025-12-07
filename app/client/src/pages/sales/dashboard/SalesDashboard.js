@@ -1,4 +1,4 @@
-import React from 'react';
+import React,{useState,useMemo} from 'react';
 import "../../analyst/dashboard/style.css"
 import Header from "../../../layouts/Component/Header";
 import { Link } from "react-router-dom";
@@ -48,7 +48,14 @@ const SalesDashboard = () => {
         return d.toISOString().split("T")[0];
     };
 
+    const [page, setPage] = useState(1);
+    const limit = 10; // câte deadline-uri pe pagină vrei
 
+    const totalPages = Math.ceil(approvedProject.length / limit);
+
+    const paginatedDeadlines = useMemo(() => {
+        return approvedProject.slice((page - 1) * limit, page * limit);
+    }, [page, approvedProject]);
 
 
     return (
@@ -158,18 +165,40 @@ const SalesDashboard = () => {
                 <div className="calendar-card">
                     <ul className="calendar-list">
 
-                        {approvedProject.map((p) => (
+                        {paginatedDeadlines.map((p) => (
                             <li key={p._id}>
-                <span>
-                    🟢 {formatDate(p.deadline)} — (56%)
-                </span>
+        <span>
+            🟢 {formatDate(p.deadline)} — (56%)
+        </span>
                             </li>
                         ))}
 
                         {approvedProject.length === 0 && (
                             <li><span>Nu exista deadline-uri.</span></li>
                         )}
+
                     </ul>
+                    <div className="pagination" style={{ marginTop: "15px" }}>
+                        <button
+                            disabled={page === 1}
+                            onClick={() => setPage((prev) => prev - 1)}
+                        >
+                            ← Precedent
+                        </button>
+
+                        <span style={{ margin: "0 10px" }}>
+        Pagina <strong>{page}</strong> din{" "}
+                            <strong>{totalPages}</strong>
+    </span>
+
+                        <button
+                            disabled={page === totalPages}
+                            onClick={() => setPage((prev) => prev + 1)}
+                        >
+                            Următor →
+                        </button>
+                    </div>
+
                 </div>
 
 
