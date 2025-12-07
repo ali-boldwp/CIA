@@ -1,12 +1,12 @@
-import { useState, useRef, useEffect } from "react";
-import { useGetAllUsersQuery } from "../../../../services/userApi";
-import { Link } from "react-router-dom";
+import {useState, useRef, useEffect} from "react";
+import {useGetAllUsersQuery} from "../../../../services/userApi";
+import {Link} from "react-router-dom";
 
-const ProjectRow = ({ project, responsible, responsibles }) => {
+const ProjectRow = ({project, responsible, responsibles}) => {
     const [open, setOpen] = useState(false);
     const dropdownRef = useRef();
 
-    const { data: usersData } = useGetAllUsersQuery();
+    const {data: usersData} = useGetAllUsersQuery();
     const users = usersData?.data || [];
 
     const responsibleUser = users.find(
@@ -85,7 +85,7 @@ const ProjectRow = ({ project, responsible, responsibles }) => {
         <div className="project-row">
             {/* INFO SECTION -------------------- */}
             <div className="col project-infoDash">
-                <h4 style={{ marginBottom: "5px" }}>
+                <h4 style={{marginBottom: "5px"}}>
                     {project.projectName || project.name}
                 </h4>
                 <p>
@@ -108,7 +108,7 @@ const ProjectRow = ({ project, responsible, responsibles }) => {
             {/* DEADLINE ------------------------ */}
             <div className="col deadline">
                 {(() => {
-                    const { text, className, date, status } = formatDeadline(project.deadline);
+                    const {text, className, date, status} = formatDeadline(project.deadline);
                     return (
                         <span
                             className={className}
@@ -123,14 +123,21 @@ const ProjectRow = ({ project, responsible, responsibles }) => {
             </div>
 
             {/* PROGRESS ------------------------ */}
-            <div className="col progress">
-                <div className="progress-bar1">
-                    <div
-                        className="progress-fill1"
-                        style={{ width: `${project.progress}%` }}
-                    ></div>
+            <div className="colProgress progress" style={{ gap: "10px" }}>
+
+                <div style={{ display: "flex", flexDirection: "row", flexGrow: 1, width: "90%", gap: "15px" }}>
+                    <div className="progress-bar1" style={{ display: "flex", flexGrow: 1 }}>
+                        <div
+                            className="progress-fill1"
+                            style={{width: `${project.progress}%`}}
+                        ></div>
+                    </div>
+                    <span style={{display: "block"}}>100%</span>
                 </div>
-                <span className="progress-text">{project.progressText}</span>
+
+                <div>8/10 taskuri</div>
+                <div>
+                </div>
             </div>
 
             {/* STATUS -------------------------- */}
@@ -151,23 +158,23 @@ const ProjectRow = ({ project, responsible, responsibles }) => {
                     HUMINT ▾
                 </button>
 
-                {/* DROPDOWN MENU */}
+
                 {open && (
                     <div className="humint-dropdown">
                         <label className="dropdown-item">
-                            <input type="checkbox" /> Nu s-a solicitat HUMINT
+                            <input type="checkbox"/> Nu s-a solicitat HUMINT
                         </label>
 
                         <label className="dropdown-item selected">
-                            <input type="checkbox" defaultChecked /> S-a solicitat HUMINT
+                            <input type="checkbox" defaultChecked/> S-a solicitat HUMINT
                         </label>
 
                         <label className="dropdown-item">
-                            <input type="checkbox" /> Primit HUMINT
+                            <input type="checkbox"/> Primit HUMINT
                         </label>
 
                         <label className="dropdown-item">
-                            <input type="checkbox" /> Predat HUMINT
+                            <input type="checkbox"/> Predat HUMINT
                         </label>
                     </div>
                 )}
