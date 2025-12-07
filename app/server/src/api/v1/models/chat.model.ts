@@ -3,6 +3,7 @@ import { Schema, model, Types, Document } from "mongoose";
 export interface IChatParticipant {
     user: Types.ObjectId;
     muted: boolean;
+    pinned: boolean;
 }
 
 export interface IChat extends Document {
@@ -19,7 +20,8 @@ const chatSchema = new Schema<IChat>(
             type: [
                 {
                     user: { type: Schema.Types.ObjectId, ref: "User", required: true },
-                    muted: { type: Boolean, default: false }
+                    muted: { type: Boolean, default: false },
+                    pinned: { type: Boolean, default: false }
                 }
             ],
             default: []

@@ -13,5 +13,10 @@ router.post("/:chatId/message", auth, messageController.sendMessage);
 router.get("/:chatId/messages", auth, messageController.getMessages);
 
 router.post("/:chatId/mute", auth, chatController.muteChat);
+router.post("/:chatId/pin", auth, chatController.pinChat);
+router.post("/group", auth, chatController.createGroupChat);
+
+
+
 
 export default router;

@@ -1,4 +1,5 @@
 import Clarification , { IClarification } from "../models/clarification.model";
+import Humint , {IHumint} from "../models/humint.model";
 
 export const createClarification = async (data: Partial<IClarification>) => {
     return await Clarification.create(data);
