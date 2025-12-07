@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import Chat from "../models/chat.model";
+import { logAudit} from "../../../utils/logAudit";
 import { Types } from "mongoose";
 
 
@@ -226,20 +227,76 @@ export const pinChat = async (req, res) => {
 export const createGroupChat = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const creatorId = (req as any).user.id;
-        const { groupName, users } = req.body;
-
-        if (!groupName) {
-            return res.status(400).json({ message: "groupName is required" });
-        }
+        const { users, groupName, isGroup } = req.body;
 
         if (!users || !Array.isArray(users) || users.length < 1) {
-            return res.status(400).json({ message: "At least 1 user is required to create a group" });
+            return res.status(400).json({ message: "At least 1 user is required" });
         }
 
-        // Remove duplicates + ensure creator is added
+        // ------------------------------------
+        // DIRECT CHAT (1-to-1)
+        // ------------------------------------
+        if (!isGroup) {
+            if (users.length !== 1) {
+                return res.status(400).json({ message: "Direct chat requires exactly 1 user" });
+            }
+
+            const otherUserId = users[0];
+
+            // Check if direct chat exists
+            const existing = await Chat.findOne({
+                isGroup: false,
+                "participants.user": {
+                    $all: [
+                        new Types.ObjectId(creatorId),
+                        new Types.ObjectId(otherUserId)
+                    ]
+                }
+            });
+
+            if (existing) {
+                return res.json({
+                    success: true,
+                    message: "Direct chat already exists",
+                    data: existing
+                });
+            }
+
+            // Create direct chat
+            const participants = [
+                { user: new Types.ObjectId(creatorId), muted: false, pinned: false },
+                { user: new Types.ObjectId(otherUserId), muted: false, pinned: false }
+            ];
+
+            const newChat = await Chat.create({
+                isGroup: false,
+                participants
+            });
+
+            // LOGS — for direct chat
+            await logAudit(
+                newChat._id,
+                creatorId,
+                `A creat un chat direct`
+            );
+
+            return res.json({
+                success: true,
+                message: "Direct chat created successfully",
+                data: newChat
+            });
+        }
+
+        // ------------------------------------
+        // GROUP CHAT
+        // ------------------------------------
+
+        if (!groupName) {
+            return res.status(400).json({ message: "groupName is required for group chat" });
+        }
+
         const uniqueUsers = Array.from(new Set([creatorId, ...users]));
 
-        // Build participants array according to your model
         const participants = uniqueUsers.map(id => ({
             user: new Types.ObjectId(id),
             muted: false,
@@ -252,10 +309,168 @@ export const createGroupChat = async (req: Request, res: Response, next: NextFun
             participants
         });
 
+        // LOGS — for group creation
+        await logAudit(
+            newGroup._id,
+            creatorId,
+            `A creat grupul „${groupName}”`
+        );
+
         return res.json({
             success: true,
             message: "Group created successfully",
             data: newGroup
+        });
+
+    } catch (err) {
+        next(err);
+    }
+};
+
+// ---------------- ADD MEMBERS ------------------
+
+export const addMembersToGroup = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const { chatId } = req.params;
+        const { users } = req.body;
+
+        if (!users || !Array.isArray(users) || users.length < 1) {
+            return res.status(400).json({ message: "Users array is required" });
+        }
+
+        const chat = await Chat.findById(chatId);
+        if (!chat) return res.status(404).json({ message: "Chat not found" });
+
+        if (!chat.isGroup) {
+            return res.status(400).json({ message: "Cannot add members to a direct chat" });
+        }
+
+        const existingUserIds = chat.participants.map(p => p.user.toString());
+        const newUsers = users.filter(id => !existingUserIds.includes(id));
+
+        newUsers.forEach(id => {
+            chat.participants.push({
+                user: new Types.ObjectId(id),
+                muted: false,
+                pinned: false
+            });
+        });
+
+        // LOG — Add members
+        await logAudit(chatId, req.user.id, `A adăugat membri: ${newUsers.join(", ")}`);
+
+        await chat.save();
+
+        return res.json({
+            success: true,
+            message: "Members added successfully",
+            data: chat
+        });
+
+    } catch (err) {
+        next(err);
+    }
+};
+
+// ---------------- REMOVE MEMBER ------------------
+
+export const removeMemberFromGroup = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const { chatId } = req.params;
+        const { userId } = req.body;
+
+        if (!userId) {
+            return res.status(400).json({ message: "userId is required" });
+        }
+
+        const chat = await Chat.findById(chatId);
+        if (!chat) return res.status(404).json({ message: "Chat not found" });
+
+        if (!chat.isGroup) {
+            return res.status(400).json({ message: "Cannot remove user from direct chat" });
+        }
+
+        chat.participants = chat.participants.filter(p => p.user.toString() !== userId);
+
+        // LOG — Remove member
+        await logAudit(chatId, req.user.id, `A eliminat membrul: ${userId}`);
+
+        await chat.save();
+
+        return res.json({
+            success: true,
+            message: "Member removed successfully",
+            data: chat
+        });
+
+    } catch (err) {
+        next(err);
+    }
+};
+
+// ---------------- LEAVE GROUP ------------------
+
+export const leaveGroup = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const userId = (req as any).user.id;
+        const { chatId } = req.params;
+
+        const chat = await Chat.findById(chatId);
+        if (!chat) return res.status(404).json({ message: "Chat not found" });
+
+        if (!chat.isGroup) {
+            return res.status(400).json({ message: "Cannot leave a direct chat" });
+        }
+
+        chat.participants = chat.participants.filter(
+            p => p.user.toString() !== userId
+        );
+
+        // LOG — Leave group
+        await logAudit(chatId, userId, `A părăsit grupul`);
+
+        await chat.save();
+
+        return res.json({
+            success: true,
+            message: "You left the group",
+            data: chat
+        });
+
+    } catch (err) {
+        next(err);
+    }
+};
+
+// ---------------- DELETE GROUP ------------------
+
+export const deleteGroupChat = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const chatId = req.params.chatId;
+        const userId = (req as any).user.id;
+
+        const chat = await Chat.findById(chatId);
+        if (!chat) return res.status(404).json({ message: "Chat not found" });
+
+        if (!chat.isGroup) {
+            return res.status(400).json({ message: "Cannot delete a direct chat" });
+        }
+
+        // Only creator (first participant) can delete
+        const groupCreator = chat.participants[0].user.toString();
+
+        if (groupCreator !== userId.toString()) {
+            return res.status(403).json({ message: "Only the group creator can delete the group" });
+        }
+
+        // LOG — Delete group
+        await logAudit(chatId, userId, `A șters grupul`);
+
+        await Chat.findByIdAndDelete(chatId);
+
+        return res.json({
+            success: true,
+            message: "Group deleted successfully"
         });
 
     } catch (err) {
