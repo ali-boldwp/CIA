@@ -35,6 +35,26 @@ const Team = () => {
         return Math.min(100, assignedProjects.length * 20);
     };
 
+    const getInitials = (fullName) => {
+        if (!fullName) return "_";
+
+        const parts = fullName.trim().split(" ");
+
+        // If only one word → First letter + "_"
+        if (parts.length === 1) {
+            const first = parts[0].charAt(0).toUpperCase();
+            return first + "_";
+        }
+
+        // If multiple words → First letter + Last letter
+        const first = parts[0].charAt(0).toUpperCase();
+        const last = parts[parts.length - 1].charAt(0).toUpperCase();
+
+        return first + last;
+    };
+
+
+
     /** 📄 === PAGINATION LOGIC === */
     const [page, setPage] = useState(1);
     const [limit, setLimit] = useState(10);
@@ -75,7 +95,8 @@ const Team = () => {
                                                     : styles.initialBadge
                                             }
                                         >
-                                            {a.initials || a.name?.slice(0, 2).toUpperCase()}
+                                            {getInitials(a.name)}
+
                                         </span>
                                         <span>{a.name}</span>
                                     </div>
