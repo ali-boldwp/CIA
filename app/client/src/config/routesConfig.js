@@ -25,6 +25,7 @@ import HumintListConfig from "../pages/HumintList/HumintListConfig";
 import HumintRequestDetailConfig from "../pages/HumintRequestDetail/HumintRequestDetailConfig";
 
 import AdminConfig from "../pages/admin/adminConfig";
+import NewMessengerConfig from "../pages/NewMessenger/NewMessengerConfig";
 
 
 const routeConfigs = [
@@ -48,7 +49,8 @@ const routeConfigs = [
     HumintConfig,
     HumintRequestFormConfig,
     HumintListConfig,
-    HumintRequestDetailConfig
+    HumintRequestDetailConfig,
+    NewMessengerConfig
 
 ];
 
