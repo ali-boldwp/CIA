@@ -568,6 +568,55 @@
     align-items: center;
     padding:10px 2px;
 }
+.chat-bubble {
+    max-width: 70%;
+    padding: 10px 14px;
+    margin: 8px;
+    border-radius: 10px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+}
+
+.chat-bubble.me {
+    background-color: #f4f7ff; /* WhatsApp green bubble */
+    margin-left: auto;
+    text-align: right;
+    border-top-right-radius: 0;
+}
+
+.chat-bubble.other {
+    background-color: #ffffff;
+    margin-right: auto;
+    text-align: left;
+    border-top-left-radius: 0;
+    border: 1px solid #e6e6e6;
+}
+
+.bubble-text {
+    font-size: 15px;
+    color: #111;
+    margin-bottom: 4px;
+}
+
+.bubble-footer {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11px;
+    color: gray;
+}
+
+.bubble-name {
+    font-weight: bold;
+    color: #0d6efd; /* blue name */
+}
+
+.bubble-time {
+    font-size: 11px;
+    color: #666;
+}
+
 
 .mt-8 {
     margin-top: 8px;

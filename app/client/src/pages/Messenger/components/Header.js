@@ -133,6 +133,8 @@ const  MessengerPage =({ chatID }) => {
 
     }
 
+    const currentUser = JSON.parse(localStorage.getItem("user"));
+    const currentUserId = currentUser?._id;
 
     const handleSend = async () => {
         if (!text.trim()) return;
@@ -375,21 +377,58 @@ const  MessengerPage =({ chatID }) => {
                                     </div>
                                 ))}
                             </div>
-                            {
-                                oldmessage.map(message => (
-                                <div className="message message-out">{message.text}</div>
-                               ))
+                            {oldmessage.map((msg, i) => {
 
-                            }
+                                const isMe = msg.sender._id === currentUserId;
 
-                            {
-                                messages.map( message => (
+                                return (
+                                    <div
+                                        key={i}
+                                        className={`chat-bubble ${isMe ? "me" : "other"}`}
+                                    >
+                                        {/* message text */}
+                                        <div className="bubble-text">{msg.text}</div>
 
-                                    <div className="message message-out">
-                                        { message.text }
+                                        {/* footer: username + time */}
+                                        <div className="bubble-footer">
+                <span className="bubble-name">
+                    {isMe ? "Me" : msg.sender.name}
+                </span>
+
+                                            <span className="bubble-time">
+                    {new Date(msg.createdAt).toLocaleTimeString([], {
+                        hour: "2-digit",
+                        minute: "2-digit"
+                    })}
+                </span>
+                                        </div>
                                     </div>
-                                ))
-                            }
+                                );
+                            })}
+
+
+                            {messages.map((msg, i) => {
+                                const isMe = msg.sender === currentUserId;
+
+                                return (
+                                    <div key={i} className={`chat-bubble ${isMe ? "me" : "other"}`}>
+                                        <div className="bubble-text">{msg.text}</div>
+
+                                        <div className="bubble-footer">
+                <span className="bubble-name">
+                    {isMe ? "Me" : msg.senderName}
+                </span>
+                                            <span className="bubble-time">
+                    {new Date(msg.createdAt).toLocaleTimeString([], {
+                        hour: "2-digit",
+                        minute: "2-digit"
+                    })}
+                </span>
+                                        </div>
+                                    </div>
+                                );
+                            })}
+
                         </div>
 
                         {/* composer */}
