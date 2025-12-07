@@ -1,44 +1,59 @@
-import React from 'react';
+import React, { useState, useMemo } from 'react';
 import "./style.css"
 import Header from "../../../layouts/Component/Header";
-import { useGetProjectsQuery} from "../../../services/projectApi";
-import {useGetAnalystsQuery} from "../../../services/userApi";
-import {Link} from "react-router-dom";
+import { useGetProjectsQuery } from "../../../services/projectApi";
+import { useGetAnalystsQuery } from "../../../services/userApi";
+import { Link } from "react-router-dom";
 
 const AnalystDashboard = () => {
-    const { data:analyst}=useGetAnalystsQuery();
-    const analysts=analyst?.data || [];
+
+    const { data: analyst } = useGetAnalystsQuery();
+    const analysts = analyst?.data || [];
+
     const { data: projectData, isLoading, isError } = useGetProjectsQuery();
-    const projects=projectData?.data || [];
+    const projects = projectData?.data || [];
+
+    /** === 1. PAGINATION HUMINT === */
+    const [humintPage, setHumintPage] = useState(1);
+    const humintLimit = 10;
+
+    const humintTotalPages = Math.ceil(projects.length / humintLimit);
+
+    const paginatedHumint = useMemo(() => {
+        return projects.slice((humintPage - 1) * humintLimit, humintPage * humintLimit);
+    }, [humintPage, projects]);
+
+
+    /** === 2. PAGINATION CALENDAR === */
+    const [calPage, setCalPage] = useState(1);
+    const calLimit = 10;
+
+    const calTotalPages = Math.ceil(projects.length / calLimit);
+
+    const paginatedCalendar = useMemo(() => {
+        return projects.slice((calPage - 1) * calLimit, calPage * calLimit);
+    }, [calPage, projects]);
 
 
     if (isLoading) return <p>Loading...</p>;
     if (isError) return <p>Eroare la preluarea proiectelor.</p>;
 
-    // Helper: return analyst name whether ID or object
+
+    /** === NAME RESOLVERS === */
     const resolveAnalystName = (value) => {
         if (!value) return "—";
-
-        // If backend returned full object
-        if (typeof value === "object" && value.name) {
-            return value.name;
-        }
-
-        // If it's an ID, find in analysts list
+        if (typeof value === "object" && value.name) return value.name;
         const found = analysts.find(a => a._id === value);
         return found ? found.name : "—";
     };
 
-// Helper: return multiple analyst names
     const resolveAnalystNames = (arr) => {
         if (!arr || arr.length === 0) return "—";
-
-        return arr
-            .map((item) => resolveAnalystName(item))
-            .join(", ");
+        return arr.map(resolveAnalystName).join(", ");
     };
 
-    // Status color mapping for badge/dot
+
+    /** === STATUS COLORS === */
     const statusColors = {
         requested: "orange",
         approved: "green",
@@ -46,10 +61,10 @@ const AnalystDashboard = () => {
         completed: "gray"
     };
 
+
     return (
         <div className="dashboard">
             <Header />
-
             {/* TOP SUMMARY CARDS (dynamic counts) */}
             <div className="top-summary">
                 <div className="summary-card">
@@ -59,34 +74,24 @@ const AnalystDashboard = () => {
                     </div>
                     <div className="summary-value">{projects?.length}</div>
                 </div>
-
                 <div className="summary-card">
                     <div className="summary-title">🕵️ HUMINT in lucru</div>
-                    <div className="summary-value">
-                        {projects?.filter(p => p.status === "in_progress").length}
-                    </div>
+                    <div className="summary-value"> {projects?.filter(p => p.status === "in_progress").length} </div>
                 </div>
-
                 <div className="summary-card">
                     <div className="summary-title">
-                        <span>🕵️‍♀️ Adauga solicitare noua de HUMINT ➕</span>
+                        <Link to="/humintRequest-Page">🕵️‍♀️ Adauga solicitare noua de HUMINT ➕</Link>
                     </div>
                 </div>
-
                 <div className="summary-card">
                     <div className="summary-title">
                         <span>⏳ HUMINT in asteptare aprobare</span>
                     </div>
-                    <div className="summary-sub">
-                        {projects?.filter(p => p.status === "requested").length} solicitari
-                    </div>
+                    <div className="summary-sub"> {projects?.filter(p => p.status === "requested").length} solicitari </div>
                 </div>
                 <Link to="#">
                     <div className="message-card">
-                        <div className="message-label">
-                            💬 Mesaje necitite
-                        </div>
-
+                        <div className="message-label"> 💬 Mesaje necitite </div>
                         <div className="message-footer">
                             <div className="message-count">5</div>
                             <button className="message-button">Deschide messenger</button>
@@ -95,14 +100,14 @@ const AnalystDashboard = () => {
                 </Link>
             </div>
 
-            {/* PROJECTS SECTION */}
+
+            {/* PROJECT CARDS */}
             <h2 className="analyst-title">Proiectele mele</h2>
 
             <div className="projects-row">
-                {projects?.map((project) => (
+                {projects.map((project) => (
                     <div className="project-card-analyst" key={project._id}>
-
-                        <div className="project-header" >
+                        <div className="project-header">
                             <div className="project-name">{project.projectName}</div>
 
                             <div className="project-deadline-wrapper">
@@ -127,15 +132,16 @@ const AnalystDashboard = () => {
                         </div>
 
                         <div className="project-actions">
-                            <Link to={`/projectDetail/${project._id}`} className=" pill-analyst blue">Deschide</Link>
-                            <button className=" pill-analyst green">Mesaj</button>
-                            <button className=" pill-analyst red">HUMINT Primit </button>
+                            <Link to={`/projectDetail/${project._id}`} className="pill-analyst blue">Deschide</Link>
+                            <button className="pill-analyst green">Mesaj</button>
+                            <button className="pill-analyst red">HUMINT Primit</button>
                         </div>
                     </div>
                 ))}
             </div>
 
-            {/* HUMINT REQUESTS TABLE */}
+
+            {/* HUMINT REQUEST TABLE */}
             <h2 className="analyst-title">Solicitarile mele de HUMINT</h2>
 
             <div className="humint-card">
@@ -150,7 +156,7 @@ const AnalystDashboard = () => {
                     </thead>
 
                     <tbody>
-                    {projects?.map((item) => (
+                    {paginatedHumint.map((item) => (
                         <tr key={item._id}>
                             <td>{item.projectName}</td>
 
@@ -167,42 +173,66 @@ const AnalystDashboard = () => {
                             </td>
 
                             <td>
-                                <button className="pill-analyst blue ">
-                                    Deschide solicitarea
-                                </button>
+                                <button className="pill-analyst blue">Deschide solicitarea</button>
                             </td>
                         </tr>
                     ))}
                     </tbody>
                 </table>
-            </div>
 
-            {/* CALENDAR DEADLINES */}
-            <div className="bottom-row">
-                <h2 className="analyst-title no-margin-analyst">Calendar Deadlines</h2>
+                {/* HUMINT PAGINATION */}
+                <div className="pagination" style={{ marginTop: "15px" }}>
+                    <button disabled={humintPage === 1} onClick={() => setHumintPage(prev => prev - 1)}>
+                        ← Precedent
+                    </button>
 
-                <div className="calendar-card">
-                    <ul className="calendar-list">
-                        {projects?.map((p) => (
-                            <li key={p._id}>
-                                <span>
-                                    {statusColors[p.status] === "green" ? "🟢" :
-                                        statusColors[p.status] === "orange" ? "🟠" :
-                                            statusColors[p.status] === "blue" ? "🔵" : "⚪"}
+                    <span style={{ margin: "0 10px" }}>
+                        Pagina <strong>{humintPage}</strong> din <strong>{humintTotalPages}</strong>
+                    </span>
 
-                                    {" "}
-                                    {p.deadline
-                                        ? new Date(p.deadline).toLocaleDateString("ro-RO")
-                                        : "—"}
-                                    {" — "}
-                                    {p.projectName}
-                                </span>
-                            </li>
-                        ))}
-                    </ul>
+                    <button disabled={humintPage === humintTotalPages} onClick={() => setHumintPage(prev => prev + 1)}>
+                        Următor →
+                    </button>
                 </div>
             </div>
 
+
+            {/* CALENDAR DEADLINES */}
+            <h2 className="analyst-title no-margin-analyst">Calendar Deadlines</h2>
+
+            <div className="calendar-card">
+                <ul className="calendar-list">
+                    {paginatedCalendar.map((p) => (
+                        <li key={p._id}>
+                            <span>
+                                {statusColors[p.status] === "green" ? "🟢"
+                                    : statusColors[p.status] === "orange" ? "🟠"
+                                        : statusColors[p.status] === "blue" ? "🔵"
+                                            : "⚪"}
+                                {" "}
+                                {p.deadline ? new Date(p.deadline).toLocaleDateString("ro-RO") : "—"}
+                                {" — "}
+                                {p.projectName}
+                            </span>
+                        </li>
+                    ))}
+                </ul>
+
+                {/* CALENDAR PAGINATION */}
+                <div className="pagination" style={{ marginTop: "15px" }}>
+                    <button disabled={calPage === 1} onClick={() => setCalPage(prev => prev - 1)}>
+                        ← Precedent
+                    </button>
+
+                    <span style={{ margin: "0 10px" }}>
+                        Pagina <strong>{calPage}</strong> din <strong>{calTotalPages}</strong>
+                    </span>
+
+                    <button disabled={calPage === calTotalPages} onClick={() => setCalPage(prev => prev + 1)}>
+                        Următor →
+                    </button>
+                </div>
+            </div>
         </div>
     );
 };
