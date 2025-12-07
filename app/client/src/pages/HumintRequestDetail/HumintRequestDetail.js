@@ -1,9 +1,10 @@
 // HumintRequestDetail.js
 
-import React, { useRef } from "react";
+import React, { useRef, useState , useEffect } from "react";
 import Header from "./Header";
 import RequestDetailForm from "./RequestDetailForm";
 import ActionButtons from "./Button";
+import ClarificationSectiom from "./ClarificationSectiom";
 import { useParams } from "react-router-dom";
 
 import {
@@ -15,7 +16,7 @@ import {
 } from "../../services/humintApi";
 
 import { useGetAnalystsQuery } from "../../services/userApi";
-import {toast} from "react-toastify";
+import { toast } from "react-toastify";
 
 const HumintRequestDetail = () => {
     const { id } = useParams();
@@ -28,11 +29,25 @@ const HumintRequestDetail = () => {
 
     const formRef = useRef(null);
 
+    // 🔹 UI state: show action buttons or clarification box
+    const [isClarifyMode, setIsClarifyMode] = useState(false);
+
     // API MUTATIONS
     const [approveHumint] = useApproveHumintMutation();
     const [rejectHumint] = useRejectHumintMutation();
     const [clarificationHumint] = useClarificationHumintMutation();
     const [updateHumint] = useUpdateHumintMutation();
+
+    useEffect(() => {
+        if (isClarifyMode) {
+            setTimeout(() => {
+                window.scrollTo({
+                    top: document.body.scrollHeight,
+                    behavior: "smooth",
+                });
+            }, 100);
+        }
+    }, [isClarifyMode]);
 
     // Analyst resolver (works with object or ID)
     const resolveAnalystName = (responsible) => {
@@ -93,18 +108,27 @@ const HumintRequestDetail = () => {
         }
     };
 
-    // Clarification
-    const handleClarify = async () => {
+    // 🔹 Step 1: user ne "Solicită clarificări" dabaya → box show karo
+    const handleShowClarifyBox = () => {
+        const values = validateAndGetValues();
+        if (!values) return;
+        setIsClarifyMode(true);
+    };
+
+    // 🔹 Step 2: Clarificare submit hui → API call
+    const handleClarifySubmit = async (message) => {
+        // optional: form dobara validate karna hai to:
         const values = validateAndGetValues();
         if (!values) return;
 
         try {
             await clarificationHumint({
                 id,
-                feedback: values.managerFeedback
+                feedback: message || values.managerFeedback || ""
             }).unwrap();
 
             toast("Solicitare trimisă!");
+            setIsClarifyMode(false);
         } catch (err) {
             console.error(err);
             toast.error("Eroare la clarificări");
@@ -124,6 +148,9 @@ const HumintRequestDetail = () => {
         }
     };
 
+
+
+
     return (
         <>
             <Header />
@@ -134,12 +161,20 @@ const HumintRequestDetail = () => {
                 analysts={analysts}
             />
 
-            <ActionButtons
-                onApprove={handleApprove}
-                onReject={handleReject}
-                onClarify={handleClarify}
-                onPrint={() => console.log("Print soon")}
-            />
+
+            {isClarifyMode ? (
+                <ClarificationSectiom
+                    onSubmit={handleClarifySubmit}
+                    onCancel={() => setIsClarifyMode(false)}
+                />
+            ) : (
+                <ActionButtons
+                    onApprove={handleApprove}
+                    onReject={handleReject}
+                    onClarify={handleShowClarifyBox}
+                    onPrint={() => console.log("Print soon")}
+                />
+            )}
         </>
     );
 };

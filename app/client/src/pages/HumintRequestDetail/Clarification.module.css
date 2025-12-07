@@ -1,0 +1,134 @@
+/* /home/ubaid/workspace/app/client/src/pages/HumintRequestDetail/Clarification.module.css */
+
+/* outer wrapper – align with other cards */
+.wrapper {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-top: 8px;
+    margin-bottom: 32px;
+}
+
+/* white card container */
+.card {
+    width: 96%;
+    max-width: 1500px;
+
+    background: #ffffff;
+    border-radius: 16px;
+    padding: 18px 22px 20px;
+    box-shadow: 0 8px 20px rgba(15, 23, 42, 0.08);
+}
+
+/* header */
+.title {
+    font-size: 13px;
+    font-weight: 600;
+    color: #64748b;
+    margin-bottom: 4px;
+}
+
+.subtitle {
+    font-size: 11px;
+    color: #9ca3af;
+    margin-bottom: 12px;
+}
+
+/* chat-like textarea */
+.textarea {
+    width: 100%;
+    min-height: 110px;
+    padding: 12px 14px;
+    border-radius: 12px;
+    border: 1px solid #e2e8f0;
+    background: #f8fafc;
+    font-size: 13px;
+    resize: vertical;
+    outline: none;
+}
+
+/* focus state */
+.textarea:focus {
+    border-color: #6366f1;
+    box-shadow: 0 0 0 1px rgba(99, 102, 241, 0.25);
+    background: #ffffff;
+}
+
+/* actions row */
+.actionsRow {
+    margin-top: 12px;
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+/* base button style */
+.btn {
+    border: none;
+    border-radius: 999px;
+    padding: 8px 20px;
+
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    outline: none;
+
+    box-shadow: 0 6px 16px rgba(15, 23, 42, 0.15);
+    transition: transform 0.15s ease, box-shadow 0.15s ease, opacity 0.15s ease;
+}
+
+.btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    box-shadow: none;
+}
+
+.btn:hover:not(:disabled) {
+    transform: translateY(-1px);
+    box-shadow: 0 8px 22px rgba(15, 23, 42, 0.22);
+}
+
+/* secondary (cancel) button - RED GRADIENT */
+.btnSecondary {
+    background: linear-gradient(90deg, #f87171 0%, #dc2626 100%); /* light → dark red */
+    color: #ffffff;
+    border-radius: 12px;
+    border: none;
+}
+
+.btnSecondary:hover:not(:disabled) {
+    background: linear-gradient(90deg, #fb7171 0%, #b91c1c 100%);
+    transform: translateY(-1px);
+    box-shadow: 0 6px 16px rgba(220, 38, 38, 0.35);
+}
+
+.btnSecondary:active {
+    transform: translateY(0px);
+    box-shadow: none;
+}
+
+
+/* primary (Clarifică) button – purple/blue gradient */
+.btnPrimary {
+    background: linear-gradient(90deg, #6d28d9 0%, #14b8a6 100%);
+    color: #ffffff;
+    border-radius: 12px;
+}
+
+/* responsive */
+@media (max-width: 640px) {
+    .card {
+        padding: 14px 14px 16px;
+    }
+
+    .actionsRow {
+        flex-direction: column-reverse;
+        align-items: stretch;
+    }
+
+    .btn {
+        width: 100%;
+        text-align: center;
+    }
+}
