@@ -1,4 +1,3 @@
-// /home/ubaid/workspace/app/client/src/pages/HumintRequestDetail/Button.js
 
 import React from "react";
 import styles from "./Button.module.css";
