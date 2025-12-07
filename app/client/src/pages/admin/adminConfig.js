@@ -1,5 +1,7 @@
 import Admin from "./Admin"
 
+import Dashboard from "./dashboard/Dashboard";
+
 const AdminConfig = {
     settings: {
         layout: {
@@ -10,7 +12,13 @@ const AdminConfig = {
     routes: [
         {
             path: '/admin',
-            element: <Admin />
+            element: <Admin />,
+            children: [
+                {
+                    index: true,
+                    element: <Dashboard />
+                }
+            ]
         }
     ]
 };

@@ -39,3 +39,43 @@ body{
     transform: rotate(360deg);
   }
 }
+
+
+.spinner {
+    width: 56px;
+    height: 56px;
+    animation: spinner-c601d3 1s infinite;
+    background-color: #474bff;
+    border-radius: 50%;
+    display: flex;
+    align-self: center;
+}
+
+@keyframes spinner-c601d3 {
+    0% {
+        opacity: 0;
+        transform: scale(0) translateX(-300%);
+    }
+
+    50% {
+        opacity: 1;
+        transform: scale(1.25) translateX(0);
+    }
+
+    100% {
+        opacity: 0;
+        transform: scale(0) translateX(300%);
+    }
+}
+
+.container{
+
+    margin: 0;
+    padding: 20px;
+    font-family: Arial, sans-serif;
+    background: linear-gradient(180deg, #e7efff, #d6f2f7, #e8e3ff);
+    font-style: italic;
+    display: flex;
+    flex-direction: column;
+
+}

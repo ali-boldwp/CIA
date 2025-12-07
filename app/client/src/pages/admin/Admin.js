@@ -1,15 +1,12 @@
-import LayoutHeader from "../../layouts/Component/Header"
-
-import Header from "./Components /Header"
+import Layout from "./AdminLayout";
+import {Outlet} from "react-router-dom";
 
 const Admin = () => {
 
     return (
-        <>
-            <LayoutHeader>
-                <Header />
-            </LayoutHeader>
-        </>
+        <Layout>
+            <Outlet />
+        </Layout>
     );
 
 }

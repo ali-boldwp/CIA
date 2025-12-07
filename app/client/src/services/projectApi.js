@@ -5,8 +5,14 @@ import baseQuery from './apiSlice';
 export const projectApi = createApi({
     reducerPath: "projectApi",
     baseQuery: baseQuery,
-
+    tagTypes: [ 'Projects' ],
     endpoints: (builder) => ({
+
+        getProjects: builder.query({
+            query: () => "/project",
+            providesTags: [{ type: 'Projects', id: 'LIST' }]
+        }),
+
         createProject: builder.mutation({
             query: (formData) => ({
                 url: "/project",
@@ -21,9 +27,6 @@ export const projectApi = createApi({
                 method: "POST",
                 body: formData,
             }),
-        }),
-        getProjects:builder.query({
-            query: () => "/project",
         }),
         getProjectRequests: builder.query({
             query: () => "/project-request",
@@ -96,14 +99,13 @@ export const projectApi = createApi({
 });
 
 export const {
-
+    useGetProjectsQuery,
+    useGetProjectCreateQuery,
     useCreateProjectMutation,
     useRequestProjectMutation,
-    useGetProjectsQuery,
     useGetAllRequestedProjectsQuery,
     useGetRequestedProjectByIdQuery,
     useGetProjectRequestsQuery,
-    useGetProjectCreateQuery,
     useGetChapterByIdQuery,
     useGetCreateProjectByIdQuery,
     useGetProjectRequestByIdQuery,
