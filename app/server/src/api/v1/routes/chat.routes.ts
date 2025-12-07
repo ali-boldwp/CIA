@@ -12,4 +12,6 @@ router.get("/:id", auth, chatController.getChatById);
 router.post("/:chatId/message", auth, messageController.sendMessage);
 router.get("/:chatId/messages", auth, messageController.getMessages);
 
+router.post("/:chatId/mute", auth, chatController.muteChat);
+
 export default router;
