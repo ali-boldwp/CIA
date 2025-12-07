@@ -1,10 +1,18 @@
 import React, { useState, useEffect } from "react";
 import styles from "./UserTable.module.css";
 import { useGetAllUsersQuery } from "../../services/userApi";
+import {
+    useCreateDirectChatMutation,
+    useCreateGroupChatMutation,
+} from "../../services/chatApi";
+import { useNavigate } from "react-router-dom";
 
 const UserTable = ({ mode = "single" }) => {
     const [selectedIds, setSelectedIds] = useState([]);
 
+    const navigate = useNavigate();
+
+    // backend se users
     const { data, isLoading, isError, error } = useGetAllUsersQuery();
 
     const users = Array.isArray(data)
@@ -13,6 +21,15 @@ const UserTable = ({ mode = "single" }) => {
             ? data.data
             : [];
 
+    // direct chat hook (single mode)
+    const [createDirectChat, { isLoading: isCreatingDirect }] =
+        useCreateDirectChatMutation();
+
+    // group chat hook (multi mode)
+    const [createGroupChat, { isLoading: isCreatingGroup }] =
+        useCreateGroupChatMutation();
+
+    // mode change hote hi selection reset
     useEffect(() => {
         setSelectedIds([]);
     }, [mode]);
@@ -21,36 +38,87 @@ const UserTable = ({ mode = "single" }) => {
         if (mode !== "group") return;
 
         setSelectedIds((prev) =>
-            prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]
+            prev.includes(id)
+                ? prev.filter((x) => x !== id)
+                : [...prev, id]
         );
     };
 
-    const handleStartChat = (id) => {
-        if (id === "all") {
-            console.log("Start chat with users:", selectedIds);
-        } else {
-            console.log("Start chat with user:", id);
+    const isRowSelected = (id) =>
+        mode === "group" && selectedIds.includes(id);
+
+    const handleStartChat = async (id) => {
+        // 🔵 GROUP MODE → top button "Start chat with X users"
+        if (mode === "group" && id === "all") {
+            if (!selectedIds.length) return;
+
+            try {
+                // simple group name – baad me input se le sakte ho
+                const groupName = `Group (${selectedIds.length} users)`;
+
+                const res = await createGroupChat({
+                    userIds: selectedIds,
+                    groupName,
+                }).unwrap();
+
+                const chat = res?.data || res;
+                const chatId = chat?._id;
+
+                if (!chatId) {
+                    console.error("No chatId from group response", res);
+                    return;
+                }
+
+                navigate(`/messenger/${chatId}`);
+            } catch (err) {
+                console.error("Failed to create group chat:", err);
+            }
+
+            return; // yahan se nikal jao, neeche single logic na chale
+        }
+
+        // 🟢 SINGLE MODE → per-row Start Chat
+        if (mode === "single") {
+            try {
+                const res = await createDirectChat(id).unwrap();
+
+                const chat = res?.data || res;
+                const chatId = chat?._id;
+
+                if (!chatId) {
+                    console.error("No chatId from direct response", res);
+                    return;
+                }
+
+                navigate(`/messenger/${chatId}`);
+            } catch (err) {
+                console.error("Failed to create direct chat:", err);
+            }
         }
     };
-
-    const isRowSelected = (id) => mode === "group" && selectedIds.includes(id);
 
     return (
         <div className={styles.tableWrapper}>
             <div className={styles.tableHeader}>
                 <h3 className={styles.tableTitle}>Users</h3>
 
+                {/* TOP GROUP BUTTON – sirf group mode me */}
                 {mode === "group" && selectedIds.length > 0 && (
                     <button
                         className={styles.bulkActionBtn}
                         onClick={() => handleStartChat("all")}
+                        disabled={isCreatingGroup}
                     >
-                        Start chat with {selectedIds.length} user
-                        {selectedIds.length > 1 ? "s" : ""}
+                        {isCreatingGroup
+                            ? "Creating group..."
+                            : `Start chat with ${selectedIds.length} user${
+                                selectedIds.length > 1 ? "s" : ""
+                            }`}
                     </button>
                 )}
             </div>
 
+            {/* loading / error states */}
             {isLoading && <div>Loading users...</div>}
 
             {isError && !isLoading && (
@@ -69,6 +137,7 @@ const UserTable = ({ mode = "single" }) => {
                         <th className={styles.thEmail}>Email</th>
                         <th className={styles.thRole}>Role</th>
 
+                        {/* Action column only in SINGLE mode */}
                         {mode === "single" && (
                             <th className={styles.thAction}>Action</th>
                         )}
@@ -121,15 +190,19 @@ const UserTable = ({ mode = "single" }) => {
                                     {user.role}
                                 </td>
 
+                                {/* Action buttons only in SINGLE mode */}
                                 {mode === "single" && (
                                     <td className={styles.actionCell}>
                                         <button
                                             className={styles.actionBtn}
+                                            disabled={isCreatingDirect}
                                             onClick={() =>
                                                 handleStartChat(id)
                                             }
                                         >
-                                            Start Chat
+                                            {isCreatingDirect
+                                                ? "Starting..."
+                                                : "Start Chat"}
                                         </button>
                                     </td>
                                 )}

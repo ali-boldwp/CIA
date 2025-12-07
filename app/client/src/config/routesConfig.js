@@ -51,7 +51,7 @@ const routeConfigs = [
     HumintRequestFormConfig,
     HumintListConfig,
     HumintRequestDetailConfig,
-    NewMessengerConfig
+    NewMessengerConfig,
     SearchKeywordConfig
 
 ];
