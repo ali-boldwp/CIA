@@ -1,5 +1,6 @@
 import "./Header.css";
-import {Link, useLocation} from "react-router-dom";
+import { useState } from "react";
+import {Link, useLocation,useNavigate} from "react-router-dom";
 import {Outlet} from "react-router-dom";
 import { useSelector } from "react-redux";
 
@@ -7,12 +8,21 @@ import { useSelector } from "react-redux";
 
 const Header = ({ children }) => {
 
+    const navigate = useNavigate();
     const user = useSelector((state) => state.auth.user);
 
     const location = useLocation();
     const isSale = location.pathname.includes("sales");
     const isAnalyst = location.pathname.includes("analyst");
     let dashboardTitle = `Dashboard ${ user.role }`;
+
+    const [input, setInput] = useState("");
+
+    const handleSearch = (e) => {
+        if (e.key === "Enter" && input.trim() !== "") {
+            navigate(`/search/${input.trim()}`);
+        }
+    };
 
     return (
         <header className="header">
@@ -26,7 +36,14 @@ const Header = ({ children }) => {
                 >
 
                     <span className="search-icon">🔍</span>
-                    <input type="text" placeholder="Caută proiect, persoană sau task..."/>
+                    <input
+                        type="text"
+                        placeholder="Caută proiect, persoană sau task..."
+                        value={input}
+                        onChange={(e) => setInput(e.target.value)}
+                        onKeyDown={handleSearch}
+                    />
+
                 </div>
             </div>
             <div className="secSec">

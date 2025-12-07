@@ -11,6 +11,10 @@ const HumintRequestDetailConfig = {
         {
             path: '/humintRequest-Detail/:id',
             element: <HumintRequestDetail />
+        },
+        {
+            path: '/humintRequest-Detail',
+            element: <HumintRequestDetail />
         }
     ]
 };
