@@ -1,5 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import Chat from "../models/chat.model";
+import { Types } from "mongoose";
+
 
 // Create chat (1-to-1 OR group)
 export const createChat = async (req: Request, res: Response, next: NextFunction) => {
@@ -43,9 +45,30 @@ export const getMyChats = async (req: Request, res: Response, next: NextFunction
     try {
         const userId = (req as any).user.id;
 
-        const chats = await Chat.find({ participants: userId })
-            .populate("participants", "name role")
-            .populate("lastMessage");
+        const chats = await Chat.aggregate([
+            { $match: { "participants.user": new Types.ObjectId(userId) } },
+
+
+            // Join the lastMessage document
+            {
+                $lookup: {
+                    from: "messages",
+                    localField: "lastMessage",
+                    foreignField: "_id",
+                    as: "lastMessage"
+                }
+            },
+
+            { $unwind: { path: "$lastMessage", preserveNullAndEmptyArrays: true } },
+
+            // Sort by last message timestamp (or updatedAt fallback)
+            {
+                $sort: {
+                    "lastMessage.createdAt": -1,
+                    updatedAt: -1
+                }
+            }
+        ]);
 
         res.json({ success: true, data: chats });
     } catch (err) {
@@ -66,3 +89,44 @@ export const getChatById = async (req: Request, res: Response, next: NextFunctio
         next(err);
     }
 };
+
+
+export const muteChat = async (req, res) => {
+    try {
+        const userId = req.user._id; // from auth middleware
+        const { chatId } = req.params;
+        const { mute } = req.body;
+
+        if (typeof mute !== "boolean") {
+            return res.status(400).json({ message: "mute must be boolean" });
+        }
+
+        const chat = await Chat.findById(chatId);
+        if (!chat) {
+            return res.status(404).json({ message: "Chat not found" });
+        }
+
+        // Find participant
+        const participant = chat.participants.find(
+            (p) => p.user === userId
+        );
+
+        if (!participant) {
+            return res.status(403).json({ message: "You are not in this chat" });
+        }
+
+        // Update mute state
+        participant.muted = mute;
+
+        await chat.save();
+
+        return res.json({
+            chatId,
+            muted: participant.muted
+        });
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ message: "Server error" });
+    }
+};
+

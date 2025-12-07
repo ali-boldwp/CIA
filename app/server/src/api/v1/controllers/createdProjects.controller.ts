@@ -97,7 +97,10 @@ export const createProject = async (req: Request, res: Response, next: NextFunct
         );
 
         await Chat.create({
-            participants: Array.from(groupMembers),
+            participants: Array.from(groupMembers).map(id => ({
+                user: id,
+                muted: false
+            })),
             isGroup: true,
             groupName: `Project: ${payload.projectName}`
         });
