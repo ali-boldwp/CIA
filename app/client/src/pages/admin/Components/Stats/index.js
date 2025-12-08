@@ -19,7 +19,7 @@ const Stats = ({ stats }) => {
 
                 <div className="stat-box">
                     <span className="label">💻 Solicitare de proiect nou</span>
-                    <Link to="/project/request" className="gradient-btn">Adaugă</Link>
+                    <Link to="/project/request/new" className="gradient-btn">Adaugă</Link>
                 </div>
 
                 <div className="stat-box">
