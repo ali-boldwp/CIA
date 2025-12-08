@@ -21,10 +21,6 @@ const Header = () => {
                     <span className="text">Calendar</span>
                 </button>
 
-                <button className="icon-btn">
-                    <span className="icon">👤</span>
-                    <span className="text">Utilizator</span>
-                </button>
             </div>
         </>
     )
