@@ -144,8 +144,8 @@ const CreateProject = () => {
             newErrors.projectName = "Numele proiectului este obligatoriu";
         if (!projectSubject.trim())
             newErrors.projectSubject = "Subiectul proiectului este obligatoriu";
-        if (!category.trim())
-            newErrors.category = "Tipul raportului este obligatoriu";
+        if (!reportType.trim())
+            newErrors.reportType = "Tipul raportului este obligatoriu";
         if (!entityType.trim())
             newErrors.entityType = "Tipul entității este obligatoriu";
         if (!deadline)
@@ -405,9 +405,9 @@ const CreateProject = () => {
                         <div className="form-field">
                             <label>Tip raport</label>
                             <select
-                                className={`${styles.input} ${styles.selectAnalyst}`}
-                                value={category}
-                                onChange={(e) => setCategory(e.target.value)}
+                                className={`${styles.input} input-box ${styles.selectAnalyst}`}
+                                value={reportType}
+                                onChange={(e) => setReportType(e.target.value)}
                             >
                                 <option value="">
                                     Enhanced Due Diligence
@@ -437,17 +437,15 @@ const CreateProject = () => {
                                     Altele (Custom)
                                 </option>
                             </select>
-                            {errors.category && (
-                                <p className={styles.errorText}>
-                                    {errors.category}
-                                </p>
+                            {errors.reportType && (
+                                <p className={styles.errorText}>{errors.reportType}</p>
                             )}
                         </div>
 
                         <div className="form-field">
                             <label>Tip entitate</label>
                             <select
-                                className={`${styles.input} ${styles.selectAnalyst}`}
+                                className={`${styles.input} input-box ${styles.selectAnalyst}`}
                                 value={entityType}
                                 onChange={(e) =>
                                     setEntityType(e.target.value)
@@ -497,13 +495,12 @@ const CreateProject = () => {
                         <div className="form-field">
                             <label>Prioritate</label>
                             <select
-                                className={`${styles.input} ${errors.priority ? styles.inputError : ""}`}
+                                className={`${styles.input} input-box ${errors.priority ? styles.inputError : ""}`}
                                 value={priority}
                                 onChange={(e) => setPriority(e.target.value)}
                             >
                                 <option value="">Selectează...</option>
                                 <option value="Normal">Normal</option>
-                                <option value="Ridicată">Ridicată</option>
                                 <option value="Urgentă">Urgentă</option>
                                 <option value="Confidențial">Confidențial</option>
                             </select>

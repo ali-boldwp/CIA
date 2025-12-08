@@ -409,7 +409,7 @@ const NewProject = () => {
                         <div className="form-field">
                             <label>Tip raport</label>
                             <select
-                                className={`${styles.input} ${styles.selectAnalyst}`}
+                                className={`${styles.input}  ${styles.selectAnalyst}`}
                                 value={category}
                                 onChange={(e) => setCategory(e.target.value)}
                             >
