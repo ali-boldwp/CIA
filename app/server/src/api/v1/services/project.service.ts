@@ -1,11 +1,12 @@
 import projectRequest from "../models/projectRequest.model";
+import Requested from "../models/requested.model";
 
 export const createProject = async (data: any) => {
     return await projectRequest.create(data);
 };
 
 export const getAllProjects = async ( query = {} ) => {
-    return projectRequest.find( query )
+    return Requested.find( query )
         .populate("responsibleAnalyst", "name email role")
         .populate("assignedAnalysts", "name email role")
         .sort({ createdAt: -1 });
