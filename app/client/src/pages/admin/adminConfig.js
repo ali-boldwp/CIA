@@ -26,6 +26,7 @@ const AdminConfig = {
     auth: [ 'admin', 'manager' ],
     routes: [
         {
+            path: "/",
             element: <Admin />,
             children: [
                 {

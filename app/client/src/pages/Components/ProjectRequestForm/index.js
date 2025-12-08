@@ -338,7 +338,7 @@ const Index = () => {
                 <div className={styles.headerWrapper}>
                     <div className={styles.headerCard}>
                         <div className={styles.headerInner}>
-                            <Link to="/dashboard/sales" className={styles.backLink}>
+                            <Link to="/" className={styles.backLink}>
                                 ← Înapoi la Dashboard
                             </Link>
                             <h1 className={styles.headerTitle}>

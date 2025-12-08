@@ -1,33 +1,26 @@
-// src/AppRoutes.jsx
-import React from 'react';
-import { useRoutes } from 'react-router-dom';
-import routes from './config/routesConfig';
-import RequireAuth from './RequireAuth';
+// src/AppRoutes.js
+import React from "react";
+import { useSelector } from "react-redux";
+import { useRoutes } from "react-router-dom";
+import { getRoutesForRole } from "./config/routesConfig";
 
-function AppRoutes() {
+const AppRoutes = () => {
+    const { user, loading } = useSelector((state) => state.auth);
 
-    // 🔐 Wrap routes that contain an "auth" field
-    const authWrappedRoutes = routes.map(route => {
-        if (!route.auth) {
-            return route; // public route → no wrapper
-        }
+    // Get current role (can be undefined when not logged in)
+    const role = user?.role;
 
-        return {
-            ...route,
-            element: (
-                <RequireAuth allowedRoles={route.auth}>
-                    {route.element}
-                </RequireAuth>
-            )
-        };
-    });
+    // Always build routes and call useRoutes – no conditions around this hook
+    const routes = getRoutesForRole(role);
+    const element = useRoutes(routes);
 
-    // console.log('AUTH WRAPPED ROUTES:', authWrappedRoutes);
+    // While auth is loading, just render nothing (or a loader)
+    if (loading) {
+        return null; // or <div>Loading...</div>
+    }
 
-    // 🎯 Send final routes to React Router v6
-    const element = useRoutes(authWrappedRoutes);
-
+    // Once not loading, render the router output
     return element;
-}
+};
 
 export default AppRoutes;

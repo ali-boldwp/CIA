@@ -42,10 +42,7 @@ const Login = () => {
 
             const role = loggedUser.role;
 
-            if (role === "sales" || role === "user") navigate("/dashboard/sales");
-            else if (role === "analyst") navigate("/dashboard/analyst");
-            else if (role === "manager" || role === "admin") navigate("/");
-            else navigate("/");
+            navigate("/");
         } catch (err) {
             console.error("LOGIN ERROR:", err);
             toast.error("Autentificare eșuată");
