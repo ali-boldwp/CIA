@@ -24,7 +24,7 @@ import {
 } from "react-icons/fi";
 import {useGetMyChatsQuery,useRemoveMemberMutation,useLeaveGroupMutation,useDeleteGroupMutation} from "../../../services/chatApi";
 import {FaThumbtack} from "react-icons/fa6";
-import { useNavigate } from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import styles from "../../Manager/Components/Team/Team.module.css";
 import {toast} from "react-toastify";
 
@@ -240,8 +240,8 @@ const  MessengerPage =({ chatID }) => {
                                 Serie butoane
                             </button>
                             <button className="pill">
-                                <FiUserPlus className="pill-icon" />
-                                 Adaugă în grup
+                                <FiPlus className="pill-icon" />
+                                Creează grup
                             </button>
                             <button className="pill">
                                 <FiUserMinus className="pill-icon" />
@@ -459,10 +459,10 @@ const  MessengerPage =({ chatID }) => {
                             <div className="section-title">Detalii conversație</div>
                             <div className="section-subtitle">Membri ({chats?.data?.find(c => c._id === chat)?.participants?.length || 0})</div>
                             </div>
-                            <button className="pill">
-                                <FiPlus className="pill-icon" />
-                                Creează grup
-                            </button>
+                                <Link to="/messenger/new" className="pill">
+                                    <FiUserPlus className="pill-icon" />
+                                    Adaugă în grup
+                                </Link>
                             </div>
                             <div className="member-list">
                                 <div className="member-list">
