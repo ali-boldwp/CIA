@@ -1,0 +1,607 @@
+.page {
+    width: 100%;
+    min-height: 100vh;
+    background: #f4f8ff;
+    padding-bottom: 40px;
+}
+
+.pageWrapper1 {
+    padding: 30px;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+}
+
+
+/* HEADER */
+.headerWrapper {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.headerCard {
+    width: 77%;
+    max-width: 1400px;
+    margin-top: 1.6rem;
+    background: #ffffff;
+    border-radius: 18px;
+    box-shadow: 0 8px 22px rgba(15, 35, 95, 0.06);
+    padding: 1rem 3%;
+}
+
+.headerInner {
+    position: relative;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.backLink {
+    position: absolute;
+    left: 0;
+    border: none;
+    background: transparent;
+    font-size: 0.9rem;
+    color: #6e7aa8;
+    cursor: pointer;
+
+    padding: 8px 14px;
+    min-width: 12rem;
+    border-radius: 16px;
+    border: none;
+    font-size: 14px;
+    color: white;
+    cursor: pointer;
+    font-weight: 600;
+    padding-inline: 0.4rem;
+    background: linear-gradient(150deg, #4f46e5,  #1ec6cd);
+}
+
+.backLink:hover {
+    text-decoration: underline;
+}
+
+.headerTitle {
+    margin: 0;
+    font-size: 1.45rem;
+    font-weight: 700;
+    color: #1c1e2e;
+}
+
+/* FORM WRAPPER */
+.formWrapper {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-top: 1.1rem;
+}
+
+.formCard {
+    width: 77%;
+    max-width: 1400px;
+    background: #ffffff;
+    border-radius: 24px;
+    box-shadow: 0 18px 40px rgba(15, 35, 95, 0.09);
+    padding: 1.8rem 3%;
+}
+
+.section {
+    width: 100%;
+}
+
+.sectionTitle {
+    font-size: 1.3rem;
+    font-weight: bolder;
+    color: #2c3154;
+    margin-bottom: 2.2rem;
+}
+
+/* ============== 4-COLUMN GRID ============== */
+
+.sectionGrid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    column-gap: 1.5rem;
+    row-gap: 1.4rem;
+}
+
+.gridItem {
+    min-width: 0;
+    position: relative;
+}
+
+/* LEFT HALF (col 1–2) */
+.span2Left {
+    grid-column: 1 / 3;
+}
+
+/* RIGHT HALF (col 3–4) */
+.span2Right {
+    grid-column: 3 / 5;
+
+}
+.main2{
+    width:100%;
+}
+/* ===== Labels & Inputs ===== */
+
+.label {
+    display: flex;
+    flex-direction: column;
+    font-size: 0.97rem;
+    color: #4a4f6a;
+    gap: 0.4rem;
+    font-weight: 600;
+}
+
+.boldLabel {
+    font-weight: 700;
+}
+
+.labelRow {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.input {
+    width: 100%;
+    height: 50px;
+    padding: 0 12px;
+    border-radius: 10px;
+    border: 1px solid #e3e7f5;
+    background: #f9fbff;
+    font-size: 0.95rem;
+    outline: none;
+    box-sizing: border-box;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.input:focus {
+    border-color: #7b8cff;
+    box-shadow: 0 0 0 2px rgba(123, 140, 255, 0.15);
+    background: #ffffff;
+}
+
+/* Disabled fields styling */
+.input:disabled {
+    background: #e5e7f5;
+    color: #9ca3af;
+    border-color: #d1d5db;
+    cursor: not-allowed;
+    box-shadow: none;
+}
+
+.textarea:disabled {
+    background: #e5e7f5;
+    color: #9ca3af;
+    border-color: #d1d5db;
+    cursor: not-allowed;
+    box-shadow: none;
+}
+
+
+/* TEXTAREA */
+
+.textarea {
+    width: 100%;
+    padding: 0.75rem 0.9rem;
+    border-radius: 16px;
+    border: 1px solid #e3e7f5;
+    background: #f9fbff;
+    font-size: 0.85rem;
+    resize: vertical;
+    outline: none;
+    box-sizing: border-box;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.textarea:focus {
+    border-color: #7b8cff;
+    box-shadow: 0 0 0 2px rgba(123, 140, 255, 0.15);
+    background: #ffffff;
+}
+
+.textareaTall {
+    min-height: 120px;
+}
+
+/* Checkbox */
+.checkboxSquare {
+    width: 16px;
+    height: 16px;
+}
+
+/* ===== Chips / Tags Row (vertical: label upar, chips neeche) ===== */
+
+.chipRow {
+    margin-top: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.6rem;
+}
+
+.chipRowStandalone {
+    margin-top: 1.8rem;
+}
+
+.chipRowLabel {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #3b4062;
+}
+
+.chipRowChips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+}
+
+.chip {
+    border-radius: 999px;
+    border: 1px solid #d7ddf5;
+    padding: 0.45rem 1.15rem;
+    background: #f6f7ff;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: background 0.15s ease, border-color 0.15s ease, transform 0.1s ease;
+    color: #3b4062;
+}
+
+.chip:hover {
+    background: #eef1ff;
+    border-color: #cdd6ff;
+    transform: translateY(-1px);
+}
+
+/* active state same as design */
+.chipActive {
+    background: #e8ecff;
+    color: #4b8dff !important;
+    border-color: #cdd6ff;
+    box-shadow: 0 4px 12px rgba(75, 141, 255, 0.25);
+    font-weight: 600;
+}
+
+/* Selects */
+.selectAnalyst {
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+/* ===== Full width blocks (Descriere + Note interne) ===== */
+
+.fullWidthBlock {
+    margin-top: 1.8rem;
+    width: 92%;
+    margin-left: 0;
+    margin-right: 0;
+}
+
+.largeTextarea {
+    min-height: 130px;
+}
+
+/* ===== File upload (half width + height similar to textarea) ===== */
+
+.fileUploadHalf {
+    width: 46%;
+    margin-left: 0;
+    margin-right: 0;
+}
+
+/* hide real input */
+.hiddenFileInput {
+    display: none;
+}
+
+/* drop zone container */
+.dropZone {
+    position: relative;
+    margin-top: 0.6rem;
+    border-radius: 14px;
+    border: 1px dashed #c7cff5;
+    background: #f9fbff;
+    padding: 0.9rem 1rem;
+    font-size: 0.85rem;
+    color: #6c72a2;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.3rem;
+    min-height: 130px; /* same feel as textarea */
+}
+
+/* custom upload button: shape like Adaugă but soft colors */
+.uploadButton {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    z-index: 10;
+
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    padding: 0.6rem 1.6rem;
+    border-radius: 10px;
+    background: #e8ecff;
+    color: #4b8dff;
+    font-size: 0.85rem;
+    font-weight: 600;
+    border: 1px solid #cdd6ff;
+    cursor: pointer;
+    /*box-shadow:1px 1px 15px lightgray;*/
+    transition: transform 0.12s ease, box-shadow 0.12s ease, background 0.12s ease;
+    text-decoration: none;
+}
+
+
+.uploadButton:hover {
+    transform: translateY(-1px);
+
+    background: #dde5ff;
+}
+
+/* icon wrapper */
+.uploadIcon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* actual SVG icon styling */
+.uploadSvg {
+    width: 18px;
+    height: 18px;
+    stroke: #4b8dff;
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    fill: none;
+}
+
+.dropZoneText {
+    margin-top: 80px;   /* Moves text below the button */
+    margin-left: 0px;  /* Perfect left alignment */
+    display: block;
+}
+
+/* uploaded file row card */
+.fileRow {
+    margin-top: 0.6rem;
+    font-size: 0.82rem;
+    color: #4a4f6a;
+    background: #f9fbff;
+    border: 1px solid #e3e7f5;
+    border-radius: 10px;
+    padding: 0.55rem 0.9rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.fileName {
+    font-weight: 600;
+    font-size: 0.82rem;
+}
+
+.fileSize {
+    font-size: 0.78rem;
+    color: #8a8fb3;
+}
+
+/* ===== BUTTONS CARD ===== */
+
+.buttonsCard {
+    width: 77%;
+    max-width: 1400px;
+    margin: 0 auto;
+    background: #ffffff;
+    padding: 1.4rem 2rem;
+    margin-top: 2rem;
+    border-radius: 18px;
+    box-shadow: 0 8px 25px rgba(18, 35, 95, 0.08);
+}
+
+/* buttons row inside new card */
+.actionsRow {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+/* base button */
+.actionBtn {
+    border: none;
+    border-radius: 10px;
+    padding: 0.75rem 1.8rem;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+/* hover effect */
+.actionBtn:hover {
+    transform: translateY(-2px);
+}
+
+/* Green "Adaugă" */
+.actionAdd {
+    background: #00c375;
+    color: #ffffff;
+    box-shadow: 0 5px 12px rgba(0, 195, 117, 0.4);
+}
+
+/* Blue "Salvează draft" */
+.actionDraft {
+    background: #1b9bff;
+    color: #ffffff;
+    box-shadow: 0 5px 14px rgba(27, 155, 255, 0.35);
+}
+
+/* Dark navy "Anulează" */
+.actionCancel {
+    background: #2e3a54;
+    color: #ffffff;
+    box-shadow: 0 5px 14px rgba(46, 58, 84, 0.3);
+}
+
+.error-input {
+    border: 1px solid red !important;
+}
+
+.errorText {
+    color: red;
+    font-size: 12px;
+    margin-top: 3px;
+}
+
+.selectAnalyst option {
+    font-weight: 600;
+}
+
+/* Add these styles to your existing ProjectRequest.module.css */
+
+.inputError {
+    border-color: #ff4444 !important;
+    background-color: #fff8f8 !important;
+}
+
+.errorMessage {
+    color: #ff4444;
+    font-size: 12px;
+    margin-top: 4px;
+    display: block;
+}
+
+.no-spin-project-request::-webkit-inner-spin-button,
+.no-spin-project-request::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.no-spin-project-request {
+    -moz-appearance: textfield; /* Firefox */
+}
+
+.deleteFileBtn {
+    background: transparent;
+    border: none;
+    color: #ff4d4f;
+    font-size: 18px;
+    cursor: pointer;
+    margin-left: 10px;
+}
+
+.deleteFileBtn:hover {
+    color: #ff1a1a;
+}
+.dropdownItem input{
+    display: flex;
+
+}
+.ProjectRequest_dropdownItem__S2RJu{
+    display: flex;
+}
+
+
+/*//*/
+
+/* --- MULTI SELECT WRAPPER (the closed box) --- */
+.multiSelectBox {
+    width: 100%;
+    height: 50px;
+    padding: 0 12px;
+    border-radius: 10px;
+    border: 1px solid #e3e7f5;
+    background: #f9fbff;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    box-sizing: border-box;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.multiSelectBox:hover {
+    background: #ffffff;
+}
+
+.multiSelectBox:focus,
+.multiSelectBox.active {
+    border-color: #7b8cff;
+    box-shadow: 0 0 0 2px rgba(123, 140, 255, 0.15);
+    background: #ffffff;
+}
+
+
+/* --- DROPDOWN LIST --- */
+.dropdownList {
+    margin-top: 6px;
+    width:100%;
+    background: white;
+    border: 1px solid #e3e7f5;
+    border-radius: 10px;
+    max-height: 180px;
+    overflow-y: auto;
+    box-shadow: 0px 4px 12px rgba(0,0,0,0.08);
+    padding: 6px 0;
+    z-index: 20;
+    position: absolute;
+}
+
+/* --- DROPDOWN ITEMS --- */
+.dropdownItem {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 14px;
+    cursor: pointer;
+    font-size: 0.9rem;
+}
+
+.dropdownItem:hover {
+    background: #f1f4ff;
+}
+
+.dropdownItem input {
+    cursor: pointer;
+}
+
+/* ============== RESPONSIVE ============== */
+
+@media (max-width: 960px) {
+    .headerCard,
+    .formCard,
+    .buttonsCard {
+        width: 92%;
+        padding-left: 5%;
+        padding-right: 5%;
+    }
+
+    .sectionGrid {
+        grid-template-columns: 1fr;
+    }
+
+    .span2Left,
+    .span2Right {
+        grid-column: auto;
+    }
+
+    .fullWidthBlock,
+    .fileUploadHalf {
+        width: 100%;
+    }
+}
+
+@media (max-width: 640px) {
+    .headerTitle {
+        font-size: 1.1rem;
+    }
+}

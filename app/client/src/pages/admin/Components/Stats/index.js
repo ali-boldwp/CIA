@@ -19,13 +19,13 @@ const Stats = ({ stats }) => {
 
                 <div className="stat-box">
                     <span className="label">💻 Solicitare de proiect nou</span>
-                    <Link to="/project" className="gradient-btn">Adaugă</Link>
+                    <Link to="/project/request/new" className="gradient-btn">Adaugă</Link>
                 </div>
 
                 <div className="stat-box">
                     <span className="label">🔎 Solicitare de HUMINT</span>
 
-                    <Link to="/humintRequest" className="gradient-btn">Adaugă</Link>
+                    <Link to="/humint/new" className="gradient-btn">Adaugă</Link>
 
                 </div>
 
@@ -58,7 +58,7 @@ const Stats = ({ stats }) => {
                     <span className="label">📤 Solicitări proiect — de revizuit</span>
                     <div className="sec">
                         <h3>{stats?.requested?.projects}</h3>
-                        <Link to="/projectRequest-list" className="gradient-btn">Deschide lista</Link>
+                        <Link to="/project/request/all" className="gradient-btn">Deschide lista</Link>
                     </div>
                 </div>
 
@@ -66,7 +66,7 @@ const Stats = ({ stats }) => {
                     <span className="label">🕵️‍♂️ Solicitări HUMINT — de aprobat</span>
                     <div className="sec">
                         <h3>{stats?.requested?.huments}</h3>
-                        <Link to="/humintList" className="gradient-btn">Verifica acum</Link>
+                        <Link to="/humint" className="gradient-btn">Verifica acum</Link>
                     </div>
                 </div>
 

@@ -44,7 +44,7 @@ const Login = () => {
 
             if (role === "sales" || role === "user") navigate("/dashboard/sales");
             else if (role === "analyst") navigate("/dashboard/analyst");
-            else if (role === "manager" || role === "admin") navigate("/manager/dashboard");
+            else if (role === "manager" || role === "admin") navigate("/");
             else navigate("/");
         } catch (err) {
             console.error("LOGIN ERROR:", err);

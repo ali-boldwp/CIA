@@ -1,27 +1,29 @@
-// src/components/PageHeader/PageHeader.js
 import React from "react";
-import { useNavigate } from "react-router-dom";      // 👈 add this
-import styles from "./PageHeader.module.css";
+import { useNavigate } from "react-router-dom";
+import styles from "./Header.module.css";
 
-const PageHeader = ({ title }) => {
-    const navigate = useNavigate();                 // 👈 router hook
+const Header = () => {
+    const navigate = useNavigate();
 
     const goBack = () => {
-        navigate("/");             // 👈 redirect
+        navigate("/");
     };
 
     return (
         <div className={styles.container}>
             <div className={styles.box}>
+                {/* LEFT: BACK BUTTON */}
                 <button className={styles.backBtn} onClick={goBack}>
                     <span className={styles.backBtnIcon}>⟵</span>
                     Înapoi la Dashboard
                 </button>
 
-                <h2 className={styles.title}>{title}</h2>
+                {/* TITLE */}
+                <h2 className={styles.title}>Solicitare HUMINT — Aprobare manager</h2>
+
             </div>
         </div>
     );
 };
 
-export default PageHeader;
+export default Header;

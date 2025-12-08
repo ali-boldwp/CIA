@@ -20,7 +20,7 @@ const ProjectDetailButton = ({
                     Salvează modificările
                 </button>
 
-                <Link  to={`/project/${id}/tasks`}
+                <Link  to={`/project/view/${id}/tasks`}
                     type="button"
                     className={styles.taskBtna}
                     onClick={onGoToTask}
@@ -28,13 +28,13 @@ const ProjectDetailButton = ({
                     Mergi la Task Proiect
                 </Link>
 
-                <button
+                <Link to={`/project/view/${id}/cost`}
                     type="button"
                     className={styles.costBtn}
                     onClick={onViewCosts}
                 >
                     Vezi Costuri
-                </button>
+                </Link>
             </div>
         </div>
     );

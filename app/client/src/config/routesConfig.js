@@ -1,89 +1,43 @@
-import React, { useEffect } from "react";
-import { useSelector } from "react-redux";
-import Cookies from "js-cookie";
-import { useNavigate } from 'react-router-dom';
-import Utils from '@libs/utils';
+// src/config/routesConfig.js
+import Utils from "@libs/utils";
+import RoleBasedRoot from "./RoleBasedRoot";
 import LoginConfig from "../pages/auth/Login/LoginConfig";
-import ProjectRequestConfig from '../pages/project/projectRequest/ProjectRequestConfig';
-import ManagerConfig from '../pages/Manager/Dashboard/ManagerConfig';
-import AnalystDashboardConfig from "../pages/analyst/dashboard/AnalystDashboardConfig";
-import SalesDashboardConfig from "../pages/sales/dashboard/SalesDashboardConfig";
-import NewProjectConfig from "../pages/newProjectPage/NewProjectConfig";
-import EmployeeListConfig from "../pages/EmployeeList/EmployeeListConfig";
-import AnalstListConfig from "../pages/AnalystList/AnalystListConfig";
-import ProjectDetailConfig from "../pages/ProjectDetail/ProjectDetailConfig";
-import AnalistProfileCon from "../pages/AnalystProfile/AnalystProfileCon";
-import ProjectCostsPageConfig from "../pages/ProjectCostsPage/ProjectCostsPageConfig";
-import AllUserConfig from "../pages/AllUser/AllUserConfig";
-import RequestListConfig from "../pages/ProjectRequestList/RequestListConfig";
-import MessengerConfig from "../pages/Messenger/MessengerConfig";
-import TaskPageConfig from "../pages/taskPage/TaskPageConfig";
-import HumintConfig from "../pages/Humint/HumintConfig";
-import HumintRequestFormConfig from "../pages/HumintRequestForm/HumintRequestFormConfig";
-import HumintListConfig from "../pages/HumintList/HumintListConfig";
-import HumintRequestDetailConfig from "../pages/HumintRequestDetail/HumintRequestDetailConfig";
 
+// All your role-specific configs (they only contain nested children routes)
 import AdminConfig from "../pages/admin/adminConfig";
-import NewMessengerConfig from "../pages/NewMessenger/NewMessengerConfig";
-import SearchKeywordConfig from "../pages/Manager/SearchKeyword/SearchKeywordConfig";
-
+import ManagerConfig from "../pages/Manager/Dashboard/ManagerConfig";
+import AnalystConfig from "../pages/Analyst/analystConfig";
+import salesConfig from "../pages/Sales/salesConfig";
+import SalesDashboardConfig from "../pages/sales/dashboard/SalesDashboardConfig";
+// ... import every other config
 
 const routeConfigs = [
     LoginConfig,
     AdminConfig,
-    AnalystDashboardConfig,
-    SalesDashboardConfig,
-    // NewProjectConfig,
     ManagerConfig,
-    // ProjectRequestConfig,
-    EmployeeListConfig,
-    AnalistProfileCon,
-    AnalstListConfig,
-    ProjectCostsPageConfig,
-    ProjectDetailConfig,
-    AllUserConfig,
-    RequestListConfig,
-    MessengerConfig,
-    TaskPageConfig,
-    HumintConfig,
-    HumintRequestFormConfig,
-    HumintListConfig,
-    HumintRequestDetailConfig,
-    NewMessengerConfig,
-    SearchKeywordConfig
-
+    AnalystConfig,
+    salesConfig,
+    SalesDashboardConfig,
+    // ... all others
 ];
 
-const CheckRole = () => {
-    const navigate = useNavigate();
-    const user = useSelector((state) => state.auth.user);
-
-    useEffect(() => {
-        // while user is still loading, do nothing
-        if (user === undefined) return;
-
-        // no user -> go login
-        if (!user) {
-            navigate("/login", { replace: true });
-            return;
-        }
-
-        // user exists -> redirect to /{role}
-        navigate(`/${user.role}`, { replace: true });
-    }, [user, navigate]);
-
-    return null;
-};
-
+// Generate all the nested routes (project, humint, tasks, etc.)
+const generatedRoutes = Utils.generateRoutesFromConfigs(routeConfigs);
 
 const routes = [
-    ...Utils.generateRoutesFromConfigs(routeConfigs),
-    {
-        path: '/',
-        element: <CheckRole to="/login"/>
-    }
-];
+    ...generatedRoutes,
 
-console.log(routes);
+    // This is the only "/" route you will ever need
+    {
+        path: "/",
+        element: <RoleBasedRoot />,
+    },
+
+    // Optional: catch-all for 404
+    {
+        path: "*",
+        element: <div>404 - Page Not Found</div>,
+    },
+];
 
 export default routes;

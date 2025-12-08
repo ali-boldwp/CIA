@@ -6,7 +6,15 @@ import ProjectsList from "./Pages/Projects/List";
 import ProjectSearch from "./Pages/Projects/Search";
 import NewProject from "./Pages/Projects/New";
 import CreateProject from "./Pages/Projects/New/Create"
-import RequestProject from "./Pages/Projects/New/Request";
+import ProjectRequestList from "./Pages/Projects/Request/List";
+import ProjectView from "./Pages/Projects/View";
+import ProjectTasks from "./Pages/Projects/Tasks";
+import ProjectCost from "./Pages/Projects/Cost";
+import Hument from "./Pages/Humint";
+import HumentNew from "./Pages/Humint/New";
+import HumentRequest from "./Pages/Humint/Request";
+import Humints from "./Pages/Humint/List";
+import HumentRequestView from "./Pages/Humint/View";
 
 const AdminConfig = {
     settings: {
@@ -17,7 +25,6 @@ const AdminConfig = {
     auth: [ 'admin', 'manager' ],
     routes: [
         {
-            path: '/',
             element: <Admin />,
             children: [
                 {
@@ -41,6 +48,18 @@ const AdminConfig = {
                             element: <ProjectSearch />
                         },
                         {
+                            path: 'view/:id',
+                            element: <ProjectView />
+                        },
+                        {
+                            path: 'view/:id/tasks',
+                            element: <ProjectTasks />
+                        },
+                        {
+                            path: 'view/:id/cost',
+                            element: <ProjectCost />
+                        },
+                        {
                             path: 'new',
                             element: <NewProject />,
                             children: [
@@ -51,12 +70,44 @@ const AdminConfig = {
                                 {
                                     path: ':id',
                                     element: <CreateProject />
-                                },
-                                {
-                                    path: 'request',
-                                    element: <RequestProject />
                                 }
                             ]
+                        },
+                        {
+                            path: 'request',
+                            element: <NewProject />,
+                            children: [
+                                {
+                                    index: true,
+                                    element: <CreateProject />
+                                },
+                                {
+                                    path: 'all',
+                                    element: <ProjectRequestList />
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    path: 'humint',
+                    element: <Hument />,
+                    children: [
+                        {
+                            index: true,
+                            element: <Humints />
+                        },
+                        {
+                            path: 'new',
+                            element: <HumentNew />
+                        },
+                        {
+                            path: 'new/:id',
+                            element: <HumentRequest />
+                        },
+                        {
+                            path: 'request/:id',
+                            element: <HumentRequestView />
                         }
                     ]
                 }

@@ -135,7 +135,7 @@ const Item = ({ data }) => {
 
             {/* ACTIONS + DROPDOWN -------------- */}
             <div className="col actions" ref={dropdownRef} style={{ justifyContent: "end" }}>
-                <Link to={`/projectDetail/${data._id}`} className="action-btn">
+                <Link to={`/project/view/${data._id}`} className="action-btn">
                     Deschide
                 </Link>
                 <button className="action-btn">Mesaj 🔒</button>

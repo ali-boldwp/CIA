@@ -1,6 +1,6 @@
 import {Link, useNavigate, useParams} from "react-router-dom";
 import {useGetAnalystsQuery} from "../../../../../../services/userApi";
-import styles from "../../../../../project/projectRequest/ProjectRequest.module.css";
+import styles from "./NewProjectstyle.css";
 import React, {useEffect, useRef, useState} from "react";
 import {toast} from "react-toastify";
 import {
@@ -298,7 +298,7 @@ const CreateProject = () => {
 
             const response = await createProject(payload).unwrap();
             toast("Proiect final creat cu succes!");
-            navigate(`/projectDetail/${response.data._id}`);
+            navigate(`/project/view/${response.data._id}`);
 
 
         } catch (err) {
