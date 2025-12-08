@@ -9,6 +9,8 @@ import ManagerConfig from "../pages/Manager/Dashboard/ManagerConfig";
 import AnalystConfig from "../pages/Analyst/analystConfig";
 import salesConfig from "../pages/Sales/salesConfig";
 import SalesDashboardConfig from "../pages/sales/dashboard/SalesDashboardConfig";
+import Messenger from "../pages/Messenger/Messenger";
+import NewMessenger from "../pages/NewMessenger/NewMessenger";
 // ... import every other config
 
 const routeConfigs = [
@@ -31,6 +33,23 @@ const routes = [
     {
         path: "/",
         element: <RoleBasedRoot />,
+    },
+
+    {
+        path: "/messenger",
+        element: <Messenger/>,
+
+    },
+
+    {
+        path: "/messenger/:id",
+        element: <Messenger/>,
+
+    },
+    {
+        path: "/messenger/new",
+        element: <NewMessenger/>,
+
     },
 
     // Optional: catch-all for 404
