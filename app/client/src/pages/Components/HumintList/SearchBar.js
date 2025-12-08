@@ -17,10 +17,11 @@ const SearchBar = ({
 
                 {/* LEFT: SEARCH INPUT */}
                 <div className={styles.searchWrapper}>
+                    <span className={styles.searchIcon}>🔍</span>
                     <input
                         type="text"
                         className={styles.searchInput}
-                        placeholder="🔎 Caută: proiect / subiect / responsabil"
+                        placeholder="Caută: proiect / subiect / responsabil"
                         value={searchValue}
                         onChange={(e) => onSearchChange(e.target.value)}
                     />
