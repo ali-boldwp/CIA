@@ -28,12 +28,14 @@ import {
     useLeaveGroupMutation,
     useDeleteGroupMutation,
     useMuteChatMutation,
-    usePinChatMutation
+    usePinChatMutation,
+    useAddMembersToGroupMutation,
 }
     from "../../../services/chatApi";
 import {FaThumbtack} from "react-icons/fa6";
 import {Link, useNavigate} from "react-router-dom";
 import styles from "../../Manager/Components/Team/Team.module.css";
+import './popup.css'
 import {toast} from "react-toastify";
 
 function Header() {
@@ -56,6 +58,11 @@ function Header() {
 }
 
 const MessengerPage = ({chatID}) => {
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [selectedMembers, setSelectedMembers] = useState([]);
+
+    const [addMembersToGroup] = useAddMembersToGroupMutation();
+
 
     const navigate = useNavigate();
     const {data: allUsers} = useGetAllUsersQuery();
@@ -269,6 +276,31 @@ const MessengerPage = ({chatID}) => {
 
         } catch (err) {
             toast.error("Eroare: nu s-a putut modifica pin-ul.");
+        }
+    };
+
+    const handleAddMembers = async () => {
+        if (selectedMembers.length === 0) {
+            toast.error("Select at least one member!");
+            return;
+        }
+
+        try {
+            await addMembersToGroup({
+                chatId: chat,
+                users: selectedMembers   // 👈 FIXED HERE
+            }).unwrap();
+
+            toast.success("Members added successfully!");
+
+            setIsModalOpen(false);
+            setSelectedMembers([]);
+
+            refetchChats();
+
+        } catch (error) {
+            console.error(error);
+            toast.error("Failed to add members.");
         }
     };
 
@@ -538,10 +570,14 @@ const MessengerPage = ({chatID}) => {
                             <div className="section-title">Detalii conversație</div>
                             <div className="section-subtitle">Membri ({chats?.data?.find(c => c._id === chat)?.participants?.length || 0})</div>
                             </div>
-                                <Link to="/messenger/new" className="pill">
+                                <button
+                                    className="pill"
+                                    onClick={() => setIsModalOpen(true)}
+                                >
                                     <FiUserPlus className="pill-icon" />
                                     Adaugă în grup
-                                </Link>
+                                </button>
+
                             </div>
                             <div className="member-list">
                                 <div className="member-list">
@@ -627,6 +663,69 @@ const MessengerPage = ({chatID}) => {
 
                         </div>
                     </aside>
+                    {isModalOpen && (
+                        <div className="popup-overlay">
+                            <div className="popup-card">
+
+                                {/* HEADER */}
+                                <div className="popup-header">
+                                    <h3>Membri</h3>
+                                    <button className="popup-close" onClick={() => setIsModalOpen(false)}>×</button>
+                                </div>
+
+                                {/* LIST */}
+                                <div className="popup-user-list">
+
+                                    {(allUsers?.data || []).map((user, i) => {
+                                        const isSelected = selectedMembers.includes(user._id);
+
+                                        return (
+                                            <div className="popup-user-row" key={user._id}>
+
+                                                <div className={`popup-avatar avatar-${i % 5}`}>
+                                                    {user.name.charAt(0)}
+                                                </div>
+
+                                                <div className="popup-user-info">
+                                                    <div className="popup-user-name">{user.name}</div>
+                                                </div>
+
+                                                <div className="popup-status">
+                                                    {isSelected ? (
+                                                        <span className="status-added">Adăugat</span>
+                                                    ) : (
+                                                        <span className="status-rejected">Selectează</span>
+                                                    )}
+                                                </div>
+
+                                                <input
+                                                    type="checkbox"
+                                                    className="popup-checkbox"
+                                                    checked={isSelected}
+                                                    onChange={() => {
+                                                        setSelectedMembers(prev =>
+                                                            prev.includes(user._id)
+                                                                ? prev.filter(id => id !== user._id)
+                                                                : [...prev, user._id]
+                                                        );
+                                                    }}
+                                                />
+
+                                            </div>
+                                        );
+                                    })}
+                                </div>
+
+                                {/* FOOTER */}
+                                <button className="popup-add-btn" onClick={handleAddMembers}>
+                                    + Adaugă membri
+                                </button>
+
+                            </div>
+                        </div>
+                    )}
+
+
                 </div>
             </div>
         </div>
