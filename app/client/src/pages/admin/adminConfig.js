@@ -15,6 +15,7 @@ import HumentNew from "./Pages/Humint/New";
 import HumentRequest from "./Pages/Humint/Request";
 import Humints from "./Pages/Humint/List";
 import HumentRequestView from "./Pages/Humint/View";
+import RequestProject from "./Pages/Projects/Request/New";
 
 const AdminConfig = {
     settings: {
@@ -79,11 +80,11 @@ const AdminConfig = {
                             children: [
                                 {
                                     index: true,
-                                    element: <CreateProject />
+                                    element: <ProjectRequestList />
                                 },
                                 {
-                                    path: 'all',
-                                    element: <ProjectRequestList />
+                                    path: 'new',
+                                    element: <RequestProject />
                                 }
                             ]
                         }
