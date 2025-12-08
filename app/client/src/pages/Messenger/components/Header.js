@@ -66,7 +66,10 @@ const MessengerPage = ({chatID}) => {
     const [pinChat] = usePinChatMutation();
 
 
+
     const [chat, setChat] = useState(chatID);
+
+
 
     const [messages, setMessages] = useState([]);
     const [oldmessage, setOldMessage] = useState([
@@ -89,7 +92,9 @@ const MessengerPage = ({chatID}) => {
     const [sendMessage] = useSendMessageMutation();
 
     const {data, isLoading} = useGetMessagesQuery(chat, {skip: chat === "open"});
-    const {data: chats, isLoading: chatsLoading} = useGetMyChatsQuery();
+    const {data: chats, isLoading: chatsLoading , refetch: refetchChats} = useGetMyChatsQuery();
+
+    const currentChat = chats?.data?.find(c => c._id === chat) || null;
 
 
     useEffect(() => {
@@ -190,6 +195,8 @@ const MessengerPage = ({chatID}) => {
             toast.error("Ștergerea membrului a eșuat.");
         }
     };
+
+
     const handleLeaveGroup = async () => {
         try {
             await leaveGroup(chat).unwrap();
@@ -224,23 +231,47 @@ const MessengerPage = ({chatID}) => {
 
 
     const handleMute = async () => {
+        const currentChatObj = chats?.data?.find(c => c._id === chat);
+        if (!currentChatObj) return;
+
+        const participant = currentChatObj.participants.find(
+            p => p.user === currentUserId
+        );
+
+        const newValue = !participant?.muted;
+
         try {
-            await muteChat({ chatId: chat, mute: true }).unwrap();
-            toast("Chat muted!");
+            await muteChat({ chatId: chat, mute: newValue }).unwrap();
+            await refetchChats();
+
+            if (newValue) toast("Conversația a fost mutată!");
+            else toast("Conversația a fost demutată!");
+
         } catch (err) {
-            toast.error("Mute failed");
+            toast.error("Eroare: nu s-a putut modifica starea mute.");
         }
     };
+
+
+
+
 
 
     const handlePin = async () => {
+        const currentChat = chats?.data?.find(c => c._id === chat);
+        const newValue = !currentChat?.isPinned;
+
         try {
-            await pinChat({ chatId: chat, pin: true }).unwrap();
-            toast("Chat pinned!");
+            await pinChat({ chatId: chat, pin: newValue }).unwrap();
+
+            if (newValue) toast("Chat fixat în partea de sus!");
+            else toast("Chatul a fost desfăcut din pin!");
+
         } catch (err) {
-            toast.error("Pin failed");
+            toast.error("Eroare: nu s-a putut modifica pin-ul.");
         }
     };
+
 
 
 
@@ -367,17 +398,27 @@ const MessengerPage = ({chatID}) => {
 
                                     {/* PIN BUTTON */}
                                     <span className="tag tag-pin" onClick={handlePin} style={{ cursor: "pointer" }}>
-        <span className="tag-icon">
-            <FaThumbtack style={{ color: "red" }} />
-        </span>
-        Pin
+    <span className="tag-icon">
+        <FaThumbtack style={{ color: currentChat?.isPinned ? "red" : "gray" }} />
     </span>
+                                        {currentChat?.isPinned ? "Pinned" : "Pin"}
+</span>
+
 
                                     {/* MUTE BUTTON */}
-                                    <span className="tag tag-mute" onClick={handleMute} style={{ cursor: "pointer" }}>
-        <FiVolumeX className="tag-icon" />
-        Mute
-    </span>
+                                    <span
+                                        className="tag tag-mute"
+                                        onClick={handleMute}
+                                        style={{ cursor: "pointer" }}
+                                    >
+    <FiVolumeX
+        className="tag-icon"
+        style={{ color: currentChat?.isMuted ? "orange" : "gray" }}
+    />
+                                        {currentChat?.isMuted ? "Muted" : "Mute"}
+</span>
+
+
 
                                     {/* Archive — (if needed later) */}
                                     <span className="tag tag-archive">
