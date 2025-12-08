@@ -283,6 +283,9 @@
     font-size: 13px;
     font-weight: 500;
     color: #111827;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
 .conversation-sub {
@@ -655,9 +658,19 @@
 
 
 .flex-start {
-    text-align: start;
+    text-align: end;
     margin-top: 5px;
+
 }
+
+.sidebar-pin-icon {
+    margin-left: 6px;
+    font-size: 14px;
+    color: gray;
+    transform: rotate(35deg);
+}
+
+
 /* small screens */
 @media (max-width: 1024px) {
     .body {
