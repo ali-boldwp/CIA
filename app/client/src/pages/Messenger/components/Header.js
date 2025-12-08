@@ -253,10 +253,6 @@ const MessengerPage = ({chatID}) => {
     };
 
 
-
-
-
-
     const handlePin = async () => {
         const currentChat = chats?.data?.find(c => c._id === chat);
         const newValue = !currentChat?.isPinned;
@@ -369,11 +365,16 @@ const MessengerPage = ({chatID}) => {
                                         key={c._id}
                                         onClick={() => openChat(c._id)}
                                     >
-                                        <div className="conversation-avatar"/>
+                                        <div className="conversation-avatar" />
 
                                         <div className="conversation-main">
                                             <div className="conversation-name">
                                                 {c.isGroup ? c.groupName : c.participants.map(p => p.name).join(", ")}
+
+                                                {/* 🔥 PIN ICON HERE */}
+                                                {c.isPinned && (
+                                                    <FaThumbtack className="sidebar-pin-icon" />
+                                                )}
                                             </div>
 
                                             <div className="conversation-sub">
@@ -383,6 +384,7 @@ const MessengerPage = ({chatID}) => {
                                     </div>
                                 ))
                             }
+
 
 
                         </div>
