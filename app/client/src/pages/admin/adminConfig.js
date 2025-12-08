@@ -17,6 +17,10 @@ const AdminConfig = {
                 {
                     index: true,
                     element: <Dashboard />
+                },
+                {
+                    path: 'users',
+                    element: <Dashboard />
                 }
             ]
         }
