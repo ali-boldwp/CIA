@@ -1,0 +1,141 @@
+/* OVERLAY */
+.popup-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.4);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 3000;
+}
+
+/* CARD */
+.popup-card {
+    width: 380px;
+    background: #fff;
+    border-radius: 18px;
+    padding: 20px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+    animation: popupFade 0.2s ease-out;
+    max-height: 500px;
+    display: flex;
+    flex-direction: column;
+}
+
+@keyframes popupFade {
+    from { transform: translateY(20px); opacity: 0; }
+    to   { transform: translateY(0); opacity: 1; }
+}
+
+/* HEADER */
+.popup-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.popup-header h3 {
+    margin: 0;
+    font-size: 20px;
+    font-weight: 600;
+}
+
+.popup-close {
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+}
+
+/* USER LIST */
+.popup-user-list {
+    margin-top: 15px;
+    overflow-y: auto;
+    max-height: 320px;
+}
+
+.popup-user-row {
+    display: flex;
+    align-items: center;
+    margin-bottom: 12px;
+    padding: 10px;
+    border-radius: 12px;
+    background: #f8f9fa;
+    position: relative;
+}
+
+/* AVATAR */
+.popup-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    color: white;
+    font-weight: bold;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-right: 12px;
+}
+
+.avatar-0 { background: #ff6b6b; }
+.avatar-1 { background: #845ef7; }
+.avatar-2 { background: #339af0; }
+.avatar-3 { background: #51cf66; }
+.avatar-4 { background: #fcc419; }
+
+/* INFO */
+.popup-user-info {
+    flex: 1;
+}
+
+.popup-user-name {
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.popup-user-date {
+    font-size: 12px;
+    color: gray;
+}
+
+/* STATUS BADGES */
+.status-added {
+    background: #d3f9d8;
+    color: #2f9e44;
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 12px;
+}
+
+.status-rejected {
+    background: #ffe3e3;
+    color: #c92a2a;
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 12px;
+}
+
+/* CHECKBOX */
+.popup-checkbox {
+    margin-left: 12px;
+    transform: scale(1.2);
+    cursor: pointer;
+}
+
+/* FOOTER BUTTON */
+.popup-add-btn {
+    margin-top: 15px;
+    background: #5b7fff;
+    color: white;
+    font-size: 16px;
+    padding: 12px;
+    width: 100%;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.popup-add-btn:hover {
+    background: #4764d9;
+}
