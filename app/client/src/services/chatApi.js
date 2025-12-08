@@ -81,6 +81,14 @@ export const chatApi = createApi({
             invalidatesTags: ["Chats"],
         }),
 
+        addMembersToGroup: builder.mutation({
+            query: ({ chatId, users }) => ({
+                url: `/chats/${chatId}/add-members`,
+                method: "POST",
+                body: { users }
+            }),
+            invalidatesTags: ["Chats", "Users"]
+        }),
 
 
 
@@ -97,4 +105,5 @@ export const {
     useDeleteGroupMutation,
     useMuteChatMutation,
     usePinChatMutation,
+    useAddMembersToGroupMutation,
 } = chatApi;
