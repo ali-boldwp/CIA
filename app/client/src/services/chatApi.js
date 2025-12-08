@@ -62,6 +62,27 @@ export const chatApi = createApi({
             invalidatesTags: ["Chats"], // auto refresh
         }),
 
+        muteChat: builder.mutation({
+            query: ({ chatId, mute }) => ({
+                url: `/chats/${chatId}/mute`,
+                method: "POST",
+                body: { mute },
+            }),
+            invalidatesTags: ["Chats"],
+        }),
+
+
+        pinChat: builder.mutation({
+            query: ({ chatId, pin }) => ({
+                url: `/chats/${chatId}/pin`,
+                method: "POST",
+                body: { pin },  // backend requires boolean
+            }),
+            invalidatesTags: ["Chats"],
+        }),
+
+
+
 
 
     }),
@@ -74,4 +95,6 @@ export const {
     useRemoveMemberMutation,
     useLeaveGroupMutation,
     useDeleteGroupMutation,
+    useMuteChatMutation,
+    usePinChatMutation,
 } = chatApi;

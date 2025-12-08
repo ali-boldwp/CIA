@@ -1,8 +1,8 @@
 import React, {useEffect, useState} from "react";
 import "../MessengerPage.css";
 import socket from "../../../socket";
-import { useGetMessagesQuery , useSendMessageMutation} from "../../../services/messageApi";
-import { useGetAllUsersQuery } from "../../../services/userApi";
+import {useGetMessagesQuery, useSendMessageMutation} from "../../../services/messageApi";
+import {useGetAllUsersQuery} from "../../../services/userApi";
 import {
     FiDownload,
     FiSettings,
@@ -22,7 +22,15 @@ import {
     FiShield,
     FiLogOut,
 } from "react-icons/fi";
-import {useGetMyChatsQuery,useRemoveMemberMutation,useLeaveGroupMutation,useDeleteGroupMutation} from "../../../services/chatApi";
+import {
+    useGetMyChatsQuery,
+    useRemoveMemberMutation,
+    useLeaveGroupMutation,
+    useDeleteGroupMutation,
+    useMuteChatMutation,
+    usePinChatMutation
+}
+    from "../../../services/chatApi";
 import {FaThumbtack} from "react-icons/fa6";
 import {Link, useNavigate} from "react-router-dom";
 import styles from "../../Manager/Components/Team/Team.module.css";
@@ -47,19 +55,23 @@ function Header() {
     );
 }
 
-const  MessengerPage =({ chatID }) => {
+const MessengerPage = ({chatID}) => {
 
     const navigate = useNavigate();
-    const {data:allUsers}=useGetAllUsersQuery();
+    const {data: allUsers} = useGetAllUsersQuery();
     const [removeMember] = useRemoveMemberMutation();
     const [leaveGroup] = useLeaveGroupMutation();
     const [deleteGroup] = useDeleteGroupMutation();
+    const [muteChat] = useMuteChatMutation();
+    const [pinChat] = usePinChatMutation();
 
 
 
-    const [ chat, setChat ] = useState( chatID );
+    const [chat, setChat] = useState(chatID);
 
-    const [ messages, setMessages ] = useState([]);
+
+
+    const [messages, setMessages] = useState([]);
     const [oldmessage, setOldMessage] = useState([
         {
             "_id": "6933f31daa597c5c197497e1",
@@ -79,10 +91,10 @@ const  MessengerPage =({ chatID }) => {
     const [text, setText] = useState("");
     const [sendMessage] = useSendMessageMutation();
 
-    const { data, isLoading } = useGetMessagesQuery(chat, { skip: chat === "open" });
-    const { data: chats, isLoading: chatsLoading } = useGetMyChatsQuery();
+    const {data, isLoading} = useGetMessagesQuery(chat, {skip: chat === "open"});
+    const {data: chats, isLoading: chatsLoading , refetch: refetchChats} = useGetMyChatsQuery();
 
-
+    const currentChat = chats?.data?.find(c => c._id === chat) || null;
 
 
     useEffect(() => {
@@ -90,11 +102,11 @@ const  MessengerPage =({ chatID }) => {
             try {
 
                 console.log("API RESPONSE:", data.data);
-                setOldMessage( data?.data);
+                setOldMessage(data?.data);
                 console.log("Messages:", oldmessage);
 
             } catch (e) {
-                console.log( e )
+                console.log(e)
             }
         }
     }, [data]);
@@ -125,13 +137,19 @@ const  MessengerPage =({ chatID }) => {
 
     }, []);
 
-    const openChat = ( ID ) => {
+    const openChat = (ID) => {
 
-        setChat( ID );
+        // Clear previous chat messages
+        setOldMessage([]);
+        setMessages([]);
 
+        // Change chat
+        setChat(ID);
+
+        // Redirect
         navigate(`/messenger/${ID}`);
+    };
 
-    }
 
     const currentUser = JSON.parse(localStorage.getItem("user"));
     const currentUserId = currentUser?._id;
@@ -140,9 +158,8 @@ const  MessengerPage =({ chatID }) => {
         if (!text.trim()) return;
 
         try {
-            // 1️⃣ API پر message save کرو
             const res = await sendMessage({
-                chatId: chatID,
+                chatId: chat,
                 text: text
             }).unwrap();
 
@@ -152,6 +169,7 @@ const  MessengerPage =({ chatID }) => {
             console.error("Send Error:", err);
         }
     };
+
     const getParticipants = () => {
         if (!allUsers?.data || !chats?.data) return [];
 
@@ -160,7 +178,7 @@ const  MessengerPage =({ chatID }) => {
 
         return currentChat.participants.map(p => {
             const user = allUsers.data.find(u => u._id === p.user);
-            return user ? { id: user._id, name: user.name } : null;
+            return user ? {id: user._id, name: user.name} : null;
         }).filter(Boolean);
     };
     const handleRemoveMember = async (userId) => {
@@ -177,6 +195,8 @@ const  MessengerPage =({ chatID }) => {
             toast.error("Ștergerea membrului a eșuat.");
         }
     };
+
+
     const handleLeaveGroup = async () => {
         try {
             await leaveGroup(chat).unwrap();
@@ -210,16 +230,61 @@ const  MessengerPage =({ chatID }) => {
     };
 
 
+    const handleMute = async () => {
+        const currentChatObj = chats?.data?.find(c => c._id === chat);
+        if (!currentChatObj) return;
+
+        const participant = currentChatObj.participants.find(
+            p => p.user === currentUserId
+        );
+
+        const newValue = !participant?.muted;
+
+        try {
+            await muteChat({ chatId: chat, mute: newValue }).unwrap();
+            await refetchChats();
+
+            if (newValue) toast("Conversația a fost mutată!");
+            else toast("Conversația a fost demutată!");
+
+        } catch (err) {
+            toast.error("Eroare: nu s-a putut modifica starea mute.");
+        }
+    };
+
+
+
+
+
+
+    const handlePin = async () => {
+        const currentChat = chats?.data?.find(c => c._id === chat);
+        const newValue = !currentChat?.isPinned;
+
+        try {
+            await pinChat({ chatId: chat, pin: newValue }).unwrap();
+
+            if (newValue) toast("Chat fixat în partea de sus!");
+            else toast("Chatul a fost desfăcut din pin!");
+
+        } catch (err) {
+            toast.error("Eroare: nu s-a putut modifica pin-ul.");
+        }
+    };
+
+
+
+
     return (
         <div className="app-bg">
             <div className="app-shell">
-                <Header />
+                <Header/>
 
                 {/* top toolbar */}
                 <div className="toolbar">
                     <div className="toolbar-left">
                         <div className="input-with-icon">
-                            <FiSearch className="input-search-icon" />
+                            <FiSearch className="input-search-icon"/>
                             <input
                                 className="input search-input"
                                 placeholder="Caută în mesaje..."
@@ -236,7 +301,7 @@ const  MessengerPage =({ chatID }) => {
                             <button className="pill pill-unique">Grupuri</button>
                             <button className="pill pill-unique">DM</button>
                             <button className="pill">
-                                <FiHash className="pill-icon" />
+                                <FiHash className="pill-icon"/>
                                 Serie butoane
                             </button>
                             <button className="pill">
@@ -244,8 +309,8 @@ const  MessengerPage =({ chatID }) => {
                                 Creează grup
                             </button>
                             <button className="pill">
-                                <FiUserMinus className="pill-icon" />
-                                 Elimină din grup
+                                <FiUserMinus className="pill-icon"/>
+                                Elimină din grup
                             </button>
                             <button className="pill pill-danger">
                                 {/*<FiTrash2 className="pill-icon" />*/}
@@ -273,25 +338,25 @@ const  MessengerPage =({ chatID }) => {
                             </div>
                         </div>
 
-                        <div className="conversation-list"  >
+                        <div className="conversation-list">
                             <div
                                 className={
                                     "conversation-item" +
-                                    ( chat === 'open' ? " conversation-item-active" : "")
+                                    (chat === 'open' ? " conversation-item-active" : "")
                                 }
-                                onClick={ () => setChat( 'open' ) }
+                                onClick={() => setChat('open')}
                             >
-                                <div className="conversation-avatar" />
+                                <div className="conversation-avatar"/>
                                 <div className="conversation-main">
-                                    <div className="conversation-name">{ 'General' }</div>
+                                    <div className="conversation-name">{'General'}</div>
                                     <div className="conversation-sub">
                                         Toate conversațiile
                                     </div>
                                 </div>
                                 <div className="conversation-meta">
-                                    <span className="dot green" />
-                                    <span className="dot orange" />
-                                    <span className="dot red" />
+                                    <span className="dot green"/>
+                                    <span className="dot orange"/>
+                                    <span className="dot red"/>
                                 </div>
                             </div>
                             {
@@ -304,7 +369,7 @@ const  MessengerPage =({ chatID }) => {
                                         key={c._id}
                                         onClick={() => openChat(c._id)}
                                     >
-                                        <div className="conversation-avatar" />
+                                        <div className="conversation-avatar"/>
 
                                         <div className="conversation-main">
                                             <div className="conversation-name">
@@ -320,8 +385,6 @@ const  MessengerPage =({ chatID }) => {
                             }
 
 
-
-
                         </div>
                     </aside>
 
@@ -332,27 +395,43 @@ const  MessengerPage =({ chatID }) => {
                             <div className="chat-header-left">
                                 <div className="chat-title">Grup: DD ABC</div>
                                 <div className="chat-tags">
-  <span className="tag tag-pin">
-    <span className="tag-icon">
-      <FaThumbtack  style={{ color: "red" }} />
-    </span>
-    Pin
-  </span>
 
-                                <span className="tag tag-mute">
-                                        <FiVolumeX className="tag-icon" />
-                                        Mute
-                                    </span>
+                                    {/* PIN BUTTON */}
+                                    <span className="tag tag-pin" onClick={handlePin} style={{ cursor: "pointer" }}>
+    <span className="tag-icon">
+        <FaThumbtack style={{ color: currentChat?.isPinned ? "red" : "gray" }} />
+    </span>
+                                        {currentChat?.isPinned ? "Pinned" : "Pin"}
+</span>
+
+
+                                    {/* MUTE BUTTON */}
+                                    <span
+                                        className="tag tag-mute"
+                                        onClick={handleMute}
+                                        style={{ cursor: "pointer" }}
+                                    >
+    <FiVolumeX
+        className="tag-icon"
+        style={{ color: currentChat?.isMuted ? "orange" : "gray" }}
+    />
+                                        {currentChat?.isMuted ? "Muted" : "Mute"}
+</span>
+
+
+
+                                    {/* Archive — (if needed later) */}
                                     <span className="tag tag-archive">
-                                        <FiArchive className="tag-icon" />
-                                        Archive
-                                    </span>
+        <FiArchive className="tag-icon" />
+        Archive
+    </span>
                                 </div>
+
                             </div>
 
                             {/* RIGHT SIDE: search input */}
                             <div className="input-with-icon chat-search-wrapper">
-                                <FiSearch className="input-search-icon" />
+                                <FiSearch className="input-search-icon"/>
                                 <input
                                     className="input chat-search"
                                     placeholder="Caută în conversație..."
@@ -370,7 +449,7 @@ const  MessengerPage =({ chatID }) => {
                                 {["Report_v1.pdf", "Anexa1.xlsx", "Schena.png"].map((file) => (
                                     <div key={file} className="attachment-card">
                                         <div className="attachment-name">
-                                            <FiPaperclip className="attachment-icon" />
+                                            <FiPaperclip className="attachment-icon"/>
                                             {file}
                                         </div>
                                         <div className="attachment-sub">Preview</div>
@@ -444,7 +523,7 @@ const  MessengerPage =({ chatID }) => {
                             </div>
 
                             <button className="btn-primary composer-send" onClick={handleSend}>
-                                <FiSend className="btn-icon" />
+                                <FiSend className="btn-icon"/>
                                 Trimite
                             </button>
                         </div>
@@ -469,7 +548,7 @@ const  MessengerPage =({ chatID }) => {
                                     {getParticipants().map((member, i) => (
                                         <div className="member-row" key={i}>
 
-                                            <div className={"member-avatar member-avatar-" + (i % 10)} />
+                                            <div className={"member-avatar member-avatar-" + (i % 10)}/>
 
                                             <div className="member-name">{member.name}</div>
 
@@ -500,7 +579,8 @@ const  MessengerPage =({ chatID }) => {
                                     // alignItems: "center",      // 👈 center horizontally (optional)
                                     // justifyContent: "center",  // 👈 vertical center (optional)
                                     // width: "100%",
-                                    gap: "10px"     , }}
+                                    gap: "10px",
+                                }}
                             >
                                 <button className="pill pill-warning flex-start">
                                     Șterge grup doar Manager
@@ -533,7 +613,7 @@ const  MessengerPage =({ chatID }) => {
                                 className="btn-outline full-width"
                                 onClick={handleLeaveGroup}
                             >
-                                <FiLogOut className="btn-icon" />
+                                <FiLogOut className="btn-icon"/>
                                 Ieșire grup
                             </button>
 
@@ -541,7 +621,7 @@ const  MessengerPage =({ chatID }) => {
                                 className="btn-outline full-width"
                                 onClick={handleDeleteGroup}
                             >
-                                <FiTrash2 className="btn-icon" />
+                                <FiTrash2 className="btn-icon"/>
                                 Șterge grup (Mgr)
                             </button>
 
