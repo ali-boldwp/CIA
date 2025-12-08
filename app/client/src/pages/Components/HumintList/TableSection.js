@@ -146,12 +146,14 @@ const TableSection = ({
 </span>
 
                                     </td>
+                                    <td>
                                     <Link
                                         to={`/humint/request/${item.id}`}
                                         className={styles.linkButton}
                                     >
                                         Deschide →
                                     </Link>
+                                    </td>
 
                                 </tr>
                             );
