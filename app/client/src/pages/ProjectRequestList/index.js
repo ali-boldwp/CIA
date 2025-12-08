@@ -1,22 +1,21 @@
 import "./style.css";
-import { useState } from "react";
-import {Link} from "react-router-dom";
+import { useState, useMemo } from "react";
+import { Link } from "react-router-dom";
 import ProjectRow from "./ProjectRow";
 import { useGetAllRequestedProjectsQuery } from "../../services/projectApi";
 
 const ProjectRequestList = () => {
-
-    const { data ,isLoading } = useGetAllRequestedProjectsQuery();
-    const projectRequest=data?.data || [];
+    const { data, isLoading } = useGetAllRequestedProjectsQuery();
+    const projectRequest = data?.data || [];
 
     const [search, setSearch] = useState("");
     const [sortBy, setSortBy] = useState("deadline");
     const [priorityFilter, setPriorityFilter] = useState("all");
     const [languageFilter, setLanguageFilter] = useState("all");
 
+    /** === FILTRARE === */
     const filtered = projectRequest
         .filter((p) => {
-            // Search
             const searchText = search.toLowerCase();
             return (
                 p.projectName?.toLowerCase().includes(searchText) ||
@@ -25,17 +24,14 @@ const ProjectRequestList = () => {
             );
         })
         .filter((p) => {
-            // Priority Filter
             if (priorityFilter === "all") return true;
             return p.priority?.toLowerCase() === priorityFilter.toLowerCase();
         })
         .filter((p) => {
-            // Language Filter
             if (languageFilter === "all") return true;
             return p.deliverableLanguage?.toLowerCase() === languageFilter.toLowerCase();
         })
         .sort((a, b) => {
-            // Sorting
             if (sortBy === "deadline") {
                 return new Date(a.deadline) - new Date(b.deadline);
             }
@@ -52,7 +48,6 @@ const ProjectRequestList = () => {
         return d.toISOString().split("T")[0];
     };
 
-
     const isFiltering =
         search.trim() !== "" ||
         priorityFilter !== "all" ||
@@ -61,69 +56,112 @@ const ProjectRequestList = () => {
 
     const finalData = isFiltering ? filtered : projectRequest;
 
+    /** === PAGINATION === */
+    const [page, setPage] = useState(1);
+    const limit = 10;
+
+    const totalPages = Math.ceil(finalData.length / limit);
+
+    const paginatedData = useMemo(() => {
+        return finalData.slice((page - 1) * limit, page * limit);
+    }, [page, finalData]);
+
+    if (isLoading) return <p>Loading...</p>;
+
     return (
-       <div className="RequestList">
-           <div className="top-header-box">
-               <Link to="/manager/dashboard" className="back-gradient-btn">
-                   ← Înapoi la Dashboard
-               </Link>
+        <div className="RequestList">
+            <div className="top-header-box">
+                <Link to="/manager/dashboard" className="back-gradient-btn">
+                    ← Înapoi la Dashboard
+                </Link>
 
-               <h2 className="header-title">
-                   Solicitări proiect — <span>De revizuit</span>
-               </h2>
-           </div>
+                <h2 className="header-title">
+                    Solicitări proiect — <span>De revizuit</span>
+                </h2>
+            </div>
 
-           <div className="filter-header-box">
+            <div className="filter-header-box">
+                <div className="search-box1">
+                    <span className="search-icon">🔍</span>
+                    <input
+                        type="text"
+                        placeholder="Caută: persoană / tip / subiect"
+                        className="search-input1"
+                        value={search}
+                        onChange={(e) => {
+                            setPage(1); // reset to page 1 on search
+                            setSearch(e.target.value);
+                        }
+                        }
+                    />
+                </div>
 
-               {/* Search Bar */}
-               <div className="search-box1">
-                   <span className="search-icon">🔍</span>
-                   <input
-                       type="text"
-                       placeholder="Caută: persoană / tip / subiect"
-                       className="search-input1"
-                       value={search}
-                       onChange={(e) => setSearch(e.target.value)}
-                   />
-               </div>
+                <div className="filters">
+                    <select
+                        className="filter-select"
+                        value={sortBy}
+                        onChange={(e) => {
+                            setPage(1);
+                            setSortBy(e.target.value);
+                        }}
+                    >
+                        <option value="deadline">După deadline</option>
+                        <option value="name">După nume</option>
+                    </select>
 
-               {/* Dropdown Filters */}
-               <div className="filters">
+                    <select
+                        className="filter-select"
+                        value={priorityFilter}
+                        onChange={(e) => {
+                            setPage(1);
+                            setPriorityFilter(e.target.value);
+                        }}
+                    >
+                        <option value="all">Toate prioritățile</option>
+                        <option value="Urgent">Urgent</option>
+                        <option value="Normal">Normal</option>
+                        <option value="Confidențial">Confidențial</option>
+                    </select>
 
-                   <select
-                       className="filter-select"
-                       value={sortBy}
-                       onChange={(e) => setSortBy(e.target.value)}
-                   >
-                       <option value="deadline">După deadline</option>
-                       <option value="name">După nume</option>
-                   </select>
+                    <select
+                        className="filter-select"
+                        value={languageFilter}
+                        onChange={(e) => {
+                            setPage(1);
+                            setLanguageFilter(e.target.value);
+                        }}
+                    >
+                        <option value="all">Toate limbile</option>
+                        <option value="RO">Română</option>
+                        <option value="EN">Engleză</option>
+                    </select>
+                </div>
+            </div>
 
-                   <select
-                       className="filter-select"
-                       value={priorityFilter}
-                       onChange={(e) => setPriorityFilter(e.target.value)}
-                   >
-                       <option value="all">Toate prioritățile</option>
-                       <option value="Urgent">Urgent</option>
-                       <option value="Normal">Normal</option>
-                       <option value="Confidențial">Confidențial</option>
-                   </select>
+            {/* LISTA PAGINATĂ */}
+            <ProjectRow projects={paginatedData} safe={safeDate} />
+            {/* PAGINATION CONTROLS */}
+            <div className="pagination paginationProjectList" style={{ marginTop: "20px" }}>
+                <button
+                    disabled={page === 1}
+                    onClick={() => setPage((prev) => prev - 1)}
+                >
+                    ← Precedent
+                </button>
 
-                   <select
-                       className="filter-select"
-                       value={languageFilter}
-                       onChange={(e) => setLanguageFilter(e.target.value)}
-                   >
-                       <option value="all">Toate limbile</option>
-                       <option value="RO">Română</option>
-                       <option value="EN">Engleză</option>
-                   </select>
-               </div>
-           </div>
-           <ProjectRow projects={finalData} safe={safeDate} />
+                <span style={{ margin: "0 10px" }}>
+                    Pagina <strong>{page}</strong> din{" "}
+                    <strong>{totalPages}</strong>
+                </span>
 
-       </div>
+                <button
+                    disabled={page === totalPages}
+                    onClick={() => setPage((prev) => prev + 1)}
+                >
+                    Următor →
+                </button>
+            </div>
+        </div>
     );
 };
 

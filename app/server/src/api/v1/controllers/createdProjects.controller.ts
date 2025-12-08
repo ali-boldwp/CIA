@@ -97,7 +97,10 @@ export const createProject = async (req: Request, res: Response, next: NextFunct
         );
 
         await Chat.create({
-            participants: Array.from(groupMembers),
+            participants: Array.from(groupMembers).map(id => ({
+                user: id,
+                muted: false
+            })),
             isGroup: true,
             groupName: `Project: ${payload.projectName}`
         });
@@ -112,7 +115,8 @@ export const createProject = async (req: Request, res: Response, next: NextFunct
 export const getAllProjects = async (_req: Request, res: Response, next: NextFunction) => {
     try {
         const projects = await createdProjectService.getAllProjects();
-        res.json(ok(projects));
+        const approvedProjects = projects.filter(p => p.status === "approved");
+        res.json(ok(approvedProjects));
     } catch (err) {
         next(err);
     }

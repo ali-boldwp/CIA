@@ -2,34 +2,41 @@ import "./Project.css";
 import ProjectRow from "./ProjectRow";
 import { useGetProjectCreateQuery } from "../../../../services/projectApi";
 import { useGetAnalystsQuery } from "../../../../services/userApi";
+import { useState, useMemo } from "react";
 
 const Projects = () => {
     const { data, isLoading } = useGetProjectCreateQuery();
     const { data: analystsData } = useGetAnalystsQuery();
     const analysts = analystsData?.data || [];
-    // const approvedProjects = data?.data || [];
 
-    const approvedProject = data?.data || [];
-    const approvedProjects=approvedProject.filter((p)=>p.status=== "approved")
+    const approvedAll = data?.data || [];
+    const approvedProjects = approvedAll.filter((p) => p.status === "approved");
+
     const resolveAnalystName = (value) => {
         if (!value) return "—";
 
-        // If backend returned full object
         if (typeof value === "object" && value.name) {
             return value.name;
         }
 
-        // If it's an ID, find in analysts list
         const found = analysts.find((a) => a._id === value);
         return found ? found.name : "—";
     };
 
-    // Helper: return multiple analyst names
     const resolveAnalystNames = (arr) => {
         if (!arr || arr.length === 0) return "—";
-
         return arr.map((item) => resolveAnalystName(item)).join(", ");
     };
+
+    /** === PAGINATION LOGIC === */
+    const [page, setPage] = useState(1);
+    const [limit, setLimit] = useState(10);
+
+    const totalPages = Math.ceil(approvedProjects.length / limit);
+
+    const paginatedProjects = useMemo(() => {
+        return approvedProjects.slice((page - 1) * limit, page * limit);
+    }, [page, limit, approvedProjects]);
 
     if (isLoading) return <p>Loading...</p>;
 
@@ -40,7 +47,6 @@ const Projects = () => {
                 <span className="count">{approvedProjects.length} proiecte</span>
             </div>
 
-            {/* ADD THIS WRAPPER DIV FOR RESPONSIVE TABLE */}
             <div className="responsive-table-wrapper">
                 <div className="projects-wrapper">
                     <div className="projects-table-header">
@@ -52,7 +58,7 @@ const Projects = () => {
                     </div>
 
                     <div className="projects-list">
-                        {approvedProjects.map((project, index) => (
+                        {paginatedProjects.map((project, index) => (
                             <ProjectRow
                                 key={index}
                                 project={project}
@@ -61,8 +67,31 @@ const Projects = () => {
                             />
                         ))}
                     </div>
+                    <div className="pagination" style={{ marginTop: "20px" }}>
+                        <button
+                            disabled={page === 1}
+                            onClick={() => setPage((prev) => prev - 1)}
+                        >
+                            ← Precedent
+                        </button>
+
+                        <span style={{ margin: "0 10px" }}>
+                    Pagina <strong>{page}</strong> din{" "}
+                            <strong>{totalPages}</strong>
+                </span>
+
+                        <button
+                            disabled={page === totalPages}
+                            onClick={() => setPage((prev) => prev + 1)}
+                        >
+                            Următor →
+                        </button>
+                    </div>
                 </div>
             </div>
+
+            {/* === PAGINATION CONTROLS === */}
+
         </div>
     );
 };

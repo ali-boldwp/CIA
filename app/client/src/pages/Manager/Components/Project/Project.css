@@ -17,7 +17,6 @@
 }
 
 .projects-list {
-    height: 510px;
     overflow: auto;
 }
 
@@ -68,12 +67,14 @@
     margin: 10px 0px;
     border-radius: 10px;
     align-items: center;
+    border:1px solid #E5E7EB;
 }
 
-.project-row:last-child {
-    border-bottom: none;
-}
 
+.colProgress{
+    display: flex;
+    flex-direction: column;
+}
 .col h4 {
     margin: 0;
     font-size: 15px;
@@ -164,7 +165,7 @@
 .action-btn,
 .dropdown-btn {
     padding: 6px 10px;
-    /*border: 1px solid #ddd;*/
+    border: 1px solid #ddd;
     background: white;
     border-radius: 8px;
     font-size: 13px;

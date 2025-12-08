@@ -1,6 +1,7 @@
 import { Router } from "express";
-import * as humintController from "../controllers/humint.controller";
+import * as clarificationController from "../controllers/clarification.controller";
 import { auth } from "../../../middlewares/auth.middleware";
+import * as humintController from "../controllers/humint.controller";
 // import { authorizeRoles } from "../../../middlewares/role.middleware";
 // import { Role } from "../../../constants/roles";
 
@@ -22,7 +23,7 @@ router.put("/:id", auth, humintController.updateHumint);
 router.delete(
     "/:id",
     auth,
-    // authorizeRoles(Role.ADMIN, Role.SUPER_ADMIN),
+
     humintController.deleteHumint
 );
 
@@ -44,5 +45,10 @@ router.patch("/:id/clarification", auth, humintController.clarificationHumint);
 
 // After HUMINT operation complete
 router.patch("/:id/complete", auth, humintController.completeHumint);
+
+
+
+
+
 
 export default router;

@@ -1,6 +1,6 @@
 // src/pages/TaskPage/TaskPage.js
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import {Link, useParams} from "react-router-dom";
 import { FiEdit2, FiTrash2 } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
 import {
@@ -223,7 +223,7 @@ const TaskPage = () => {
                     <div className="humint-wrapper">
                         <span className="approval-badge">necesită aprobare</span>
 
-                        <button className="project-btn">Solicita HUMINT</button>
+                        <Link to={`/humintRequest-Page/${projectId}`} className="project-btn">Solicita HUMINT</Link>
                     </div>
 
                     <div className="export-dropdown">

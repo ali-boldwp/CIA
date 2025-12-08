@@ -1,15 +1,17 @@
-// /home/ubaid/workspace/app/client/src/pages/HumintRequestDetail/Button.js
-
 import React from "react";
 import styles from "./Button.module.css";
 
-const ActionButtons = ({ onApprove, onReject, onClarify, onPrint }) => {
-    return (
-        <div className={styles.wrapper}>
-            <div className={styles.card}>
-                <h3 className={styles.title}>Acțiuni</h3>
+const RequestButton = ({ status, onApprove, onReject, onClarify }) => {
+    const normalized = (status || "").trim().toLowerCase();
 
-                <div className={styles.actionsRow}>
+    const isRequested = normalized === "requested";
+    const isClarification = normalized === "clarification";
+
+    return (
+        <>
+            {/* APPROVE + REJECT only for Requested */}
+            {isRequested && (
+                <>
                     <button
                         type="button"
                         className={`${styles.btn} ${styles.btnApprove}`}
@@ -25,14 +27,47 @@ const ActionButtons = ({ onApprove, onReject, onClarify, onPrint }) => {
                     >
                         Respinge
                     </button>
+                </>
+            )}
 
-                    <button
-                        type="button"
-                        className={`${styles.btn} ${styles.btnClarify}`}
-                        onClick={onClarify}
-                    >
-                        Solicită clarificări
-                    </button>
+            {/* Clarify button for both Requested & Clarification */}
+            {(isRequested || isClarification) && (
+                <button
+                    type="button"
+                    className={`${styles.btn} ${styles.btnClarify}`}
+                    onClick={onClarify}
+                >
+                    Solicită clarificări
+                </button>
+            )}
+        </>
+    );
+};
+
+const ActionButtons = ({ data, onApprove, onReject, onClarify, onPrint }) => {
+    const status = data?.status;
+    const normalized = (status || "").trim().toLowerCase();
+
+    const isRequested = normalized === "requested";
+    const isClarification = normalized === "clarification";
+
+    // debug ke liye (1 dafa dekh lo console me kya aa raha hai)
+    console.log("Humint status raw:", status, "normalized:", normalized);
+
+    return (
+        <div className={styles.wrapper}>
+            <div className={styles.card}>
+                <h3 className={styles.title}>Acțiuni</h3>
+
+                <div className={styles.actionsRow}>
+                    {(isRequested || isClarification) && (
+                        <RequestButton
+                            status={status}
+                            onApprove={onApprove}
+                            onReject={onReject}
+                            onClarify={onClarify}
+                        />
+                    )}
 
                     <button
                         type="button"

@@ -1,0 +1,181 @@
+/* MAIN WRAPPER */
+.tableWrapper {
+    width: 96%;
+    max-width: 1500px;
+
+    background: #ffffff;
+    border-radius: 16px;
+    padding: 18px 20px;
+    box-shadow: 0 8px 20px rgba(15, 23, 42, 0.08);
+    border: 1px solid #e2e8f0;
+    margin-top: 16px;
+}
+
+/* HEADER */
+.tableHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+}
+
+.tableTitle {
+    font-size: 16px;
+    font-weight: 700;
+    color: #0f172a;
+    font-style: italic;
+}
+
+/* BULK BUTTON */
+.bulkActionBtn {
+    padding: 8px 14px;
+    border-radius: 999px;
+    border: none;
+    cursor: pointer;
+
+    background: linear-gradient(90deg, #6d28d9 0%, #14b8a6 100%);
+    color: #ffffff;
+    font-size: 13px;
+    font-weight: 600;
+    font-style: italic;
+    box-shadow: 0 4px 12px rgba(109, 40, 217, 0.25);
+    transition: transform 0.15s ease, box-shadow 0.15s ease, opacity 0.15s ease;
+}
+
+.bulkActionBtn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 18px rgba(109, 40, 217, 0.3);
+    opacity: 0.95;
+}
+
+/* TABLE BASE */
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    table-layout: fixed;
+}
+
+.table thead {
+    background: #f8fafc;
+}
+
+.table th,
+.table td {
+    padding: 12px 18px;
+    text-align: left;
+    border-bottom: 1px solid #e5e7eb;
+    color: #0f172a;
+    height: 48px;
+    vertical-align: middle;  /* row content center */
+}
+
+/* COLUMN WIDTHS */
+.thName {
+    width: 25%;
+}
+
+.thEmail {
+    width: 35%;
+}
+
+.thRole {
+    width: 20%;
+}
+
+.thAction {
+    width: 20%;
+    text-align: right;
+}
+
+/* extra left gap for 2nd, 3rd, 4th column */
+.table th:not(:first-child),
+.table td:not(:first-child) {
+    padding-left: 32px;
+}
+
+/* ROWS */
+.tr {
+    cursor: pointer;
+    transition: background-color 0.12s ease;
+}
+
+.tr:hover {
+    background-color: #f9fafb;
+}
+
+.trSelected {
+    background-color: #eef2ff;
+}
+
+/* NAME CELL
+   IMPORTANT: td ko flex mat banao, warna border toot jata hai */
+.nameCell {
+    /* default: table-cell hi rahega */
+    /* sirf spacing + text style */
+}
+
+.nameCell span {
+    display: inline-block;
+    vertical-align: middle;
+}
+
+/* CHECKBOX (ONLY GROUP MODE) */
+.checkbox {
+    margin-right: 8px;
+    cursor: pointer;
+    vertical-align: middle;
+}
+
+/* EMAIL + ROLE CELLS */
+.emailCell {
+    word-break: break-all;
+}
+
+.roleCell {
+    text-transform: lowercase;
+}
+
+/* ACTION BUTTON */
+.actionCell {
+    text-align: right;
+}
+
+.actionBtn {
+    padding: 6px 12px;
+    border-radius: 999px;
+    border: none;
+    cursor: pointer;
+
+    background: linear-gradient(90deg, #4f46e5 0%, #14b8a6 100%);
+    color: #ffffff;
+    font-size: 12px;
+    font-weight: 600;
+    font-style: italic;
+    box-shadow: 0 3px 10px rgba(79, 70, 229, 0.25);
+    transition: transform 0.15s ease, box-shadow 0.15s ease, opacity 0.1s ease;
+}
+
+.actionBtn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 5px 16px rgba(79, 70, 229, 0.35);
+    opacity: 0.96;
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+    .tableWrapper {
+        padding: 14px 12px;
+    }
+
+    .table th,
+    .table td {
+        padding: 8px 10px;
+        font-size: 12px;
+    }
+
+    .actionBtn {
+        padding: 5px 10px;
+        font-size: 11px;
+    }
+}

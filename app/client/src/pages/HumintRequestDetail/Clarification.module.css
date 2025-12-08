@@ -1,0 +1,217 @@
+/* OUTER WRAPPER */
+.wrapper {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-top: 8px;
+    margin-bottom: 16px;
+}
+
+/* MAIN WHITE CARD */
+.card {
+    width: 96%;
+    max-width: 1500px;
+
+    background: #ffffff;
+    border-radius: 16px;
+    padding: 18px 22px 20px;
+    box-shadow: 0 8px 20px rgba(15, 23, 42, 0.08);
+
+    display: flex;
+    flex-direction: column;
+}
+
+/* HEADERS */
+.title {
+    font-size: 13px;
+    font-weight: 600;
+    color: #64748b;
+    margin-bottom: 4px;
+}
+
+.subtitle {
+    font-size: 11px;
+    color: #9ca3af;
+    margin-bottom: 12px;
+}
+
+/* 🔹 CHAT THREAD (for history card) */
+.chatThread {
+    width: 100%;
+    flex: 1;
+    min-height: 120px;
+    max-height: 350px;
+
+    padding: 12px 10px;
+    margin-bottom: 4px;
+
+    border-radius: 12px;
+    border: 1px solid #e2e8f0;
+    background: #f9fafb;
+
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+
+    overflow-y: auto;
+}
+
+.emptyState {
+    font-size: 12px;
+    color: #9ca3af;
+    font-style: italic;
+}
+
+/* MESSAGE ALIGNMENT */
+.chatRow {
+    display: flex;
+    width: 100%;
+}
+
+/* Current user → RIGHT side */
+.chatRowOwn {
+    justify-content: flex-end;
+}
+
+/* Other user → LEFT side */
+.chatRowOther {
+    justify-content: flex-start;
+}
+
+/* MESSAGE BUBBLE DESIGN */
+.bubble {
+    max-width: 70%;
+    border-radius: 18px;
+    padding: 10px 14px;
+    font-size: 13px;
+    line-height: 1.35;
+    box-shadow: 0 2px 6px rgba(15, 23, 42, 0.15);
+}
+
+/* My messages (RIGHT — Purple) */
+.chatRowOwn .bubble {
+    background: linear-gradient(90deg, #4f46e5 0%, #6366f1 100%);
+    color: #ffffff;
+}
+
+/* Other messages (LEFT — Light gray) */
+.chatRowOther .bubble {
+    background: #e5e7eb;
+    color: #1f2937;
+}
+
+/* BUBBLE HEADER (NAME + TIME) */
+.bubbleHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 3px;
+}
+
+.bubbleName {
+    font-weight: 600;
+    font-size: 11px;
+}
+
+.bubbleTime {
+    font-size: 10px;
+    opacity: 0.8;
+}
+
+.bubbleMessage {
+    white-space: pre-wrap;
+    margin-top: 2px;
+}
+
+/* 🔹 SIMPLE TEXTAREA (Clarify form) */
+.textarea {
+    width: 100%;
+    min-height: 110px;
+    padding: 12px 14px;
+    border-radius: 12px;
+    border: 1px solid #e2e8f0;
+    background: #f8fafc;
+    font-size: 13px;
+    resize: vertical;
+    outline: none;
+
+    transition: all 0.2s ease;
+}
+
+.textarea:focus {
+    background: #ffffff;
+    border-color: #6366f1;
+    box-shadow: 0 0 0 1px rgba(99, 102, 241, 0.25);
+}
+
+/* BOTTOM BUTTON ROW */
+.actionsRow {
+    margin-top: 12px;
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+/* BUTTON BASE STYLE */
+.btn {
+    border: none;
+    border-radius: 12px;
+    padding: 9px 22px;
+
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    outline: none;
+
+    box-shadow: 0 6px 16px rgba(15, 23, 42, 0.15);
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* HOVER */
+.btn:hover:not(:disabled) {
+    transform: translateY(-1px);
+    box-shadow: 0 8px 22px rgba(15, 23, 42, 0.22);
+}
+
+/* ❌ CANCEL BUTTON — RED GRADIENT */
+.btnSecondary {
+    background: linear-gradient(90deg, #f87171 0%, #dc2626 100%);
+    color: #ffffff;
+}
+
+/* SEND / CLARIFY BUTTON — Purple gradient */
+.btnPrimary {
+    background: linear-gradient(90deg, #8b5cf6 0%, #6366f1 100%);
+    color: #ffffff;
+}
+
+/* MOBILE RESPONSIVE */
+@media (max-width: 640px) {
+    .card {
+        padding: 14px;
+    }
+
+    .chatThread {
+        max-height: 280px;
+    }
+
+    .actionsRow {
+        flex-direction: column-reverse;
+        align-items: stretch;
+    }
+
+    .btn {
+        width: 100%;
+        text-align: center;
+    }
+
+    .bubble {
+        max-width: 100%;
+    }
+}

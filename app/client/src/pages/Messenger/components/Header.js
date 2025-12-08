@@ -2,6 +2,7 @@ import React, {useEffect, useState} from "react";
 import "../MessengerPage.css";
 import socket from "../../../socket";
 import { useGetMessagesQuery , useSendMessageMutation} from "../../../services/messageApi";
+import { useGetAllUsersQuery } from "../../../services/userApi";
 import {
     FiDownload,
     FiSettings,
@@ -21,9 +22,11 @@ import {
     FiShield,
     FiLogOut,
 } from "react-icons/fi";
-import {useGetMyChatsQuery} from "../../../services/chatApi";
+import {useGetMyChatsQuery,useRemoveMemberMutation,useLeaveGroupMutation,useDeleteGroupMutation} from "../../../services/chatApi";
 import {FaThumbtack} from "react-icons/fa6";
 import { useNavigate } from "react-router-dom";
+import styles from "../../Manager/Components/Team/Team.module.css";
+import {toast} from "react-toastify";
 
 function Header() {
     return (
@@ -47,6 +50,13 @@ function Header() {
 const  MessengerPage =({ chatID }) => {
 
     const navigate = useNavigate();
+    const {data:allUsers}=useGetAllUsersQuery();
+    const [removeMember] = useRemoveMemberMutation();
+    const [leaveGroup] = useLeaveGroupMutation();
+    const [deleteGroup] = useDeleteGroupMutation();
+
+
+
     const [ chat, setChat ] = useState( chatID );
 
     const [ messages, setMessages ] = useState([]);
@@ -123,6 +133,8 @@ const  MessengerPage =({ chatID }) => {
 
     }
 
+    const currentUser = JSON.parse(localStorage.getItem("user"));
+    const currentUserId = currentUser?._id;
 
     const handleSend = async () => {
         if (!text.trim()) return;
@@ -140,7 +152,62 @@ const  MessengerPage =({ chatID }) => {
             console.error("Send Error:", err);
         }
     };
+    const getParticipants = () => {
+        if (!allUsers?.data || !chats?.data) return [];
 
+        const currentChat = chats.data.find(c => c._id === chat);
+        if (!currentChat || !currentChat.isGroup) return [];
+
+        return currentChat.participants.map(p => {
+            const user = allUsers.data.find(u => u._id === p.user);
+            return user ? { id: user._id, name: user.name } : null;
+        }).filter(Boolean);
+    };
+    const handleRemoveMember = async (userId) => {
+        try {
+            await removeMember({
+                chatId: chat,
+                userId: userId
+            }).unwrap();
+
+            toast("Membru șters cu succes!");
+
+        } catch (err) {
+            console.error("Remove member error:", err);
+            toast.error("Ștergerea membrului a eșuat.");
+        }
+    };
+    const handleLeaveGroup = async () => {
+        try {
+            await leaveGroup(chat).unwrap();
+
+            toast("Ai părăsit grupul."); // Romanian: You left the group
+
+            navigate("/messenger"); // redirect to inbox
+
+        } catch (err) {
+            console.error("Leave group error:", err);
+            toast.error("Nu ai putut părăsi grupul.");
+        }
+    };
+
+
+    const handleDeleteGroup = async () => {
+        const confirmDelete = window.confirm("Sigur dorești să ștergi acest grup? Această acțiune este permanentă.");
+
+
+        try {
+            await deleteGroup(chat).unwrap();
+
+            toast("Grup șters cu succes!");
+
+            navigate("/messenger"); // redirect user
+
+        } catch (err) {
+            console.error("Delete group error:", err);
+            toast.error("Ștergerea grupului a eșuat.");
+        }
+    };
 
 
     return (
@@ -171,10 +238,6 @@ const  MessengerPage =({ chatID }) => {
                             <button className="pill">
                                 <FiHash className="pill-icon" />
                                 Serie butoane
-                            </button>
-                            <button className="pill">
-                                <FiPlus className="pill-icon" />
-                                Creează grup
                             </button>
                             <button className="pill">
                                 <FiUserPlus className="pill-icon" />
@@ -314,21 +377,58 @@ const  MessengerPage =({ chatID }) => {
                                     </div>
                                 ))}
                             </div>
-                            {
-                                oldmessage.map(message => (
-                                <div className="message message-out">{message.text}</div>
-                               ))
+                            {oldmessage.map((msg, i) => {
 
-                            }
+                                const isMe = msg.sender._id === currentUserId;
 
-                            {
-                                messages.map( message => (
+                                return (
+                                    <div
+                                        key={i}
+                                        className={`chat-bubble ${isMe ? "me" : "other"}`}
+                                    >
+                                        {/* message text */}
+                                        <div className="bubble-text">{msg.text}</div>
 
-                                    <div className="message message-out">
-                                        { message.text }
+                                        {/* footer: username + time */}
+                                        <div className="bubble-footer">
+                <span className="bubble-name">
+                    {isMe ? "Me" : msg.sender.name}
+                </span>
+
+                                            <span className="bubble-time">
+                    {new Date(msg.createdAt).toLocaleTimeString([], {
+                        hour: "2-digit",
+                        minute: "2-digit"
+                    })}
+                </span>
+                                        </div>
                                     </div>
-                                ))
-                            }
+                                );
+                            })}
+
+
+                            {messages.map((msg, i) => {
+                                const isMe = msg.sender === currentUserId;
+
+                                return (
+                                    <div key={i} className={`chat-bubble ${isMe ? "me" : "other"}`}>
+                                        <div className="bubble-text">{msg.text}</div>
+
+                                        <div className="bubble-footer">
+                <span className="bubble-name">
+                    {isMe ? "Me" : msg.senderName}
+                </span>
+                                            <span className="bubble-time">
+                    {new Date(msg.createdAt).toLocaleTimeString([], {
+                        hour: "2-digit",
+                        minute: "2-digit"
+                    })}
+                </span>
+                                        </div>
+                                    </div>
+                                );
+                            })}
+
                         </div>
 
                         {/* composer */}
@@ -354,26 +454,38 @@ const  MessengerPage =({ chatID }) => {
                     {/* RIGHT: details */}
                     <aside className="sidebar-right card">
                         <div className="sidebar-right-section">
+                            <div className="rightCreateGroup">
+                            <div>
                             <div className="section-title">Detalii conversație</div>
-                            <div className="section-subtitle">Membri (5)</div>
-
+                            <div className="section-subtitle">Membri ({chats?.data?.find(c => c._id === chat)?.participants?.length || 0})</div>
+                            </div>
+                            <button className="pill">
+                                <FiPlus className="pill-icon" />
+                                Creează grup
+                            </button>
+                            </div>
                             <div className="member-list">
-                                {[
-                                    "Manager",
-                                    "A. Mateiovcu",
-                                    "A. Pop",
-                                    "C. Vasilescu",
-                                    "M. Kotel",
-                                ].map((m, i) => (
-                                    <div className="member-row" key={m}>
-                                        <div className={"member-avatar member-avatar-" + i} />
-                                        <div className="member-name">{m}</div>
-                                        <div className="member-controls">
-                                            <button className="circle-btn">+</button>
-                                            <button className="circle-btn">−</button>
+                                <div className="member-list">
+                                    {getParticipants().map((member, i) => (
+                                        <div className="member-row" key={i}>
+
+                                            <div className={"member-avatar member-avatar-" + (i % 10)} />
+
+                                            <div className="member-name">{member.name}</div>
+
+                                            <div className="member-controls">
+                                                <button
+                                                    className={styles.deleteBtn}
+                                                    onClick={() => handleRemoveMember(member.id)}
+                                                >
+                                                    🗑 Șterge
+                                                </button>
+                                            </div>
                                         </div>
-                                    </div>
-                                ))}
+                                    ))}
+                                </div>
+
+
                             </div>
                         </div>
 
@@ -417,14 +529,22 @@ const  MessengerPage =({ chatID }) => {
                         </div>
 
                         <div className="sidebar-right-footer">
-                            <button className="btn-outline full-width">
+                            <button
+                                className="btn-outline full-width"
+                                onClick={handleLeaveGroup}
+                            >
                                 <FiLogOut className="btn-icon" />
                                 Ieșire grup
                             </button>
-                            <button className="btn-outline full-width">
+
+                            <button
+                                className="btn-outline full-width"
+                                onClick={handleDeleteGroup}
+                            >
                                 <FiTrash2 className="btn-icon" />
                                 Șterge grup (Mgr)
                             </button>
+
                         </div>
                     </aside>
                 </div>
