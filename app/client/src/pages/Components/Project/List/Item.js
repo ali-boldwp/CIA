@@ -109,14 +109,21 @@ const Item = ({ data }) => {
             </div>
 
             {/* PROGRESS ------------------------ */}
-            <div className="col progress">
-                <div className="progress-bar1">
-                    <div
-                        className="progress-fill1"
-                        style={{ width: `${data.progress}%` }}
-                    ></div>
+            <div className="colProgress progress" style={{ gap: "10px" }}>
+
+                <div style={{ display: "flex", flexDirection: "row", flexGrow: 1, width: "90%", gap: "15px" }}>
+                    <div className="progress-bar1" style={{ display: "flex", flexGrow: 1 }}>
+                        <div
+                            className="progress-fill1"
+                            style={{width: `${data.progress}%`}}
+                        ></div>
+                    </div>
+                    <span style={{display: "block"}}>100%</span>
                 </div>
-                <span className="progress-text">{data?.progressText}</span>
+
+                <div>8/10 taskuri</div>
+                <div>
+                </div>
             </div>
 
             {/* STATUS -------------------------- */}
@@ -127,7 +134,7 @@ const Item = ({ data }) => {
             </div>
 
             {/* ACTIONS + DROPDOWN -------------- */}
-            <div className="col actions" ref={dropdownRef}>
+            <div className="col actions" ref={dropdownRef} style={{ justifyContent: "end" }}>
                 <Link to={`/projectDetail/${data._id}`} className="action-btn">
                     Deschide
                 </Link>

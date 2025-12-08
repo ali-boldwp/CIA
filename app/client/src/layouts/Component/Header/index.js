@@ -27,7 +27,7 @@ const Header = ({ children }) => {
     return (
         <header className="header">
             <div className="firstSec">
-                <h3 className="logo">{dashboardTitle}</h3>
+                <Link to={ "/" } ><h3 className="logo">{dashboardTitle}</h3> </Link>
                 <div
                     className="search-box"
                     style={{

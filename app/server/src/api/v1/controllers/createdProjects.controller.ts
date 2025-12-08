@@ -112,15 +112,72 @@ export const createProject = async (req: Request, res: Response, next: NextFunct
     }
 };
 
-export const getAllProjects = async (_req: Request, res: Response, next: NextFunction) => {
+export const getAllProjects = async (req: Request, res: Response, next: NextFunction) => {
+    const user = req.user;
+
+    // pagination
+    let page  = parseInt(req.query.page as string, 10) || 1;
+    let limit = parseInt(req.query.limit as string, 10) || 10;
+    if (page < 1) page = 1;
+    if (limit < 1) limit = 1;
+
+    const search = req.query.search ? String(req.query.search).trim() : "";
+
+    // Build role filter
+    let roleFilter: any;
+    if (user.role === "sales") {
+        roleFilter = { fromRequestId: user.id };
+    } else if (user.role === "analyst") {
+        roleFilter = {
+            $or: [
+                { responsibleAnalyst: user.id },
+                { assignedAnalysts: user.id }
+            ]
+        };
+    } else if (user.role === "admin" || user.role === "manager") {
+        roleFilter = {};      // no restriction
+    } else {
+        return res.status(403).json({ status: "error", message: "Forbidden" });
+    }
+
+    // Build search filter (if search provided)
+    let finalFilter: any = roleFilter;
+    if (search) {
+        const searchFilter = {
+            $or: [
+                { projectName:         { $regex: search, $options: "i" } },
+                { projectSubject:      { $regex: search, $options: "i" } },
+                { clientName:          { $regex: search, $options: "i" } },
+                { clientContactPerson: { $regex: search, $options: "i" } },
+                { referenceRequest:    { $regex: search, $options: "i" } },
+                { projectDescription:  { $regex: search, $options: "i" } }
+            ]
+        };
+
+        finalFilter = { $and: [ roleFilter, searchFilter ] };
+    }
+
     try {
-        const projects = await createdProjectService.getAllProjects();
-        const approvedProjects = projects.filter(p => p.status === "approved");
-        res.json(ok(approvedProjects));
+        const skip = (page - 1) * limit;
+        const projects = await createdProjectService.getAllProjects(finalFilter, { skip, limit });
+        const total = await createdProjectService.countProjects(finalFilter);
+
+        res.status(200).json({
+            status: "success",
+            data: projects,
+            pagination: {
+                page,
+                limit,
+                total,
+                totalPages: Math.ceil(total / limit),
+            }
+        });
     } catch (err) {
         next(err);
     }
 };
+
+
 
 export const getProjectById = async (req: Request, res: Response, next: NextFunction) => {
     try {

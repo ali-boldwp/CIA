@@ -9,7 +9,7 @@ const Header = () => {
 
     return (
         <>
-            {isSale ? "" : isAnalyst? "":     <Link to="/project" className="new-project-btn">+ Creeeaza proiect nou</Link>}
+            {isSale ? "" : isAnalyst? "":     <Link to="/project/new" className="new-project-btn">+ Creeeaza proiect nou</Link>}
             <div className="right-buttons">
                 <button className="icon-btn">
                     <span className="icon">🔔</span>

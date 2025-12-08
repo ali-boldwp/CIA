@@ -1,10 +1,14 @@
-import Stats from "../Components/Stats"
-import { useGetProjectRequestsQuery, useGetProjectsQuery } from "../../../services/projectApi";
+import Stats from "../../Components/Stats"
+import { useGetProjectRequestsQuery, useGetProjectsQuery } from "../../../../services/projectApi";
 import {useEffect, useState} from "react";
 
-import ProjectList from "../../Components/Project/List";
+import { useGetStatsQuery } from "../../../../services/V1/statesApi";
 
-const Dashboard = () => {
+import ProjectList from "../../../Components/Project/List";
+import Team from "../../Components/Team/Team"
+import CalenderList from "../../Components/CalenderList"
+
+const Index = () => {
 
     const [ stats, setStats ] = useState({
         projects: 5,
@@ -20,10 +24,11 @@ const Dashboard = () => {
         },
         messages: 2
     });
+
     const [ projects, setProjects ] = useState([]);
 
-    const { data: statsData, isLoading: statsLoading } = useGetProjectRequestsQuery();
-    const { data: projectsData, isLoading: projectsLoading } = useGetProjectsQuery();
+    const { data: statsData, isLoading: statsLoading } = useGetStatsQuery();
+    const { data: projectsData, isLoading: projectsLoading } = useGetProjectsQuery({ limit: 5 });
 
     useEffect( () => {
 
@@ -59,10 +64,12 @@ const Dashboard = () => {
         <>
             <Stats stats={ stats } />
             <ProjectList data={ projects } />
+            <Team />
+            <CalenderList />
         </>
 
     )
 
 }
 
-export default Dashboard
+export default Index

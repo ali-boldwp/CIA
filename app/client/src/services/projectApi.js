@@ -9,8 +9,22 @@ export const projectApi = createApi({
     endpoints: (builder) => ({
 
         getProjects: builder.query({
-            query: () => "/project",
-            providesTags: [{ type: 'Projects', id: 'LIST' }]
+            // arg is an object — e.g. { page: 1, limit: 10, search: 'foo' }
+            query: (arg = {}) => {
+                const { page, limit, search, ...rest } = arg;
+                const params = {};
+
+                if (page != null)  params.page   = page;
+                if (limit != null) params.limit  = limit;
+                if (search)       params.search = search;
+
+                // any additional filters can go into rest if needed
+                return {
+                    url: '/project',
+                    params,
+                };
+            },
+            providesTags: [{ type: 'Projects', id: 'LIST' }],
         }),
 
         createProject: builder.mutation({

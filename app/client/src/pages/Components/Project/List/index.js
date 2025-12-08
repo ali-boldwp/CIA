@@ -1,4 +1,5 @@
 import Item from "./Item";
+import {Link} from "react-router-dom";
 
 const ProjectList = ({ data }) => {
 
@@ -7,9 +8,12 @@ const ProjectList = ({ data }) => {
     return (
         <div className="main">
 
-            <div className="projects-header">
-                <h3>Proiecte active în derulare</h3>
-                <span className="count">{ data.length } proiecte</span>
+            <div className="projects-header" style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between" }}>
+                <div>
+                    <h3>Proiecte active în derulare</h3>
+                    <span className="count">{ data.length } proiecte</span>
+                </div>
+                <Link to={ "/project/all" } > View All Projects </Link>
             </div>
 
             <div className="responsive-table-wrapper">
@@ -19,7 +23,7 @@ const ProjectList = ({ data }) => {
                         <span>Deadline</span>
                         <span>Progres</span>
                         <span>Status HUMINT</span>
-                        <span>Acțiuni</span>
+                        <span style={{ textAlign: "right" }}>Acțiuni</span>
                     </div>
                     <div className="projects-list">
                         { data.map((project, index) => (

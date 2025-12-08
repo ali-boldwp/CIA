@@ -61,7 +61,7 @@ export const submitHumint = async (req: Request, res: Response, next: NextFuncti
 };
 
 const requireManagerOrAdmin = (req: Request, res: Response) => {
-    if (req.user.role !== "manager" && req.user.role !== "admin" && req.user.role !== "aanalyst") {
+    if (req.user.role !== "manager" && req.user.role !== "admin" && req.user.role !== "analyst") {
         res.status(403).json({ message: "Only managers and admins can perform this action" });
         return false;
     }

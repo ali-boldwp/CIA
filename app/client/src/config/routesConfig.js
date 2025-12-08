@@ -3,7 +3,6 @@ import { useSelector } from "react-redux";
 import Cookies from "js-cookie";
 import { useNavigate } from 'react-router-dom';
 import Utils from '@libs/utils';
-import DashboardConfig from '../pages/admin/dashboard/DashboardConfig';
 import LoginConfig from "../pages/auth/Login/LoginConfig";
 import ProjectRequestConfig from '../pages/project/projectRequest/ProjectRequestConfig';
 import ManagerConfig from '../pages/Manager/Dashboard/ManagerConfig';
@@ -32,12 +31,11 @@ import SearchKeywordConfig from "../pages/Manager/SearchKeyword/SearchKeywordCon
 const routeConfigs = [
     LoginConfig,
     AdminConfig,
-    DashboardConfig,
     AnalystDashboardConfig,
     SalesDashboardConfig,
-    NewProjectConfig,
+    // NewProjectConfig,
     ManagerConfig,
-    ProjectRequestConfig,
+    // ProjectRequestConfig,
     EmployeeListConfig,
     AnalistProfileCon,
     AnalstListConfig,

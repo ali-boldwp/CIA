@@ -30,7 +30,7 @@ import {toast} from "react-toastify";
 
 function Header() {
     return (
-        <div className="header">
+        <div className="Mheader">
             <h2 className="header-title">💬 Messenger — Toți / Grupuri / DM</h2>
 
             {/*<div className="header-actions">*/}

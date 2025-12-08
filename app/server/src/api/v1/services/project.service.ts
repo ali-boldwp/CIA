@@ -24,3 +24,9 @@ export const updateProject = async (id: string, data: any) => {
 export const deleteProject = async (id: string) => {
     return projectRequest.findByIdAndDelete(id);
 };
+
+export async function countProjects(filter = {}) {
+    // count how many documents match `filter`
+    const total = await projectRequest.countDocuments(filter).exec();
+    return total;
+}

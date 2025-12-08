@@ -68,37 +68,61 @@ export const requestProject = async (req: Request, res: Response, next: NextFunc
     }
 };
 
-export const getAllProjects = async ( req, res, next) => {
+export const getAllProjects = async (req, res, next) => {
 
-    const user = (req as any).user;
+    const user = req.user;  // assume auth middleware has set this
+
+    // parse pagination params from query
+    // default: page 1, limit 10
+    let page  = parseInt(req.query.page, 10)  || 1;
+    let limit = parseInt(req.query.limit, 10) || 10;
+    if (page < 1) page = 1;
+    if (limit < 1) limit = 1;
+
+    // determine filter based on role
+    let filter = {};
+    if (user.role === 'sales') {
+        filter = { fromRequestId: user.id };
+    } else if (user.role === 'analyst') {
+        filter = {
+            $or: [
+                { responsibleAnalyst: user.id },
+                { assignedAnalysts: user.id }
+            ]
+        };
+    } else if (user.role === 'admin' || user.role === 'manager') {
+        filter = {};
+    } else {
+        return res.status(403).json({ status: 'error', message: 'Forbidden' });
+    }
 
     try {
+        const skip = (page - 1) * limit;
 
-        if ( user.role == 'sales' ) {
+        const projects = await projectService
+            .getAllProjects(filter)
+            .skip(skip)
+            .limit(limit);
 
-            const projects = await projectService.getAllProjects({ fromRequestId: user.id });
-            res.json(ok(projects));
+        // optionally, also fetch total count to help frontend with pagination UI
+        const total = await projectService.countProjects(filter);
 
-        } else if ( user.role == 'analyst' ) {
-
-            const projects = await projectService.getAllProjects({ responsibleAnalyst: user.id });
-            res.json(ok(projects));
-
-        } else if ( user.role == 'admin' || user.role == 'manager' ) {
-
-            const projects = await projectService.getAllProjects({});
-            res.json(ok(projects));
-
-        } else {
-
-            res.json(ok([]));
-
-        }
-
+        res.status(200).json({
+            status: 'success',
+            data: projects,
+            pagination: {
+                page,
+                limit,
+                total,
+                totalPages: Math.ceil(total / limit)
+            }
+        });
     } catch (err) {
         next(err);
     }
 };
+
+
 
 export const getProjectById = async (req, res, next) => {
     try {
