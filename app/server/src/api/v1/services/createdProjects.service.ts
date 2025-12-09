@@ -10,6 +10,7 @@ export const getAllProjects = async (query = {}, options = {}) => {
     let q = projectRequest.find(query)
         .populate("responsibleAnalyst", "name email role")
         .populate("assignedAnalysts", "name email role")
+        .populate("humintId")
         .sort({ createdAt: -1 });
 
     if (skip) {

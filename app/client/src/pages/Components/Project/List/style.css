@@ -74,6 +74,12 @@
     flex-direction: column;
 }
 
+/* ✅ Progres column text smaller */
+.colProgress,
+.colProgress span {
+    font-size: 12px;
+}
+
 .col h4 {
     margin: 0;
     font-size: 15px;
@@ -136,10 +142,11 @@
 }
 
 /* Status */
+/* ✅ Status HUMINT badge smaller */
 .status-badge-approved {
-    padding: 6px 10px;
+    padding: 4px 8px;
     border-radius: 10px;
-    font-size: 13px;
+    font-size: 12px;
     font-weight: 600;
 }
 
@@ -161,8 +168,7 @@
 }
 
 /* Actions */
-.action-btn,
-.dropdown-btn {
+.action-btn{
     padding: 6px 10px;
     border: 1px solid #ddd;
     background: white;
@@ -172,6 +178,23 @@
     margin-right: 5px;
     text-decoration: none;
     display: inline-block;
+}
+
+.dropdown-btn {
+    padding: 12px 10px;
+    border: 1px solid #ddd;
+    background: white;
+    border-radius: 8px;
+    font-size: 13px;
+    cursor: pointer;
+    margin-right: 5px;
+    text-decoration: none;
+    display: inline-block;
+    font-weight: 600;
+
+    white-space: nowrap;      /* line break allowed nahi */
+    display: inline-flex;     /* text ko center rakhta hai */
+    align-items: center;      /* width content ke hisaab se */
 }
 
 .projects-search {
