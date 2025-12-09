@@ -1,6 +1,8 @@
 import Item from "./Item";
 import {Link} from "react-router-dom";
 
+import "./style.css";
+
 const ProjectList = ({ data }) => {
 
     console.log( data )

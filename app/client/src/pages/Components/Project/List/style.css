@@ -1,0 +1,553 @@
+/* Wrapper for responsive table */
+.responsive-table-wrapper {
+    max-width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+.projects-wrapper {
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0px 3px 12px rgba(0, 0, 0, 0.06);
+    margin-bottom: 60px;
+    font-style: italic;
+    min-width: 1000px; /* Minimum width for desktop */
+}
+
+.projects-list {
+    overflow: auto;
+}
+
+/* Header */
+.projects-header {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+.projects-header h3 {
+    margin: 0;
+    font-size: 20px;
+}
+
+.project-infoDash {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start !important;
+    gap: 3px;
+}
+
+.project-info h4 {
+    color: #0f172a;
+}
+
+.count {
+    opacity: 0.7;
+}
+
+/* Table Headings */
+.projects-table-header {
+    display: grid;
+    grid-template-columns: 25% 15% 17% 17% 25%;
+    padding: 10px 5px;
+    font-size: 14px;
+    font-weight: bold;
+    opacity: 0.7;
+}
+
+/* Rows */
+.project-row {
+    display: grid;
+    grid-template-columns: 25% 15% 17% 17% 25%;
+    padding: 18px 5px;
+    margin: 10px 0px;
+    border-radius: 10px;
+    align-items: center;
+    border:1px solid #E5E7EB;
+}
+
+
+.colProgress{
+    display: flex;
+    flex-direction: column;
+}
+.col h4 {
+    margin: 0;
+    font-size: 15px;
+    font-weight: 700;
+}
+
+.col p {
+    margin: 4px 0;
+    font-size: 13px;
+}
+
+.team-badge-approved:first-child {
+    padding: 8px 6px;
+    background: #14b8a6;
+    border-radius: 50%;
+    color: white;
+    font-size: 10px;
+    margin-right: 5px;
+}
+
+.team-badge-approved {
+    padding: 8px 6px;
+    background: #6d28d9;
+    border-radius: 50%;
+    color: white;
+    font-size: 10px;
+    margin-right: 5px;
+}
+
+/* Deadline */
+.deadline-date {
+    font-size: 13px;
+    padding: 6px 10px;
+    background: #dff2ff;
+    border-radius: 8px;
+}
+
+.expired {
+    background: #ffd9d9;
+    color: #ff4a4a;
+}
+
+/* Progress */
+.progress-bar1 {
+    height: 13px;
+    width: 85%;
+    background: #e7e7e7;
+    border-radius: 10px;
+    margin-bottom: 5px;
+}
+
+.progress-fill1 {
+    height: 13px;
+    background: linear-gradient(90deg, #6a5af9, #1ec6cd);
+    border-radius: 10px;
+}
+
+.progress-text {
+    font-size: 12px;
+}
+
+/* Status */
+.status-badge-approved {
+    padding: 6px 10px;
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.green {
+    background: #d8ffe4;
+    color: #009e3c;
+}
+.orange {
+    background: #ffe8d5;
+    color: #ff7a00;
+}
+.gray {
+    background: #eeeeee;
+    color: #666;
+}
+.blue {
+    background: #d6e9ff;
+    color: #005cc5;
+}
+
+/* Actions */
+.action-btn,
+.dropdown-btn {
+    padding: 6px 10px;
+    border: 1px solid #ddd;
+    background: white;
+    border-radius: 8px;
+    font-size: 13px;
+    cursor: pointer;
+    margin-right: 5px;
+    text-decoration: none;
+    display: inline-block;
+}
+.projects-search {
+    margin: 15px 0;
+}
+
+.projects-search input {
+    width: 100%;
+    padding: 10px 14px;
+    border-radius: 10px;
+    border: 1px solid #dbe2f3;
+    font-size: 0.95rem;
+}
+
+.pagination {
+    display: flex;
+    justify-content: end;
+    gap: 12px;
+    align-items: center;
+    padding: 20px 0;
+}
+
+.pagination button {
+    padding: 6px 12px;
+    border: 1px solid #d1d8ee;
+    background: #fff;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.pagination button:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+.pagination select {
+    padding: 6px 10px;
+    border-radius: 6px;
+    border: 1px solid #d1d8ee;
+}
+.empty-state {
+    padding: 20px;
+    text-align: center;
+    color: #9aa3c2;
+}
+
+a {
+    color: black;
+}
+
+.dropdown-btn {
+    font-weight: 600;
+}
+
+.actions {
+    position: relative;
+}
+
+.humint-dropdown {
+    position: absolute;
+    background: white;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    z-index: 10;
+    right: 0;
+    margin-top: 5px;
+    border-radius: 10px;
+    box-shadow: 1px 1px 15px lightgray;
+    min-width: 200px;
+}
+
+/* Deadline Badge Styles */
+.deadline-badge {
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 600;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    min-height: 50px;
+    white-space: normal;
+    line-height: 1.2;
+}
+
+.deadline-badge .deadline-date {
+    font-weight: 700;
+    display: block;
+    padding: 0;
+    background: transparent;
+    border-radius: 0;
+    font-size: 13px;
+}
+
+.deadline-badge .deadline-status {
+    font-weight: 500;
+    display: block;
+    font-size: 12px;
+    opacity: 0.9;
+    margin-top: 2px;
+}
+
+/* Blue (future deadline) */
+.deadline-badge.upcoming {
+    background: #bfe2ff;
+    color: #0c4a6e;
+    border: 1px solid #93c5fd;
+}
+
+/* Red (expired deadline) */
+.deadline-badge.overdue {
+    background: #ffe6e6;
+    color: #d93025;
+    border: 1px solid #ffb3b3;
+}
+
+/* No deadline */
+.deadline-badge.none {
+    background: #f0f0f0;
+    color: #777;
+}
+
+/* Desktop - Keep inline layout */
+@media (min-width: 1025px) {
+    .deadline-badge {
+        flex-direction: row;
+        gap: 4px;
+        min-height: auto;
+        white-space: nowrap;
+    }
+
+    .deadline-badge .deadline-status {
+        margin-top: 0;
+        margin-left: 4px;
+    }
+
+    .deadline-badge .deadline-date {
+        font-size: 14px;
+    }
+}
+
+/* MEDIA QUERIES FOR RESPONSIVE DESIGN */
+
+/* Tablet devices */
+@media (max-width: 1024px) {
+    .responsive-table-wrapper {
+        margin: 0 -15px;
+        padding: 0 15px;
+    }
+
+    .projects-wrapper {
+        padding: 15px;
+        min-width: 900px;
+    }
+
+    .project-row,
+    .projects-table-header {
+        grid-template-columns: 30% 15% 17% 18% 20%;
+        min-width: 900px;
+    }
+
+    .action-btn,
+    .dropdown-btn {
+        padding: 5px 8px;
+        font-size: 12px;
+        margin-right: 3px;
+    }
+
+    /* Stacked layout for tablets */
+    .deadline-badge {
+        min-height: 45px;
+        padding: 8px 10px;
+    }
+
+    .deadline-badge .deadline-date {
+        font-size: 12px;
+    }
+
+    .deadline-badge .deadline-status {
+        font-size: 11px;
+    }
+}
+
+/* Mobile devices */
+@media (max-width: 768px) {
+    .projects-wrapper {
+        padding: 12px;
+        border-radius: 8px;
+        min-width: 700px;
+    }
+
+    .projects-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+
+    .projects-header h3 {
+        font-size: 18px;
+    }
+
+    .project-row,
+    .projects-table-header {
+        grid-template-columns: 35% 15% 17% 18% 15%;
+        min-width: 700px;
+        padding: 12px 5px;
+    }
+
+    .col h4 {
+        font-size: 14px;
+    }
+
+    .col p {
+        font-size: 12px;
+    }
+
+    .deadline-badge {
+        padding: 6px 8px;
+        min-height: 40px;
+        font-size: 12px;
+    }
+
+    .deadline-badge .deadline-date {
+        font-size: 11px;
+    }
+
+    .deadline-badge .deadline-status {
+        font-size: 10px;
+    }
+
+    .status-badge-approved {
+        padding: 4px 8px;
+        font-size: 11px;
+    }
+
+    .actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 4px;
+    }
+
+    .action-btn,
+    .dropdown-btn {
+        padding: 4px 6px;
+        font-size: 11px;
+        margin-right: 2px;
+        flex: 1;
+        min-width: 70px;
+    }
+
+    .humint-dropdown {
+        position: fixed;
+        left: 50%;
+        transform: translateX(-50%);
+        right: auto;
+        top: 50%;
+        width: 90%;
+        max-width: 300px;
+        z-index: 1000;
+    }
+}
+
+/* Small mobile devices */
+@media (max-width: 480px) {
+    .responsive-table-wrapper {
+        margin: 0 -10px;
+        padding: 0 10px;
+    }
+
+    .projects-wrapper {
+        padding: 10px;
+        min-width: 650px;
+    }
+
+    .project-row,
+    .projects-table-header {
+        grid-template-columns: 40% 14% 16% 15% 15%;
+        min-width: 650px;
+    }
+
+    .team-badge-approved,
+    .team-badge-approved:first-child {
+        padding: 6px 4px;
+        font-size: 9px;
+    }
+
+    .progress-bar1 {
+        height: 10px;
+    }
+
+    .progress-fill1 {
+        height: 10px;
+    }
+
+    .progress-text {
+        font-size: 11px;
+    }
+
+    .action-btn,
+    .dropdown-btn {
+        font-size: 10px;
+        padding: 3px 4px;
+    }
+
+    /* Even smaller on very small screens */
+    .deadline-badge {
+        padding: 4px 6px;
+        min-height: 35px;
+    }
+
+    .deadline-badge .deadline-date {
+        font-size: 10px;
+    }
+
+    .deadline-badge .deadline-status {
+        font-size: 9px;
+    }
+}
+
+/* For very small screens */
+@media (max-width: 360px) {
+    .project-row,
+    .projects-table-header {
+        grid-template-columns: 45% 13% 15% 12% 15%;
+        min-width: 580px;
+    }
+
+    .projects-wrapper {
+        min-width: 580px;
+    }
+
+    .deadline-badge {
+        min-height: 32px;
+        padding: 3px 5px;
+    }
+}
+
+/* Hide scrollbar for cleaner look on mobile */
+@media (max-width: 768px) {
+    .responsive-table-wrapper::-webkit-scrollbar {
+        height: 4px;
+    }
+
+    .responsive-table-wrapper::-webkit-scrollbar-track {
+        background: #f1f1f1;
+        border-radius: 2px;
+    }
+
+    .responsive-table-wrapper::-webkit-scrollbar-thumb {
+        background: #888;
+        border-radius: 2px;
+    }
+}
+
+/* Print styles */
+@media print {
+    .responsive-table-wrapper {
+        overflow-x: visible;
+    }
+
+    .projects-wrapper {
+        box-shadow: none;
+        border: 1px solid #ddd;
+        min-width: auto;
+    }
+
+    .action-btn,
+    .dropdown-btn {
+        border: 1px solid #000;
+    }
+
+    .deadline-badge {
+        flex-direction: row !important;
+        min-height: auto !important;
+    }
+}
