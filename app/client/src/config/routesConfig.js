@@ -5,18 +5,20 @@ import Utils from "@libs/utils";
 import LoginConfig from "../pages/auth/Login/LoginConfig";
 import AdminConfig from "../pages/admin/adminConfig";
 import AnalystConfig from "../pages/Analyst/analystConfig";
+// Folder ka actual case check kar lena: "Sales" ya "sales"
 import SalesConfig from "../pages/Sales/salesConfig";
-import ProjectSearch from "../pages/admin/Pages/Projects/Search";
+
 import NotFound from "../pages/Components/404";
 import Messenger from "../pages/Messenger/Messenger";
+import ProjectSearch from "../pages/admin/Pages/Projects/Search"; // agar config me use ho raha hai to theek hai
 
 // 1) All configs together
 const allRouteConfigs = [
     LoginConfig,
     AdminConfig,
     AnalystConfig,
-    SalesConfig
-    // ...add any others here
+    SalesConfig,
+    // ...add any others here (ManagerConfig, etc)
 ];
 
 // 2) Helper: filter configs by role
@@ -55,12 +57,20 @@ export const getRoutesForRole = (role) => {
 };
 
 // 4) DEFAULT EXPORT (used by App.js / AppContext)
-//    This is a "generic" routes list (all configs) –
-//    it does NOT affect what AppRoutes actually renders.
+//    Yeh generic routes list hai (all configs) –
+//    isse AppRoutes ki role-based logic independent rehti hai.
 const generatedRoutesAll = Utils.generateRoutesFromConfigs(allRouteConfigs);
 
 const routes = [
     ...generatedRoutesAll,
+    {
+        path: "/messenger",
+        element: <Messenger />,
+    },
+    {
+        path: "/messenger/:id",
+        element: <Messenger />,
+    },
     {
         path: "*",
         element: <NotFound />,
