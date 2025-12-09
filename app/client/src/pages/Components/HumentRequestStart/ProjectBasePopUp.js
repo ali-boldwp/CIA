@@ -5,7 +5,9 @@ import { Link } from "react-router-dom";
 
 const ProjectBasePopUp = () => {
 
-    const { data, isLoading } = useGetProjectsQuery();
+    const { data, isLoading } = useGetProjectsQuery({
+        onlyWithoutHumint: true
+    });
     const projects = data?.data || [];
 
     const [selectedProject, setSelectedProject] = useState(null);
