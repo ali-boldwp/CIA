@@ -78,15 +78,14 @@ const Item = ({ data }) => {
         };
     };
 
-    // Text on button
-    const selectedHumintLabel =
-        HUMINT_OPTIONS.find((o) => o.value === humintStatus)?.label ||
-        "Nu s-a solicitat HUMINT";
-
+    // ✅ HUMINT dropdown selection handler (still keeps internal state, but button text hard-coded)
     const handleSelectHumint = (value) => {
         setHumintStatus(value);
         setOpen(false);
     };
+
+    // ✅ check directly from Mongo data (humintId) for Status column
+    const hasHumint = !!data?.humintId;
 
     return (
         <div className="project-row">
@@ -138,9 +137,15 @@ const Item = ({ data }) => {
                 {data.completedTasks}/{data.totalTasks} taskuri
             </div>
 
-            {/* Status */}
+            {/* ✅ Status HUMINT column (based on humintId) */}
             <div className="col status">
-                <span className="status-badge-approved orange">HUMINT Status</span>
+    <span
+        className={`status-badge-approved ${
+            hasHumint ? "orange" : "gray"
+        }`}
+    >
+        {hasHumint ? "S-a solicitat HUMINT" : "Nu s-a solicitat HUMINT"}
+    </span>
             </div>
 
             {/* ACTIONS + HUMINT DROPDOWN */}
@@ -171,12 +176,12 @@ const Item = ({ data }) => {
                 {/* KPI */}
                 <button className="action-btn">Costuri & KPI</button>
 
-                {/* HUMINT Button */}
+                {/* ✅ HUMINT Button — hard-coded label now */}
                 <button className="dropdown-btn" onClick={() => setOpen(!open)}>
-                    {selectedHumintLabel} ▾
+                    HUMINT ▾
                 </button>
 
-                {/* Updated HUMINT Dropdown (NO HUMINT TITLE ROW) */}
+                {/* HUMINT Dropdown */}
                 {open && (
                     <div className="humint-dropdown">
                         {HUMINT_OPTIONS.map((opt) => (
