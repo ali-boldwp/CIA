@@ -6,7 +6,7 @@ const Header = () => {
     const navigate = useNavigate();
 
     const goBack = () => {
-        navigate("/manager/dashboard");
+        navigate("/");
     };
 
     return (

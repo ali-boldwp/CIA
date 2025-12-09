@@ -1,7 +1,7 @@
 // This is the ONLY place you ever add a new role in the future
 import AdminLayout from "../pages/admin/Admin";
 import AnalystLayout from "../pages/Analyst/AnalystLayout";
-import SalesLayout from "../pages/Sales/Pages";
+import SalesLayout from "../pages/Sales/SalesLayout";
 
 export const roleLayoutMap = {
     admin:   <AdminLayout />,

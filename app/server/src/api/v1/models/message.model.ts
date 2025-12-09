@@ -4,6 +4,7 @@ export interface IMessage extends Document {
     chatId: Types.ObjectId;
     sender: Types.ObjectId;
     text: string;
+    seenBy: Types.ObjectId;
 }
 
 const messageSchema = new Schema<IMessage>(
@@ -19,7 +20,13 @@ const messageSchema = new Schema<IMessage>(
             required: true
         },
 
-        text: { type: String, required: true }
+        text: { type: String, required: true },
+
+        seenBy: [{
+            type: Schema.Types.ObjectId,
+            ref: "User"
+        }]
+
     },
     { timestamps: true }
 );

@@ -1,12 +1,14 @@
 import "./Header.css";
 import { useState } from "react";
-import {Link, useLocation,useNavigate} from "react-router-dom";
+import {Link, useLocation, useNavigate, useParams} from "react-router-dom";
 import {Outlet} from "react-router-dom";
 import { useSelector } from "react-redux";
 
 
 
 const Header = ({ children }) => {
+
+    const { keyword } = useParams();
 
     const navigate = useNavigate();
     const user = useSelector((state) => state.auth.user);
@@ -16,11 +18,11 @@ const Header = ({ children }) => {
     const isAnalyst = location.pathname.includes("analyst");
     let dashboardTitle = `Dashboard ${ user.role }`;
 
-    const [input, setInput] = useState("");
+    const [input, setInput] = useState( keyword );
 
     const handleSearch = (e) => {
         if (e.key === "Enter" && input.trim() !== "") {
-            navigate(`/search/${input.trim()}`);
+            navigate(`/project/search/${input.trim()}`);
         }
     };
 

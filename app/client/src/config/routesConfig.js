@@ -1,61 +1,69 @@
 // src/config/routesConfig.js
+import React from "react";
 import Utils from "@libs/utils";
-import RoleBasedRoot from "./RoleBasedRoot";
+
 import LoginConfig from "../pages/auth/Login/LoginConfig";
-
-// All your role-specific configs (they only contain nested children routes)
 import AdminConfig from "../pages/admin/adminConfig";
-import ManagerConfig from "../pages/Manager/Dashboard/ManagerConfig";
 import AnalystConfig from "../pages/Analyst/analystConfig";
-import salesConfig from "../pages/Sales/salesConfig";
-import SalesDashboardConfig from "../pages/sales/dashboard/SalesDashboardConfig";
+import SalesConfig from "../pages/Sales/salesConfig";
+import ProjectSearch from "../pages/admin/Pages/Projects/Search";
+import NotFound from "../pages/Components/404";
 import Messenger from "../pages/Messenger/Messenger";
-import NewMessenger from "../pages/NewMessenger/NewMessenger";
-// ... import every other config
 
-const routeConfigs = [
+// 1) All configs together
+const allRouteConfigs = [
     LoginConfig,
     AdminConfig,
-    ManagerConfig,
     AnalystConfig,
-    salesConfig,
-    SalesDashboardConfig,
-    // ... all others
+    SalesConfig
+    // ...add any others here
 ];
 
-// Generate all the nested routes (project, humint, tasks, etc.)
-const generatedRoutes = Utils.generateRoutesFromConfigs(routeConfigs);
+// 2) Helper: filter configs by role
+const filterConfigsByRole = (role) => {
+    return allRouteConfigs.filter((config) => {
+        // configs without auth are public
+        if (!config.auth || config.auth.length === 0) return true;
+        if (!role) return false;
+        return config.auth.includes(role);
+    });
+};
+
+// 3) ROLE-BASED ROUTES (used by AppRoutes)
+export const getRoutesForRole = (role) => {
+    const allowedConfigs = filterConfigsByRole(role);
+
+    const generatedRoutes = Utils.generateRoutesFromConfigs(allowedConfigs);
+
+    const routes = [
+        ...generatedRoutes,
+        {
+            path: "/messenger",
+            element: <Messenger />,
+        },
+        {
+            path: "/messenger/:id",
+            element: <Messenger />,
+        },
+        {
+            path: "*",
+            element: <NotFound />,
+        },
+    ];
+
+    return routes;
+};
+
+// 4) DEFAULT EXPORT (used by App.js / AppContext)
+//    This is a "generic" routes list (all configs) –
+//    it does NOT affect what AppRoutes actually renders.
+const generatedRoutesAll = Utils.generateRoutesFromConfigs(allRouteConfigs);
 
 const routes = [
-    ...generatedRoutes,
-
-    // This is the only "/" route you will ever need
-    {
-        path: "/",
-        element: <RoleBasedRoot />,
-    },
-
-    {
-        path: "/messenger",
-        element: <Messenger/>,
-
-    },
-
-    {
-        path: "/messenger/:id",
-        element: <Messenger/>,
-
-    },
-    {
-        path: "/messenger/new",
-        element: <NewMessenger/>,
-
-    },
-
-    // Optional: catch-all for 404
+    ...generatedRoutesAll,
     {
         path: "*",
-        element: <div>404 - Page Not Found</div>,
+        element: <NotFound />,
     },
 ];
 

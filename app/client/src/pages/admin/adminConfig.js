@@ -26,6 +26,7 @@ const AdminConfig = {
     auth: [ 'admin', 'manager' ],
     routes: [
         {
+            path: "/",
             element: <Admin />,
             children: [
                 {
@@ -41,12 +42,12 @@ const AdminConfig = {
                             element: <ProjectsList />
                         },
                         {
-                            path: 'all',
-                            element: <ProjectsList />
-                        },
-                        {
                             path: 'search/:keyword',
                             element: <ProjectSearch />
+                        },
+                        {
+                            path: 'all',
+                            element: <ProjectsList />
                         },
                         {
                             path: 'view/:id',

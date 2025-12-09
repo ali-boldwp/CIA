@@ -37,6 +37,7 @@ import {Link, useNavigate} from "react-router-dom";
 import styles from "../../Manager/Components/Team/Team.module.css";
 import './popup.css'
 import {toast} from "react-toastify";
+import {useSelector} from "react-redux";
 
 function Header() {
     return (
@@ -58,6 +59,9 @@ function Header() {
 }
 
 const MessengerPage = ({chatID}) => {
+
+    const { user, loading } = useSelector((state) => state.auth);
+
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedMembers, setSelectedMembers] = useState([]);
 
@@ -260,10 +264,6 @@ const MessengerPage = ({chatID}) => {
     };
 
 
-
-
-
-
     const handlePin = async () => {
         const currentChat = chats?.data?.find(c => c._id === chat);
         const newValue = !currentChat?.isPinned;
@@ -401,11 +401,21 @@ const MessengerPage = ({chatID}) => {
                                         key={c._id}
                                         onClick={() => openChat(c._id)}
                                     >
-                                        <div className="conversation-avatar"/>
+                                        <div className="conversation-avatar" />
 
                                         <div className="conversation-main">
                                             <div className="conversation-name">
                                                 {c.isGroup ? c.groupName : c.participants.map(p => p.name).join(", ")}
+
+                                                { !c.isGroup ? <>
+                                                {c.participants[0]._id !== user._id ? c.participants[0].name : "" }
+                                                {c.participants[1]._id !== user._id ? c.participants[0].name : "" }
+                                                </> : "" }
+
+                                                {/* 🔥 PIN ICON HERE */}
+                                                {c.isPinned && (
+                                                    <FaThumbtack className="sidebar-pin-icon" />
+                                                )}
                                             </div>
 
                                             <div className="conversation-sub">
@@ -415,6 +425,7 @@ const MessengerPage = ({chatID}) => {
                                     </div>
                                 ))
                             }
+
 
 
                         </div>
