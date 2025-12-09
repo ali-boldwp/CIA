@@ -23,7 +23,7 @@ export const getStats = async (req: Request, res: Response, next: NextFunction) 
         // -------- ANALYSTS --------
         const totalAnalysts = await User.countDocuments({ role: "analyst" });
 
-        const busyAnalysts = await ProjectRequest.distinct("assignedAnalysts")
+        const busyAnalysts = await ProjectRequest.distinct("responsibleAnalyst")
             .then(ids => ids.map(id => id.toString()));
 
 
@@ -32,6 +32,9 @@ export const getStats = async (req: Request, res: Response, next: NextFunction) 
 
         // -------- MESSAGES --------
         const totalMessages = await Message.countDocuments();
+
+
+
 
         // ----- FINAL RESPONSE FORMAT -----
         const stats = {

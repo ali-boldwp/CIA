@@ -168,9 +168,37 @@ export const getAllProjects = async (req: Request, res: Response, next: NextFunc
         const projects = await createdProjectService.getAllProjects(finalFilter, { skip, limit });
         const total = await createdProjectService.countProjects(finalFilter);
 
-        res.status(200).json({
+        // -----------------------------------------
+        // ENRICH PROJECTS WITH TASK INFORMATION
+        // -----------------------------------------
+        const enrichedProjects = [];
+
+        for (const project of projects) {
+            // 1️⃣ Find all chapters for this project
+            const chapters = await Chapter.find({ projectId: project._id }).select("_id");
+            const chapterIds = chapters.map(c => c._id);
+
+            // 2️⃣ Find all tasks under those chapters
+            const tasks = await Task.find({ chapterId: { $in: chapterIds } });
+
+            const totalTasks = tasks.length;
+            const completedTasks = tasks.filter(t => t.completed).length;
+
+            const progress = totalTasks > 0
+                ? Math.round((completedTasks / totalTasks) * 100)
+                : 0;
+
+            enrichedProjects.push({
+                ...project.toObject(),
+                totalTasks,
+                completedTasks,
+                progress
+            });
+        }
+
+        return res.status(200).json({
             status: "success",
-            data: projects,
+            data: enrichedProjects,
             pagination: {
                 page,
                 limit,
@@ -178,9 +206,11 @@ export const getAllProjects = async (req: Request, res: Response, next: NextFunc
                 totalPages: Math.ceil(total / limit),
             }
         });
+
     } catch (err) {
         next(err);
     }
+
 };
 
 

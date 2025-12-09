@@ -118,10 +118,13 @@ const Item = ({ data }) => {
                             style={{width: `${data.progress}%`}}
                         ></div>
                     </div>
-                    <span style={{display: "block"}}>100%</span>
+                    <span style={{ display: "block" }}>
+    {data.progress}%
+</span>
+
                 </div>
 
-                <div>8/10 taskuri</div>
+                {data.completedTasks}/{data.totalTasks} taskuri
                 <div>
                 </div>
             </div>
