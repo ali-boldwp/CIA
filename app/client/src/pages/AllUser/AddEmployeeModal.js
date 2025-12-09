@@ -410,13 +410,14 @@ const AddEmployeeModal = ({ isOpen, sectionKey, editData, onClose }) => {
                                             {/* 🔥 Color picker – only for Investigations section */}
                                             {sectionKey === "investigatii" && (
                                                 <div className={`${styles.field} ${styles.colorFieldSmall}`}>
-                                                    <label>Culoare punct avatar</label>
+                                                    <label>Culoare avatar</label>
 
                                                     <input
                                                         type="color"
-                                                        className={styles.colorInput}  // same height & style as inputs
+                                                        className={styles.colorSmallBox}
                                                         {...register("avatarDotColor")}
                                                     />
+
                                                 </div>
                                             )}
 
