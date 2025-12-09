@@ -77,7 +77,7 @@ const MessengerPage = ({chatID}) => {
     const [chat, setChat] = useState(chatID);
 
 
-
+    const [searchTerm, setSearchTerm] = useState("");
     const [messages, setMessages] = useState([]);
     const [oldmessage, setOldMessage] = useState([
         {
@@ -673,48 +673,74 @@ const MessengerPage = ({chatID}) => {
                                     <button className="popup-close" onClick={() => setIsModalOpen(false)}>×</button>
                                 </div>
 
+                                <div className="popup-search">
+                                    <span className="popup-search-icon">🔍</span>
+                                    <input
+                                        type="text"
+                                        placeholder="Caută utilizatori..."
+                                        value={searchTerm}
+                                        onChange={(e) => setSearchTerm(e.target.value)}
+                                    />
+                                </div>
+
                                 {/* LIST */}
+                                {/* USER LIST */}
                                 <div className="popup-user-list">
 
-                                    {(allUsers?.data || []).map((user, i) => {
-                                        const isSelected = selectedMembers.includes(user._id);
-
-                                        return (
-                                            <div className="popup-user-row" key={user._id}>
-
-                                                <div className={`popup-avatar avatar-${i % 5}`}>
-                                                    {user.name.charAt(0)}
-                                                </div>
-
-                                                <div className="popup-user-info">
-                                                    <div className="popup-user-name">{user.name}</div>
-                                                </div>
-
-                                                <div className="popup-status">
-                                                    {isSelected ? (
-                                                        <span className="status-added">Adăugat</span>
-                                                    ) : (
-                                                        <span className="status-rejected">Selectează</span>
-                                                    )}
-                                                </div>
-
-                                                <input
-                                                    type="checkbox"
-                                                    className="popup-checkbox"
-                                                    checked={isSelected}
-                                                    onChange={() => {
-                                                        setSelectedMembers(prev =>
-                                                            prev.includes(user._id)
-                                                                ? prev.filter(id => id !== user._id)
-                                                                : [...prev, user._id]
-                                                        );
-                                                    }}
-                                                />
-
-                                            </div>
+                                    {(() => {
+                                        const filteredUsers = (allUsers?.data || []).filter(user =>
+                                            user.name.toLowerCase().includes(searchTerm.toLowerCase())
                                         );
-                                    })}
+
+                                        if (filteredUsers.length === 0) {
+                                            return (
+                                                <div className="no-users-found">
+                                                    Niciun membru găsit
+                                                </div>
+                                            );
+                                        }
+
+                                        return filteredUsers.map((user, i) => {
+                                            const isSelected = selectedMembers.includes(user._id);
+
+                                            return (
+                                                <div className="popup-user-row" key={user._id}>
+
+                                                    <div className={`popup-avatar avatar-${i % 5}`}>
+                                                        {user.name.charAt(0)}
+                                                    </div>
+
+                                                    <div className="popup-user-info">
+                                                        <div className="popup-user-name">{user.name}</div>
+                                                    </div>
+
+                                                    <div className="popup-status">
+                                                        {isSelected ? (
+                                                            <span className="status-added">Adăugat</span>
+                                                        ) : (
+                                                            <span className="status-rejected">Selectează</span>
+                                                        )}
+                                                    </div>
+
+                                                    <input
+                                                        type="checkbox"
+                                                        className="popup-checkbox"
+                                                        checked={isSelected}
+                                                        onChange={() => {
+                                                            setSelectedMembers(prev =>
+                                                                prev.includes(user._id)
+                                                                    ? prev.filter(id => id !== user._id)
+                                                                    : [...prev, user._id]
+                                                            );
+                                                        }}
+                                                    />
+
+                                                </div>
+                                            );
+                                        });
+                                    })()}
                                 </div>
+
 
                                 {/* FOOTER */}
                                 <button className="popup-add-btn" onClick={handleAddMembers}>
