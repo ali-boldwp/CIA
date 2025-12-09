@@ -261,7 +261,7 @@
     border-bottom: 1px solid #f2f2f2;
 }
 
-/* Checkbox */
+
 .task-table input[type="checkbox"] {
     width: 16px;
     height: 16px;
@@ -269,7 +269,6 @@
     cursor: pointer;
 }
 
-/* Status Badges */
 .status-badge {
     padding: 5px 12px;
     border-radius: 8px;
@@ -294,22 +293,22 @@
 .priority.medium { background: #457b9d; }
 .priority.low { background: #6c757d; }
 
-/* Delete Icon */
+
 
 .delete-icon:hover {
     color: #ff4d4d;
 }
 
-/* Striped table rows */
+
 .task-table tbody tr:nth-child(odd) {
-    background: #f9f9f9;   /* light gray */
+    background: #f9f9f9;
 }
 
 .task-table tbody tr:nth-child(even) {
-    background: #ffffff;   /* white */
+    background: #ffffff;
 }
 
-/* Optional hover highlight (optional but looks professional) */
+
 .task-table tbody tr:hover {
     background: #eef4ff;
     transition: 0.2s;
@@ -323,7 +322,7 @@
     cursor: pointer;
     width: 16px;
     height: 16px;
-    position: relative; /* important for pseudo-element positioning */
+    position: relative;
 }
 
 .checkbox:checked {
@@ -335,11 +334,11 @@
     position: absolute;
     top: 50%;
     left: 50%;
-    transform: translate(-50%, -50%); /* center both vertically and horizontally */
-    font-size: 14px; /* slightly smaller than box for perfect fit */
+    transform: translate(-50%, -50%);
+    font-size: 14px;
     color: #0d9c57;
     font-weight: bold;
-    pointer-events: none; /* ensure clicks go to checkbox */
+    pointer-events: none;
 }
 
 .task-btn {
@@ -685,12 +684,18 @@
 
 .analyst-label {
     font-weight: 600;
+    width:100px;
 }
 
 .col-actions {
     display: flex;
     align-items: center;
     gap: 10px;
+    position: relative;
+}
+.btnActionBoth{
+    position:absolute;
+    right:50px;
 }
 
 .btn {
@@ -914,9 +919,11 @@
 }
 
 .legend-grid {
-    display: flex;
-    gap:50px;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* 12 items per row */
+    gap: 20px; /* spacing */
 }
+
 
 .legend-item {
     display: flex;
@@ -1092,7 +1099,7 @@
 .task-table-header {
     margin-top: 20px;
     display: grid;
-    grid-template-columns: 3% 47% 13% 13% 27%;
+    grid-template-columns: 3% 50% 13% 17% 20%;
     font-size: 11px;
     font-weight: 600;
     color: #8b8b8b;
@@ -1105,7 +1112,7 @@
 /* Task rows */
 .task-row {
     display: grid;
-    grid-template-columns: 3% 47% 13% 13% 27%;
+    grid-template-columns: 3% 50% 13% 17% 20%;
     align-items: center;
     padding: 10px 0;
 
@@ -1137,6 +1144,7 @@
     border-radius: 12px;
     font-size: 11px;
     font-weight: 600;
+    width:100px;
 }
 
 .status-pill.auto {
@@ -1149,12 +1157,12 @@
     color: #3a714e;
 }
 
-.status-pill.progress {
-    background: #ffe89e;
+.status-pill.inprogress {
+    background: #f8e9bc;
     color: #9c7b1a;
 }
 
-.status-pill.assigned {
+.status-pill.unassigned {
     background: #e4e6ea;
     color: #6b6f77;
 }

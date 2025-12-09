@@ -113,7 +113,35 @@ export const projectApi = createApi({
 
         getAnalystsProgress: builder.query({
             query: () => "/project/analysts/progress"
-        })
+        }),
+
+
+        startTask: builder.mutation({
+            query: (taskId) => ({
+                url: `/task/${taskId}/start`,
+                method: "POST",
+            }),
+        }),
+
+        pauseTask: builder.mutation({
+            query: (id) => ({
+                url: `/task/${id}/pause`,
+                method: "POST",
+            }),
+        }),
+        resumeTask: builder.mutation({
+            query: (id) => ({
+                url: `/task/${id}/resume`,
+                method: "POST",
+            }),
+        }),
+        completeTask: builder.mutation({
+            query: (id) => ({
+                url: `/task/${id}/complete`,
+                method: "POST",
+            }),
+        }),
+
 
     }),
 });
@@ -135,4 +163,8 @@ export const {
     useGetTasksByChapterIdQuery,
     useCreateTaskMutation, // ✅ export hook
     useGetAnalystsProgressQuery,
+    useStartTaskMutation,
+    usePauseTaskMutation,
+    useResumeTaskMutation,
+    useCompleteTaskMutation
 } = projectApi;

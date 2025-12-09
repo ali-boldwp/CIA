@@ -56,6 +56,8 @@ export const startTask = async (req, res) => {
 
     await task.save();
 
+    task = await Task.findById(task._id).populate("analyst", "name");
+
     res.json({ message: "Task started", task });
 };
 
@@ -78,6 +80,7 @@ export const pauseTask = async (req, res) => {
     task.lastStartTimestamp = undefined;
 
     await task.save();
+    task = await Task.findById(task._id).populate("analyst", "name");
 
     res.json({ message: "Task paused", totalSeconds: task.totalSeconds });
 };
@@ -94,6 +97,7 @@ export const resumeTask = async (req, res) => {
     console.log( "task",task.lastStartTimestamp)
 
     await task.save();
+    task = await Task.findById(task._id).populate("analyst", "name");
 
     res.json({ message: "Task resumed", task });
 };
@@ -118,6 +122,7 @@ export const completeTask = async (req, res) => {
     task.lastStartTimestamp = undefined;
 
     await task.save();
+    task = await Task.findById(task._id).populate("analyst", "name");
 
     res.json({ message: "Task completed", totalSeconds: task.totalSeconds });
 };

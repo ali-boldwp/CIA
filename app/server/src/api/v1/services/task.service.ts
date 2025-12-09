@@ -9,7 +9,7 @@ export const getAllTasks = async () => {
 };
 
 export const getTaskById = async (chapterId: string) => {
-    return await Task.find({ chapterId });
+    return await Task.find({ chapterId }).populate("analyst", "name");
 };
 
 // export const updateTask = async (id: string, data: Partial<ITask>) => {
