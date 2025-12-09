@@ -266,38 +266,46 @@ const ProjectTasks = () => {
 
                         {/* Tasks */}
                         {tasksByChapter[item._id]?.map((task, i) => (
-                            <div  className={`task-row ${i % 2 === 0 ? "row-white" : "row-gray"}`} key={i}>
+                            <div className="task-row new-task-row" key={task._id}>
 
-                                {/* Number */}
-                                <div className="col number">{i+1}</div>
+                                {/* # Number */}
+                                <div className="col col-number">{i + 1}.</div>
 
-                                {/* Task Name */}
-                                <div className="col description">
+                                {/* Checkbox + Title */}
+                                <div className="col col-title">
                                     <input type="checkbox" defaultChecked={task.completed} />
-                                    <span className={task.bold ? "bold" : ""}>{task.name}</span>
+                                    <span className="task-text">{task.name}</span>
                                 </div>
 
-                                {/* Status */}
-                                <div className="col status">
-                            <span className={`status-pill ${task.completed ? "done" : "assigned"}`}>
+                                {/* Status Pill */}
+                                <div className="col col-status">
+            <span className={`status-pill ${task.completed ? "done" : "assigned"}`}>
                 {task.completed ? "Done" : "Assigned"}
             </span>
                                 </div>
 
-                                {/* Analyst */}
-                                <div className="col analyst">
-            <span className={`analyst-pill ${task.analystColor}`}>
-              {task.assignedAnalyst?.name || "Unassigned"}
+                                {/* Analyst + Time */}
+                                <div className="col col-analyst">
+                                    <span className="analyst-dot" />
+
+                                    <span className="analyst-label">
+                {task.assignedAnalyst?.initials || "CM"} • {task.time || "0h00m"}
             </span>
                                 </div>
+
                                 {/* Actions */}
-                                <div className="col actions">
+                                <div className="col col-actions">
+                                    <button className="btn start">Start</button>
+                                    <button className="btn stop">Stop</button>
+                                    <button className="btn done">Done</button>
+
                                     <FiEdit2 className="icon edit" />
                                     <FiTrash2 className="icon delete" />
                                 </div>
 
                             </div>
                         ))}
+
 
                         {/* Add new task */}
                         <div className="add-row">

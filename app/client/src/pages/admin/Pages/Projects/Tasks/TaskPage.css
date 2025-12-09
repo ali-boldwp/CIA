@@ -619,6 +619,110 @@
     padding-left: 10px !important;
     border-radius: 10px;
 }
+.new-task-row {
+    display: grid;
+    /*grid-template-columns: 40px 1.5fr 140px 180px 260px;*/
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid #f0f0f0;
+    font-size: 14px;
+}
+
+.col-number {
+    text-align: right;
+    color: #666;
+}
+
+.col-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.task-text {
+    font-weight: 500;
+}
+
+.col-status {
+    text-align: center;
+}
+
+.status-pill {
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.status-pill.assigned {
+    background: #eceff5;
+    color: #333;
+}
+
+.status-pill.done {
+    background: #4caf50;
+    color: white;
+}
+
+.col-analyst {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.analyst-dot {
+    width: 10px;
+    height: 10px;
+    background: #26c281; /* green example */
+    border-radius: 50%;
+}
+
+.analyst-label {
+    font-weight: 600;
+}
+
+.col-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.btn {
+    padding: 4px 10px;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    font-size: 12px;
+}
+
+.btn.start {
+    background: #4c8bf5;
+    color: white;
+}
+
+.btn.stop {
+   background: white;
+    color:black;
+}
+
+.btn.done {
+    background: #4caf50;
+    color: white;
+    margin-right:25px;
+}
+
+.icon {
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.icon.edit {
+    color: #555;
+}
+
+.icon.delete {
+    color: red;
+}
 
 
 @keyframes slideUp {
@@ -982,20 +1086,26 @@
 .task-table-header {
     margin-top: 20px;
     display: grid;
-    grid-template-columns: 60px 1.5fr 140px 160px 100px;
+    grid-template-columns: 3% 47% 13% 13% 27%;
     font-size: 11px;
     font-weight: 600;
     color: #8b8b8b;
-    padding-left: 10px !important;
+
+}
+.task-table-header span:last-child{
+    text-align: center;
 }
 
 /* Task rows */
 .task-row {
     display: grid;
-    grid-template-columns: 60px 1.5fr 140px 160px 100px;
+    grid-template-columns: 3% 47% 13% 13% 27%;
     align-items: center;
     padding: 10px 0;
 
+}
+.task-row:nth-child(even){
+    background: #F9FAFB;
 }
 
 .col {
@@ -1079,4 +1189,24 @@
     color: #fff;
     cursor: pointer;
     font-size: 14px;
+}
+/* Hide ALL action buttons by default */
+.task-row .col-actions .start
+  {
+    display: hidden !important;
+}
+
+/* Hover par SIRF Start button show hoga */
+.task-row:hover .col-actions .btn.start {
+    display: inline-block !important;
+}
+
+/* (Optional) Start button fade effect */
+.task-row .col-actions .btn.start {
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+
+.task-row:hover .col-actions .btn.start {
+    opacity: 1;
 }
