@@ -1,39 +1,50 @@
-import {Link} from "react-router-dom";
-import {useRef, useState} from "react";
+import { Link } from "react-router-dom";
+import { useRef, useState, useEffect } from "react";
+
+const HUMINT_OPTIONS = [
+    { value: "title",     label: "HUMINT" },  // first option
+    { value: "none",      label: "Nu s-a solicitat HUMINT" },
+    { value: "requested", label: "S-a solicitat HUMINT" },
+    { value: "received",  label: "Primit HUMINT" },
+    { value: "delivered", label: "Predat HUMINT" },
+];
 
 const Item = ({ data }) => {
-
     const [open, setOpen] = useState(false);
-    const dropdownRef = useRef();
+
+    // Default: HUMINT (first option)
+    const [humintStatus, setHumintStatus] = useState("title");
+
+    const dropdownRef = useRef(null);
+
+    useEffect(() => {
+        const handler = (e) => {
+            if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
+                setOpen(false);
+            }
+        };
+        document.addEventListener("mousedown", handler);
+        return () => document.removeEventListener("mousedown", handler);
+    }, []);
 
     const getInitials = (idOrObj) => {
-
         const fullName = idOrObj.name;
 
         if (!fullName || typeof fullName !== "string") return "_";
 
         const parts = fullName.trim().split(" ");
 
-        if (parts.length === 1) {
-            const first = parts[0].charAt(0).toUpperCase();
-            return first + "_";
-        }
+        if (parts.length === 1) return parts[0][0].toUpperCase() + "_";
 
-        const first = parts[0].charAt(0).toUpperCase();
-        const last = parts[parts.length - 1].charAt(0).toUpperCase();
-
-        return first + last;
+        return parts[0][0].toUpperCase() + parts[parts.length - 1][0].toUpperCase();
     };
 
     const formatDeadline = (deadline) => {
-
         if (!deadline)
             return {
-                text: "Fără deadline",
                 className: "deadline-badge none",
                 date: "Fără deadline",
                 status: "",
-                displayText: "Fără deadline"
             };
 
         const today = new Date();
@@ -47,33 +58,33 @@ const Item = ({ data }) => {
 
         if (diff < 0) {
             return {
-                text: `${dateText} • depășit`,
                 className: "deadline-badge overdue",
                 date: dateText,
                 status: "depășit",
-                displayText: `${dateText} • depășit`
             };
         }
 
-        const daysLeft = Math.floor(diff);
-
         return {
-            text: `${dateText} • ${daysLeft} zile`,
             className: "deadline-badge upcoming",
             date: dateText,
-            status: `${daysLeft} zile`,
-            displayText: `${dateText} • ${daysLeft} zile`
+            status: `${Math.floor(diff)} zile`,
         };
+    };
 
+    const selectedHumintLabel =
+        HUMINT_OPTIONS.find((o) => o.value === humintStatus)?.label || "HUMINT";
+
+    const handleSelectHumint = (value) => {
+        setHumintStatus(value);
+        setOpen(false);
     };
 
     return (
         <div className="project-row">
 
+            {/* Project Info */}
             <div className="col project-infoDash">
-                <h4 style={{ marginBottom: "5px" }}>
-                    { data.projectName || data.name }
-                </h4>
+                <h4>{data.projectName || data.name}</h4>
                 <p>
                     Responsabil: <b>{data?.responsibleAnalyst?.name}</b>
                 </p>
@@ -91,16 +102,12 @@ const Item = ({ data }) => {
                 </p>
             </div>
 
-            {/* DEADLINE ------------------------ */}
+            {/* Deadline */}
             <div className="col deadline">
                 {(() => {
-                    const { text, className, date, status } = formatDeadline( data.deadline);
+                    const { className, date, status } = formatDeadline(data.deadline);
                     return (
-                        <span
-                            className={className}
-                            data-date={date}
-                            data-status={status}
-                        >
+                        <span className={className}>
                             <span className="deadline-date">{date}</span>
                             {status && <span className="deadline-status">• {status}</span>}
                         </span>
@@ -108,70 +115,69 @@ const Item = ({ data }) => {
                 })()}
             </div>
 
-            {/* PROGRESS ------------------------ */}
+            {/* Progress */}
             <div className="colProgress progress" style={{ gap: "10px" }}>
-
-                <div style={{ display: "flex", flexDirection: "row", flexGrow: 1, width: "90%", gap: "15px" }}>
-                    <div className="progress-bar1" style={{ display: "flex", flexGrow: 1 }}>
+                <div style={{ display: "flex", flexGrow: 1, gap: "15px" }}>
+                    <div className="progress-bar1">
                         <div
                             className="progress-fill1"
-                            style={{width: `${data.progress}%`}}
+                            style={{ width: `${data.progress}%` }}
                         ></div>
                     </div>
-                    <span style={{ display: "block" }}>
-    {data.progress}%
-</span>
-
+                    <span>{data.progress}%</span>
                 </div>
-
                 {data.completedTasks}/{data.totalTasks} taskuri
-                <div>
-                </div>
             </div>
 
-            {/* STATUS -------------------------- */}
+            {/* Status */}
             <div className="col status">
-                <span className={`status-badge-approved orange ${data.statusColor}`}>
-                    S-a solicitat HUMINT
+                <span className="status-badge-approved orange">
+                    HUMINT Status
                 </span>
             </div>
 
-            {/* ACTIONS + DROPDOWN -------------- */}
-            <div className="col actions" ref={dropdownRef} style={{ justifyContent: "end" }}>
-                <Link to={`/project/view/${data._id}`} className="action-btn">
-                    Deschide
-                </Link>
+            {/* ACTIONS + HUMINT DROPDOWN */}
+            <div className="col actions" ref={dropdownRef} style={{ display: "flex", justifyContent: "end", gap: "5px" }}>
+                <Link to={`/project/view/${data._id}`} className="action-btn">Deschide</Link>
                 <button className="action-btn">Mesaj 🔒</button>
                 <button className="action-btn">Costuri & KPI</button>
-                <button className="dropdown-btn" onClick={() => setOpen((prev) => !prev)}>
-                    HUMINT ▾
+
+                {/* HUMINT BUTTON */}
+                <button className="dropdown-btn" onClick={() => setOpen(!open)}>
+                    {selectedHumintLabel} ▾
                 </button>
 
-                {/* DROPDOWN MENU */}
+                {/* DROPDOWN */}
                 {open && (
                     <div className="humint-dropdown">
-                        <label className="dropdown-item">
-                            <input type="checkbox" /> Nu s-a solicitat HUMINT
-                        </label>
 
-                        <label className="dropdown-item selected">
-                            <input type="checkbox" defaultChecked /> S-a solicitat HUMINT
-                        </label>
+                        {/* FIRST OPTION → HUMINT */}
+                        <div
+                            className={`dropdown-item ${humintStatus === "title" ? "selected" : ""}`}
+                            onClick={() => handleSelectHumint("title")}
+                        >
+                            HUMINT
+                        </div>
 
-                        <label className="dropdown-item">
-                            <input type="checkbox" /> Primit HUMINT
-                        </label>
+                        <hr style={{ margin: "4px 0", borderColor: "#eee" }} />
 
-                        <label className="dropdown-item">
-                            <input type="checkbox" /> Predat HUMINT
-                        </label>
+
+                        {/* THE FOUR ORIGINAL OPTIONS */}
+                        {HUMINT_OPTIONS.slice(1).map((opt) => (
+                            <div
+                                key={opt.value}
+                                className={`dropdown-item ${humintStatus === opt.value ? "selected" : ""}`}
+                                onClick={() => handleSelectHumint(opt.value)}
+                            >
+                                {opt.label}
+                            </div>
+                        ))}
                     </div>
                 )}
             </div>
 
         </div>
-    )
-
-}
+    );
+};
 
 export default Item;
