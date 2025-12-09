@@ -1,7 +1,7 @@
-import React , { useEffect } from "react";
-import { useForm , } from "react-hook-form";
+import React, { useEffect } from "react";
+import { useForm } from "react-hook-form";
 import styles from "./AddEmployeeModal.module.css";
-import { useCreateUserMutation ,useUpdateUserMutation } from "../../services/userApi"
+import { useCreateUserMutation, useUpdateUserMutation } from "../../services/userApi";
 
 const sectionNames = {
     management: "Management",
@@ -9,11 +9,9 @@ const sectionNames = {
     auxiliar: "Personal auxiliar",
 };
 
-const AddEmployeeModal = ({ isOpen, sectionKey,editData, onClose }) => {
-
+const AddEmployeeModal = ({ isOpen, sectionKey, editData, onClose }) => {
     const [createUser, { isLoading }] = useCreateUserMutation();
     const [updateUser] = useUpdateUserMutation();
-
 
     const sectionLabel = sectionNames[sectionKey] || "Angajat";
 
@@ -35,6 +33,7 @@ const AddEmployeeModal = ({ isOpen, sectionKey,editData, onClose }) => {
             remember: false,
             rememberUser: "",
             rememberPassword: "",
+            avatarDotColor: "#ff0000", // 🔥 default color
         },
     });
 
@@ -51,9 +50,22 @@ const AddEmployeeModal = ({ isOpen, sectionKey,editData, onClose }) => {
                 date: editData.hiringDate?.slice(0, 10),
                 remember: editData.isLogin,
                 rememberUser: editData.email,
+                avatarDotColor: editData.avatarDotColor || "#ff0000",
             });
         } else {
-            reset({});
+            reset({
+                name: "",
+                role: "",
+                salary: "",
+                hoursMonth: "",
+                hoursDay: "",
+                bonus: "",
+                date: "",
+                remember: false,
+                rememberUser: "",
+                rememberPassword: "",
+                avatarDotColor: "#ff0000",
+            });
         }
     }, [editData, reset]);
 
@@ -65,6 +77,7 @@ const AddEmployeeModal = ({ isOpen, sectionKey,editData, onClose }) => {
     const hoursMonth = watch("hoursMonth");
     const hoursDay = watch("hoursDay");
     const rememberChecked = watch("remember");
+    const selectedRole = watch("role");
 
     const costHour =
         salary && hoursMonth ? (Number(salary) / Number(hoursMonth)).toFixed(1) : 0;
@@ -87,8 +100,13 @@ const AddEmployeeModal = ({ isOpen, sectionKey,editData, onClose }) => {
             isLogin: data.remember,
             email: data.remember ? data.rememberUser : undefined,
             password: data.remember ? data.rememberPassword : undefined,
-        };
 
+            // 🔥 Avatar color – only for Investigations + logged in
+            avatarDotColor:
+                sectionKey === "investigatii" && data.remember
+                    ? data.avatarDotColor
+                    : undefined,
+        };
 
         try {
             if (editData) {
@@ -103,7 +121,6 @@ const AddEmployeeModal = ({ isOpen, sectionKey,editData, onClose }) => {
             alert(err?.data?.message || "Error saving user");
         }
     };
-
 
     const roleOptions = {
         management: [
@@ -138,9 +155,6 @@ const AddEmployeeModal = ({ isOpen, sectionKey,editData, onClose }) => {
         // Normal (adding new employee)
         options = roleOptions[sectionKey] || [];
     }
-
-
-
 
     return (
         <div className={styles.modalOverlay}>
@@ -185,7 +199,7 @@ const AddEmployeeModal = ({ isOpen, sectionKey,editData, onClose }) => {
                                 className="no-spin "
                                 min="0"
                                 onKeyDown={(e) => {
-                                    if (e.key === '-' || e.key === 'Minus') {
+                                    if (e.key === "-" || e.key === "Minus") {
                                         e.preventDefault();
                                     }
                                 }}
@@ -194,8 +208,7 @@ const AddEmployeeModal = ({ isOpen, sectionKey,editData, onClose }) => {
                                     required: "Salariul este obligatoriu",
                                     min: {
                                         value: 1,
-                                        message:
-                                            "Salariul trebuie să fie mai mare decât 0",
+                                        message: "Salariul trebuie să fie mai mare decât 0",
                                     },
                                 })}
                             />
@@ -219,8 +232,8 @@ const AddEmployeeModal = ({ isOpen, sectionKey,editData, onClose }) => {
                                 ))}
                             </select>
 
-                            {/* 🔥 Analyst Role Dropdown (only when role = 'analyst') */}
-                            {watch("role") === "analyst" && (
+                            {/* Analyst Role Dropdown (only when role = 'analyst') */}
+                            {selectedRole === "analyst" && (
                                 <div className={`${styles.field} ${styles.fieldLeft}`}>
                                     <label>Rol analist</label>
                                     <select {...register("analystRole", { required: true })}>
@@ -235,8 +248,6 @@ const AddEmployeeModal = ({ isOpen, sectionKey,editData, onClose }) => {
                                 </div>
                             )}
 
-
-
                             {errors.role && (
                                 <p className={styles.error}>{errors.role.message}</p>
                             )}
@@ -248,7 +259,7 @@ const AddEmployeeModal = ({ isOpen, sectionKey,editData, onClose }) => {
                             <input
                                 min="0"
                                 onKeyDown={(e) => {
-                                    if (e.key === '-' || e.key === 'Minus') {
+                                    if (e.key === "-" || e.key === "Minus") {
                                         e.preventDefault();
                                     }
                                 }}
@@ -275,7 +286,7 @@ const AddEmployeeModal = ({ isOpen, sectionKey,editData, onClose }) => {
                             <input
                                 min="0"
                                 onKeyDown={(e) => {
-                                    if (e.key === '-' || e.key === 'Minus') {
+                                    if (e.key === "-" || e.key === "Minus") {
                                         e.preventDefault();
                                     }
                                 }}
@@ -311,14 +322,18 @@ const AddEmployeeModal = ({ isOpen, sectionKey,editData, onClose }) => {
                         </div>
 
                         {/* BONUS – optional */}
-                        <div className={styles.fieldSmall}  >
+                        <div className={styles.fieldSmall}>
                             <label>Bonus lunar </label>
-                            <input min="0"
-                                   onKeyDown={(e) => {
-                                       if (e.key === '-' || e.key === 'Minus') {
-                                           e.preventDefault();
-                                       }
-                                   }} type="number" {...register("bonus")} />
+                            <input
+                                min="0"
+                                onKeyDown={(e) => {
+                                    if (e.key === "-" || e.key === "Minus") {
+                                        e.preventDefault();
+                                    }
+                                }}
+                                type="number"
+                                {...register("bonus")}
+                            />
                         </div>
 
                         {/* COSTURI (automat) – DISABLED fields */}
@@ -340,7 +355,7 @@ const AddEmployeeModal = ({ isOpen, sectionKey,editData, onClose }) => {
                             </div>
                         </div>
 
-
+                        {/* LOGIN + EXTRA FIELDS – only when creating new */}
                         {!editData && (
                             <>
                                 <div className={`${styles.fieldFull} ${styles.checkboxRow}`}>
@@ -350,8 +365,8 @@ const AddEmployeeModal = ({ isOpen, sectionKey,editData, onClose }) => {
                                     </label>
                                 </div>
 
-                                {/* USERNAME & PASSWORD FIELDS */}
-                                {watch("remember") && (
+                                {/* USERNAME, PASSWORD & (for investigatii) COLOR */}
+                                {rememberChecked && (
                                     <div className={`${styles.fieldLeft} ${styles.loginRow}`}>
                                         <div className={styles.loginGrid}>
                                             <div className={styles.field}>
@@ -361,13 +376,15 @@ const AddEmployeeModal = ({ isOpen, sectionKey,editData, onClose }) => {
                                                     placeholder="Username"
                                                     {...register("rememberUser", {
                                                         validate: (value) =>
-                                                            !watch("remember") ||
+                                                            !rememberChecked ||
                                                             value.trim() !== "" ||
                                                             "Userul este obligatoriu",
                                                     })}
                                                 />
                                                 {errors.rememberUser && (
-                                                    <p className={styles.error}>{errors.rememberUser.message}</p>
+                                                    <p className={styles.error}>
+                                                        {errors.rememberUser.message}
+                                                    </p>
                                                 )}
                                             </div>
 
@@ -378,15 +395,31 @@ const AddEmployeeModal = ({ isOpen, sectionKey,editData, onClose }) => {
                                                     placeholder="Password"
                                                     {...register("rememberPassword", {
                                                         validate: (value) =>
-                                                            !watch("remember") ||
+                                                            !rememberChecked ||
                                                             value.trim() !== "" ||
                                                             "Parola este obligatorie",
                                                     })}
                                                 />
                                                 {errors.rememberPassword && (
-                                                    <p className={styles.error}>{errors.rememberPassword.message}</p>
+                                                    <p className={styles.error}>
+                                                        {errors.rememberPassword.message}
+                                                    </p>
                                                 )}
                                             </div>
+
+                                            {/* 🔥 Color picker – only for Investigations section */}
+                                            {sectionKey === "investigatii" && (
+                                                <div className={`${styles.field} ${styles.colorFieldSmall}`}>
+                                                    <label>Culoare punct avatar</label>
+
+                                                    <input
+                                                        type="color"
+                                                        className={styles.colorInput}  // same height & style as inputs
+                                                        {...register("avatarDotColor")}
+                                                    />
+                                                </div>
+                                            )}
+
                                         </div>
                                     </div>
                                 )}

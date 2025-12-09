@@ -60,6 +60,33 @@
     font-style: italic;
 }
 
+.colorSmallBox {
+    width: 12px;
+    height: 38px;
+    border-radius: 10px;
+    border: 1px solid #ddd;
+    cursor: pointer;
+    padding: 0;
+    background: transparent;
+}
+
+/* Remove browser default UI */
+.colorSmallBox::-webkit-color-swatch-wrapper {
+    padding: 0;
+}
+
+.colorSmallBox::-webkit-color-swatch {
+    border: none;
+    border-radius: 10px;
+}
+
+/* Focus style to match inputs */
+.colorSmallBox:focus {
+    border-color: #2D9CDB;
+    box-shadow: 0 0 0 2px rgba(45,156,219,0.15);
+}
+
+
 .formSubtitle {
     font-size: 12px;
     color: #6b7280;
@@ -207,10 +234,11 @@
 
 .loginGrid {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr 1fr 1fr; /* 👈 ab 3 columns */
     gap: 16px;
     width: 100%;
 }
+
 
 /* === ERROR TEXT === */
 .error {
@@ -256,4 +284,11 @@
     font-size: 14px;
     font-weight: 600;
     font-style: italic;
+}
+.colorInput {
+    height: 42px;     /* same as other fields */
+    border: 1px solid #ddd;
+    border-radius: 12px;
+    padding: 0;
+    cursor: pointer;
 }
