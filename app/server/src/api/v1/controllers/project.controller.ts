@@ -50,6 +50,7 @@ export const requestProject = async (req: Request, res: Response, next: NextFunc
             contractInfo: body.contractInfo,
             referenceRequest: body.referenceRequest,
             internalNotes: body.internalNotes,
+            surname: req.body.surname,
 
             files: files,
             fromRequestId: user.id,

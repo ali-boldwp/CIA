@@ -41,6 +41,7 @@ const Index = () => {
 
     const [projectDescription, setProjectDescription] = useState("");
     const [internalNotes, setInternalNotes] = useState("");
+    const [surname, setSurname] = useState("");
 
     const [files, setFiles] = useState([]);
     const [errors, setErrors] = useState({});
@@ -56,6 +57,7 @@ const Index = () => {
 
     const [responsibleAnalyst, setResponsibleAnalyst] = useState("");
     const [assignedAnalysts, setAssignedAnalysts] = useState([]);
+
 
     const respRef = useRef(null);
     const multiRef = useRef(null);
@@ -197,6 +199,10 @@ const Index = () => {
             newErrors.projectDescription = "Descrierea proiectului este obligatorie";
         }
 
+        if (!surname.trim()) {
+            newErrors.surname = "Prenumele este obligatoriu";
+        }
+
         // Internal notes validation
         if (!internalNotes.trim()) {
             newErrors.internalNotes = "Notele interne sunt obligatorii";
@@ -256,6 +262,7 @@ const Index = () => {
         formData.append("contractInfo", additionalInfo);
         formData.append("referenceRequest", referenceRequest);
         formData.append("internalNotes", internalNotes);
+        formData.append("surname", surname);
 
         // SERVICES → backend expects servicesRequested[]
         services.forEach((srv) => {
@@ -305,6 +312,7 @@ const Index = () => {
             setAssignedAnalysts("");
             setCategory("");
             setProjectPrice("");
+            setSurname("");
             setPriority("Normal");
             setLanguage("Română");
             setPreferredAnalyst("");
@@ -568,7 +576,7 @@ const Index = () => {
                                     className={`${styles.gridItem} ${styles.span2Left}`}
                                 >
                                     <label className={styles.label}>
-                                        Tip entitate / caz (dropdown)
+                                        Tip entitate / caz
                                         <select
                                             className={`${styles.input} ${styles.selectAnalyst} ${errors.entityType ? styles.inputError : ''}`}
                                             value={entityType}
@@ -636,7 +644,7 @@ const Index = () => {
                                     className={`${styles.gridItem} ${styles.span2Left}`}
                                 >
                                     <label className={styles.label}>
-                                        Categorie (dropdown)
+                                        Tip raport
                                         <select
                                             className={`${styles.input} ${styles.selectAnalyst} ${errors.category ? styles.inputError : ''}`}
                                             value={category}
@@ -645,7 +653,7 @@ const Index = () => {
                                             }
                                         >
                                             <option value="" className="option-bold">
-                                                Selectați categoria
+                                                Selectați Tip raport
                                             </option>
                                             <option value="Enhanced Due Diligence (Societate / Grup)">
                                                 Enhanced Due Diligence (Societate /
@@ -842,26 +850,50 @@ const Index = () => {
                                     className={`${styles.gridItem} ${styles.span2Right}`}
                                 >
                                     <label className={styles.label}>
-                                        Solicitare referințe / informații
-                                        suplimentare
+                                        Preferinta detectiv implicat in proiect
                                         <input
                                             type="text"
-                                            className={`${styles.input} ${errors.referenceRequest ? styles.inputError : ''}`}
-                                            value={referenceRequest}
+                                            className={`${styles.input} ${errors.surname ? styles.inputError : ''}`}
+                                            value={surname}
                                             onChange={(e) =>
-                                                setReferenceRequest(
+                                                setSurname(
                                                     e.target.value
                                                 )
                                             }
-                                            placeholder="Introdu solicitarea de referințe..."
+                                            placeholder=" Nume prenume persoane"
                                         />
                                     </label>
-                                    {errors.referenceRequest && (
+                                    {errors.surname && (
                                         <div className={styles.errorMessage}>
-                                            {errors.referenceRequest}
+                                            {errors.surname}
                                         </div>
                                     )}
                                 </div>
+                            </div>
+
+                            <div
+                                className={`${styles.gridItem} ${styles.span2Right}`}
+                            >
+                                <label className={styles.label}>
+                                    Solicitare referințe / informații
+                                    suplimentare
+                                    <input
+                                        type="text"
+                                        className={`${styles.input} ${errors.referenceRequest ? styles.inputError : ''}`}
+                                        value={referenceRequest}
+                                        onChange={(e) =>
+                                            setReferenceRequest(
+                                                e.target.value
+                                            )
+                                        }
+                                        placeholder="Introdu solicitarea de referințe..."
+                                    />
+                                </label>
+                                {errors.referenceRequest && (
+                                    <div className={styles.errorMessage}>
+                                        {errors.referenceRequest}
+                                    </div>
+                                )}
                             </div>
 
                             {/* ==== SERVICES ==== */}
@@ -900,6 +932,7 @@ const Index = () => {
                                     </div>
                                 )}
                             </div>
+
 
                             {/* PROJECT DESCRIPTION */}
                             <div className={styles.fullWidthBlock}>
@@ -946,7 +979,7 @@ const Index = () => {
                                 className={`${styles.fullWidthBlock} ${styles.fileUploadHalf}`}
                             >
                                 <label className={styles.label}>
-                                    Atașează fișiere (drag &amp; drop)
+                                    Atașează fișiere
                                     <div className={styles.dropZone}>
                                         <input
                                             id="fileUpload"
@@ -1015,11 +1048,11 @@ const Index = () => {
                         >
                             Salvează draft
                         </button>
-                        <button
+                        <Link to={`/`}
                             className={`${styles.actionBtn} ${styles.actionCancel}`}
                         >
                             Anulează
-                        </button>
+                        </Link>
                     </div>
                 </div>
             </div>

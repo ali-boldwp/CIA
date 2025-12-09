@@ -17,6 +17,7 @@ export interface IRequested extends Document {
 
     projectPrice: number;
     currency: string;
+    surname: string;
 
 
     deadline?: Date;
@@ -79,6 +80,9 @@ const requestSchema = new Schema<IRequested>(
         servicesRequested: {
             type: [String],
             default: []
+        },
+        surname: {
+            type:String,
         },
 
         contractInfo: String,
