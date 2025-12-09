@@ -179,3 +179,19 @@
     margin-left: 8px;
     color: #4a9eff;
 }
+.unread-badge {
+    background: linear-gradient(to bottom, #6D28D9, #14B8A6);
+    padding: 4px 10px;
+    border-radius: 20px;
+    color: white;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.conversation-meta {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    min-width: 40px;
+}
+

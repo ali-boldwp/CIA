@@ -52,7 +52,7 @@ export const getMyChats = async (req: Request, res: Response, next: NextFunction
             // Match only chats where user is a participant
             { $match: { "participants.user": userId } },
 
-            // Extract pinned field for this user
+            // Extract current user's pinned setting
             {
                 $addFields: {
                     currentUserInfo: {
@@ -73,7 +73,40 @@ export const getMyChats = async (req: Request, res: Response, next: NextFunction
                 }
             },
 
-            // Lookup last message
+            // ------------------------------
+            // 🔥 UNREAD MESSAGE LOOKUP HERE
+            // ------------------------------
+            {
+                $lookup: {
+                    from: "messages",
+                    let: { chatId: "$_id", userId: userId },
+                    pipeline: [
+                        {
+                            $match: {
+                                $expr: {
+                                    $and: [
+                                        { $eq: ["$chatId", "$$chatId"] },
+                                        { $ne: ["$sender", "$$userId"] },
+                                        { $not: { $in: ["$$userId", "$seenBy"] } }
+                                    ]
+                                }
+                            }
+                        },
+                        { $count: "unread" }
+                    ],
+                    as: "unreadMessages"
+                }
+            },
+
+            {
+                $addFields: {
+                    unreadCount: {
+                        $ifNull: [{ $arrayElemAt: ["$unreadMessages.unread", 0] }, 0]
+                    }
+                }
+            },
+
+            // Fetch lastMessage
             {
                 $lookup: {
                     from: "messages",
@@ -85,23 +118,23 @@ export const getMyChats = async (req: Request, res: Response, next: NextFunction
 
             { $unwind: { path: "$lastMessage", preserveNullAndEmptyArrays: true } },
 
-            // 📌 Sort logic:
-            // 1. pinned first
-            // 2. inside unpinned -> latest message first
+            // Sort: pinned → latest message
             {
                 $sort: {
-                    isPinned: -1,                     // pinned first
-                    "lastMessage.createdAt": -1,      // among unpinned → latest msg first
-                    updatedAt: -1                     // fallback sorting
+                    isPinned: -1,
+                    "lastMessage.createdAt": -1,
+                    updatedAt: -1
                 }
             }
         ]);
 
-        res.json({ success: true, data: chats });
+        return res.json({ success: true, data: chats });
+
     } catch (err) {
         next(err);
     }
 };
+
 
 
 
