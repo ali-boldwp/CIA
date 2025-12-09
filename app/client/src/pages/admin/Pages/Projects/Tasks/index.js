@@ -286,11 +286,13 @@ const ProjectTasks = () => {
 
                                 {/* Analyst + Time */}
                                 <div className="col col-analyst">
+                                    <div className="col-analyst2">
                                     <span className="analyst-dot" />
 
                                     <span className="analyst-label">
                 {task.assignedAnalyst?.initials || "CM"} • {task.time || "0h00m"}
             </span>
+                                    </div>
                                 </div>
 
                                 {/* Actions */}
