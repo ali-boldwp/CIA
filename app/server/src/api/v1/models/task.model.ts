@@ -4,6 +4,11 @@ export interface ITask extends Document {
     name: string;
     chapterId:Types.ObjectId;
     completed:Boolean,
+    analyst: Types.ObjectId;
+    isPaused: boolean;
+
+    totalSeconds: number;
+    lastStartTimestamp?: number;
 }
 
 const taskSchema = new Schema<ITask>(
@@ -24,6 +29,17 @@ const taskSchema = new Schema<ITask>(
             required :false,
 
         },
+        analyst: {
+            type : Schema.Types.ObjectId,
+            ref: "User",
+        },
+        isPaused: { type: Boolean, default: false },
+
+        totalSeconds: { type: Number, default: 0 },
+
+
+        lastStartTimestamp: { type: Number },
+
     },
     {
         timestamps: true,
