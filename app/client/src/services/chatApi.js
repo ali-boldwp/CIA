@@ -89,6 +89,13 @@ export const chatApi = createApi({
             }),
             invalidatesTags: ["Chats", "Users"]
         }),
+        markSeen: builder.mutation({
+            query: (chatId) => ({
+                url: `/chats/${chatId}/seen`,
+                method: "POST"
+            }),
+            invalidatesTags: ["Chats"]
+        }),
 
 
 
@@ -106,4 +113,5 @@ export const {
     useMuteChatMutation,
     usePinChatMutation,
     useAddMembersToGroupMutation,
+    useMarkSeenMutation,
 } = chatApi;

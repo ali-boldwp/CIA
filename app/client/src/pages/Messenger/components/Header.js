@@ -30,6 +30,7 @@ import {
     useMuteChatMutation,
     usePinChatMutation,
     useAddMembersToGroupMutation,
+    useMarkSeenMutation,
 }
     from "../../../services/chatApi";
 import {FaThumbtack} from "react-icons/fa6";
@@ -101,7 +102,7 @@ const MessengerPage = ({chatID}) => {
 
     const [text, setText] = useState("");
     const [sendMessage] = useSendMessageMutation();
-
+    const [markSeen] = useMarkSeenMutation();
     const {data, isLoading} = useGetMessagesQuery(chat, {skip: chat === "open"});
     const {data: chats, isLoading: chatsLoading , refetch: refetchChats} = useGetMyChatsQuery();
 
@@ -127,20 +128,22 @@ const MessengerPage = ({chatID}) => {
         console.log("Joining chat:", chatID);
         socket.emit("join_chat", chatID);
 
-        socket.on("new_message", (msg) => {
+        socket.on("new_message", async (msg) => {
 
-            // console.log( [ ...messages, msg ] );
+            setMessages(prev => [...prev, msg]);
 
-            // console.log("📩 New message received:", msg);
-            // alert("📩 New message: " + msg.text);
+            // auto-mark seen if user is viewing that chat
+            if (msg.chatId === chat) {
+                try {
+                    await markSeen(chat).unwrap();
 
-            setMessages(prev => {
-                const updated = [...prev, msg];
-                console.log("UPDATED LIST:", updated);
-                return updated;
-            });
+                    // update UI after marking seen
+                    msg.seenBy = [...(msg.seenBy || []), currentUserId];
 
+                } catch (e) {}
+            }
         });
+
 
         return () => {
             socket.off("new_message");
@@ -148,18 +151,24 @@ const MessengerPage = ({chatID}) => {
 
     }, []);
 
-    const openChat = (ID) => {
+    const openChat = async (ID) => {
 
-        // Clear previous chat messages
         setOldMessage([]);
         setMessages([]);
 
-        // Change chat
         setChat(ID);
 
-        // Redirect
+        try {
+            await markSeen(ID).unwrap();
+            refetchChats();
+        } catch (e) {
+            console.log("Seen error", e);
+        }
+
         navigate(`/messenger/${ID}`);
     };
+
+
 
 
     const currentUser = JSON.parse(localStorage.getItem("user"));
@@ -278,7 +287,6 @@ const MessengerPage = ({chatID}) => {
             toast.error("Eroare: nu s-a putut modifica pin-ul.");
         }
     };
-
     const handleAddMembers = async () => {
         if (selectedMembers.length === 0) {
             toast.error("Select at least one member!");
@@ -500,18 +508,14 @@ const MessengerPage = ({chatID}) => {
                                 ))}
                             </div>
                             {oldmessage.map((msg, i) => {
-
                                 const isMe = msg.sender._id === currentUserId;
+                                const hasSeen = msg.seenBy?.some(uid => uid !== currentUserId);
+
 
                                 return (
-                                    <div
-                                        key={i}
-                                        className={`chat-bubble ${isMe ? "me" : "other"}`}
-                                    >
-                                        {/* message text */}
+                                    <div key={i} className={`chat-bubble ${isMe ? "me" : "other"}`}>
                                         <div className="bubble-text">{msg.text}</div>
 
-                                        {/* footer: username + time */}
                                         <div className="bubble-footer">
                 <span className="bubble-name">
                     {isMe ? "Me" : msg.sender.name}
@@ -523,14 +527,23 @@ const MessengerPage = ({chatID}) => {
                         minute: "2-digit"
                     })}
                 </span>
+
+                                            {isMe && (
+                                                <span className="bubble-seen">
+                        {hasSeen ? "Seen" : "Sent"}
+                    </span>
+                                            )}
                                         </div>
                                     </div>
                                 );
                             })}
 
 
+
                             {messages.map((msg, i) => {
                                 const isMe = msg.sender === currentUserId;
+                                const hasSeen = msg.seenBy?.some(uid => uid !== currentUserId);
+
 
                                 return (
                                     <div key={i} className={`chat-bubble ${isMe ? "me" : "other"}`}>
@@ -540,16 +553,24 @@ const MessengerPage = ({chatID}) => {
                 <span className="bubble-name">
                     {isMe ? "Me" : msg.senderName}
                 </span>
+
                                             <span className="bubble-time">
                     {new Date(msg.createdAt).toLocaleTimeString([], {
                         hour: "2-digit",
                         minute: "2-digit"
                     })}
                 </span>
+
+                                            {isMe && (
+                                                <span className="bubble-seen">
+                        {hasSeen ? "Seen" : "Sent"}
+                    </span>
+                                            )}
                                         </div>
                                     </div>
                                 );
                             })}
+
 
                         </div>
 
