@@ -32,6 +32,8 @@ export interface IProjectRequest extends Document {
     internalNotes?: string;
 
     files?: string[];
+    color? : string;
+    surname?: string,
     humintId : Types.ObjectId;
     groupChatId: Types.ObjectId;
 
@@ -63,6 +65,7 @@ const projectRequestSchema = new Schema<IProjectRequest>(
         deadline: { type: Date },
         clientPosition: String,
 
+
         responsibleAnalyst: {
             type: Schema.Types.ObjectId,
             ref: "User"
@@ -90,6 +93,14 @@ const projectRequestSchema = new Schema<IProjectRequest>(
         files: {
             type: [String],
             default: []
+        },
+
+        surname: {
+          type: String,
+        },
+
+        color :{
+          type : String,
         },
 
         groupChatId: {
