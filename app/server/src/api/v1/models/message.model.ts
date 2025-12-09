@@ -4,7 +4,7 @@ export interface IMessage extends Document {
     chatId: Types.ObjectId;
     sender: Types.ObjectId;
     text: string;
-    seenBy: Types.ObjectId;
+    seenBy: Types.ObjectId[];
 }
 
 const messageSchema = new Schema<IMessage>(

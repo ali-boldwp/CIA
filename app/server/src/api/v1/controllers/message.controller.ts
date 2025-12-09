@@ -5,48 +5,49 @@ import { getIO } from "../../../socket";
 
 export const sendMessage = async (req, res, next) => {
     try {
-        const sender = (req as any).user.id;
+        const sender = req.user.id;
         let { chatId } = req.params;
         const { text } = req.body;
 
-        // 🔥 Emit instantly — NO DELAY
+        // 1️⃣ Instant socket emit (client sees message immediately)
         const instantMsg = {
-            _id: Date.now(),      // temporary ID for socket
+            _id: Date.now(),     // temporary ID
             chatId,
             text,
-            sender
+            sender,
+            seenBy: [sender]     // 👈 VERY IMPORTANT
         };
 
         getIO().to(chatId).emit("new_message", instantMsg);
 
-        if ( chatId == 'open' ) {
-
+        // 2️⃣ Handle 'open' chat
+        if (chatId === "open") {
             chatId = null;
-
         }
 
-        let data = {
+        // 3️⃣ Save to DB — sender must be first viewer
+        const savedMessage = await Message.create({
+            chatId,
             sender,
             text,
-            chatId
-        }
-
-
-
-        // 🔥 Now save in background
-        const savedMessage = await Message.create(data);
-
-        await Chat.findByIdAndUpdate(chatId, {
-            lastMessage: savedMessage._id
+            seenBy: [sender]     // 👈 VERY IMPORTANT
         });
 
-        // Send final DB response to API caller
+        // 4️⃣ Update chat lastMessage
+        if (chatId) {
+            await Chat.findByIdAndUpdate(chatId, {
+                lastMessage: savedMessage._id
+            });
+        }
+
+        // 5️⃣ Return final DB message
         res.json({ success: true, data: savedMessage });
 
     } catch (err) {
         next(err);
     }
 };
+
 
 
 

@@ -174,3 +174,8 @@
     box-shadow: 0 0 0 2px rgba(91, 127, 255, 0.2);
     background: white;
 }
+.bubble-seen {
+    font-size: 11px;
+    margin-left: 8px;
+    color: #4a9eff;
+}
