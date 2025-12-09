@@ -1,5 +1,5 @@
 import React,{useState,useMemo} from 'react';
-import "../../analyst/dashboard/style.css"
+import "../../Analyst/Pages/Dashboard/style.css"
 import Header from "../../../layouts/Component/Header";
 import { Link } from "react-router-dom";
 import {  useGetProjectsQuery } from "../../../services/projectApi";
