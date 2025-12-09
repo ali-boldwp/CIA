@@ -7,11 +7,13 @@ import Chapter from "../models/chapter.model";
 import Task from "../models/task.model";
 import projectData from "../data/data.js"
 import Requested from "../models/requested.model"
+import Humint from "../models/humint.model";
 import { ok } from "../../../utils/ApiResponse";
 
 export const createProject = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const body = req.body;
+        const { humintId } = body;
 
         const files = Array.isArray(req.files)
             ? req.files.map((f: any) => f.filename)
@@ -45,6 +47,7 @@ export const createProject = async (req: Request, res: Response, next: NextFunct
         const payload = {
             ...requestData,
             ...body,
+            humintId: humintId || requestData.humintId || null,
             assignedAnalysts: toArray(body.assignedAnalysts ?? requestData.assignedAnalysts),
             servicesRequested: toArray(body.servicesRequested ?? requestData.servicesRequested),
             files: [...(requestData.files || []), ...files],
@@ -53,6 +56,17 @@ export const createProject = async (req: Request, res: Response, next: NextFunct
 
         const project = await createdProjectService.createProject(payload);
 
+
+        if (humintId) {
+            await Humint.findByIdAndUpdate(
+                humintId,
+                {
+                    projectId: project._id,
+                    isLinkedToProject: true
+                },
+                { new: true }
+            );
+        }
 
         const reportType = project.reportType;
 
@@ -118,6 +132,8 @@ export const createProject = async (req: Request, res: Response, next: NextFunct
     }
 };
 
+
+
 export const getAllProjects = async (req: Request, res: Response, next: NextFunction) => {
     const user = req.user;
 
@@ -129,7 +145,10 @@ export const getAllProjects = async (req: Request, res: Response, next: NextFunc
 
     const search = req.query.search ? String(req.query.search).trim() : "";
 
-    // Build role filter
+    // 👉 yeh query param use karenge
+    const onlyWithoutHumint = req.query.onlyWithoutHumint === "true";
+
+    // -------- ROLE FILTER ----------
     let roleFilter: any;
     if (user.role === "sales") {
         roleFilter = { fromRequestId: user.id };
@@ -146,8 +165,9 @@ export const getAllProjects = async (req: Request, res: Response, next: NextFunc
         return res.status(403).json({ status: "error", message: "Forbidden" });
     }
 
-    // Build search filter (if search provided)
-    let finalFilter: any = roleFilter;
+    // -------- SEARCH FILTER ----------
+    let baseFilter: any = roleFilter;
+
     if (search) {
         const searchFilter = {
             $or: [
@@ -160,7 +180,21 @@ export const getAllProjects = async (req: Request, res: Response, next: NextFunc
             ]
         };
 
-        finalFilter = { $and: [ roleFilter, searchFilter ] };
+        baseFilter = { $and: [roleFilter, searchFilter] };
+    }
+
+    // -------- OPTIONAL HUMINT FILTER ----------
+    let finalFilter: any = baseFilter;
+
+    if (onlyWithoutHumint) {
+        const humintFilter = {
+            $or: [
+                { humintId: { $exists: false } },
+                { humintId: null }
+            ]
+        };
+
+        finalFilter = { $and: [baseFilter, humintFilter] };
     }
 
     try {
@@ -168,17 +202,12 @@ export const getAllProjects = async (req: Request, res: Response, next: NextFunc
         const projects = await createdProjectService.getAllProjects(finalFilter, { skip, limit });
         const total = await createdProjectService.countProjects(finalFilter);
 
-        // -----------------------------------------
-        // ENRICH PROJECTS WITH TASK INFORMATION
-        // -----------------------------------------
         const enrichedProjects = [];
 
         for (const project of projects) {
-            // 1️⃣ Find all chapters for this project
             const chapters = await Chapter.find({ projectId: project._id }).select("_id");
             const chapterIds = chapters.map(c => c._id);
 
-            // 2️⃣ Find all tasks under those chapters
             const tasks = await Task.find({ chapterId: { $in: chapterIds } });
 
             const totalTasks = tasks.length;
@@ -189,7 +218,7 @@ export const getAllProjects = async (req: Request, res: Response, next: NextFunc
                 : 0;
 
             enrichedProjects.push({
-                ...project.toObject(),
+                ...(project.toObject ? project.toObject() : project),
                 totalTasks,
                 completedTasks,
                 progress
@@ -210,8 +239,8 @@ export const getAllProjects = async (req: Request, res: Response, next: NextFunc
     } catch (err) {
         next(err);
     }
-
 };
+
 
 
 
@@ -237,6 +266,74 @@ export const deleteProject = async (req: Request, res: Response, next: NextFunct
     try {
         const deleted = await createdProjectService.deleteProject(req.params.id);
         res.json(ok(deleted));
+    } catch (err) {
+        next(err);
+    }
+};
+
+
+export const getAnalystsProgress = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        // Get all analysts
+        const analysts = await User.find({ role: "analyst" });
+
+        // Get all approved projects
+        const projects = await ProjectRequest.find({ status: "approved" });
+
+        const result = [];
+
+        for (const analyst of analysts) {
+
+            // Find projects where this analyst is responsible
+            const assignedProjects = projects.filter((p: any) =>
+                p.responsibleAnalyst?.toString() === analyst._id.toString()
+            );
+
+            // No projects → progress = 0
+            if (assignedProjects.length === 0) {
+                result.push({
+                    analystId: analyst._id,
+                    name: analyst.name,
+                    status: "liber",
+                    progress: 0,
+                    totalTasks: 0,
+                    completedTasks: 0,
+                    assignedProjects: 0
+                });
+                continue;
+            }
+
+            let totalTasks = 0;
+            let completedTasks = 0;
+
+            // LOOP ALL PROJECTS AND CALCULATE TASK PROGRESS
+            for (const proj of assignedProjects) {
+                const chapters = await Chapter.find({ projectId: proj._id }).select("_id");
+                const chapterIds = chapters.map(c => c._id);
+
+                const tasks = await Task.find({ chapterId: { $in: chapterIds } });
+
+                totalTasks += tasks.length;
+                completedTasks += tasks.filter(t => t.completed).length;
+            }
+
+            const progress = totalTasks > 0
+                ? Math.round((completedTasks / totalTasks) * 100)
+                : 0;
+
+            result.push({
+                analystId: analyst._id,
+                name: analyst.name,
+                assignedProjects: assignedProjects.length,
+                status: assignedProjects.length > 0 ? "în lucru" : "liber",
+                progress,
+                totalTasks,
+                completedTasks
+            });
+        }
+
+        res.json({ success: true, data: result });
+
     } catch (err) {
         next(err);
     }

@@ -32,6 +32,7 @@ export interface IProjectRequest extends Document {
     internalNotes?: string;
 
     files?: string[];
+    humintId : Types.ObjectId;
     groupChatId: Types.ObjectId;
 
     fromRequestId?: Types.ObjectId;
@@ -97,6 +98,10 @@ const projectRequestSchema = new Schema<IProjectRequest>(
             default: null
         },
 
+        humintId: {
+            type: Schema.Types.ObjectId,
+            ref: "Humint",
+        },
 
         fromRequestId: {
             type: Schema.Types.ObjectId,

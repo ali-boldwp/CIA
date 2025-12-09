@@ -1,59 +1,22 @@
 import React, { useState, useMemo } from "react";
 import styles from "./Team.module.css";
-import { useGetAnalystsQuery } from "../../../../services/userApi";
-import { useGetProjectRequestsQuery } from "../../../../services/projectApi";
+import { useGetAnalystsProgressQuery } from "../../../../services/projectApi";
 
 const Team = () => {
-    // Fetch all analysts
-    const { data: analystsData } = useGetAnalystsQuery();
+    // Fetch analysts progress (backend-calculated)
+    const { data: analystsData } = useGetAnalystsProgressQuery();
     const analysts = analystsData?.data || [];
 
-    // Fetch all projects
-    const { data: projectsData } = useGetProjectRequestsQuery();
-    const projects = projectsData?.data || [];
-
-    // Only approved projects
-    const approvedProjects = projects.filter(
-        (p) => p.status?.toLowerCase() === "approved"
-    );
-
-    // Function to check workload
-    const getAnalystStatus = (id) => {
-        const assigned = approvedProjects.some((proj) =>
-            proj.assignedAnalysts?.includes(id)
-        );
-        return assigned ? "în lucru" : "liber";
-    };
-
-    const getAnalystProgress = (id) => {
-        const assignedProjects = approvedProjects.filter((proj) =>
-            proj.assignedAnalysts?.includes(id)
-        );
-
-        if (assignedProjects.length === 0) return 0;
-
-        return Math.min(100, assignedProjects.length * 20);
-    };
-
+    // Function to show initials (unchanged)
     const getInitials = (fullName) => {
         if (!fullName) return "_";
-
         const parts = fullName.trim().split(" ");
-
-        // If only one word → First letter + "_"
-        if (parts.length === 1) {
-            const first = parts[0].charAt(0).toUpperCase();
-            return first + "_";
-        }
-
-        // If multiple words → First letter + Last letter
-        const first = parts[0].charAt(0).toUpperCase();
-        const last = parts[parts.length - 1].charAt(0).toUpperCase();
-
-        return first + last;
+        if (parts.length === 1) return parts[0][0].toUpperCase() + "_";
+        return (
+            parts[0][0].toUpperCase() +
+            parts[parts.length - 1][0].toUpperCase()
+        );
     };
-
-
 
     /** 📄 === PAGINATION LOGIC === */
     const [page, setPage] = useState(1);
@@ -67,7 +30,6 @@ const Team = () => {
 
     return (
         <div className="main" style={{ marginBottom: "50px" }}>
-
             <h3 className={styles.teamTitle}>Echipa de analiști</h3>
 
             <div className={styles.teamWrapper}>
@@ -81,76 +43,78 @@ const Team = () => {
                     </div>
 
                     <div className={styles.teamBody}>
-                        {paginated.map((a) => {
-                            const status = getAnalystStatus(a._id);
-                            const progress = getAnalystProgress(a._id);
-
-                            return (
-                                <div className={styles.teamRow} key={a._id}>
-                                    <div className={`${styles.col} ${styles.name}`}>
-                                        <span
-                                            className={
-                                                status === "în lucru"
-                                                    ? styles.purple
-                                                    : styles.initialBadge
-                                            }
-                                        >
-                                            {getInitials(a.name)}
-
-                                        </span>
-                                        <span>{a.name}</span>
-                                    </div>
-
-                                    <div className={`${styles.col} ${styles.score}`}>
-                                        {a.score || 0}
-                                    </div>
-
-                                    <div className={`${styles.col} ${styles.state}`}>
-                                        <span
-                                            className={`${styles.stateBadge} ${
-                                                status === "liber" ? styles.free : styles.work
-                                            }`}
-                                        >
-
-                                            {status}
-                                        </span>
-                                    </div>
-
-                                    <div className={`${styles.col} ${styles.progress}`} style={{ display: "flex" } } >
-                                        <div className={styles.progresBar}>
-                                            <div
-                                                className={styles.progresFill}
-                                                style={{ width: `${progress}%` }}
-                                            />
-                                        </div>
-                                        <div>
-                                            <span className={styles.progressNumber} style={{ marginLeft: "0.8rem" } } >
-                                            {progress}%
-                                        </span>
-                                        </div>
-                                    </div>
-
-                                    <div className={`${styles.col} ${styles.actions}`}>
-                                        <button className={styles.openBtn}>Deschide</button>
-                                        <button className={styles.deleteBtn}>🗑 Șterge</button>
-                                    </div>
+                        {paginated.map((a) => (
+                            <div className={styles.teamRow} key={a.analystId}>
+                                <div className={`${styles.col} ${styles.name}`}>
+                                    <span
+                                        className={
+                                            a.status === "în lucru"
+                                                ? styles.purple
+                                                : styles.initialBadge
+                                        }
+                                    >
+                                        {getInitials(a.name)}
+                                    </span>
+                                    <span>{a.name}</span>
                                 </div>
-                            );
-                        })}
+
+                                <div className={`${styles.col} ${styles.score}`}>
+                                    {a.score || 0}
+                                </div>
+
+                                <div className={`${styles.col} ${styles.state}`}>
+                                    <span
+                                        className={`${styles.stateBadge} ${
+                                            a.status === "liber"
+                                                ? styles.free
+                                                : styles.work
+                                        }`}
+                                    >
+                                        {a.status}
+                                    </span>
+                                </div>
+
+                                {/* PROGRESS BAR FROM BACKEND */}
+                                <div
+                                    className={`${styles.col} ${styles.progress}`}
+                                    style={{ display: "flex" }}
+                                >
+                                    <div className={styles.progresBar}>
+                                        <div
+                                            className={styles.progresFill}
+                                            style={{ width: `${a.progress}%` }}
+                                        />
+                                    </div>
+                                    <span
+                                        className={styles.progressNumber}
+                                        style={{ marginLeft: "0.8rem" }}
+                                    >
+                                        {a.progress}%
+                                    </span>
+                                </div>
+
+                                <div className={`${styles.col} ${styles.actions}`}>
+                                    <button className={styles.openBtn}>
+                                        Deschide
+                                    </button>
+                                    <button className={styles.deleteBtn}>
+                                        🗑 Șterge
+                                    </button>
+                                </div>
+                            </div>
+                        ))}
                     </div>
                 </div>
+
                 <div className={styles.pagination}>
-                    <button
-                        disabled={page === 1}
-                        onClick={() => setPage(page - 1)}
-                    >
+                    <button disabled={page === 1} onClick={() => setPage(page - 1)}>
                         ← Precedent
                     </button>
 
                     <span>
-                    Pagina <strong>{page}</strong> din{" "}
+                        Pagina <strong>{page}</strong> din{" "}
                         <strong>{totalPages}</strong>
-                </span>
+                    </span>
 
                     <button
                         disabled={page === totalPages}
@@ -158,14 +122,9 @@ const Team = () => {
                     >
                         Următor →
                     </button>
-
                 </div>
             </div>
 
-
-
-
-            {/* Buttons (same as before) */}
             <div className={styles.teamFooterActions}>
                 <button className={`${styles.pillBtn} ${styles.addBtn}`}>
                     <span className={styles.addIcon}>＋</span>

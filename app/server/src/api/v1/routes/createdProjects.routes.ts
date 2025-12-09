@@ -44,4 +44,6 @@ router.delete(
     createdProjectController.deleteProject
 );
 
+router.get("/analysts/progress", auth, createdProjectController.getAnalystsProgress);
+
 export default router;
