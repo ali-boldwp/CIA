@@ -333,7 +333,6 @@ const MessengerPage = ({chatID}) => {
                     </div>
 
                     <div className="toolbar-center">
-                        {/* all pills inside one centered div */}
                         <div className="toolbar-pill-group">
                             <button className="pill pill-active pill-unique">
                                 Toți
@@ -429,6 +428,11 @@ const MessengerPage = ({chatID}) => {
                                             <div className="conversation-sub">
                                                 {c.lastMessage ? c.lastMessage.text : "No messages yet"}
                                             </div>
+                                        </div>
+                                        <div className="conversation-meta">
+                                            {c.unreadCount > 0 && (
+                                                <span className="unread-badge">{c.unreadCount}</span>
+                                            )}
                                         </div>
                                     </div>
                                 ))
