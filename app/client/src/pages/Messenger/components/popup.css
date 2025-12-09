@@ -11,7 +11,7 @@
 
 /* CARD */
 .popup-card {
-    width: 380px;
+    width: 80vh;
     background: #fff;
     border-radius: 18px;
     padding: 20px;
@@ -138,4 +138,39 @@
 
 .popup-add-btn:hover {
     background: #4764d9;
+}
+/* SEARCH BAR WRAPPER */
+.popup-search {
+    position: relative;
+    width: 100%;
+    margin: 10px 0 12px 0;
+}
+
+/* SEARCH ICON */
+.popup-search-icon {
+    position: absolute;
+    top: 50%;
+    left: 12px;
+    transform: translateY(-50%);
+    color: #7a7a7a;
+    font-size: 18px;
+    pointer-events: none;
+}
+
+/* INPUT FIELD */
+.popup-search input {
+    width: 100%;
+    padding: 10px 12px 10px 40px; /* space for icon */
+    border: 1px solid #dcdcdc;
+    border-radius: 10px;
+    font-size: 14px;
+    outline: none;
+    transition: 0.2s;
+    background: #f9f9f9;
+}
+
+.popup-search input:focus {
+    border-color: #5b7fff;
+    box-shadow: 0 0 0 2px rgba(91, 127, 255, 0.2);
+    background: white;
 }
