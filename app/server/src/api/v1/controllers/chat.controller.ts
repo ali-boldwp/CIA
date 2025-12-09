@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import Chat from "../models/chat.model";
+import Message from "../models/message.model";
 import { logAudit} from "../../../utils/logAudit";
 import { Types } from "mongoose";
 
@@ -477,3 +478,81 @@ export const deleteGroupChat = async (req: Request, res: Response, next: NextFun
         next(err);
     }
 };
+
+
+export const getAllUnseenCounts = async (req, res) => {
+    try {
+        const userId = req.user.id;
+
+        const unseen = await Message.aggregate([
+            {
+                $match: {
+                    sender: { $ne: new Types.ObjectId(userId) },
+                    seenBy: { $ne: new Types.ObjectId(userId) }
+                }
+            },
+            {
+                $group: {
+                    _id: "$chatId",
+                    count: { $sum: 1 }
+                }
+            }
+        ]);
+
+        return res.json({ success: true, unseen });
+
+    } catch (err) {
+        return res.status(500).json({ message: "Server error" });
+    }
+};
+
+
+
+export const markMessagesSeen = async (req, res) => {
+    try {
+        const userId = req.user.id;
+        const { chatId } = req.params;
+
+        // Mark ALL messages as seen for this user
+        await Message.updateMany(
+            {
+                chatId,
+                sender: { $ne: userId },     // user should not mark their own messages
+                seenBy: { $ne: userId }      // not already seen
+            },
+            {
+                $push: { seenBy: userId }
+            }
+        );
+
+        return res.json({ success: true, message: "Messages marked as seen" });
+    } catch (err) {
+        return res.status(500).json({ message: "Server error" });
+    }
+};
+
+
+export const getUnseenCount = async (req, res) => {
+    try {
+        const userId = req.user.id;
+        const { chatId } = req.params;
+
+        const unseenCount = await Message.countDocuments({
+            chatId,
+            sender: { $ne: userId },  // messages from others
+            seenBy: { $ne: userId }   // user has not seen them
+        });
+
+        return res.json({
+            success: true,
+            chatId,
+            unseen: unseenCount
+        });
+
+    } catch (err) {
+        return res.status(500).json({ message: "Server error" });
+    }
+};
+
+
+
