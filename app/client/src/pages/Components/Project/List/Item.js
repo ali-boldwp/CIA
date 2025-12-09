@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { useRef, useState, useEffect } from "react";
 
 const HUMINT_OPTIONS = [
-    { value: "title",     label: "HUMINT" },  // first option
+    { value: "title",     label: "HUMINT" },
     { value: "none",      label: "Nu s-a solicitat HUMINT" },
     { value: "requested", label: "S-a solicitat HUMINT" },
     { value: "received",  label: "Primit HUMINT" },
@@ -11,11 +11,12 @@ const HUMINT_OPTIONS = [
 
 const Item = ({ data }) => {
     const [open, setOpen] = useState(false);
-
-    // Default: HUMINT (first option)
     const [humintStatus, setHumintStatus] = useState("title");
 
     const dropdownRef = useRef(null);
+
+    // 👉 Your REAL chat ID
+    const chatId = data.groupChatId;
 
     useEffect(() => {
         const handler = (e) => {
@@ -29,23 +30,15 @@ const Item = ({ data }) => {
 
     const getInitials = (idOrObj) => {
         const fullName = idOrObj.name;
-
         if (!fullName || typeof fullName !== "string") return "_";
-
         const parts = fullName.trim().split(" ");
-
         if (parts.length === 1) return parts[0][0].toUpperCase() + "_";
-
         return parts[0][0].toUpperCase() + parts[parts.length - 1][0].toUpperCase();
     };
 
     const formatDeadline = (deadline) => {
         if (!deadline)
-            return {
-                className: "deadline-badge none",
-                date: "Fără deadline",
-                status: "",
-            };
+            return { className: "deadline-badge none", date: "Fără deadline", status: "" };
 
         const today = new Date();
         const due = new Date(deadline);
@@ -57,11 +50,7 @@ const Item = ({ data }) => {
         const dateText = due.toISOString().split("T")[0];
 
         if (diff < 0) {
-            return {
-                className: "deadline-badge overdue",
-                date: dateText,
-                status: "depășit",
-            };
+            return { className: "deadline-badge overdue", date: dateText, status: "depășit" };
         }
 
         return {
@@ -85,9 +74,7 @@ const Item = ({ data }) => {
             {/* Project Info */}
             <div className="col project-infoDash">
                 <h4>{data.projectName || data.name}</h4>
-                <p>
-                    Responsabil: <b>{data?.responsibleAnalyst?.name}</b>
-                </p>
+                <p>Responsabil: <b>{data?.responsibleAnalyst?.name}</b></p>
                 <p>
                     Echipa asignată:{" "}
                     {data.assignedAnalysts?.length > 0 ? (
@@ -131,27 +118,47 @@ const Item = ({ data }) => {
 
             {/* Status */}
             <div className="col status">
-                <span className="status-badge-approved orange">
-                    HUMINT Status
-                </span>
+                <span className="status-badge-approved orange">HUMINT Status</span>
             </div>
 
             {/* ACTIONS + HUMINT DROPDOWN */}
-            <div className="col actions" ref={dropdownRef} style={{ display: "flex", justifyContent: "end", gap: "5px" }}>
-                <Link to={`/project/view/${data._id}`} className="action-btn">Deschide</Link>
-                <button className="action-btn">Mesaj 🔒</button>
+            <div
+                className="col actions"
+                ref={dropdownRef}
+                style={{ display: "flex", justifyContent: "end", gap: "5px" }}
+            >
+                {/* Open Project */}
+                <Link to={`/project/view/${data._id}`} className="action-btn">
+                    Deschide
+                </Link>
+
+                {/* Messenger – using groupChatId */}
+                <Link
+                    to={chatId ? `/messenger/${chatId}` : "#"}
+                    className="action-btn"
+                    onClick={(e) => {
+                        console.log("Clicked Chat ID:", chatId); // 👈 NOW CONSOLE SHOWS ID
+
+                        if (!chatId) {
+                            e.preventDefault();
+                            alert("Is project ke liye groupChatId set nahi hai.");
+                        }
+                    }}
+                >
+                    Mesaj 🔒
+                </Link>
+
+                {/* Other Button */}
                 <button className="action-btn">Costuri & KPI</button>
 
-                {/* HUMINT BUTTON */}
+                {/* HUMINT Dropdown Button */}
                 <button className="dropdown-btn" onClick={() => setOpen(!open)}>
                     {selectedHumintLabel} ▾
                 </button>
 
-                {/* DROPDOWN */}
+                {/* HUMINT Dropdown */}
                 {open && (
                     <div className="humint-dropdown">
-
-                        {/* FIRST OPTION → HUMINT */}
                         <div
                             className={`dropdown-item ${humintStatus === "title" ? "selected" : ""}`}
                             onClick={() => handleSelectHumint("title")}
@@ -161,8 +168,6 @@ const Item = ({ data }) => {
 
                         <hr style={{ margin: "4px 0", borderColor: "#eee" }} />
 
-
-                        {/* THE FOUR ORIGINAL OPTIONS */}
                         {HUMINT_OPTIONS.slice(1).map((opt) => (
                             <div
                                 key={opt.value}
@@ -175,7 +180,6 @@ const Item = ({ data }) => {
                     </div>
                 )}
             </div>
-
         </div>
     );
 };
