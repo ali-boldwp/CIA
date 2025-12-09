@@ -32,6 +32,7 @@ export interface IProjectRequest extends Document {
     internalNotes?: string;
 
     files?: string[];
+    groupChatId: Types.ObjectId;
 
     fromRequestId?: Types.ObjectId;
 
@@ -88,6 +89,12 @@ const projectRequestSchema = new Schema<IProjectRequest>(
         files: {
             type: [String],
             default: []
+        },
+
+        groupChatId: {
+            type: Schema.Types.ObjectId,
+            ref: "Chat",
+            default: null
         },
 
 

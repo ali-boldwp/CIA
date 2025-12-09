@@ -80,7 +80,6 @@ export const createProject = async (req: Request, res: Response, next: NextFunct
             }
         }
 
-
         // CHAT GROUP CREATION
         const admins = await User.find({ role: "admin" }).select("_id");
         const managers = await User.find({ role: "manager" }).select("_id");
@@ -96,14 +95,21 @@ export const createProject = async (req: Request, res: Response, next: NextFunct
             groupMembers.add(String(a))
         );
 
-        await Chat.create({
+
+        const chatGroup = await Chat.create({
             participants: Array.from(groupMembers).map(id => ({
                 user: id,
-                muted: false
+                muted: false,
+                pinned: false
             })),
             isGroup: true,
             groupName: `Project: ${payload.projectName}`
         });
+
+
+        project.groupChatId = chatGroup._id;
+        await project.save();
+
 
         return res.json(ok(project));
 
