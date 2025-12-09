@@ -6,7 +6,12 @@ import {
     useCreateChapterMutation,
     useCreateTaskMutation,
     useGetChapterByIdQuery,
-    useGetCreateProjectByIdQuery
+    useGetCreateProjectByIdQuery,
+    useStartTaskMutation,
+    usePauseTaskMutation,
+    useResumeTaskMutation,
+    useCompleteTaskMutation,
+    useGetAnalystsProgressQuery,
 } from "../../../../../services/projectApi";
 import {toast} from "react-toastify";
 import {FiEdit2, FiTrash2} from "react-icons/fi";
@@ -21,12 +26,21 @@ const ProjectTasks = () => {
 
     const [tasksByChapter, setTasksByChapter] = useState({});
 
+    const [startTask] = useStartTaskMutation();
+    const [pauseTask] = usePauseTaskMutation();
+    const [resumeTask] = useResumeTaskMutation();
+    const [completeTask] = useCompleteTaskMutation();
+
+    const { data: analystsProgress } = useGetAnalystsProgressQuery();
     const [createTask, { isLoading: isCreatingTask }] = useCreateTaskMutation();
 
     const {data:chapter}=useGetChapterByIdQuery(projectId, {
         skip: !projectId,
     });
     const chapterData=chapter?.data || [];
+
+
+    const legendColors = ["blue", "purple", "green", "red", "yellow", "pink"];
 
     // Fetch project info
 
@@ -37,6 +51,10 @@ const ProjectTasks = () => {
     const [createChapter] = useCreateChapterMutation();
 
 
+    const analystId = project?.responsibleAnalyst?._id;
+    const current = analystsProgress?.data?.find(
+        (a) => a.analystId === analystId
+    );
     useEffect(() => {
         const fetchAll = async () => {
             let result = {};
@@ -57,6 +75,10 @@ const ProjectTasks = () => {
             fetchAll();
         }
     }, [chapterData]);
+
+
+    const responsible = project?.responsibleAnalyst;
+    const assigned = project?.assignedAnalysts || [];
 
 
     const handleCreateTask = async (chapterId) => {
@@ -87,6 +109,147 @@ const ProjectTasks = () => {
     const goBack = () => {
         navigate("/");
     };
+
+    const handleStart = async (taskId, chapterId) => {
+        try {
+            const res = await startTask(taskId).unwrap();
+
+            // UI update — analyst assign hua
+            setTasksByChapter((prev) => ({
+                ...prev,
+                [chapterId]: prev[chapterId].map(t =>
+                    t._id === taskId ? { ...t, analyst: res.task.analyst } : t
+                )
+            }));
+
+            toast.success("Task started!");
+        } catch (error) {
+            toast.error("Failed to start task");
+        }
+    };
+
+    const handlePause = async (taskId, chapterId) => {
+        try {
+            const res = await pauseTask(taskId).unwrap();
+
+            setTasksByChapter(prev => ({
+                ...prev,
+                [chapterId]: prev[chapterId].map(t =>
+                    t._id === taskId
+                        ? { ...t, isPaused: true, lastStartTimestamp: undefined }
+                        : t
+                )
+            }));
+
+            toast("Task paused");
+        } catch (e) {
+            toast.error("Pause failed");
+        }
+    };
+
+    const handleResume = async (taskId, chapterId) => {
+        try {
+            const res = await resumeTask(taskId).unwrap();
+
+            setTasksByChapter(prev => ({
+                ...prev,
+                [chapterId]: prev[chapterId].map(t =>
+                    t._id === taskId
+                        ? { ...t, isPaused: false, lastStartTimestamp: Date.now() }
+                        : t
+                )
+            }));
+
+            toast("Task resumed");
+        } catch (e) {
+            toast.error("Resume failed");
+        }
+    };
+
+    const handleComplete = async (taskId, chapterId) => {
+        try {
+            const res = await completeTask(taskId).unwrap();
+
+            setTasksByChapter(prev => ({
+                ...prev,
+                [chapterId]: prev[chapterId].map(t =>
+                    t._id === taskId
+                        ? { ...t, completed: true, isPaused: false, lastStartTimestamp: undefined }
+                        : t
+                )
+            }));
+
+            toast.success("Task completed!");
+        } catch (e) {
+            toast.error("Complete failed");
+        }
+    };
+
+    const progress = current?.progress || 0;
+    const totalTasks = current?.totalTasks || 0;
+    const completedTasks = current?.completedTasks || 0;
+
+    const formatTime = (seconds) => {
+        if (!seconds || seconds <= 0) return "0h00m";
+
+        const h = Math.floor(seconds / 3600);
+        const m = Math.floor((seconds % 3600) / 60);
+
+        return `${h}h ${m.toString().padStart(2, "0")}m`;
+    };
+
+    const getInitials = (name) => {
+        if (!name) return "";
+
+        const parts = name.trim().split(" ");
+
+        const first = parts[0]?.charAt(0).toUpperCase() || "";
+        const last = parts[parts.length - 1]?.charAt(0).toUpperCase() || "";
+
+        return first + last;  // AP, BI, CM etc.
+    };
+
+    let totalWorkedSeconds = 0;
+    let analystWorkMap = {};
+
+    chapterData.forEach(ch => {
+        const chapterTasks = tasksByChapter[ch._id] || [];
+
+        chapterTasks.forEach(task => {
+            totalWorkedSeconds += task.totalSeconds || 0;
+
+            if (task.analyst?._id) {
+                const id = task.analyst._id.toString();
+
+                if (!analystWorkMap[id]) analystWorkMap[id] = 0;
+
+                analystWorkMap[id] += task.totalSeconds || 0;
+            }
+        });
+    });
+
+    const allTasks = Object.values(tasksByChapter).flat();
+
+    const analystTimes = Object.entries(analystWorkMap)
+        .map(([analystId, sec]) => {
+            const taskAnalyst = allTasks.find(
+                t => t.analyst?._id?.toString() === analystId
+            )?.analyst;
+
+            if (!taskAnalyst) return null;
+
+            return `${getInitials(taskAnalyst.name)} - ${formatTime(sec)}`;
+        })
+        .filter(Boolean);
+
+
+    const getStatus = (task) => {
+        if (task.completed) return "done";
+        if (task.analyst) return "inprogress";
+        return "unassigned";
+    };
+
+
 
     if (!projectId) return <p>No project selected.</p>;
     if (isLoading) return <p>Loading project data...</p>;
@@ -130,8 +293,6 @@ const ProjectTasks = () => {
                         </p>
 
                         <div className="buttons-row">
-                            <button className="btn start">▶ Start</button>
-                            <button className="btn pause">⏸ Pauză</button>
                             <button className="btn finalize">✔ Finalizează</button>
                         </div>
                     </div>
@@ -142,10 +303,15 @@ const ProjectTasks = () => {
                         <p className="progress-title">Progres general</p>
 
                         <div className="progress-bar">
-                            <div className="progress-fill" style={{ width: "54%" }}></div>
+                            <div
+                                className="progress-fill"
+                                style={{ width: `${progress}%` }}
+                            ></div>
                         </div>
 
-                        <p className="progress-info">6 / 11 taskuri finalizate (54%)</p>
+                        <p className="progress-info">
+                            {completedTasks} / {totalTasks} taskuri finalizate ({progress}%)
+                        </p>
                     </div>
 
                 </div>
@@ -161,21 +327,23 @@ const ProjectTasks = () => {
                     </div>
 
                     <div className="time-box">
-
                         <p className="time-title">REZUMAT TIMP LUCRU</p>
 
                         <p className="time-info">
-                            Timp total lucrat: <strong>3h 05m</strong> · Estimare ramas: <strong>2h 15m</strong>
+                            Timp total lucrat:
+                            <strong> {formatTime(totalWorkedSeconds)} </strong>
+                            · Estimare ramas:
+                            <strong> 00h 00m</strong>
                         </p>
 
                         <p className="analyst-times">
-                            AP - 1h35m | BI - 1h30m | CM - 0h20m | DR - 0h00m
+                            {analystTimes.length ? analystTimes.join(" | ") : "-"}
                         </p>
 
+
                     </div>
-
-
                 </div>
+
 
             </div>
 
@@ -187,30 +355,41 @@ const ProjectTasks = () => {
                     <p className="legend-title">LEGEND ANALISTI</p>
 
                     <div className="legend-grid">
+
+                        {/* Responsible Analyst First */}
                         <div className="firstButton">
-                            <div className="legend-item">
-                                <span className="doted blue"></span>
-                                <span className="legend-text">AP - Alina Popescu (Responsabil)</span>
-                            </div>
-
-                            <div className="legend-item">
-                                <span className="doted purple"></span>
-                                <span className="legend-text">BI - Bica Iulia</span>
-                            </div>
+                            {responsible && (
+                                <div className="legend-item">
+                                    <span className="doted blue"></span>
+                                    <span className="legend-text">
+                        {getInitials(responsible.name)} - {responsible.name}
+                                        (Responsabil)
+                    </span>
+                                </div>
+                            )}
                         </div>
-                        <div className="secButton">
-                            <div className="legend-item">
-                                <span className="doted green"></span>
-                                <span className="legend-text">CM - Craciun Marian</span>
-                            </div>
 
-                            <div className="legend-item">
-                                <span className="doted red"></span>
-                                <span className="legend-text">DR - Dica Raluca</span>
-                            </div>
-                        </div>
+                        {/* Assigned Analysts */}
+
+                            {assigned.length > 0 ? (
+                                assigned.map((a, i) => (
+                                    <div className="legend-item" key={a._id}>
+                                        <span className={`doted ${legendColors[i + 1] || "green"}`}></span>
+
+                                        <span className="legend-text">
+                            {getInitials(a.name)} - {a.name}
+
+                        </span>
+                                    </div>
+                                ))
+                            ) : (
+                                <p className="fs-12 text-gray">Niciun analist asignat</p>
+                            )}
+
+
                     </div>
                 </div>
+
 
                 {/* RIGHT SIDE — ACTION BUTTONS */}
                 <div className="actions-box">
@@ -273,15 +452,25 @@ const ProjectTasks = () => {
 
                                 {/* Checkbox + Title */}
                                 <div className="col col-title">
-                                    <input type="checkbox" defaultChecked={task.completed} />
-                                    <span className="task-text">{task.name}</span>
+                                    <input
+                                        type="checkbox"
+                                        checked={task.completed}
+                                        disabled={task.completed}
+                                        onChange={() => {}}
+                                    />
+
+                                    <span className="task-text">
+        {task.name}
+    </span>
                                 </div>
+
 
                                 {/* Status Pill */}
                                 <div className="col col-status">
-            <span className={`status-pill ${task.completed ? "done" : "assigned"}`}>
-                {task.completed ? "Done" : "Assigned"}
-            </span>
+                                <span className={`status-pill ${getStatus(task)}`}>
+                                    {getStatus(task).toUpperCase()}
+                                </span>
+
                                 </div>
 
                                 {/* Analyst + Time */}
@@ -289,21 +478,66 @@ const ProjectTasks = () => {
                                     <div className="col-analyst2">
                                     <span className="analyst-dot" />
 
-                                    <span className="analyst-label">
-                {task.assignedAnalyst?.initials || "CM"} • {task.time || "0h00m"}
-            </span>
+                                        <span className="analyst-label">
+                                            {getInitials(task.analyst?.name)} • {formatTime(task.totalSeconds)}
+
+                                        </span>
+
                                     </div>
                                 </div>
 
                                 {/* Actions */}
                                 <div className="col col-actions">
-                                    <button className="btn start">Start</button>
-                                    <button className="btn stop">Stop</button>
-                                    <button className="btn done">Done</button>
 
-                                    <FiEdit2 className="icon edit" />
-                                    <FiTrash2 className="icon delete" />
+                                    {/* 🔥 If task is completed → hide ALL buttons */}
+                                    {task.completed ? (
+                                        <>
+                                           <span className="btnActionBoth">
+                                            <FiEdit2 className="icon edit" />
+                                            <FiTrash2 className="icon delete" />
+                                            </span>
+                                        </>
+                                    ) : (
+                                        <>
+                                            {/* No analyst = START button */}
+                                            {!task.analyst ? (
+                                                <button className="btn start"
+                                                        onClick={() => handleStart(task._id, item._id)}>
+                                                    Start
+                                                </button>
+                                            ) : (
+                                                <>
+                                                    {/* If paused → show Resume */}
+                                                    {task.isPaused ? (
+                                                        <button className="btn start"
+                                                                onClick={() => handleResume(task._id, item._id)}>
+                                                            Resume
+                                                        </button>
+                                                    ) : (
+                                                        /* If running → show Pause */
+                                                        <button className="btn stop"
+                                                                onClick={() => handlePause(task._id, item._id)}>
+                                                            Pause
+                                                        </button>
+                                                    )}
+
+                                                    {/* DONE button show only if not completed */}
+                                                    <button className="btn done"
+                                                            onClick={() => handleComplete(task._id, item._id)}>
+                                                        Done
+                                                    </button>
+                                                </>
+                                            )}
+                                            <span className="btnActionBoth">
+                                            <FiEdit2 className="icon edit" />
+                                            <FiTrash2 className="icon delete" />
+                                            </span>
+                                        </>
+                                    )}
+
                                 </div>
+
+
 
                             </div>
                         ))}
