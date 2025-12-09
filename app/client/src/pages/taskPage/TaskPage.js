@@ -86,7 +86,7 @@ const TaskPage = () => {
     const navigate=useNavigate();
 
     const goBack = () => {
-        navigate("/manager/dashboard");
+        navigate("/");
     };
 
     if (!projectId) return <p>No project selected.</p>;

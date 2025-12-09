@@ -81,7 +81,7 @@ const SearchKeyword = () => {
 
           <div className="RequestList">
               <div className="top-header-box">
-                  <Link to="/manager/dashboard" className="back-gradient-btn">
+                  <Link to="/" className="back-gradient-btn">
                       ← Înapoi la Dashboard
                   </Link>
 

@@ -348,7 +348,7 @@ const NewProject = () => {
             <div className="page-container">
                 <div className="project-header-box">
             <span className="project-header-back">
-                <a href="/manager/dashboard">
+                <a href="/">
                     <button className="gradient-btn-dashboard" >
                         ← Înapoi la Dashboard
                     </button>

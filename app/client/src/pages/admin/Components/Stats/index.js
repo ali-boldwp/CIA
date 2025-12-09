@@ -1,5 +1,7 @@
 import {Link} from "react-router-dom";
 
+import "./style.css";
+
 const Stats = ({ stats }) => {
 
     return (
