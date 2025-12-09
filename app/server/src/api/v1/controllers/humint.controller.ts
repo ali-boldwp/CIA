@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import * as humintService from "../services/humint.service";
+import ProjectRequest from "../models/projectRequest.model";
 import { ok } from "../../../utils/ApiResponse";
 
 // CREATE
@@ -7,17 +8,48 @@ export const createHumint = async (req: Request, res: Response, next: NextFuncti
     try {
         const userId = (req as any).user.id;
 
+        const { projectId, briefObjective, ...rest } = req.body;
+
+        // 1️⃣ If projectId provided → check if already linked
+        if (projectId) {
+            const project = await ProjectRequest.findById(projectId);
+
+            if (!project) {
+                return res.status(404).json({ message: "Project not found" });
+            }
+
+            // ❌ If project already has humintId → stop here
+            if (project.humintId) {
+                return res.status(400).json({
+                    message: "This project already has a HUMINT assigned."
+                });
+            }
+        }
+
+        // 2️⃣ Create HUMINT
         const humint = await humintService.createHumint({
-            ...req.body,
-            briefObjective: req.body.briefObjective,
-            createdBy: userId
+            ...rest,
+            briefObjective,
+            createdBy: userId,
+            projectId: projectId || undefined,
+            isLinkedToProject: !!projectId
         });
 
-        res.json(ok(humint));
+        // 3️⃣ Save HUMINT ID to Project (only if projectId exists)
+        if (projectId) {
+            await ProjectRequest.findByIdAndUpdate(
+                projectId,
+                { humintId: humint._id },
+                { new: true }
+            );
+        }
+
+        return res.json(ok(humint));
     } catch (err) {
         next(err);
     }
 };
+
 
 
 // GET ALL

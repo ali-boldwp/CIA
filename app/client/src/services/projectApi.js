@@ -11,12 +11,13 @@ export const projectApi = createApi({
         getProjects: builder.query({
             // arg is an object — e.g. { page: 1, limit: 10, search: 'foo' }
             query: (arg = {}) => {
-                const { page, limit, search, ...rest } = arg;
+                const { page, limit, search, onlyWithoutHumint , ...rest } = arg;
                 const params = {};
 
                 if (page != null)  params.page   = page;
                 if (limit != null) params.limit  = limit;
                 if (search)       params.search = search;
+                if (onlyWithoutHumint) params.onlyWithoutHumint = true;
 
                 // any additional filters can go into rest if needed
                 return {
@@ -109,6 +110,11 @@ export const projectApi = createApi({
                 body: { name, chapterId },
             }),
         }),
+
+        getAnalystsProgress: builder.query({
+            query: () => "/project/analysts/progress"
+        })
+
     }),
 });
 
@@ -128,4 +134,5 @@ export const {
     useCreateChapterMutation,
     useGetTasksByChapterIdQuery,
     useCreateTaskMutation, // ✅ export hook
+    useGetAnalystsProgressQuery,
 } = projectApi;
