@@ -40,6 +40,10 @@ export const getRoutesForRole = (role) => {
     const routes = [
         ...generatedRoutes,
         {
+            path: "/users",
+            element: <Messenger />,
+        },
+        {
             path: "/messenger",
             element: <Messenger />,
         },

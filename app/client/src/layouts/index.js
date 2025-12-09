@@ -1,5 +1,11 @@
-const Layouts = {
+const Layout = () => {
+
+    return (
+        <>
+            Layout
+        </>
+    );
 
 };
 
-export default Layouts;
+export default Layout;

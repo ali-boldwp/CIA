@@ -8,7 +8,7 @@ const Layout = ({ children }) => {
             <LayoutHeader>
                 <Header />
             </LayoutHeader>
-            <div style={{ display: "flex", flexDirection: "column", flexGrow: 1 }}>
+            <div style={{ display: "flex", flexDirection: "column", flexGrow: 1, padding: '20px' }}>
                 { children }
             </div>
         </>
