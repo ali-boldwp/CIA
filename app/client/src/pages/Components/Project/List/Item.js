@@ -2,7 +2,6 @@ import { Link } from "react-router-dom";
 import { useRef, useState, useEffect } from "react";
 
 const HUMINT_OPTIONS = [
-    { value: "title",     label: "HUMINT" },
     { value: "none",      label: "Nu s-a solicitat HUMINT" },
     { value: "requested", label: "S-a solicitat HUMINT" },
     { value: "received",  label: "Primit HUMINT" },
@@ -11,13 +10,25 @@ const HUMINT_OPTIONS = [
 
 const Item = ({ data }) => {
     const [open, setOpen] = useState(false);
-    const [humintStatus, setHumintStatus] = useState("title");
+
+    // 👉 default status based on humintId
+    const [humintStatus, setHumintStatus] = useState(
+        data?.humintId ? "requested" : "none"
+    );
 
     const dropdownRef = useRef(null);
-
-    // 👉 Your REAL chat ID
     const chatId = data.groupChatId;
 
+    // Sync if data changes
+    useEffect(() => {
+        if (data?.humintId) {
+            setHumintStatus("requested");
+        } else {
+            setHumintStatus("none");
+        }
+    }, [data?.humintId]);
+
+    // Click outside closes dropdown
     useEffect(() => {
         const handler = (e) => {
             if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
@@ -38,11 +49,14 @@ const Item = ({ data }) => {
 
     const formatDeadline = (deadline) => {
         if (!deadline)
-            return { className: "deadline-badge none", date: "Fără deadline", status: "" };
+            return {
+                className: "deadline-badge none",
+                date: "Fără deadline",
+                status: "",
+            };
 
         const today = new Date();
         const due = new Date(deadline);
-
         today.setHours(0, 0, 0, 0);
         due.setHours(0, 0, 0, 0);
 
@@ -50,7 +64,11 @@ const Item = ({ data }) => {
         const dateText = due.toISOString().split("T")[0];
 
         if (diff < 0) {
-            return { className: "deadline-badge overdue", date: dateText, status: "depășit" };
+            return {
+                className: "deadline-badge overdue",
+                date: dateText,
+                status: "depășit",
+            };
         }
 
         return {
@@ -60,8 +78,10 @@ const Item = ({ data }) => {
         };
     };
 
+    // Text on button
     const selectedHumintLabel =
-        HUMINT_OPTIONS.find((o) => o.value === humintStatus)?.label || "HUMINT";
+        HUMINT_OPTIONS.find((o) => o.value === humintStatus)?.label ||
+        "Nu s-a solicitat HUMINT";
 
     const handleSelectHumint = (value) => {
         setHumintStatus(value);
@@ -74,7 +94,9 @@ const Item = ({ data }) => {
             {/* Project Info */}
             <div className="col project-infoDash">
                 <h4>{data.projectName || data.name}</h4>
+
                 <p>Responsabil: <b>{data?.responsibleAnalyst?.name}</b></p>
+
                 <p>
                     Echipa asignată:{" "}
                     {data.assignedAnalysts?.length > 0 ? (
@@ -132,13 +154,11 @@ const Item = ({ data }) => {
                     Deschide
                 </Link>
 
-                {/* Messenger – using groupChatId */}
+                {/* Messenger (group chat) */}
                 <Link
                     to={chatId ? `/messenger/${chatId}` : "#"}
                     className="action-btn"
                     onClick={(e) => {
-                        console.log("Clicked Chat ID:", chatId); // 👈 NOW CONSOLE SHOWS ID
-
                         if (!chatId) {
                             e.preventDefault();
                             alert("Is project ke liye groupChatId set nahi hai.");
@@ -148,30 +168,23 @@ const Item = ({ data }) => {
                     Mesaj 🔒
                 </Link>
 
-                {/* Other Button */}
+                {/* KPI */}
                 <button className="action-btn">Costuri & KPI</button>
 
-                {/* HUMINT Dropdown Button */}
+                {/* HUMINT Button */}
                 <button className="dropdown-btn" onClick={() => setOpen(!open)}>
                     {selectedHumintLabel} ▾
                 </button>
 
-                {/* HUMINT Dropdown */}
+                {/* Updated HUMINT Dropdown (NO HUMINT TITLE ROW) */}
                 {open && (
                     <div className="humint-dropdown">
-                        <div
-                            className={`dropdown-item ${humintStatus === "title" ? "selected" : ""}`}
-                            onClick={() => handleSelectHumint("title")}
-                        >
-                            HUMINT
-                        </div>
-
-                        <hr style={{ margin: "4px 0", borderColor: "#eee" }} />
-
-                        {HUMINT_OPTIONS.slice(1).map((opt) => (
+                        {HUMINT_OPTIONS.map((opt) => (
                             <div
                                 key={opt.value}
-                                className={`dropdown-item ${humintStatus === opt.value ? "selected" : ""}`}
+                                className={`dropdown-item ${
+                                    humintStatus === opt.value ? "selected" : ""
+                                }`}
                                 onClick={() => handleSelectHumint(opt.value)}
                             >
                                 {opt.label}
