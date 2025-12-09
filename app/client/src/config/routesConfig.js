@@ -10,7 +10,8 @@ import SalesConfig from "../pages/Sales/salesConfig";
 
 import NotFound from "../pages/Components/404";
 import Messenger from "../pages/Messenger/Messenger";
-import ProjectSearch from "../pages/admin/Pages/Projects/Search"; // agar config me use ho raha hai to theek hai
+import ProjectSearch from "../pages/admin/Pages/Projects/Search";
+import AllUser from "../pages/AllUser/AllUser"; // agar config me use ho raha hai to theek hai
 
 // 1) All configs together
 const allRouteConfigs = [
@@ -41,7 +42,7 @@ export const getRoutesForRole = (role) => {
         ...generatedRoutes,
         {
             path: "/users",
-            element: <Messenger />,
+            element: <AllUser />,
         },
         {
             path: "/messenger",

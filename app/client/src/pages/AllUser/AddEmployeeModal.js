@@ -144,7 +144,6 @@ const AddEmployeeModal = ({ isOpen, sectionKey,editData, onClose }) => {
 
     return (
         <div className={styles.modalOverlay}>
-            <h1>hahahhaha</h1>
             <div className={styles.modal}>
                 {/* CLOSE BTN */}
                 <button
