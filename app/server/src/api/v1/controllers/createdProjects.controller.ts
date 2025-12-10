@@ -385,3 +385,42 @@ export const updateEditableStatus = async (req, res, next) => {
     }
 };
 
+
+export const updateProjectStatus = async (req, res, next) => {
+    try {
+        const projectId = req.params.id;
+        const { status } = req.body;
+
+        // Allowed statuses
+        const allowedStatuses = ["revision", "observation"];
+
+        if (!allowedStatuses.includes(status)) {
+            return res.status(400).json({
+                success: false,
+                message: "Invalid status. Allowed: revision, observation"
+            });
+        }
+
+        const project = await ProjectRequest.findByIdAndUpdate(
+            projectId,
+            { status },
+            { new: true }
+        );
+
+        if (!project) {
+            return res.status(404).json({
+                success: false,
+                message: "Project not found"
+            });
+        }
+
+        return res.json({
+            success: true,
+            message: `Project status updated to '${status}'`,
+            data: project
+        });
+
+    } catch (err) {
+        next(err);
+    }
+};

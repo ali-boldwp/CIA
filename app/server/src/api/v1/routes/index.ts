@@ -12,6 +12,7 @@ import requestedRoutes from "./requested.routes";
 import clarificationRoutes from "./clarification.routes";
 import dashboardRoutes from "./dashboard.routes";
 import notificationRoutes from "./notification.routes";
+import observationRoutes from "./observation.routes";
 
 const router = Router();
 
@@ -28,5 +29,7 @@ router.use("/" , requestedRoutes);
 router.use("/" , clarificationRoutes);
 router.use("/" , dashboardRoutes);
 router.use("/notification" , notificationRoutes);
+router.use("/observation" , observationRoutes);
+
 
 export default router;
