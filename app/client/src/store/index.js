@@ -10,6 +10,7 @@ import { analystApi } from "../services/analystApi";
 import {messageApi} from "../services/messageApi";
 import {chatApi} from "../services/chatApi";
 import { humintApi } from "../services/humintApi";
+import {notificationApi} from "../services/notificationApi";
 
 import { statsApi } from "../services/V1/statesApi";
 
@@ -26,6 +27,7 @@ const store = configureStore({
         [messageApi.reducerPath]:messageApi.reducer,
         [chatApi.reducerPath]:chatApi.reducer,
         [humintApi.reducerPath]:humintApi.reducer,
+        [notificationApi.reducerPath]:notificationApi.reducer,
 
         // V1 APIs don't touch those
 
@@ -45,7 +47,7 @@ const store = configureStore({
             messageApi.middleware,
             chatApi.middleware,
             humintApi.middleware,
-
+            notificationApi.middleware,
             // V1 APIs don't touch those
             statsApi.middleware
 
