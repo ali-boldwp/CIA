@@ -1,4 +1,5 @@
 import { Schema, model, Document, Types } from "mongoose";
+import {boolean} from "joi";
 
 export interface IProjectRequest extends Document {
 
@@ -36,6 +37,7 @@ export interface IProjectRequest extends Document {
     surname?: string,
     humintId : Types.ObjectId;
     groupChatId: Types.ObjectId;
+    isEditable?:boolean;
 
     fromRequestId?: Types.ObjectId;
     createdBy?: Types.ObjectId;
@@ -100,8 +102,8 @@ const projectRequestSchema = new Schema<IProjectRequest>(
           type: String,
         },
 
-        color :{
-          type : String,
+        color : {
+            type: String,
         },
 
         groupChatId: {
@@ -109,6 +111,12 @@ const projectRequestSchema = new Schema<IProjectRequest>(
             ref: "Chat",
             default: null
         },
+
+        isEditable : {
+            type: Boolean,
+            default:true
+        },
+
 
         humintId: {
             type: Schema.Types.ObjectId,

@@ -44,6 +44,9 @@ router.delete(
     createdProjectController.deleteProject
 );
 
+router.put("/:id/editable", auth, createdProjectController.updateEditableStatus);
+
+
 router.get("/analysts/progress", auth, createdProjectController.getAnalystsProgress);
 
 export default router;

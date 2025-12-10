@@ -12,7 +12,7 @@ import { ok } from "../../../utils/ApiResponse";
 
 export const createProject = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const userId = req.user
+        const userId = req.user.id
         const body = req.body;
         const { humintId } = body;
 
@@ -347,3 +347,41 @@ export const getAnalystsProgress = async (req: Request, res: Response, next: Nex
         next(err);
     }
 };
+
+
+export const updateEditableStatus = async (req, res, next) => {
+    try {
+        const projectId = req.params.id;
+        const { isEditable } = req.body;
+
+        if (typeof isEditable !== "boolean") {
+            return res.status(400).json({
+                success: false,
+                message: "isEditable must be a boolean (true/false)"
+            });
+        }
+
+        const updatedProject = await ProjectRequest.findByIdAndUpdate(
+            projectId,
+            { isEditable },
+            { new: true }
+        );
+
+        if (!updatedProject) {
+            return res.status(404).json({
+                success: false,
+                message: "Project not found"
+            });
+        }
+
+        return res.json({
+            success: true,
+            message: "Editable status updated successfully",
+            data: updatedProject
+        });
+
+    } catch (error) {
+        next(error);
+    }
+};
+
