@@ -11,13 +11,17 @@ import {
     usePauseTaskMutation,
     useResumeTaskMutation,
     useCompleteTaskMutation,
-    useGetAnalystsProgressQuery, useUpdateEditableMutation,
+    useGetAnalystsProgressQuery,
+    useUpdateEditableMutation,
+    useFinalizeTaskMutation,
 } from "../../../../../services/projectApi";
 import {toast} from "react-toastify";
 import {FiEdit2, FiTrash2} from "react-icons/fi";
 import ChapterCreation from "../../../../taskPage/components/ChapterCreation";
 import ReviewPopUp from "./Popup/ReviewPop/ReviewPopUp";
 import EditingPopUp from "./Popup/EditingPopUp/EditingPopUp";
+import PleaseWaitPopUp from "./Popup/PleaseWaitPopUp/PleaseWaitPopUp";
+
 
 
 
@@ -31,12 +35,14 @@ const ProjectTasks = () => {
     const [tasksByChapter, setTasksByChapter] = useState({});
     const [showReviewPopup, setShowReviewPopup] = useState(false);
     const [showEditingPopup, setShowEditingPopup] = useState(false);
+    const [showPleaseWait, setShowPleaseWait] = useState(false);
 
     const [startTask] = useStartTaskMutation();
     const [pauseTask] = usePauseTaskMutation();
     const [resumeTask] = useResumeTaskMutation();
     const [completeTask] = useCompleteTaskMutation();
     const [updateEditable] = useUpdateEditableMutation();
+    const [finalizeTask, { isLoading: isFinalizing }] = useFinalizeTaskMutation();
 
 
 
@@ -235,6 +241,27 @@ const ProjectTasks = () => {
         return `${h}h ${m.toString().padStart(2, "0")}m`;
     };
 
+    const handleFinalize = async () => {
+        // yahan tum decide karo kis task ka id bhejna hai
+        // example: koi specific task, ya last task, ya kuch selected
+        const someTaskId = "123"; // <-- yahan real taskId dalo
+
+        console.log("Finalize clicked, taskId:", someTaskId);
+        setShowPleaseWait(true);
+
+        try {
+            await finalizeTask(someTaskId).unwrap();
+            toast.success("Task finalizat cu succes!");
+        } catch (err) {
+            console.error(err);
+            toast.error("Eroare la finalizare!");
+        }
+        finally {
+            setShowPleaseWait(false);
+        }
+    };
+
+
     const getInitials = (name) => {
         if (!name) return "";
 
@@ -330,7 +357,16 @@ const ProjectTasks = () => {
                         </p>
 
                         <div className="buttons-row">
-                            <button className="btn finalize">✔ Finalizează</button>
+                            <button
+                                className="btn finalize"
+                                onClick={() => {
+                                    console.log("Finalize button clicked, ID:", projectId); // 👈 ID console me
+                                    handleFinalize(projectId);
+                                }}
+                            >
+                                ✔ Finalizează
+                            </button>
+
                         </div>
                     </div>
 
@@ -651,6 +687,13 @@ const ProjectTasks = () => {
 
             {showEditingPopup && (
                 <EditingPopUp onClose={() => setShowEditingPopup(false)} />
+            )}
+
+            {showPleaseWait && (
+                <PleaseWaitPopUp
+                    message="Vă rugăm să așteptați..."
+                    subText="Se procesează finalizarea task-ului."
+                />
             )}
 
             <ChapterCreation projectId={projectId} createChapter={createChapter} />
