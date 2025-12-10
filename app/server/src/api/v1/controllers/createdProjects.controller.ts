@@ -12,6 +12,7 @@ import { ok } from "../../../utils/ApiResponse";
 
 export const createProject = async (req: Request, res: Response, next: NextFunction) => {
     try {
+        const userId = req.user
         const body = req.body;
         const { humintId } = body;
 
@@ -50,6 +51,7 @@ export const createProject = async (req: Request, res: Response, next: NextFunct
             humintId: humintId || requestData.humintId || null,
             assignedAnalysts: toArray(body.assignedAnalysts ?? requestData.assignedAnalysts),
             servicesRequested: toArray(body.servicesRequested ?? requestData.servicesRequested),
+            createdBy: userId,
             files: [...(requestData.files || []), ...files],
             status: body.status ? body.status : "approved"
         };
@@ -151,9 +153,10 @@ export const getAllProjects = async (req: Request, res: Response, next: NextFunc
     // -------- ROLE FILTER ----------
     let roleFilter: any;
     if (user.role === "sales") {
+        console.log(user)
         roleFilter = {
             $and: [
-                { fromRequestId: user._id },
+                { fromRequestId: user.id },
                 { status: "approved" }
             ]
         };

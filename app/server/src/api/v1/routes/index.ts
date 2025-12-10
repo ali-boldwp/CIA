@@ -11,6 +11,7 @@ import chapterRoutes from "./chapter.routes";
 import requestedRoutes from "./requested.routes";
 import clarificationRoutes from "./clarification.routes";
 import dashboardRoutes from "./dashboard.routes";
+import notificationRoutes from "./notification.routes";
 
 const router = Router();
 
@@ -25,6 +26,7 @@ router.use("/chats" , chatRoutes);
 router.use("/chapter",chapterRoutes);
 router.use("/" , requestedRoutes);
 router.use("/" , clarificationRoutes);
-router.use("/" , dashboardRoutes)
+router.use("/" , dashboardRoutes);
+router.use("/notification" , notificationRoutes);
 
 export default router;

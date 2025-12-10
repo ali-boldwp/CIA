@@ -38,6 +38,7 @@ export interface IProjectRequest extends Document {
     groupChatId: Types.ObjectId;
 
     fromRequestId?: Types.ObjectId;
+    createdBy?: Types.ObjectId;
 
     status: "draft" | "requested" | "approved" | "finished" | "cancelled";
 }
@@ -115,6 +116,11 @@ const projectRequestSchema = new Schema<IProjectRequest>(
         },
 
         fromRequestId: {
+            type: Schema.Types.ObjectId,
+            ref: "User"
+        },
+
+        createdBy: {
             type: Schema.Types.ObjectId,
             ref: "User"
         },
