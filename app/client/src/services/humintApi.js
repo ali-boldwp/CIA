@@ -130,7 +130,6 @@ export const humintApi = createApi({
 export const {
     useCreateHumintMutation,
     useGetAllHumintsQuery,
-
     useGetHumintByIdQuery,
     useUpdateHumintMutation,
     useSubmitHumintMutation,
@@ -139,7 +138,6 @@ export const {
     useClarificationHumintMutation,
     useCompleteHumintMutation,
     useDeleteHumintMutation,
-
     // 🔹 new hooks
     useGetClarificationsByHumintQuery,
     useCreateClarificationMutation,
