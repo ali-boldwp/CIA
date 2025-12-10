@@ -275,9 +275,7 @@ const CreateProject = () => {
         responsibleAnalyst: responsible,
         assignedAnalysts: selectedAnalysts,
 
-        deadline,
-
-        fromRequestId: id || undefined,
+        deadline
 
     });
 
@@ -325,8 +323,7 @@ const CreateProject = () => {
 
         const payload = {
             ...buildPayload(),
-            status: "draft",        // 🔥 VERY IMPORTANT
-            createdBy: userId,
+            status: "draft"        // 🔥 VERY IMPORTANT
         };
 
         try {

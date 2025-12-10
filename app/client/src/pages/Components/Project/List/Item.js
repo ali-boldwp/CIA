@@ -2,7 +2,6 @@ import { Link } from "react-router-dom";
 import { useRef, useState, useEffect } from "react";
 
 const HUMINT_OPTIONS = [
-    { value: "none",      label: "Nu s-a solicitat HUMINT" },
     { value: "requested", label: "S-a solicitat HUMINT" },
     { value: "received",  label: "Primit HUMINT" },
     { value: "delivered", label: "Predat HUMINT" },
@@ -178,7 +177,7 @@ const Item = ({ data }) => {
 
                 {
                     hasHumint ? (
-                        <button className="dropdown-btn" onClick={() => setOpen(!open)}>
+                        <button className="dropdown-btn action-btn" onClick={() => setOpen(!open)}>
                             HUMINT ▾
                         </button>
                     ):(
