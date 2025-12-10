@@ -1,8 +1,13 @@
 import Notification from "../Notification";
 import { useState } from 'react'
+import "./Header.css"
 import {Link, useLocation} from "react-router-dom";
+import { useGetUnseenCountQuery } from "../../../../services/notificationApi";
 
 const Header = () => {
+
+    const { data } = useGetUnseenCountQuery();
+    const unseen = data?.unseen || 0;
 
     const location=useLocation();
     const isSale=location.pathname.includes("sales") ;
@@ -19,6 +24,7 @@ const Header = () => {
                 <button className="icon-btn" onClick={() => setShowNotif(!showNotif)}>
                     <span className="icon">🔔</span>
                     <span className="text">Alarme</span>
+                    {unseen > 0 && <span className="notif-badge">{unseen}</span>}
                 </button>
 
                 <button className="icon-btn">

@@ -90,3 +90,8 @@
 .notif-footer-btn:hover {
     opacity: 0.9;
 }
+.notif-dot.info { background: #4a90e2; }
+.notif-dot.message { background: #6c5ce7; }
+.notif-dot.alert { background: #ff7675; }
+.notif-dot.task { background: #00b894; }
+.notif-dot.system { background: #fdcb6e; }
