@@ -11,7 +11,7 @@ import {
     usePauseTaskMutation,
     useResumeTaskMutation,
     useCompleteTaskMutation,
-    useGetAnalystsProgressQuery,
+    useGetAnalystsProgressQuery, useUpdateEditableMutation,
 } from "../../../../../services/projectApi";
 import {toast} from "react-toastify";
 import {FiEdit2, FiTrash2} from "react-icons/fi";
@@ -30,6 +30,11 @@ const ProjectTasks = () => {
     const [pauseTask] = usePauseTaskMutation();
     const [resumeTask] = useResumeTaskMutation();
     const [completeTask] = useCompleteTaskMutation();
+    const [updateEditable] = useUpdateEditableMutation();
+
+
+
+
 
     const { data: analystsProgress } = useGetAnalystsProgressQuery();
     const [createTask, { isLoading: isCreatingTask }] = useCreateTaskMutation();
@@ -79,6 +84,13 @@ const ProjectTasks = () => {
 
     const responsible = project?.responsibleAnalyst;
     const assigned = project?.assignedAnalysts || [];
+
+
+    const [editMode, setEditMode] = useState(project?.isEditable ?? true);
+
+    useEffect(() => {
+        setEditMode(project?.isEditable);
+    }, [project]);
 
 
     const handleCreateTask = async (chapterId) => {
@@ -184,6 +196,25 @@ const ProjectTasks = () => {
             toast.error("Complete failed");
         }
     };
+
+    const handleToggleEdit = async () => {
+        const newValue = !editMode;
+
+        setEditMode(newValue);
+
+        try {
+            await updateEditable({
+                projectId,
+                isEditable: newValue
+            }).unwrap();
+
+            toast.success(`Edit mode ${newValue ? "ON" : "OFF"}`);
+        } catch (err) {
+            toast.error("Failed to update edit mode");
+            setEditMode(!newValue); // revert if failed
+        }
+    };
+
 
     const progress = current?.progress || 0;
     const totalTasks = current?.totalTasks || 0;
@@ -320,10 +351,11 @@ const ProjectTasks = () => {
                 <div className="right-side">
                     <div className="edit-row">
                         <span className="edit-label">Mod editare:</span>
-                        <div className="toggle-switch">
-                            <span className="toggle-on">ON</span>
-                            <span className="toggle-off">OFF</span>
+                        <div className="toggle-switch" onClick={handleToggleEdit}>
+                            <span className={editMode ? "toggle-on active" : "toggle-on"}>ON</span>
+                            <span className={!editMode ? "toggle-off active" : "toggle-off"}>OFF</span>
                         </div>
+
                     </div>
 
                     <div className="time-box">
@@ -489,53 +521,54 @@ const ProjectTasks = () => {
                                 {/* Actions */}
                                 <div className="col col-actions">
 
-                                    {/* 🔥 If task is completed → hide ALL buttons */}
-                                    {task.completed ? (
-                                        <>
-                                           <span className="btnActionBoth">
-                                            <FiEdit2 className="icon edit" />
-                                            <FiTrash2 className="icon delete" />
-                                            </span>
-                                        </>
+                                    {!editMode ? (
+                                        <span className="disabled-text">Editing disabled</span>
                                     ) : (
                                         <>
-                                            {/* No analyst = START button */}
-                                            {!task.analyst ? (
-                                                <button className="btn start"
-                                                        onClick={() => handleStart(task._id, item._id)}>
-                                                    Start
-                                                </button>
+                                            {task.completed ? (
+                                                <span className="btnActionBoth">
+                    <FiEdit2 className="icon edit" />
+                    <FiTrash2 className="icon delete" />
+                </span>
                                             ) : (
                                                 <>
-                                                    {/* If paused → show Resume */}
-                                                    {task.isPaused ? (
+                                                    {!task.analyst ? (
                                                         <button className="btn start"
-                                                                onClick={() => handleResume(task._id, item._id)}>
-                                                            Resume
+                                                                onClick={() => handleStart(task._id, item._id)}>
+                                                            Start
                                                         </button>
                                                     ) : (
-                                                        /* If running → show Pause */
-                                                        <button className="btn stop"
-                                                                onClick={() => handlePause(task._id, item._id)}>
-                                                            Pause
-                                                        </button>
+                                                        <>
+                                                            {task.isPaused ? (
+                                                                <button className="btn start"
+                                                                        onClick={() => handleResume(task._id, item._id)}>
+                                                                    Resume
+                                                                </button>
+                                                            ) : (
+                                                                <button className="btn stop"
+                                                                        onClick={() => handlePause(task._id, item._id)}>
+                                                                    Pause
+                                                                </button>
+                                                            )}
+
+                                                            <button className="btn done"
+                                                                    onClick={() => handleComplete(task._id, item._id)}>
+                                                                Done
+                                                            </button>
+                                                        </>
                                                     )}
 
-                                                    {/* DONE button show only if not completed */}
-                                                    <button className="btn done"
-                                                            onClick={() => handleComplete(task._id, item._id)}>
-                                                        Done
-                                                    </button>
+                                                    <span className="btnActionBoth">
+                        <FiEdit2 className="icon edit" />
+                        <FiTrash2 className="icon delete" />
+                    </span>
                                                 </>
                                             )}
-                                            <span className="btnActionBoth">
-                                            <FiEdit2 className="icon edit" />
-                                            <FiTrash2 className="icon delete" />
-                                            </span>
                                         </>
                                     )}
 
                                 </div>
+
 
 
 

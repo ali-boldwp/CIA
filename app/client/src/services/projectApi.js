@@ -142,6 +142,16 @@ export const projectApi = createApi({
             }),
         }),
 
+        updateEditable: builder.mutation({
+            query: ({ projectId, isEditable }) => ({
+                url: `/project/${projectId}/editable`,
+                method: "PUT",
+                body: { isEditable }
+            }),
+            invalidatesTags: ["Project"]
+        }),
+
+
 
     }),
 });
@@ -166,5 +176,6 @@ export const {
     useStartTaskMutation,
     usePauseTaskMutation,
     useResumeTaskMutation,
-    useCompleteTaskMutation
+    useCompleteTaskMutation,
+    useUpdateEditableMutation,
 } = projectApi;
