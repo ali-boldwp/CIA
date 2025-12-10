@@ -1,5 +1,5 @@
 import "./TaskPage.css"
-
+import { useSelector } from "react-redux";
 import {Link, useNavigate, useParams} from "react-router-dom";
 import React, {useEffect, useState} from "react";
 import {
@@ -18,6 +18,8 @@ import {FiEdit2, FiTrash2} from "react-icons/fi";
 import ChapterCreation from "../../../../taskPage/components/ChapterCreation";
 
 const ProjectTasks = () => {
+
+    const { user } = useSelector((state) => state.auth);
 
     const { id: projectId } = useParams();
     const [showTaskForm, setShowTaskForm] = useState(false);
@@ -86,10 +88,11 @@ const ProjectTasks = () => {
     const assigned = project?.assignedAnalysts || [];
 
 
-    const [editMode, setEditMode] = useState(project?.isEditable ?? true);
+    const [edit_Mode, setEdit_Mode] = useState(project?.isEditable ?? true);
+    const [editMode, setEditMode] = useState( false );
 
     useEffect(() => {
-        setEditMode(project?.isEditable);
+        setEditMode( ( ( user?.role == "admin"  || user?.role == "manager" ) || ( project?.isEditable && user?.role == "analyst" ) ) );
     }, [project]);
 
 
@@ -198,9 +201,10 @@ const ProjectTasks = () => {
     };
 
     const handleToggleEdit = async () => {
+
         const newValue = !editMode;
 
-        setEditMode(newValue);
+         setEditMode(newValue);
 
         try {
             await updateEditable({
@@ -211,7 +215,7 @@ const ProjectTasks = () => {
             toast.success(`Edit mode ${newValue ? "ON" : "OFF"}`);
         } catch (err) {
             toast.error("Failed to update edit mode");
-            setEditMode(!newValue); // revert if failed
+            // setEditMode(!newValue); // revert if failed
         }
     };
 
@@ -349,14 +353,21 @@ const ProjectTasks = () => {
 
                 {/* RIGHT SIDE – TIME BOX */}
                 <div className="right-side">
-                    <div className="edit-row">
-                        <span className="edit-label">Mod editare:</span>
-                        <div className="toggle-switch" onClick={handleToggleEdit}>
-                            <span className={editMode ? "toggle-on active" : "toggle-on"}>ON</span>
-                            <span className={!editMode ? "toggle-off active" : "toggle-off"}>OFF</span>
-                        </div>
+                    { user?.role === "manager" && (
+                        <div className="edit-row">
+                            <span className="edit-label">Mod editare:</span>
+                            <label className="ios-switch">
+                                <input
+                                    type="checkbox"
+                                    checked={editMode}
+                                    onChange={handleToggleEdit}
+                                />
+                                <span className="slider"></span>
+                            </label>
 
-                    </div>
+                        </div>
+                    )}
+
 
                     <div className="time-box">
                         <p className="time-title">REZUMAT TIMP LUCRU</p>
@@ -522,7 +533,7 @@ const ProjectTasks = () => {
                                 <div className="col col-actions">
 
                                     {!editMode ? (
-                                        <span className="disabled-text">Editing disabled</span>
+                                        <span className="disabled-text"></span>
                                     ) : (
                                         <>
                                             {task.completed ? (
@@ -578,15 +589,18 @@ const ProjectTasks = () => {
 
                         {/* Add new task */}
                         <div className="add-row">
-                            <button
-                                className="add-btn"
-                                onClick={() => {
-                                    setActiveChapterId(item._id);
-                                    setShowTaskForm(true);
-                                }}
-                            >
-                                + Adauga punct nou in acest capitol
-                            </button>
+                            { editMode &&(
+                                <button
+                                    className="add-btn"
+                                    onClick={() => {
+                                        setActiveChapterId(item._id);
+                                        setShowTaskForm(true);
+                                    }}
+                                >
+                                    + Adauga punct nou in acest capitol
+                                </button>
+                            )}
+
                         </div>
                     </div>
                 ))}
@@ -628,7 +642,7 @@ const ProjectTasks = () => {
 
 
 
-            <ChapterCreation projectId={projectId} createChapter={createChapter} />
+            <ChapterCreation mode={editMode} projectId={projectId} createChapter={createChapter} />
 
         </div>
     );
