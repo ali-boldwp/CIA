@@ -16,6 +16,10 @@ import {
 import {toast} from "react-toastify";
 import {FiEdit2, FiTrash2} from "react-icons/fi";
 import ChapterCreation from "../../../../taskPage/components/ChapterCreation";
+import ReviewPopUp from "./Popup/ReviewPop/ReviewPopUp";
+import EditingPopUp from "./Popup/EditingPopUp/EditingPopUp";
+
+
 
 const ProjectTasks = () => {
 
@@ -25,6 +29,8 @@ const ProjectTasks = () => {
     const [activeChapterId, setActiveChapterId] = useState(null);
 
     const [tasksByChapter, setTasksByChapter] = useState({});
+    const [showReviewPopup, setShowReviewPopup] = useState(false);
+    const [showEditingPopup, setShowEditingPopup] = useState(false);
 
     const [startTask] = useStartTaskMutation();
     const [pauseTask] = usePauseTaskMutation();
@@ -394,9 +400,21 @@ const ProjectTasks = () => {
                 {/* RIGHT SIDE — ACTION BUTTONS */}
                 <div className="actions-box">
 
-                    <button className="project-btn save">Salveaza progres</button>
+                    <button
+                        className="project-btn save"
+                        onClick={() => setShowEditingPopup(true)}
+                    >
+                        Salveaza progres
+                    </button>
 
-                    <button className="project-btn">Cauta in Notes App</button>
+
+                    <button
+                        className="project-btn"
+                        onClick={() => setShowReviewPopup(true)}
+                    >
+                        Cauta in Notes App
+                    </button>
+
 
                     <div className="humint-wrapper">
                         <span className="approval-badge">necesită aprobare</span>
@@ -594,6 +612,13 @@ const ProjectTasks = () => {
             )}
 
 
+            {showReviewPopup && (
+                <ReviewPopUp onClose={() => setShowReviewPopup(false)} />
+            )}
+
+            {showEditingPopup && (
+                <EditingPopUp onClose={() => setShowEditingPopup(false)} />
+            )}
 
             <ChapterCreation projectId={projectId} createChapter={createChapter} />
 
