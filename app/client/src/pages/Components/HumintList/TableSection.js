@@ -61,8 +61,8 @@ const TableSection = ({
         onToggleSelectAll(visibleIds, e.target.checked);
     };
 
-    const pendingCount = requests.filter((r) => r.status === "De aprobat").length;
-    const clarCount = requests.filter((r) => r.status === "Clarificări").length;
+    const pendingCount = requests.filter((r) => r.status === "Requested").length;
+    const clarCount = requests.filter((r) => r.status === "Clarification").length;
 
     return (
         <div className={styles.container}>

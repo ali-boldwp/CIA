@@ -951,8 +951,8 @@ const CreateProject = () => {
                             onClick={handleSave}
                         >
                             {id
-                                ? "Actualizează & aprobă"
-                                : "Creează proiect"}
+                                ? "Creeaza proiect nou"
+                                : "Creează proiect nou"}
                         </button>
                     </div>
                 </div>
