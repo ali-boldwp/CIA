@@ -176,13 +176,20 @@ const Item = ({ data }) => {
                 {/* KPI */}
                 <button className="action-btn">Costuri & KPI</button>
 
-                {/* ✅ HUMINT Button — hard-coded label now */}
-                <button className="dropdown-btn" onClick={() => setOpen(!open)}>
-                    HUMINT ▾
-                </button>
+                {
+                    hasHumint ? (
+                        <button className="dropdown-btn" onClick={() => setOpen(!open)}>
+                            HUMINT ▾
+                        </button>
+                    ):(
+                        <Link  to={`/humint/new/${data?._id}`} className="action-btn">Solicitare HUMINT</Link>
+                    )
+                }
+
 
                 {/* HUMINT Dropdown */}
                 {open && (
+
                     <div className="humint-dropdown">
                         {HUMINT_OPTIONS.map((opt) => (
                             <div
