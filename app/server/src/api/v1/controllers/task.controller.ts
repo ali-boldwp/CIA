@@ -43,7 +43,7 @@ export const getTaskById = async (req: Request, res: Response, next: NextFunctio
 };
 
 export const startTask = async (req, res) => {
-    const task = await Task.findById(req.params.id);
+    let task = await Task.findById(req.params.id);
     if (!task) return res.status(404).json({ message: "Task not found" });
 
     console.log("USER:", req.user);
@@ -63,7 +63,7 @@ export const startTask = async (req, res) => {
 
 
 export const pauseTask = async (req, res) => {
-    const task = await Task.findById(req.params.id);
+    let task = await Task.findById(req.params.id);
     if (!task) return res.status(404).json({ message: "Task not found" });
 
     if (!task.lastStartTimestamp)
@@ -87,7 +87,7 @@ export const pauseTask = async (req, res) => {
 
 
 export const resumeTask = async (req, res) => {
-    const task = await Task.findById(req.params.id);
+    let task = await Task.findById(req.params.id);
     if (!task) return res.status(404).json({ message: "Task not found" });
 
     task.isPaused = false;
@@ -104,7 +104,7 @@ export const resumeTask = async (req, res) => {
 
 
 export const completeTask = async (req, res) => {
-    const task = await Task.findById(req.params.id);
+    let task = await Task.findById(req.params.id);
     if (!task) return res.status(404).json({ message: "Task not found" });
 
     
