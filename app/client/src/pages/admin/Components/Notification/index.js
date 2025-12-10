@@ -47,7 +47,7 @@ const Notification = ({ onClose }) => {
                 </div>
 
                 <button className="notif-footer-btn">
-
+                    Vezi mai multe
                 </button>
             </div>
         </div>
