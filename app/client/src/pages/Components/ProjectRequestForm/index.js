@@ -287,7 +287,7 @@ const Index = () => {
         });
 
         // REQUIRED BY BACKEND
-        formData.append("fromRequestId", user._id);
+        
         formData.append("status", "requested");
 
         try {

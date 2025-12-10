@@ -338,10 +338,10 @@ const MessengerPage = ({chatID}) => {
                                 <FiHash className="pill-icon"/>
                                 Serie butoane
                             </button>
-                            <button className="pill">
+                            <Link to="/messenger/new" className="pill">
                                 <FiPlus className="pill-icon" />
                                 Creează grup
-                            </button>
+                            </Link>
                             <button className="pill">
                                 <FiUserMinus className="pill-icon"/>
                                 Elimină din grup
