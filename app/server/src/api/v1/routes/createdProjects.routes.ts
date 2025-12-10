@@ -46,6 +46,9 @@ router.delete(
 
 router.put("/:id/editable", auth, createdProjectController.updateEditableStatus);
 
+router.put("/:id/status", auth, createdProjectController.updateProjectStatus);
+
+
 
 router.get("/analysts/progress", auth, createdProjectController.getAnalystsProgress);
 

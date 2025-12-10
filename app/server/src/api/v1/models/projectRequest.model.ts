@@ -42,7 +42,7 @@ export interface IProjectRequest extends Document {
     fromRequestId?: Types.ObjectId;
     createdBy?: Types.ObjectId;
 
-    status: "draft" | "requested" | "approved" | "finished" | "cancelled";
+    status: "draft" | "requested" | "approved" | "finished" | "cancelled" | "revision" | "observation";
 }
 
 const projectRequestSchema = new Schema<IProjectRequest>(
@@ -135,7 +135,7 @@ const projectRequestSchema = new Schema<IProjectRequest>(
 
         status: {
             type: String,
-            enum: ["draft" , "requested" , "approved" , "finished" , "cancelled"],
+            enum: ["draft" , "requested" , "approved" , "finished" , "cancelled" , "revision" , "observation"],
             default: "requested"
         },
     },
