@@ -142,6 +142,13 @@ export const projectApi = createApi({
             }),
         }),
 
+        finalizeTask: builder.mutation({
+            query: (id) => ({
+                url: `/task/${id}/finalize`,
+                method: "POST",
+            }),
+        }),
+
         updateEditable: builder.mutation({
             query: ({ projectId, isEditable }) => ({
                 url: `/project/${projectId}/editable`,
@@ -178,4 +185,5 @@ export const {
     useResumeTaskMutation,
     useCompleteTaskMutation,
     useUpdateEditableMutation,
+    useFinalizeTaskMutation,
 } = projectApi;
