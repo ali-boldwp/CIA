@@ -7,7 +7,8 @@ import "./style.css";
 
 const Dashboard = () => {
 
-    const { data, isLoading }=useGetProjectsQuery();
+    const { data:approve, isLoading }=useGetProjectsQuery();
+    const approvedProject=approve?.data || [];
     const { data: analystsData } = useGetAnalystsQuery();
 
     const analysts = analystsData?.data || [];
@@ -37,7 +38,7 @@ const Dashboard = () => {
 
 
 
-    const approvedProject=data?.data || [];
+
 
     const formatDate = (date) => {
         if (!date) return "—";

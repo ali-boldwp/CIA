@@ -151,12 +151,18 @@ export const getAllProjects = async (req: Request, res: Response, next: NextFunc
     // -------- ROLE FILTER ----------
     let roleFilter: any;
     if (user.role === "sales") {
-        roleFilter = { fromRequestId: user.id };
+        roleFilter = {
+            $and: [
+                { fromRequestId: user._id },
+                { status: "approved" }
+            ]
+        };
     } else if (user.role === "analyst") {
         roleFilter = {
             $or: [
                 { responsibleAnalyst: user.id },
-                { assignedAnalysts: user.id }
+                { assignedAnalysts: user.id },
+
             ]
         };
     } else if (user.role === "admin" || user.role === "manager") {
