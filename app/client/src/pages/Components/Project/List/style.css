@@ -30,7 +30,8 @@
 
 .projects-header h3 {
     margin: 0;
-    font-size: 20px;
+    font-size: 21px;        /* 20px se 1px zyada */
+    font-weight: 800;       /* thoda aur bold */
 }
 
 .project-infoDash {
@@ -51,17 +52,25 @@
 /* Table Headings */
 .projects-table-header {
     display: grid;
-    grid-template-columns: 25% 15% 19% 15% 25%;
+    /* pehle: 25% 15% 19% 15% 25% */
+    /* last column (Actiuni) ko thora kam kiya */
+    grid-template-columns: 22% 15% 18% 18% 27%;
     padding: 10px 5px;
-    font-size: 14px;
-    font-weight: bold;
+    font-size: 14px;   /* 13px se 1px zyada */
+    font-weight: 700;  /* bold */
     opacity: 0.7;
+}
+
+/* Acțiuni header ko center mein lao */
+.projects-table-header span:last-child {
+    text-align: center !important;
 }
 
 /* Rows */
 .project-row {
     display: grid;
-    grid-template-columns: 25% 15% 19% 15% 25%;
+    /* columns header jese hi rakho */
+    grid-template-columns: 22% 15% 18% 18% 27%;
     padding: 18px 5px;
     margin: 10px 0px;
     border-radius: 10px;
@@ -72,24 +81,24 @@
 .colProgress {
     display: flex;
     flex-direction: column;
-    width:80%;
+    width: 80%;
 }
 
 /* ✅ Progres column text smaller */
 .colProgress,
 .colProgress span {
-    font-size: 12px;
+    font-size: 11px; /* 12px se kam */
 }
 
 .col h4 {
     margin: 0;
-    font-size: 15px;
+    font-size: 14px; /* 15px se kam */
     font-weight: 700;
 }
 
 .col p {
     margin: 4px 0;
-    font-size: 13px;
+    font-size: 12px; /* 13px se kam */
 }
 
 .team-badge-approved:first-child {
@@ -112,7 +121,7 @@
 
 /* Deadline */
 .deadline-date {
-    font-size: 13px;
+    font-size: 12px; /* 13px se kam */
     padding: 6px 10px;
     background: #dff2ff;
     border-radius: 8px;
@@ -139,15 +148,15 @@
 }
 
 .progress-text {
-    font-size: 12px;
+    font-size: 11px; /* 12px se kam */
 }
 
 /* Status */
 /* ✅ Status HUMINT badge smaller */
 .status-badge-approved {
-    padding: 4px 8px;
-    border-radius: 10px;
-    font-size: 12px;
+    padding: 8px 9px;
+    border-radius: 100px;
+    font-size: 12px; /* 12px se kam */
     font-weight: 600;
 }
 
@@ -169,33 +178,39 @@
 }
 
 /* Actions */
-.action-btn{
-    padding: 6px 10px;
-    border: 1px solid #ddd;
-    background: white;
-    border-radius: 8px;
-    font-size: 13px;
-    cursor: pointer;
-    margin-right: 5px;
-    text-decoration: none;
-    display: inline-block;
+/* ✅ Deschide, Mesaj 🔒, Costuri & KPI – same height & width */
+.action-btn {
+    min-width: 90px !important;
+    height: 32px !important;
+    padding: 6px 10px !important;
+    display: inline-flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    font-size: 12px !important;
+    border-radius: 8px !important;
+    border: 1px solid #ddd !important;
+    background: white !important;
+    white-space: nowrap !important;
 }
 
+/* HUMINT button */
 .dropdown-btn {
-    padding: 12px 10px;
+    padding: 12px 12px;
     border: 1px solid #ddd;
     background: white;
-    border-radius: 8px;
-    font-size: 13px;
+    border-radius: 999px;
+    font-size: 12px;
     cursor: pointer;
     margin-right: 5px;
     text-decoration: none;
-    display: inline-block;
     font-weight: 600;
 
-    white-space: nowrap;      /* line break allowed nahi */
-    display: inline-flex;     /* text ko center rakhta hai */
-    align-items: center;      /* width content ke hisaab se */
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    white-space: nowrap;
+
+    font-style: normal;
 }
 
 .projects-search {
@@ -278,7 +293,7 @@ a {
     padding: 8px 12px;
     border: none;
     background: transparent;
-    font-size: 13px;
+    font-size: 12px; /* 13px se kam */
     cursor: pointer;
 }
 
@@ -294,9 +309,9 @@ a {
 
 /* Deadline Badge Styles */
 .deadline-badge {
-    padding: 6px 12px;
+    padding: 5px 9px;
     border-radius: 20px;
-    font-size: 14px;
+    font-size: 13px; /* 14px se kam */
     font-weight: 600;
     display: flex;
     flex-direction: column;
@@ -314,13 +329,13 @@ a {
     padding: 0;
     background: transparent;
     border-radius: 0;
-    font-size: 13px;
+    font-size: 12px; /* 13px se kam */
 }
 
 .deadline-badge .deadline-status {
     font-weight: 500;
     display: block;
-    font-size: 12px;
+    font-size: 11px; /* 12px se kam */
     opacity: 0.9;
     margin-top: 2px;
 }
@@ -360,7 +375,7 @@ a {
     }
 
     .deadline-badge .deadline-date {
-        font-size: 14px;
+        font-size: 13px;
     }
 }
 
@@ -389,6 +404,8 @@ a {
         padding: 5px 8px;
         font-size: 12px;
         margin-right: 3px;
+        min-width: 100px;
+        height: 30px;
     }
 
     /* Stacked layout for tablets */
@@ -471,6 +488,7 @@ a {
         margin-right: 2px;
         flex: 1;
         min-width: 70px;
+        height: 28px;
     }
 }
 
@@ -514,6 +532,7 @@ a {
     .dropdown-btn {
         font-size: 10px;
         padding: 3px 4px;
+        height: 26px;
     }
 
     .deadline-badge {
