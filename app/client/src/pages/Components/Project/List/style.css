@@ -51,7 +51,7 @@
 /* Table Headings */
 .projects-table-header {
     display: grid;
-    grid-template-columns: 25% 15% 17% 17% 25%;
+    grid-template-columns: 25% 15% 19% 15% 25%;
     padding: 10px 5px;
     font-size: 14px;
     font-weight: bold;
@@ -61,7 +61,7 @@
 /* Rows */
 .project-row {
     display: grid;
-    grid-template-columns: 25% 15% 17% 17% 25%;
+    grid-template-columns: 25% 15% 19% 15% 25%;
     padding: 18px 5px;
     margin: 10px 0px;
     border-radius: 10px;
@@ -72,6 +72,7 @@
 .colProgress {
     display: flex;
     flex-direction: column;
+    width:80%;
 }
 
 /* ✅ Progres column text smaller */

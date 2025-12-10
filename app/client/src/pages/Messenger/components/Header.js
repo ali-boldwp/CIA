@@ -34,7 +34,7 @@ import {
 }
     from "../../../services/chatApi";
 import {FaThumbtack} from "react-icons/fa6";
-import {Link, useNavigate} from "react-router-dom";
+import {Link, useNavigate,useParams} from "react-router-dom";
 import styles from "../../Manager/Components/Team/Team.module.css";
 import './popup.css'
 import {toast} from "react-toastify";
@@ -44,23 +44,12 @@ function Header() {
     return (
         <div className="Mheader">
             <h2 className="header-title">💬 Messenger — Toți / Grupuri / DM</h2>
-
-            {/*<div className="header-actions">*/}
-            {/*    <button className="btn-outline">*/}
-            {/*        <FiDownload className="btn-icon" />*/}
-            {/*        Export chat*/}
-            {/*    </button>*/}
-            {/*    <button className="btn-primary">*/}
-            {/*        <FiSettings className="btn-icon" />*/}
-            {/*        Setări*/}
-            {/*    </button>*/}
-            {/*</div>*/}
         </div>
     );
 }
 
 const MessengerPage = ({chatID}) => {
-
+    const {id:ChatID}=useParams();
     const { user, loading } = useSelector((state) => state.auth);
 
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -79,7 +68,7 @@ const MessengerPage = ({chatID}) => {
 
 
 
-    const [chat, setChat] = useState(chatID);
+    const [chat, setChat] = useState(ChatID);
 
 
     const [searchTerm, setSearchTerm] = useState("");
@@ -108,6 +97,12 @@ const MessengerPage = ({chatID}) => {
 
     const currentChat = chats?.data?.find(c => c._id === chat) || null;
 
+    useEffect(() => {
+        if (ChatID) {
+            setChat(ChatID);
+            socket.emit("join_chat", ChatID);
+        }
+    }, [ChatID]);
 
     useEffect(() => {
         if (data) {
@@ -296,10 +291,10 @@ const MessengerPage = ({chatID}) => {
         try {
             await addMembersToGroup({
                 chatId: chat,
-                users: selectedMembers   // 👈 FIXED HERE
+                users: selectedMembers
             }).unwrap();
 
-            toast.success("Members added successfully!");
+            toast("Membrii au fost adăugați cu succes!");
 
             setIsModalOpen(false);
             setSelectedMembers([]);
@@ -308,7 +303,7 @@ const MessengerPage = ({chatID}) => {
 
         } catch (error) {
             console.error(error);
-            toast.error("Failed to add members.");
+            toast.error("Adăugarea membrilor a eșuat.");
         }
     };
 
