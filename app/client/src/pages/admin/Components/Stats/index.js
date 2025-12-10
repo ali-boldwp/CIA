@@ -37,7 +37,7 @@ const Stats = ({ stats }) => {
                             <span className="label">👥 Analiști implicați</span>
                             <h3> { stats?.analyst?.free }/{ stats?.analyst?.total }</h3>
                         </div>
-                        <Link to="/allUser" className="gradient-btn">
+                        <Link to="/users" className="gradient-btn">
                             👥 Vezi utilizatorii
                         </Link>
                     </div>
