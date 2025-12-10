@@ -26,6 +26,7 @@ const ChapterCreation = ({ projectId, createChapter , mode}) => {
 
     return !showChapterInput  ? (
         mode && (
+
         <button className="add-chapter-btn" onClick={() => setShowChapterInput(true)}>
             + Capitol nou
         </button>
