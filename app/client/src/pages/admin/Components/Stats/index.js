@@ -72,7 +72,7 @@ const Stats = ({ stats }) => {
                                 <span className={ "stats-block-content-title" }> HUMINT în lucru </span>
                                 <span className={"stats-block-content-value"}> { stats?.hument } </span>
                             </div>
-                            <a href={ "#" }> View all projects </a>
+                            <Link to={ "/humint" }> View all projects </Link>
                         </div>
                     </div>
 

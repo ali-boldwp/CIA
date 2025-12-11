@@ -55,26 +55,18 @@ const Index = () => {
 
     }, [ projectsData ]);
 
-    /*if ( statsLoading || projectsLoading ) {
-
-        return (
-            <div className="spinner"></div>
-        )
-
-    }*/
-
     return (
         <Layout
             loading={ statsLoading || projectsLoading }
             header={
                 {
-                    content: <Header />
+                    content: <Header createProject={ true } />
                 }
             }
             content={
                 <>
                     <Stats stats={ stats } />
-                    <ProjectList data={ projects } />
+                    <ProjectList data={ projects } header={true} />
                     <Team />
                     <CalenderList />
                 </>

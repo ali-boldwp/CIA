@@ -1,7 +1,7 @@
 .header {
     width: 100%;
     background: #ffffff;
-    padding: 12px 10px;
+    padding: 20px 10px;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -63,7 +63,7 @@
     align-items: center;
     background: transparent;
     padding: 9px 10px;
-    border-radius: 4px;
+    border-radius: 50px;
     max-width: 26rem;
     border: 1px solid rgba( 255, 255, 255, 0.5);
     /*box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.18);*/
@@ -130,7 +130,7 @@
 .icon-btn {
     background: transparent;
     border: 1px solid #FFF;
-    border-radius: 4px;
+    border-radius: 40px;
     cursor: pointer;
     font-weight: 800;
     font-size: 14px;
@@ -138,7 +138,6 @@
     align-items: center;
     padding: 10px 14px;
     gap: 5px;
-    min-height: 44px;
     color: #FFF;
 }
 
@@ -152,6 +151,7 @@
 .icon-btn .text {
     font-weight: normal; /* only text italic */
     letter-spacing: 0.5px;
+    font-size: 12px;
 }
 
 .icon-btn.new .text {
@@ -159,8 +159,8 @@
 }
 
 .icon-btn .icon {
-    font-style: normal; /* icons stay normal */
-    /*margin-left: 3px;*/
+    font-style: normal;
     margin: 0;
+    display: flex;
 }
 

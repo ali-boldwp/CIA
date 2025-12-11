@@ -7,6 +7,7 @@ import { toast } from "react-toastify";
 import { useGetAnalystsQuery } from "../../../services/userApi";
 
 const Index = () => {
+
     const user = useSelector((state) => state.auth.user);
 
     // FORM STATES
@@ -341,20 +342,6 @@ const Index = () => {
         <div className={ styles.pageWrapper1 }>
             <div className={styles.page}>
                 <div className={styles.topBar} />
-
-                {/* HEADER */}
-                <div className={styles.headerWrapper}>
-                    <div className={styles.headerCard}>
-                        <div className={styles.headerInner}>
-                            <Link to="/" className={styles.backLink}>
-                                ← Înapoi la Dashboard
-                            </Link>
-                            <h1 className={styles.headerTitle}>
-                                Solicitare nouă de proiect
-                            </h1>
-                        </div>
-                    </div>
-                </div>
 
                 {/* FORM CARD */}
                 <div className={styles.formWrapper}>

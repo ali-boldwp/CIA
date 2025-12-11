@@ -28,7 +28,7 @@ const Header = ({ children, search, logo, title, back = false }) => {
         <header className="header">
             <div className="firstSec">
                 { back && <Link to={ '/' } className={ 'back-to-dashboard' }>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="15px" height="15px" viewBox="0 0 1024 1024"><path fill="#000000" d="M224 480h640a32 32 0 1 1 0 64H224a32 32 0 0 1 0-64z"/><path fill="#000000" d="m237.248 512 265.408 265.344a32 32 0 0 1-45.312 45.312l-288-288a32 32 0 0 1 0-45.312l288-288a32 32 0 1 1 45.312 45.312L237.248 512z"/></svg> Înapoi la Dashboard
+                    <svg xmlns="http://www.w3.org/2000/svg" width="12px" height="12px" viewBox="0 0 1024 1024"><path fill="#000000" d="M224 480h640a32 32 0 1 1 0 64H224a32 32 0 0 1 0-64z"/><path fill="#000000" d="m237.248 512 265.408 265.344a32 32 0 0 1-45.312 45.312l-288-288a32 32 0 0 1 0-45.312l288-288a32 32 0 1 1 45.312 45.312L237.248 512z"/></svg> Înapoi la Dashboard
                 </Link> }
                 { logo && <Link to={"/"}><h3 className="logo">{ title ? title : dashboardTitle}</h3></Link> }
                 {
@@ -64,7 +64,7 @@ const Header = ({ children, search, logo, title, back = false }) => {
                 {children}
                 <button className="icon-btn">
                     <span className="icon">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="15px" height="15px" viewBox="0 0 16 16"
+                        <svg xmlns="http://www.w3.org/2000/svg" width="12px" height="12px" viewBox="0 0 16 16"
                              fill="none">
                             <path
                                 d="M8 7C9.65685 7 11 5.65685 11 4C11 2.34315 9.65685 1 8 1C6.34315 1 5 2.34315 5 4C5 5.65685 6.34315 7 8 7Z"
