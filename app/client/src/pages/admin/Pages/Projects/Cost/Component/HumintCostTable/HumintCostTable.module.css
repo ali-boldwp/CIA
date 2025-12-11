@@ -1,0 +1,374 @@
+.formCard {
+    background: #ffffff;
+    border-radius: 18px;
+    padding: 24px 28px;
+    margin-bottom: 24px;
+    width: 100%;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.formTitle {
+    font-size: 19px;
+    font-weight: 800;
+    margin-bottom: 20px;
+    color: #111827;
+}
+
+/* Table styles */
+.costTable {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+    margin-top: 6px;
+    background: #ffffff;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.costTable thead tr {
+    background: #f9fafb;
+}
+
+.costTable th,
+.costTable td {
+    padding: 12px 16px;
+    border-bottom: 1px solid #e5e7eb;
+    text-align: left;
+    vertical-align: middle;
+    height: 52px;
+}
+
+.costTable th {
+    font-size: 14px;
+    color: #6b7280;
+    font-weight: 700;
+}
+
+/* Specific column widths */
+.costTable th:nth-child(1),
+.costTable td:nth-child(1) {
+    width: 120px;
+    min-width: 120px;
+    white-space: nowrap;
+}
+
+
+.costTable th:nth-child(2),
+.costTable td:nth-child(2) {
+    width: auto;
+    min-width: 60px;
+}
+
+
+.costTable th:nth-child(3),
+.costTable td:nth-child(3) {
+    width: 190px;
+    min-width: 190px;
+}
+
+
+.costTable th:nth-child(4),
+.costTable td:nth-child(4) {
+    width: 170px;
+    min-width: 170px;
+    text-align: right;
+}
+
+
+.costTable th:nth-child(5),
+.costTable td:nth-child(5) {
+    width: 170px;
+    min-width: 170px;
+    text-align: right;
+}
+
+
+.costTable th:nth-child(6),
+.costTable td:nth-child(6) {
+    width: 180px;
+    min-width: 180px;
+    text-align: right;
+}
+
+.costTable tbody tr:last-child td {
+    border-bottom: none;
+}
+
+
+.costTable td:nth-child(1) {
+    font-family: 'Courier New', monospace;
+    font-size: 14px;
+    color: #111827;
+    font-weight: 800 !important;
+    background-color: #f8fafc;
+    border-right: 2px solid #d1d5db;
+}
+
+
+.costTable td:nth-child(2) {
+    color: #111827;
+    font-weight: 600;
+    line-height: 1.5;
+    word-break: break-word;
+}
+
+/* Loading and no data cells */
+.loadingCell,
+.noDataCell {
+    text-align: center;
+    color: #6b7280;
+    padding: 40px !important;
+    font-size: 15px;
+    vertical-align: middle;
+}
+
+/* Utility cell with progress bar - FIXED ALIGNMENT */
+.utilityCell {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    height: 100%;
+    min-height: 28px;
+}
+
+.utilityValue {
+    min-width: 40px;
+    font-weight: 600;
+    color: #4f46e5;
+}
+
+.utilityBar {
+    flex: 1;
+    height: 8px;
+    background: #e5e7eb;
+    border-radius: 4px;
+    overflow: hidden;
+    margin: 0;
+}
+
+.utilityFill {
+    height: 100%;
+    background: linear-gradient(90deg, #22c55e, #10b981);
+    border-radius: 4px;
+    transition: width 0.3s ease;
+}
+
+/* Amount styling - IMPROVED ALIGNMENT */
+.costAmount {
+    color: #111827;
+    font-weight: 700;
+    font-size: 14px;
+    display: block;
+    text-align: right;
+    line-height: 1.4;
+}
+
+.taxAmount {
+    color: #dc2626;
+    font-weight: 700;
+    font-size: 14px;
+    display: block;
+    text-align: right;
+    line-height: 1.4;
+}
+
+.totalAmount {
+    color: #059669;
+    font-weight: 800;
+    font-size: 15px;
+    display: block;
+    text-align: right;
+    line-height: 1.4;
+}
+
+
+/* Total box */
+.totalBox {
+    margin: 20px 0 10px 0;
+    padding: 16px 20px;
+    background: #f8fafc;
+    border-radius: 12px;
+    border: 1px solid #e5e7eb;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.totalLabel {
+    font-weight: 700;
+    font-size: 17px;
+    color: #111827;
+}
+
+.totalValue {
+    font-weight: 800;
+    font-size: 18px;
+    color: #059669;
+}
+
+/* Button */
+.btnGreen {
+    margin-top: 16px;
+    background: #22C55E;
+    color: #ffffff;
+    padding: 14px 20px;
+    border-radius: 8px;
+    border: none;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    width: auto;
+    min-width: 180px;
+    transition: all 0.2s ease;
+}
+
+.btnGreen:hover {
+    background: #15803d;
+}
+
+/* Responsive */
+@media (max-width: 1199px) {
+    .costTable {
+        font-size: 13px;
+    }
+
+    .costTable th,
+    .costTable td {
+        padding: 10px 12px;
+        height: 48px;
+    }
+
+
+    .costTable th:nth-child(1),
+    .costTable td:nth-child(1) {
+        width: 100px;
+        min-width: 100px;
+    }
+
+
+    .costTable td:nth-child(1) {
+        font-size: 13px;
+        font-weight: 700 !important;
+    }
+
+    .costTable td:nth-child(2) {
+        font-weight: 600;
+    }
+}
+
+@media (max-width: 991px) {
+    .formCard {
+        padding: 20px 24px;
+    }
+
+    .formTitle {
+        font-size: 18px;
+    }
+
+    .utilityCell {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 6px;
+        min-height: 40px;
+    }
+
+    .utilityBar {
+        width: 100%;
+    }
+}
+
+@media (max-width: 767px) {
+    .formCard {
+        padding: 18px 20px;
+        border-radius: 14px;
+    }
+
+    .formTitle {
+        font-size: 17px;
+    }
+
+    .costTable th,
+    .costTable td {
+        padding: 8px 10px;
+        font-size: 12px;
+        height: 44px; /* Adjusted for small mobile */
+    }
+
+    .costTable {
+        display: block;
+        overflow-x: auto;
+        white-space: nowrap;
+    }
+
+
+    .costTable th:nth-child(n),
+    .costTable td:nth-child(n) {
+        width: auto !important;
+        min-width: auto !important;
+    }
+
+
+    .costTable th:nth-child(1),
+    .costTable td:nth-child(1) {
+        width: 90px !important;
+        min-width: 90px !important;
+    }
+
+
+    .costTable td:nth-child(1) {
+        font-size: 12px;
+        font-weight: 700 !important;
+    }
+
+    .costTable td:nth-child(2) {
+        font-weight: 600;
+    }
+
+
+    .totalBox {
+        padding: 14px 16px;
+    }
+
+    .totalLabel {
+        font-size: 16px;
+    }
+
+    .totalValue {
+        font-size: 17px;
+    }
+
+    .btnGreen {
+        width: 100%;
+        min-width: auto;
+    }
+}
+
+@media (max-width: 575px) {
+    .formCard {
+        padding: 15px 18px;
+        border-radius: 12px;
+    }
+
+    .formTitle {
+        font-size: 16px;
+        margin-bottom: 16px;
+    }
+
+    .totalBox {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+    }
+
+    /* Extra small screens */
+    .costTable td:nth-child(1) {
+        font-size: 11px;
+        font-weight: 700 !important;
+    }
+
+    .costTable th,
+    .costTable td {
+        height: 40px;
+    }
+}

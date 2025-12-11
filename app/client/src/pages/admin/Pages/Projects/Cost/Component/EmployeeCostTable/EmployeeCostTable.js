@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import styles from './EmployeeCostTable.module.css';
-import { useGetAnalystsQuery } from '../../../../../../services/userApi';
+import { useGetAnalystsQuery } from '../../../../../../../services/userApi';
 
 const EmployeeCostTable = ({ onAddCost }) => {
     // Fetch analysts data from API

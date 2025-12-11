@@ -2,21 +2,13 @@ import "./style.css";
 import { useState } from "react";
 import AddEmployeeCostPopup from "./PopUp/AddEmployeeCostPopup/AddEmployeeCostPopup";
 import AddHumintCostPopup from "./PopUp/AddHumintCostPopup/AddHumintCostPopup";
-import SummarySection from "./SummarySection/SummaaySection";
-import CostBar from "./CostBar/CostBar";
-
-import EmployeeCostTable from "./EmployeeCostTable/EmployeeCostTable"; // Import the new component
-
-import { useGetHumintExpensesQuery, useGetHumintTotalsQuery }
-    from "../../../../../services/humintExpanseApi";
-
-
+import SummarySection from "./Component/SummarySection/SummaaySection";
+import CostBar from "./Component/CostBar/CostBar";
+import EmployeeCostTable from "./Component/EmployeeCostTable/EmployeeCostTable";
+import HumintCostTable from "./Component/HumintCostTable/HumintCostTable";
+import ButtonSection from "./Component/FooterButton/ButtonSection";
 
 const ProjectCost = () => {
-
-    const { data: humintExpenses, isLoading: loadingHumint } = useGetHumintExpensesQuery();
-    const { data: humintTotals } = useGetHumintTotalsQuery();
-
     // State for popups visibility
     const [showEmployeePopup, setShowEmployeePopup] = useState(false);
     const [showHumintPopup, setShowHumintPopup] = useState(false);
@@ -33,80 +25,51 @@ const ProjectCost = () => {
         // Add your save logic here
     };
 
+    // Function to handle save all changes
+    const handleSaveAll = () => {
+        console.log("Saving all changes...");
+        // Add your save all logic here
+        // Example: Save employee changes, HUMINT changes, etc.
+    };
+
+    // Function to handle back to project page
+    const handleBackToProject = () => {
+        console.log("Navigating back to project page...");
+        // Add navigation logic here
+        // Example: window.location.href = "/project-page";
+    };
+
     return (
         <div className="page-wrapper">
             <div className="page-container">
                 {/* REMOVED HEADER SECTION */}
 
                 {/* TOP ROW: PROJECT DETAILS + FINANCIAL SUMMARY */}
-                <SummarySection /> {/* Using the new component */}
+                <SummarySection /> {/* Using the SummarySection component */}
 
                 {/* FIXED COSTS + OSINT COSTS BAR */}
-                <CostBar /> {/* Using the new CostBar component */}
+                <CostBar /> {/* Using the CostBar component */}
 
-                {/* EMPLOYEE COSTS TABLE - Now dynamic */}
+                {/* EMPLOYEE COSTS TABLE */}
                 <EmployeeCostTable
                     onAddCost={() => setShowEmployeePopup(true)}
                 />
 
-                {/* HUMINT COSTS */}
-                {/* HUMINT COSTS */}
-                <div className="form-card">
-                    <h2 className="form-title">Cheltuieli HUMINT</h2>
+                {/* HUMINT COSTS TABLE */}
+                <HumintCostTable
+                    onAddCost={() => setShowHumintPopup(true)}
+                />
 
-                    <table className="cost-table">
-                        <thead>
-                        <tr>
-                            <th>Data</th>
-                            <th>Descriere</th>
-                            <th>Utilitate</th>
-                            <th>Cash</th>
-                            <th>Taxe</th>
-                            <th>Total</th>
-                        </tr>
-                        </thead>
-
-                        <tbody>
-                        {loadingHumint ? (
-                            <tr><td colSpan="6">Loading...</td></tr>
-                        ) : humintExpenses?.data?.length > 0 ? (
-                            humintExpenses.data.map(exp => (
-                                <tr key={exp._id}>
-                                    <td>{exp.date?.slice(0,10)}</td>
-                                    <td>{exp.description}</td>
-                                    <td>{exp.utility}/5</td>
-                                    <td>{exp.cost} {exp.currency}</td>
-                                    <td>{exp.taxIncludedCost - exp.cost} {exp.currency}</td>
-                                    <td>{exp.total} {exp.currency}</td>
-                                </tr>
-                            ))
-                        ) : (
-                            <tr><td colSpan="6">Nicio cheltuială HUMINT încă</td></tr>
-                        )}
-                        </tbody>
-                    </table>
-
-                    {/* TOTAL HUMINT COST */}
-                    <div className="total-box">
-                        Total HUMINT:
-                        {humintTotals?.totals?.EUR
-                            ? ` ${humintTotals.totals.EUR.toFixed(2)} EUR`
-                            : ""}
-                    </div>
-
-
-                    {/* ADD HUMINT COST BUTTON */}
-                    <button className="btn-green" onClick={() => setShowHumintPopup(true)}>
-                        Adaugă cheltuiala
-                    </button>
-                </div>
-
-
-                {/* PAGE FOOTER BUTTONS */}
-                <div className="button-row footer-row">
-                    <button className="btn-secondary" style={{"background":"#10B981"}}>Salvează modificări</button>
-                    <button className="btn-primary">Înapoi la Pagina Proiect</button>
-                </div>
+                {/* PAGE FOOTER BUTTONS - Using ButtonSection component */}
+                <ButtonSection
+                    onSave={handleSaveAll}
+                    onBack={handleBackToProject}
+                    saveButtonText="Salvează modificări"
+                    backButtonText="Înapoi la Pagina Proiect"
+                    saveButtonColor="#10B981"
+                    showSaveButton={true}
+                    showBackButton={true}
+                />
             </div>
 
             {/* EMPLOYEE COST POPUP */}
