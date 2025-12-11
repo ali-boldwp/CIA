@@ -7,95 +7,43 @@
 
 /* PAGE WRAPPER */
 .page-wrapper {
-    padding: 30px;
+    padding: 20px;
     background: #f4f7ff;
     font-family: "Inter", sans-serif;
     min-height: 100vh;
-    display: flex;
-    justify-content: center;
+    width: 100%;
 }
 
 /* CONTENT WIDTH */
 .page-container {
-    width: 92%;
-    max-width: 1400px;
-}
-
-/* ========================= HEADER ========================= */
-
-.header-box {
-    background: #ffffff;
-    border-radius: 16px;
-    padding: 20px 26px;
-    margin-bottom: 26px;
-    box-shadow: 0 10px 30px rgba(99, 132, 255, 0.12);
-    display: flex;
-    align-items: center;
-    position: relative;
-}
-
-.header-back {
-    color: #64748b;
-    font-size: 14px;
-    font-weight: 600;
-    position: absolute;
-    left: 26px;
-    cursor: pointer;
-}
-
-.header-title {
-    flex: 1;
-    text-align: center;
-    font-size: 20px;
-    font-weight: 700;
-    color: #111827;
-}
-
-.header-tags {
-    position: absolute;
-    right: 26px;
-    display: flex;
-    gap: 10px;
-}
-
-.tag {
-    padding: 5px 12px;
-    border-radius: 999px;
-    font-size: 12px;
-    font-weight: 600;
-    white-space: nowrap;
-}
-
-.tag.blue {
-    background: #e0eaff;
-    color: #3366ff;
-}
-.tag.yellow {
-    background: #fff3c4;
-    color: #a67c00;
+    width: 100%;
+    max-width: 1800px;
+    margin: 0 auto;
+    padding: 0 20px;
 }
 
 /* ========================= GENERIC CARD ========================= */
-
 .form-card {
     background: #ffffff;
     border-radius: 18px;
     padding: 24px 28px;
     margin-bottom: 24px;
+    width: 100%;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
 }
 
 .form-title {
     font-size: 18px;
     font-weight: 700;
     margin-bottom: 20px;
+    color: #111827;
 }
 
 /* ========================= TOP ROW ========================= */
-
 .top-row {
     display: grid;
-    grid-template-columns: 1.2fr 1.8fr;
-    gap: 24px;
+    grid-template-columns: 1fr 2fr;
+    gap: 30px;
     margin-bottom: 24px;
 }
 
@@ -136,18 +84,79 @@
     margin-bottom: 2px;
 }
 
-/* ========================= FINANCIAL SUMMARY ========================= */
+.project-block li span {
+    display: block;
+    font-size: 15px;
+    color: #111827;
+    margin-top: 3px;
+    font-weight: 700;
+}
 
+/* ========================= FINANCIAL SUMMARY HEADER ========================= */
+.finance-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.currency-update-btn {
+    background: #ffffff;
+    color: #4f46e5;
+    padding: 8px 16px;
+    border-radius: 8px;
+    border: 1px solid #d1d5db;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    transition: all 0.2s ease;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.currency-update-btn:hover {
+    background: #f9fafb;
+    border-color: #9ca3af;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.currency-update-btn::before {
+    content: "€";
+    font-size: 12px;
+    font-weight: 700;
+    color: #059669;
+}
+
+.currency-update-btn::after {
+    content: "↻";
+    font-size: 11px;
+    font-weight: 700;
+    color: #6b7280;
+    margin-left: 4px;
+}
+
+/* For better visual spacing between text parts */
+.currency-update-btn span {
+    letter-spacing: 0.3px;
+}
+/* ========================= FINANCIAL SUMMARY ========================= */
 .finance-card {
     padding-bottom: 26px;
 }
 
 .financial-grid {
     display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 18px;
+    grid-template-columns: repeat(4, 1fr); /* 4 columns */
+    gap: 15px;
+    width: 100%;
 }
 
+/* Each box takes 1 column */
 .summary-box {
     border-radius: 16px;
     padding: 18px 20px;
@@ -155,6 +164,33 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
+    width: 100%;
+    border: 1px solid #e5e7eb;
+}
+
+/* Special box for Project Duration */
+.summary-box.box-duration {
+    grid-column: 3 / span 2; /* Takes last 2 columns */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 20px;
+    background: #f3f4f6;
+    border-color: #d1d5db;
+}
+
+/* Special box for Profit - Takes 2 columns in last row */
+.summary-box.box-profit {
+    grid-column: 1 / span 2; /* Takes first 2 columns in last row */
+    background: #e8ffe8;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 25px;
+    min-height: auto;
+    border: 2px solid #bbf7d0;
 }
 
 .s-label {
@@ -162,6 +198,7 @@
     font-weight: 600;
     color: #6366f1;
     margin-bottom: 6px;
+    display: block;
 }
 
 .s-label-green {
@@ -169,45 +206,73 @@
     font-weight: 600;
     color: #15803d;
     margin-bottom: 6px;
+    display: block;
+}
+
+.s-label-duration {
+    font-size: 13px;
+    font-weight: 600;
+    color: #6b7280;
+    margin-bottom: 6px;
+    display: block;
 }
 
 .s-value {
     font-size: 21px;
     font-weight: 700;
     color: #111827;
+    display: block;
+}
+
+.s-value-duration {
+    font-size: 24px;
+    font-weight: 700;
+    color: #111827;
+    display: block;
+    margin-top: 5px;
 }
 
 /* colors */
 .box-purple {
     background: #efe6ff;
+    border-color: #d8b4fe;
 }
 .box-blue {
     background: #e6efff;
+    border-color: #93c5fd;
 }
 .box-cyan {
     background: #e3f8ff;
+    border-color: #67e8f9;
 }
 .box-gray {
     background: #f0f2f5;
+    border-color: #d1d5db;
 }
 .box-yellow {
     background: #fff7df;
+    border-color: #fde68a;
 }
 .box-lightgray {
     background: #f3f3f3;
+    border-color: #e5e7eb;
 }
 
-/* profit row full width */
-.box-profit {
-    grid-column: 1 / -1;
-    background: #e8ffe8;
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
+/* New box colors */
+.box-tfsa {
+    background: #fff0f6;
+    border-color: #f9a8d4;
 }
 
+.box-other {
+    background: #fef3c7;
+    border-color: #fcd34d;
+}
+
+/* profit section styling */
 .profit-left {
     display: flex;
+    align-items: center;
     justify-content: space-between;
     width: 100%;
 }
@@ -215,20 +280,30 @@
 .profit-right {
     font-size: 17px;
     font-weight: 700;
-    color: #64748B;
+    color: #15803d;
     margin-right: 12px;
 }
 
-/* ========================= COSTS BAR (FIXE + OSINT) ========================= */
+.box-profit .s-value {
+    font-size: 24px;
+    color: #15803d;
+}
 
+/* Remove the old currency box style since it's now a button */
+.box-currency {
+    display: none; /* Hide the old currency box */
+}
+/* ========================= COSTS BAR (FIXE + OSINT) ========================= */
 .costs-bar {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 40px;
+    gap: 50px;
+    padding: 24px 28px;
 }
 
 .cost-block {
     border-radius: 18px;
+    width: 100%;
 }
 
 .cost-title {
@@ -240,52 +315,16 @@
 .cost-row {
     display: grid;
     grid-template-columns: 2fr 1fr;
-    gap: 18px;
-}
-
-/* generic grid helpers */
-
-.row-two {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 22px;
-    margin-bottom: 18px;
-}
-
-.row-three {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 18px;
-    margin-top: 18px;
-}
-
-.row-four {
-    display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 18px;
-    margin-top: 18px;
-}
-
-.row-five {
-    display: grid;
-    grid-template-columns: repeat(5, minmax(0, 1fr));
-    gap: 18px;
-    margin-top: 18px;
-}
-
-.row-six {
-    display: grid;
-    grid-template-columns: 1.2fr repeat(5, minmax(0, 1fr));
-    gap: 18px;
-    margin-top: 18px;
+    gap: 20px;
+    width: 100%;
 }
 
 /* ========================= GENERIC FORM CONTROLS ========================= */
-
 .form-field {
     display: flex;
     flex-direction: column;
     gap: 6px;
+    width: 100%;
 }
 
 .form-field label {
@@ -303,42 +342,16 @@
     font-size: 14px;
 }
 
-.input-box.soft {
-    background: #f9fafc;
-    border-color: #e5e7eb;
-}
-
-/* textarea */
-.textarea-box {
-    width: 100%;
-    min-height: 120px;
-    border-radius: 12px;
-    border: 1px solid #e3e6ef;
-    background: #f9fafc;
-    padding: 14px;
-    font-size: 14px;
-    font-weight: 600;
-}
-
-/* file preview (not used here but kept for consistency) */
-.file-preview {
-    background: #f9fafc;
-    border: 1px solid #e2e6eb;
-    padding: 14px;
-    border-radius: 12px;
-    font-size: 14px;
-    height: 55px;
-    display: flex;
-    align-items: center;
-}
-
 /* ========================= TABLES ========================= */
-
 .cost-table {
     width: 100%;
     border-collapse: collapse;
     font-size: 14px;
     margin-top: 6px;
+    background: #ffffff;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
 }
 
 .cost-table thead tr {
@@ -377,6 +390,7 @@
     background: #f9fafb;
     border: 1px solid #e5e7eb;
     height: 60px;
+    width: 100%;
 }
 
 /* edit column text */
@@ -384,71 +398,18 @@
     white-space: nowrap;
 }
 
-/* ========================= ADD BLOCKS ========================= */
-
-/* ADD HUMINT BLOCK */
-.add-block {
-    margin-top: 20px;
-}
-
-.block-label {
-    font-size: 13px;
-    font-weight: 600;
-    margin-bottom: 8px;
-    color: #111827;
-}
-
-/* 2-column layout */
-.row-two {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 22px;
-    margin-bottom: 18px;
-}
-
-/* 6-column row */
-.row-six {
-    display: grid;
-    grid-template-columns: 120px 1fr 1fr 1fr 1fr 1fr;
-    gap: 22px;
-    margin-top: 10px;
-}
-
-/* Utilitate box (1–5 selection) */
-.utilitate-list label {
-    font-weight: 600;
-    font-size: 13px;
-}
-
-.utilitate-box {
-    border-radius: 12px;
-    border: 1px solid #e5e7eb;
-    background: #f9fafc;
-    padding: 10px 12px;
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-    font-size: 14px;
-    color: #111;
-}
-
-/* INPUT SOFT STYLE */
-.input-box.soft {
-    background: #f9fafc;
-    border-color: #e5e7eb;
-}
-
-/* Save button */
-.add-actions {
-    margin-top: 18px;
-}
 .total-box{
     margin: 10px;
+    width: 100%;
+    padding: 12px 16px;
+    background: #f8fafc;
+    border-radius: 8px;
+    border: 1px solid #e5e7eb;
+    font-weight: 700;
+    font-size: 16px;
 }
 
-
 /* ========================= BUTTONS ========================= */
-
 .btn-green {
     margin-top: 16px;
     background: #22C55E;
@@ -459,6 +420,9 @@
     font-size: 14px;
     font-weight: 600;
     cursor: pointer;
+    width: auto;
+    min-width: 180px;
+    transition: all 0.2s ease;
 }
 
 .btn-green:hover {
@@ -470,6 +434,7 @@
     gap: 16px;
     margin-top: 24px;
     margin-bottom: 30px;
+    width: 100%;
 }
 
 .footer-row {
@@ -485,6 +450,8 @@
     font-size: 14px;
     font-weight: 600;
     cursor: pointer;
+    min-width: 200px;
+    transition: all 0.2s ease;
 }
 
 .btn-secondary {
@@ -496,42 +463,357 @@
     font-size: 14px;
     font-weight: 600;
     cursor: pointer;
+    min-width: 200px;
+    transition: all 0.2s ease;
 }
 
 .btn-primary:hover {
     background: #4338ca;
 }
 .btn-secondary:hover {
-    background: #020617;
+    background: #0a53d4;
 }
 
 /* ========================= RESPONSIVE ========================= */
 
-@media (max-width: 1100px) {
+/* Large Desktop (1800px+) */
+@media (min-width: 1800px) {
+    .page-container {
+        max-width: 1800px;
+    }
+}
+
+/* Desktop (1400px - 1799px) */
+@media (max-width: 1799px) {
+    .page-container {
+        max-width: 1400px;
+        padding: 0 30px;
+    }
+}
+
+/* Laptop (1200px - 1399px) */
+@media (max-width: 1399px) {
+    .page-container {
+        max-width: 1200px;
+        padding: 0 25px;
+    }
+
+    .financial-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .top-row {
+        gap: 25px;
+    }
+
+    .costs-bar {
+        gap: 30px;
+    }
+}
+
+/* Tablet Landscape (992px - 1199px) */
+@media (max-width: 1199px) {
+    .page-container {
+        max-width: 100%;
+        padding: 0 20px;
+    }
+
     .top-row {
         grid-template-columns: 1fr;
+        gap: 20px;
     }
 
     .costs-bar {
         grid-template-columns: 1fr;
+        gap: 20px;
+    }
+
+    .financial-grid {
+        grid-template-columns: repeat(2, 1fr);
     }
 }
 
-@media (max-width: 900px) {
-    .row-two,
-    .row-three,
-    .row-four,
-    .row-five,
-    .row-six {
+/* Tablet Portrait (768px - 991px) */
+@media (max-width: 991px) {
+    .page-wrapper {
+        padding: 15px;
+    }
+
+    .page-container {
+        padding: 0 15px;
+    }
+
+    .form-card {
+        padding: 20px 24px;
+    }
+
+    .financial-grid {
         grid-template-columns: 1fr;
+        gap: 15px;
     }
 
-    .header-tags {
-        position: static;
-        margin-left: auto;
+    .summary-box {
+        min-height: 90px;
+        padding: 16px 18px;
     }
 
-    .header-title {
+    .cost-table th,
+    .cost-table td {
+        padding: 10px 12px;
+        font-size: 13px;
+    }
+
+    .btn-green,
+    .btn-primary,
+    .btn-secondary {
+        min-width: 160px;
+        padding: 12px 18px;
+        font-size: 13px;
+    }
+
+    .button-row {
+        flex-wrap: wrap;
+        gap: 12px;
+    }
+}
+
+/* Mobile Large (576px - 767px) */
+@media (max-width: 767px) {
+    .page-wrapper {
+        padding: 10px;
+    }
+
+    .page-container {
+        padding: 0 10px;
+    }
+
+    .form-card {
+        padding: 18px 20px;
+        border-radius: 14px;
+    }
+
+    .form-title {
+        font-size: 16px;
+        margin-bottom: 16px;
+    }
+
+    .costs-bar {
+        padding: 18px 20px;
+        gap: 15px;
+    }
+
+    .cost-row {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+
+    .cost-table {
+        font-size: 13px;
+    }
+
+    .cost-table th,
+    .cost-table td {
+        padding: 8px 10px;
+        font-size: 12px;
+    }
+
+    .input-cell {
+        width: 60px;
+        padding: 5px 6px;
+        font-size: 12px;
+    }
+
+    .table-empty-strip {
+        height: 50px;
+    }
+
+    .project-block li {
+        font-size: 13px;
+        margin-bottom: 15px;
+        padding-left: 15px;
+    }
+
+    .project-block li b {
+        font-size: 12px;
+    }
+
+    .s-value {
         font-size: 18px;
+    }
+
+    .box-profit .s-value {
+        font-size: 20px;
+    }
+
+    .btn-green,
+    .btn-primary,
+    .btn-secondary {
+        width: 100%;
+        min-width: auto;
+        margin-top: 12px;
+    }
+
+    .button-row {
+        flex-direction: column;
+        gap: 10px;
+    }
+}
+
+/* Mobile Small (320px - 575px) */
+@media (max-width: 575px) {
+    .page-wrapper {
+        padding: 8px;
+    }
+
+    .page-container {
+        padding: 0 8px;
+    }
+
+    .form-card {
+        padding: 15px 18px;
+        border-radius: 12px;
+        margin-bottom: 18px;
+    }
+
+    .form-title {
+        font-size: 15px;
+        margin-bottom: 14px;
+    }
+
+    .cost-table {
+        display: block;
+        overflow-x: auto;
+        white-space: nowrap;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .financial-grid {
+        gap: 12px;
+    }
+
+    .summary-box {
+        min-height: 80px;
+        padding: 14px 16px;
+        border-radius: 14px;
+    }
+
+    .s-label {
+        font-size: 12px;
+    }
+
+    .s-value {
+        font-size: 16px;
+    }
+
+    .box-profit {
+        padding: 16px 18px;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .profit-left {
+        flex-direction: column;
+        gap: 8px;
+        text-align: center;
+    }
+
+    .profit-right {
+        margin-right: 0;
+    }
+
+    .box-profit .s-value {
+        font-size: 18px;
+        text-align: center;
+    }
+
+    .top-row {
+        gap: 15px;
+    }
+
+    .project-card {
+        padding-right: 20px;
+    }
+}
+
+/* Very Small Mobile (under 320px) */
+@media (max-width: 319px) {
+    .page-wrapper {
+        padding: 5px;
+    }
+
+    .page-container {
+        padding: 0 5px;
+    }
+
+    .form-card {
+        padding: 12px 15px;
+    }
+
+    .form-title {
+        font-size: 14px;
+    }
+
+    .btn-green,
+    .btn-primary,
+    .btn-secondary {
+        padding: 10px 15px;
+        font-size: 12px;
+    }
+}/* Tablet Landscape (992px - 1199px) */
+@media (max-width: 1199px) {
+    .page-container {
+        max-width: 100%;
+        padding: 0 20px;
+    }
+
+    .top-row {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+
+    .costs-bar {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+
+    .financial-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    /* Reset grid columns for tablet */
+    .summary-box.box-duration,
+    .summary-box.box-profit {
+        grid-column: span 1;
+    }
+}
+
+/* Tablet Portrait (768px - 991px) */
+@media (max-width: 991px) {
+    .page-wrapper {
+        padding: 15px;
+    }
+
+    .page-container {
+        padding: 0 15px;
+    }
+
+    .form-card {
+        padding: 20px 24px;
+    }
+
+    .financial-grid {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+
+    .summary-box {
+        min-height: 90px;
+        padding: 16px 18px;
+    }
+
+    /* Reset grid columns for mobile */
+    .summary-box.box-duration,
+    .summary-box.box-profit {
+        grid-column: span 1;
     }
 }
