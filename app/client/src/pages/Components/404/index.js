@@ -1,5 +1,6 @@
 import React from "react";
 import styles from "./404.module.css";
+import {Link} from "react-router-dom";
 
 const NotFound = () => {
     return (
@@ -25,9 +26,9 @@ const NotFound = () => {
                     </div>
                 </div>
 
-                <a href="/" className={styles["cia-404-button"]}>
+                <Link href="/login" className={styles["cia-404-button"]}>
                     ← Înapoi la dashboard
-                </a>
+                </Link>
 
             </div>
         </div>
