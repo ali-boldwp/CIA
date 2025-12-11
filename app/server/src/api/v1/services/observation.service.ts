@@ -1,5 +1,4 @@
 import Observation , { IObservation } from "../models/observation.model";
-import ProjectRequest from "../models/projectRequest.model";
 
 
 export const createObservation = async (data: Partial<IObservation>) => {
@@ -7,9 +6,8 @@ export const createObservation = async (data: Partial<IObservation>) => {
 };
 
 
-export const getObservationProjectById = async (projectId: string) => {
-    return await Observation
-        .find({ projectId })
-        .populate("userId", "name")
-        .sort({ createdAt: 1 });
+export const getObservationByProjectId = async (projectId: string) => {
+    return Observation.find({ projectId })
+        .populate("projectId")
+        .lean();
 };
