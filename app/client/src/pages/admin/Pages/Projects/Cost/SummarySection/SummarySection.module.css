@@ -1,0 +1,535 @@
+/* SummarySection.module.css */
+
+/* ========================= TOP ROW ========================= */
+.topRow {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 30px;
+    margin-bottom: 24px;
+}
+
+/* Project Card */
+.formCard {
+    background: #ffffff;
+    border-radius: 18px;
+    padding: 24px 28px;
+    margin-bottom: 24px;
+    width: 100%;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.projectCard {
+    padding-right: 40px;
+}
+
+.formTitle {
+    font-size: 20px;
+    font-weight: 800;
+    margin-bottom: 20px;
+    color: #111827;
+}
+
+/* project bullet list with increased font sizes */
+.projectBlock ul {
+    list-style: none;
+}
+
+.projectBlock li {
+    position: relative;
+    padding-left: 18px;
+    margin-bottom: 18px;
+    font-size: 15px;
+    color: #111827;
+    font-weight: 700;
+}
+
+.projectBlock li::before {
+    content: "";
+    width: 7px;
+    height: 7px;
+    background: #4f46e5;
+    border-radius: 50%;
+    position: absolute;
+    left: 0;
+    top: 8px;
+}
+
+.projectBlock li b {
+    display: block;
+    font-size: 15px;
+    font-weight: 800;
+    color: #6b7280;
+    margin-bottom: 2px;
+}
+
+.projectBlock li span {
+    display: block;
+    font-size: 16px;
+    color: #111827;
+    margin-top: 3px;
+    font-weight: 800;
+}
+
+/* ========================= FINANCIAL SUMMARY HEADER ========================= */
+.financeHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.financeCard {
+    padding-bottom: 26px;
+}
+
+/* Currency Button - COMPLETELY FIXED cursor issue */
+.currencyUpdateBtn {
+    background: #c7d2fe;
+    color: #4338CA; /* Purple color for "Curs EURO (BNR)" */
+    padding: 8px 16px;
+    border-radius: 8px;
+    border: 1px solid #c7d2fe;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    transition: all 0.2s ease;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+    -webkit-user-select: none; /* Safari */
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none; /* IE10+/Edge */
+    user-select: none; /* Standard */
+    outline: none; /* Remove focus outline */
+}
+
+.currencyUpdateBtn:hover {
+    background: #a5b4fc;
+    border-color: #a5b4fc;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.currencyUpdateBtn::before {
+    content: "€";
+    font-size: 13px;
+    font-weight: 700;
+    color: #059669; /* Green euro symbol */
+    margin-right: 4px;
+}
+
+.currencyUpdateBtn::after {
+    content: "↻";
+    font-size: 13px;
+    font-weight: 700;
+    color: #2563eb; /* Blue refresh symbol */
+    margin-left: 4px;
+}
+
+/* Style for "actualizat" text inside the button */
+.currencyUpdateBtn span {
+    color: #2563eb; /* Blue color for "actualizat" */
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    pointer-events: none; /* IMPORTANT: Prevents text selection completely */
+}
+
+/* Remove focus styles that might show cursor */
+.currencyUpdateBtn:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.2);
+}
+
+/* Make all text inside button non-selectable */
+.currencyUpdateBtn * {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    pointer-events: none;
+}
+
+/* ========================= FINANCIAL SUMMARY GRID ========================= */
+.financialGrid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 15px;
+    width: 100%;
+}
+
+/* Each box takes 1 column */
+.summaryBox {
+    border-radius: 16px;
+    padding: 18px 20px;
+    min-height: 104px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: 100%;
+    border: 1px solid #e5e7eb;
+}
+
+/* Special box for Project Duration */
+.boxDuration {
+    grid-column: 3 / span 2;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 20px;
+    background: #f3f4f6;
+    border-color: #d1d5db;
+}
+
+/* Special box for Profit */
+.boxProfit {
+    grid-column: 1 / span 2;
+    background: #e8ffe8;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 25px;
+    min-height: auto;
+    border: 2px solid #bbf7d0;
+}
+
+/* All summary box labels */
+.sLabel {
+    font-size: 14px;
+    font-weight: 800;
+    margin-bottom: 6px;
+    display: block;
+}
+
+.sLabelGreen {
+    font-size: 14px;
+    font-weight: 800;
+    color: #15803d;
+    margin-bottom: 6px;
+    display: block;
+}
+
+.sLabelDuration {
+    font-size: 14px;
+    font-weight: 800;
+    color: #6b7280;
+    margin-bottom: 6px;
+    display: block;
+}
+
+.sValue {
+    font-size: 22px;
+    font-weight: 800;
+    color: #111827;
+    display: block;
+}
+
+.sValueDuration {
+    font-size: 24px;
+    font-weight: 800;
+    color: #111827;
+    display: block;
+    margin-top: 5px;
+}
+
+/* Row 1: First 4 boxes - Updated colors */
+.boxGray {
+    background: #edf2ff;
+    border-color: #c7d2fe;
+}
+
+.boxGray .sLabel {
+    color: #1e40af;
+}
+
+.boxTfsa {
+    background: #eef2ff;
+    border-color: #c7d2fe;
+}
+
+.boxTfsa .sLabel {
+    color: #4338ca;
+}
+
+.boxCyan {
+    background: #ecfeff;
+    border-color: #a5f3fc;
+}
+
+.boxCyan .sLabel {
+    color: #0e7490;
+}
+
+.boxYellow {
+    background: #fff7ed;
+    border-color: #fed7aa;
+}
+
+.boxYellow .sLabel {
+    color: #b45309;
+}
+
+/* Row 2: Next 4 boxes - Updated colors */
+.boxBlue {
+    background: #f1f5f9;
+    border-color: #cbd5e1;
+}
+
+.boxBlue .sLabel {
+    color: #334155;
+}
+
+.boxOther {
+    background: #f0fdfa;
+    border-color: #a7f3d0;
+}
+
+.boxOther .sLabel {
+    color: #0f766e;
+}
+
+/* Row 2: Remaining boxes */
+.boxPurple {
+    background: #efe6ff;
+    border-color: #d8b4fe;
+}
+
+.boxPurple .sLabel {
+    color: #7c3aed;
+}
+
+.boxLightgray {
+    background: #f3f3f3;
+    border-color: #e5e7eb;
+}
+
+.boxLightgray .sLabel {
+    color: #374151;
+}
+
+/* profit section styling */
+.profitLeft {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.profitRight {
+    font-size: 18px;
+    font-weight: 800;
+    color: #15803d;
+    margin-right: 12px;
+}
+
+.boxProfit .sValue {
+    font-size: 24px;
+    font-weight: 800;
+    color: #15803d;
+}
+
+/* ========================= RESPONSIVE ========================= */
+
+/* Desktop (1400px - 1799px) */
+@media (max-width: 1799px) {
+    .topRow {
+        gap: 25px;
+    }
+}
+
+/* Laptop (1200px - 1399px) */
+@media (max-width: 1399px) {
+    .topRow {
+        gap: 25px;
+    }
+
+    .financialGrid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* Tablet Landscape (992px - 1199px) */
+@media (max-width: 1199px) {
+    .topRow {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+
+    .financialGrid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .boxDuration,
+    .boxProfit {
+        grid-column: span 1;
+    }
+}
+
+/* Tablet Portrait (768px - 991px) */
+@media (max-width: 991px) {
+    .topRow {
+        gap: 20px;
+    }
+
+    .financialGrid {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+
+    .summaryBox {
+        min-height: 90px;
+        padding: 16px 18px;
+    }
+
+    .formTitle {
+        font-size: 19px;
+    }
+
+    .projectBlock li {
+        font-size: 14px;
+    }
+
+    .projectBlock li b {
+        font-size: 14px;
+        font-weight: 700;
+    }
+
+    .projectBlock li span {
+        font-size: 15px;
+        font-weight: 700;
+    }
+
+    .sLabel,
+    .sLabelGreen,
+    .sLabelDuration {
+        font-size: 13px;
+        font-weight: 700;
+    }
+
+    .sValue {
+        font-size: 20px;
+        font-weight: 700;
+    }
+
+    .profitRight {
+        font-size: 16px;
+        font-weight: 700;
+    }
+}
+
+/* Mobile Large (576px - 767px) */
+@media (max-width: 767px) {
+    .topRow {
+        gap: 15px;
+    }
+
+    .projectCard {
+        padding-right: 20px;
+    }
+
+    .formTitle {
+        font-size: 18px;
+    }
+
+    .projectBlock li {
+        font-size: 13px;
+        margin-bottom: 15px;
+        padding-left: 15px;
+    }
+
+    .projectBlock li b {
+        font-size: 12px;
+        font-weight: 700;
+    }
+
+    .projectBlock li span {
+        font-size: 14px;
+        font-weight: 700;
+    }
+
+    .sLabel,
+    .sLabelGreen,
+    .sLabelDuration {
+        font-size: 12px;
+        font-weight: 700;
+    }
+
+    .sValue {
+        font-size: 18px;
+        font-weight: 700;
+    }
+
+    .sValueDuration {
+        font-size: 20px;
+        font-weight: 700;
+    }
+
+    .boxProfit .sValue {
+        font-size: 20px;
+        font-weight: 700;
+    }
+
+    .profitRight {
+        font-size: 15px;
+        font-weight: 700;
+    }
+}
+
+/* Mobile Small (320px - 575px) */
+@media (max-width: 575px) {
+    .topRow {
+        gap: 15px;
+    }
+
+    .projectCard {
+        padding-right: 20px;
+    }
+
+    .formTitle {
+        font-size: 17px;
+    }
+
+    .projectBlock li {
+        font-size: 13px;
+    }
+
+    .projectBlock li b {
+        font-size: 12px;
+        font-weight: 700;
+    }
+
+    .projectBlock li span {
+        font-size: 13px;
+        font-weight: 700;
+    }
+
+    .boxProfit {
+        padding: 16px 18px;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .profitLeft {
+        flex-direction: column;
+        gap: 8px;
+        text-align: center;
+    }
+
+    .profitRight {
+        margin-right: 0;
+        font-size: 14px;
+        font-weight: 700;
+    }
+
+    .boxProfit .sValue {
+        font-size: 18px;
+        text-align: center;
+        font-weight: 700;
+    }
+}
