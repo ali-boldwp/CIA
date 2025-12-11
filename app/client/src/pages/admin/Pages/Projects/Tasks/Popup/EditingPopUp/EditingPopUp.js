@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useState , useEffect } from "react";
 import styles from "./EditingPopUp.module.css";
 
 const EditingPopUp = ({
+                          data,
                           onClose,
                           statusLabel = "Status: Revino la redactare",
                           editMode = "ON",
@@ -16,7 +17,13 @@ Cap. II – Terminologie neunitară`,
                           onMarkAllResolved,
                           onResubmit,
                       }) => {
-    const [notes, setNotes] = useState(notesText);
+    const [notes, setNotes] = useState("");
+
+    useEffect(() => {
+        if (Array.isArray(data) && data.length > 0) {
+            setNotes(data.map((o) => `• ${o.text}`).join("\n\n"));
+        }
+    }, [data]);
 
     const handleOverlayClick = (e) => {
         if (e.target === e.currentTarget && onClose) {

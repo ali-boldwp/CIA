@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import {toast} from "react-toastify";
 
-const ChapterCreation = ({ projectId, createChapter , mode}) => {
+const ChapterCreation = ({ projectId, createChapter , mode,observe}) => {
     const [showChapterInput, setShowChapterInput] = useState(false);
     const [chapterName, setChapterName] = useState("");
     const [isCreating, setIsCreating] = useState(false);
@@ -25,7 +25,7 @@ const ChapterCreation = ({ projectId, createChapter , mode}) => {
     };
 
     return !showChapterInput  ? (
-        mode && (
+        mode && !observe && (
 
         <button className="add-chapter-btn" onClick={() => setShowChapterInput(true)}>
             + Capitol nou

@@ -79,87 +79,9 @@ export const projectApi = createApi({
                 body: status,
             }),
         }),
-
-        createChapter: builder.mutation({
-            query: ({ name, projectId }) => ({
-                url: "/chapter",
-                method: "POST",
-                body: { name, projectId },
-            }),
-            invalidatesTags: ["Chapters"],
-        }),
-
-        getChapterById: builder.query({
-            query: (id) => `/chapter/${id}`,
-            providesTags: ["Chapters"],
-        }),
-
-
-        // Get Tasks by chapter
-        getTasksByChapterId: builder.query({
-            query: (chapterId) => `/task/${chapterId}`,
-        }),
-
-
-
-        // ✅ New: Create Task
-        createTask: builder.mutation({
-            query: ({ name, chapterId }) => ({
-                url: "/task",
-                method: "POST",
-                body: { name, chapterId },
-            }),
-        }),
-
         getAnalystsProgress: builder.query({
             query: () => "/project/analysts/progress"
         }),
-
-
-        startTask: builder.mutation({
-            query: (taskId) => ({
-                url: `/task/${taskId}/start`,
-                method: "POST",
-            }),
-        }),
-
-        pauseTask: builder.mutation({
-            query: (id) => ({
-                url: `/task/${id}/pause`,
-                method: "POST",
-            }),
-        }),
-        resumeTask: builder.mutation({
-            query: (id) => ({
-                url: `/task/${id}/resume`,
-                method: "POST",
-            }),
-        }),
-        completeTask: builder.mutation({
-            query: (id) => ({
-                url: `/task/${id}/complete`,
-                method: "POST",
-            }),
-        }),
-
-        finalizeTask: builder.mutation({
-            query: (id) => ({
-                url: `/task/${id}/finalize`,
-                method: "POST",
-            }),
-        }),
-
-        updateEditable: builder.mutation({
-            query: ({ projectId, isEditable }) => ({
-                url: `/project/${projectId}/editable`,
-                method: "PUT",
-                body: { isEditable }
-            }),
-            invalidatesTags: ["Project"]
-        }),
-
-
-
     }),
 });
 
@@ -173,17 +95,11 @@ export const {
     useGetProjectRequestsQuery,
     useGetChapterByIdQuery,
     useGetCreateProjectByIdQuery,
-    useGetProjectRequestByIdQuery,
     useUpdateProjectMutation,
-    useUpdateProjectStatusMutation,
     useCreateChapterMutation,
     useGetTasksByChapterIdQuery,
-    useCreateTaskMutation, // ✅ export hook
+    useCreateTaskMutation,
     useGetAnalystsProgressQuery,
-    useStartTaskMutation,
-    usePauseTaskMutation,
-    useResumeTaskMutation,
-    useCompleteTaskMutation,
-    useUpdateEditableMutation,
-    useFinalizeTaskMutation,
+    useGetAnalystsProgress
+
 } = projectApi;

@@ -14,10 +14,10 @@ const ReviewPopUp = ({
                      }) => {
     const [notes, setNotes] = useState(
         observationsText ||
-        "• Cap. I – actualizează data (secțiunea 1.1) • Anexează confirmarea OSINT #123"
+        ""
     );
 
-    // textarea + "Adaugă observație" kab dikhani hai
+
     const [showObservations, setShowObservations] = useState(false);
 
     const handleOverlayClick = (e) => {

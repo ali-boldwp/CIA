@@ -11,7 +11,7 @@ import {messageApi} from "../services/messageApi";
 import {chatApi} from "../services/chatApi";
 import { humintApi } from "../services/humintApi";
 import {notificationApi} from "../services/notificationApi";
-
+import { taskApi } from "../services/taskApi";
 import { statsApi } from "../services/V1/statesApi";
 
 const store = configureStore({
@@ -27,6 +27,7 @@ const store = configureStore({
         [messageApi.reducerPath]:messageApi.reducer,
         [chatApi.reducerPath]:chatApi.reducer,
         [humintApi.reducerPath]:humintApi.reducer,
+        [taskApi.reducerPath]:taskApi.reducer,
         [notificationApi.reducerPath]:notificationApi.reducer,
 
         // V1 APIs don't touch those
@@ -48,7 +49,7 @@ const store = configureStore({
             chatApi.middleware,
             humintApi.middleware,
             notificationApi.middleware,
-            // V1 APIs don't touch those
+            taskApi.middleware,
             statsApi.middleware
 
         ),
