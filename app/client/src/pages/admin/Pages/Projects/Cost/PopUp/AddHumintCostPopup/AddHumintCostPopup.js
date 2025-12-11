@@ -1,18 +1,26 @@
-import React, { useState } from 'react';
-import styles from './AddHumintCostPopup.module.css';
+import React, { useState, useEffect } from "react";
+import { useCreateHumintExpanseMutation } from "../../../../../../../services/humintExpanseApi";
+import { useGetAllHumintsQuery } from "../../../../../../../services/humintApi";
+import styles from "./AddHumintCostPopup.module.css";
 
-const AddHumintCostPopup = ({ isOpen, onClose, onSave }) => {
+const AddHumintCostPopup = ({ isOpen, onClose }) => {
+
+    const { data: humintList, isLoading: loadingHumints } = useGetAllHumintsQuery();
+    const [createExpense, { isLoading }] = useCreateHumintExpanseMutation();
+
     const [formData, setFormData] = useState({
-        date: '',
-        description: '',
-        utility: '3',
-        cost: '',
-        currency: 'EUR',
-        costWithTaxes: '',
-        taxPercentage: '32',
-        total: ''
+        humintId: "",
+        date: "",
+        description: "",
+        utility: "3",
+        cost: "",
+        currency: "EUR",
+        taxPercentage: "32",
+        costWithTaxes: "",
+        total: "",
     });
 
+    // handle input changes
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData(prev => ({
@@ -21,16 +29,57 @@ const AddHumintCostPopup = ({ isOpen, onClose, onSave }) => {
         }));
     };
 
-    const handleSubmit = () => {
-        onSave(formData);
-        onClose();
+    // auto calculate tax cost
+    useEffect(() => {
+        const cost = parseFloat(formData.cost || 0);
+        const tax = parseFloat(formData.taxPercentage || 0);
+
+        const costWithTax = cost + (cost * tax) / 100;
+
+        setFormData(prev => ({
+            ...prev,
+            costWithTaxes: isNaN(costWithTax) ? "" : costWithTax.toFixed(2),
+            total: isNaN(costWithTax) ? "" : costWithTax.toFixed(2)
+        }));
+    }, [formData.cost, formData.taxPercentage]);
+
+    const handleSubmit = async () => {
+        try {
+            await createExpense({
+                ...formData,
+                taxPercent: Number(formData.taxPercentage),
+                taxIncludedCost: Number(formData.costWithTaxes),
+                total: Number(formData.total),
+            }).unwrap();
+
+            // RESET FORM AFTER SUBMIT
+            setFormData({
+                humintId: "",
+                date: "",
+                description: "",
+                utility: "3",
+                cost: "",
+                currency: "EUR",
+                taxPercentage: "32",
+                costWithTaxes: "",
+                total: "",
+            });
+
+            onClose();
+
+        } catch (error) {
+            console.error(error);
+            alert("Failed to save expense");
+        }
     };
+
 
     if (!isOpen) return null;
 
     return (
         <div className={styles.popupOverlay}>
             <div className={styles.popupContainer}>
+
                 <div className={styles.popupHeader}>
                     <h3 className={styles.popupTitle}>Adaugă cheltuiala HUMINT</h3>
                     <button className={styles.closeButton} onClick={onClose}>×</button>
@@ -38,37 +87,55 @@ const AddHumintCostPopup = ({ isOpen, onClose, onSave }) => {
 
                 <div className={styles.popupBody}>
                     <div className={styles.formSection}>
-                        {/* Row 1 */}
+
+                        {/* HUMINT SELECT BOX */}
+                        <div className={styles.formField}>
+                            <label>Select HUMINT</label>
+
+                            <select
+                                name="humintId"
+                                className={styles.inputBox}
+                                value={formData.humintId}
+                                onChange={handleChange}
+                            >
+                                <option value="">Select HUMINT</option>
+
+                                {!loadingHumints && humintList?.data?.map((h) => (
+                                    <option key={h._id} value={h._id}>
+                                        {h.humintSubject || "No Subject"}
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
+
+                        {/* DATE + DESCRIPTION */}
                         <div className={styles.rowTwo}>
                             <div className={styles.formField}>
                                 <label>Data</label>
                                 <input
-                                    className={styles.inputBox}
-                                    name="date"
                                     type="date"
+                                    name="date"
+                                    className={styles.inputBox}
                                     value={formData.date}
                                     onChange={handleChange}
-                                    placeholder="Selectează data"
                                 />
                             </div>
 
                             <div className={styles.formField}>
                                 <label>Descriere</label>
                                 <input
-                                    className={styles.inputBox}
                                     name="description"
+                                    className={styles.inputBox}
                                     value={formData.description}
                                     onChange={handleChange}
-                                    placeholder="ex: Interviu sursa, deplasare, verificare locatie"
                                 />
                             </div>
                         </div>
 
-                        {/* Row 2 (6 columns) */}
+                        {/* COST ROWS – unchanged */}
                         <div className={styles.rowSix}>
-                            {/* Utilitate now as dropdown */}
                             <div className={styles.formField}>
-                                <label>Utilitate (1-5)</label>
+                                <label>Utilitate</label>
                                 <select
                                     className={styles.inputBox}
                                     name="utility"
@@ -90,65 +157,56 @@ const AddHumintCostPopup = ({ isOpen, onClose, onSave }) => {
                                     name="cost"
                                     value={formData.cost}
                                     onChange={handleChange}
-                                    placeholder="ex: 200"
                                 />
                             </div>
 
                             <div className={styles.formField}>
                                 <label>Monedă</label>
                                 <select
-                                    className={styles.inputBox}
                                     name="currency"
+                                    className={styles.inputBox}
                                     value={formData.currency}
                                     onChange={handleChange}
                                 >
-                                    <option value="EUR">EUR ▾</option>
-                                    <option value="USD">USD</option>
+                                    <option value="EUR">EUR</option>
                                     <option value="RON">RON</option>
+                                    <option value="USD">USD</option>
                                 </select>
                             </div>
 
                             <div className={styles.formField}>
                                 <label>Cost cu taxe</label>
-                                <input
-                                    className={styles.inputBox}
-                                    name="costWithTaxes"
-                                    value={formData.costWithTaxes}
-                                    onChange={handleChange}
-                                    placeholder="ex: 200 + 32%"
-                                />
+                                <input className={styles.inputBox} value={formData.costWithTaxes} readOnly />
                             </div>
 
                             <div className={styles.formField}>
-                                <label>Procent total taxe</label>
+                                <label>Procent taxe</label>
                                 <input
                                     className={styles.inputBox}
                                     name="taxPercentage"
                                     value={formData.taxPercentage}
                                     onChange={handleChange}
-                                    placeholder="32%"
                                 />
                             </div>
 
                             <div className={styles.formField}>
-                                <label>Total (auto)</label>
-                                <input
-                                    className={styles.inputBox}
-                                    name="total"
-                                    value={formData.total}
-                                    onChange={handleChange}
-                                    placeholder="260 EUR"
-                                    readOnly
-                                />
+                                <label>Total</label>
+                                <input className={styles.inputBox} value={formData.total} readOnly />
                             </div>
                         </div>
+
                     </div>
                 </div>
 
                 <div className={styles.popupFooter}>
                     <button className={styles.cancelButton} onClick={onClose}>Anulează</button>
-                    <button className={styles.saveButton} onClick={handleSubmit}>
-                        Salvează cheltuiala
+
+                    <button
+                        className={styles.saveButton}
+                        onClick={handleSubmit}
+                        disabled={isLoading}
+                    >
+                        {isLoading ? "Saving..." : "Salvează cheltuiala"}
                     </button>
                 </div>
             </div>

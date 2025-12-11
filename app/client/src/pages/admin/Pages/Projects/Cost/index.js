@@ -4,9 +4,19 @@ import AddEmployeeCostPopup from "./PopUp/AddEmployeeCostPopup/AddEmployeeCostPo
 import AddHumintCostPopup from "./PopUp/AddHumintCostPopup/AddHumintCostPopup";
 import SummarySection from "./SummarySection/SummaaySection";
 import CostBar from "./CostBar/CostBar";
+
 import EmployeeCostTable from "./EmployeeCostTable/EmployeeCostTable"; // Import the new component
 
+import { useGetHumintExpensesQuery, useGetHumintTotalsQuery }
+    from "../../../../../services/humintExpanseApi";
+
+
+
 const ProjectCost = () => {
+
+    const { data: humintExpenses, isLoading: loadingHumint } = useGetHumintExpensesQuery();
+    const { data: humintTotals } = useGetHumintTotalsQuery();
+
     // State for popups visibility
     const [showEmployeePopup, setShowEmployeePopup] = useState(false);
     const [showHumintPopup, setShowHumintPopup] = useState(false);
@@ -40,6 +50,7 @@ const ProjectCost = () => {
                 />
 
                 {/* HUMINT COSTS */}
+                {/* HUMINT COSTS */}
                 <div className="form-card">
                     <h2 className="form-title">Cheltuieli HUMINT</h2>
 
@@ -50,42 +61,46 @@ const ProjectCost = () => {
                             <th>Descriere</th>
                             <th>Utilitate</th>
                             <th>Cash</th>
-                            <th>Alte</th>
+                            <th>Taxe</th>
                             <th>Total</th>
                         </tr>
                         </thead>
 
                         <tbody>
-                        <tr>
-                            <td>2025-11-18</td>
-                            <td>Interviu sursa</td>
-                            <td>4/5</td>
-                            <td>200 EUR</td>
-                            <td>60 EUR</td>
-                            <td>260 EUR</td>
-                        </tr>
-
-                        <tr>
-                            <td>2025-11-20</td>
-                            <td>Verificare locatie</td>
-                            <td>3/5</td>
-                            <td>120 EUR</td>
-                            <td>45 EUR</td>
-                            <td>165 EUR</td>
-                        </tr>
+                        {loadingHumint ? (
+                            <tr><td colSpan="6">Loading...</td></tr>
+                        ) : humintExpenses?.data?.length > 0 ? (
+                            humintExpenses.data.map(exp => (
+                                <tr key={exp._id}>
+                                    <td>{exp.date?.slice(0,10)}</td>
+                                    <td>{exp.description}</td>
+                                    <td>{exp.utility}/5</td>
+                                    <td>{exp.cost} {exp.currency}</td>
+                                    <td>{exp.taxIncludedCost - exp.cost} {exp.currency}</td>
+                                    <td>{exp.total} {exp.currency}</td>
+                                </tr>
+                            ))
+                        ) : (
+                            <tr><td colSpan="6">Nicio cheltuială HUMINT încă</td></tr>
+                        )}
                         </tbody>
                     </table>
 
-                    <div className="total-box">Total HUMINT: 425 EUR</div>
+                    {/* TOTAL HUMINT COST */}
+                    <div className="total-box">
+                        Total HUMINT:
+                        {humintTotals?.totals?.EUR
+                            ? ` ${humintTotals.totals.EUR.toFixed(2)} EUR`
+                            : ""}
+                    </div>
 
-                    {/* ADD HUMINT COST BUTTON - Opens popup */}
-                    <button
-                        className="btn-green"
-                        onClick={() => setShowHumintPopup(true)}
-                    >
+
+                    {/* ADD HUMINT COST BUTTON */}
+                    <button className="btn-green" onClick={() => setShowHumintPopup(true)}>
                         Adaugă cheltuiala
                     </button>
                 </div>
+
 
                 {/* PAGE FOOTER BUTTONS */}
                 <div className="button-row footer-row">

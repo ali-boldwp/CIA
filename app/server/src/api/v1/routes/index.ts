@@ -14,6 +14,7 @@ import dashboardRoutes from "./dashboard.routes";
 import notificationRoutes from "./notification.routes";
 import observationRoutes from "./observation.routes";
 import analystExpanseRoutes from "./analystExpanse.routes";
+import humintExpanseRoutes from "./humintExpanse.routes";
 
 const router = Router();
 
@@ -32,5 +33,6 @@ router.use("/" , dashboardRoutes);
 router.use("/notification" , notificationRoutes);
 router.use("/observation" , observationRoutes);
 router.use("/analyst" , analystExpanseRoutes);
+router.use("/humint-expanse", humintExpanseRoutes)
 
 export default router;

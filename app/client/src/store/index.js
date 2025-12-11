@@ -13,6 +13,7 @@ import { humintApi } from "../services/humintApi";
 import {notificationApi} from "../services/notificationApi";
 import { taskApi } from "../services/taskApi";
 import { statsApi } from "../services/V1/statesApi";
+import {humintExpanseApi} from "../services/humintExpanseApi";
 
 const store = configureStore({
     reducer: {
@@ -29,6 +30,7 @@ const store = configureStore({
         [humintApi.reducerPath]:humintApi.reducer,
         [taskApi.reducerPath]:taskApi.reducer,
         [notificationApi.reducerPath]:notificationApi.reducer,
+        [humintExpanseApi.reducerPath]:humintExpanseApi.reducer,
 
         // V1 APIs don't touch those
 
@@ -50,6 +52,7 @@ const store = configureStore({
             humintApi.middleware,
             notificationApi.middleware,
             taskApi.middleware,
+            humintExpanseApi.middleware,
             statsApi.middleware
 
         ),
