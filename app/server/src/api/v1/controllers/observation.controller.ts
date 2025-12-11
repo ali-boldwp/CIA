@@ -48,10 +48,23 @@ export const createObservation = async (req, res, next) => {
 
 
 
-export const getObservationProjectById = async (req: Request, res: Response, next: NextFunction) => {
+export const getObservationByProjectId = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const observationById  = await observationService.getObservationProjectById(req.params.id);
-        res.json(ok(observationById));
+        const projectId = req.params.id;
+        console.log(projectId)
+
+        if (!projectId) {
+            return res.status(400).json({ success: false, message: "Project ID is required" });
+        }
+
+        const observation = await observationService.getObservationByProjectId(projectId);
+
+
+        if (!observation || observation.length === 0) {
+            return res.status(404).json({ success: false, message: "No observation found for this project" });
+        }
+
+        return res.json(ok(observation));
     } catch (err) {
         next(err);
     }
