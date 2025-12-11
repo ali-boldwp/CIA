@@ -806,7 +806,7 @@ const ProjectTasks = () => {
             )}
 
             {showEditingPopup && (
-                <EditingPopUp data={Observation?.data || []} onClose={() => setShowEditingPopup(false)} />
+                <EditingPopUp final={()=>handleFinalize("revision")} data={Observation?.data || []} onClose={() => setShowEditingPopup(false)} />
             )}
 
             {showPleaseWait  && (

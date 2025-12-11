@@ -3,6 +3,7 @@ import styles from "./EditingPopUp.module.css";
 
 const EditingPopUp = ({
                           data,
+                          final,
                           onClose,
                           statusLabel = "Status: Revino la redactare",
                           editMode = "ON",
@@ -120,11 +121,7 @@ Cap. II – Terminologie neunitară`,
                             <button
                                 type="button"
                                 className={styles.primaryBtn}
-                                onClick={() => {
-                                    if (onResubmit) {
-                                        onResubmit(notes);
-                                    }
-                                }}
+                                onClick={final}
                             >
                                 Trimite din nou la revizie
                             </button>
