@@ -35,8 +35,9 @@
     padding: 16px 28px;
     border-radius: 10px;
     border: none;
-    font-size: 15px;
+    font-size: 14px;
     font-weight: 700;
+    font-style: italic;
     cursor: pointer;
     min-width: 220px;
     transition: all 0.3s ease;
@@ -72,8 +73,9 @@
     padding: 16px 28px;
     border-radius: 10px;
     border: 2px solid #2563EB !important; /* Blue border */
-    font-size: 15px;
+    font-size: 14px;
     font-weight: 700;
+    font-style: italic;
     cursor: pointer;
     min-width: 220px;
     transition: all 0.3s ease;

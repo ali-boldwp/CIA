@@ -46,7 +46,7 @@ const SummarySection = () => {
                 <div className={styles.financialGrid}>
                     {/* Row 1 - First 4 boxes */}
                     <div className={`${styles.summaryBox} ${styles.boxGray}`}>
-                        <span className={styles.sLabel}>Cheltuieli angajați Supraveghere</span>
+                        {/* REMOVED LABEL - Only showing value */}
                         <span className={styles.sValue}>1050 EUR</span>
                     </div>
 
@@ -88,11 +88,15 @@ const SummarySection = () => {
 
                     {/* Row 3 - Last 2 boxes (each spanning 2 columns) */}
                     <div className={`${styles.summaryBox} ${styles.boxProfit}`}>
-                        <div className={styles.profitLeft}>
-                            <span className={styles.sLabelGreen}>Profit</span>
-                            <span className={styles.profitRight}>41.3%</span>
+                        <div className={styles.profitContainer}>
+                            <div className={styles.profitTopRow}>
+                                <span className={styles.sLabelGreen}>Profit</span>
+                                <span className={styles.profitPercentage}>41.3%</span>
+                            </div>
+                            <div className={styles.profitBottomRow}>
+                                <span className={styles.profitValue}>1445.6 EUR</span>
+                            </div>
                         </div>
-                        <div className={styles.sValue}>1445.6 EUR</div>
                     </div>
 
                     <div className={`${styles.summaryBox} ${styles.boxDuration}`}>

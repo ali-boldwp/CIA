@@ -7,7 +7,6 @@ const EmployeeCostTable = ({ onAddCost }) => {
     const { data: response = {}, isLoading, error } = useGetAnalystsQuery();
 
     // Extract analysts array from response
-    // Check if response has data property or is directly an array
     const analysts = response?.data || response || [];
 
     const [editingRow, setEditingRow] = useState(null);
@@ -23,7 +22,6 @@ const EmployeeCostTable = ({ onAddCost }) => {
 
     // Function to handle save
     const handleSave = (index) => {
-        // Here you would typically call an API to update the hours
         console.log(`Saving hours for analyst ${index}: ${editedHours[index]}`);
         setEditingRow(null);
     };
@@ -47,14 +45,24 @@ const EmployeeCostTable = ({ onAddCost }) => {
     const calculateTotal = (analyst, hours) => {
         const actualHours = hours || analyst.hoursPerDay || 8;
         const costPerHour = analyst.costPerHour || 0;
-        return (actualHours * costPerHour).toFixed(2);
+        return actualHours * costPerHour;
     };
 
     // Function to calculate cost per day
     const calculateCostPerDay = (analyst) => {
         const costPerHour = analyst.costPerHour || 0;
         const hoursPerDay = analyst.hoursPerDay || 8;
-        return (costPerHour * hoursPerDay).toFixed(2);
+        return costPerHour * hoursPerDay;
+    };
+
+    // Calculate total for all analysts
+    const calculateTotalEmployeesCost = () => {
+        let total = 0;
+        analysts.forEach((analyst, index) => {
+            const hours = editedHours[index] !== undefined ? editedHours[index] : analyst.hoursPerDay || 8;
+            total += calculateTotal(analyst, hours);
+        });
+        return total.toFixed(2);
     };
 
     if (isLoading) {
@@ -86,6 +94,9 @@ const EmployeeCostTable = ({ onAddCost }) => {
         );
     }
 
+    // Calculate total cost for display
+    const totalEmployeesCost = calculateTotalEmployeesCost();
+
     return (
         <div className={styles.formCard}>
             <h2 className={styles.formTitle}>Cheltuieli cu angajații (timp & cost)</h2>
@@ -115,13 +126,13 @@ const EmployeeCostTable = ({ onAddCost }) => {
                         const hours = editedHours[index] !== undefined ? editedHours[index] : analyst.hoursPerDay || 8;
                         const days = calculateDays(hours);
                         const costPerHour = analyst.costPerHour?.toFixed(2) || '0.00';
-                        const costPerDay = calculateCostPerDay(analyst);
-                        const total = calculateTotal(analyst, hours);
+                        const costPerDay = calculateCostPerDay(analyst).toFixed(2);
+                        const total = calculateTotal(analyst, hours).toFixed(2);
 
                         return (
                             <tr key={analyst._id || index}>
                                 {/* Analist Name */}
-                                <td>{analyst.name}</td>
+                                <td className={styles.analystName}>{analyst.name}</td>
 
                                 {/* Rol - analystRole from API */}
                                 <td>{analyst.analystRole || 'N/A'}</td>
@@ -141,18 +152,18 @@ const EmployeeCostTable = ({ onAddCost }) => {
                                             max="24"
                                         />
                                     ) : (
-                                        hours
+                                        <span className={styles.hoursValue}>{hours}</span>
                                     )}
                                 </td>
 
                                 {/* Cost/ora - From API */}
-                                <td>{costPerHour} EUR</td>
+                                <td className={styles.costPerHour}>{costPerHour} EUR</td>
 
                                 {/* Cost/zi - Calculated */}
-                                <td>{costPerDay} EUR</td>
+                                <td className={styles.costPerDay}>{costPerDay} EUR</td>
 
                                 {/* Total - Calculated */}
-                                <td>{total} EUR</td>
+                                <td className={styles.totalCost}>{total} EUR</td>
 
                                 {/* Editare - Edit/Save buttons */}
                                 <td className={styles.editCell}>
@@ -187,8 +198,11 @@ const EmployeeCostTable = ({ onAddCost }) => {
                 </tbody>
             </table>
 
-            {/* Blank strip under table */}
-            <div className={styles.tableEmptyStrip} />
+            {/* TOTAL EMPLOYEES COST SECTION (not blank strip) */}
+            <div className={styles.totalSection}>
+                <div className={styles.totalLabel}>Total angajați:</div>
+                <div className={styles.totalValue}>{totalEmployeesCost} EUR</div>
+            </div>
 
             {/* ADD EMPLOYEE COST BUTTON */}
             <button className={styles.btnGreen} onClick={onAddCost}>

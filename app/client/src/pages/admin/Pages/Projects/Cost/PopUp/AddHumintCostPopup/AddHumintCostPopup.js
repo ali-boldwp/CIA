@@ -1,15 +1,15 @@
 import React, { useState, useEffect } from "react";
 import { useCreateHumintExpanseMutation } from "../../../../../../../services/humintExpanseApi";
-import { useGetAllHumintsQuery } from "../../../../../../../services/humintApi";
+
 import styles from "./AddHumintCostPopup.module.css";
 
 const AddHumintCostPopup = ({ isOpen, onClose }) => {
 
-    const { data: humintList, isLoading: loadingHumints } = useGetAllHumintsQuery();
+
     const [createExpense, { isLoading }] = useCreateHumintExpanseMutation();
 
     const [formData, setFormData] = useState({
-        humintId: "",
+
         date: "",
         description: "",
         utility: "3",
@@ -54,7 +54,7 @@ const AddHumintCostPopup = ({ isOpen, onClose }) => {
 
             // RESET FORM AFTER SUBMIT
             setFormData({
-                humintId: "",
+
                 date: "",
                 description: "",
                 utility: "3",
@@ -88,25 +88,8 @@ const AddHumintCostPopup = ({ isOpen, onClose }) => {
                 <div className={styles.popupBody}>
                     <div className={styles.formSection}>
 
-                        {/* HUMINT SELECT BOX */}
-                        <div className={styles.formField}>
-                            <label>Select HUMINT</label>
 
-                            <select
-                                name="humintId"
-                                className={styles.inputBox}
-                                value={formData.humintId}
-                                onChange={handleChange}
-                            >
-                                <option value="">Select HUMINT</option>
 
-                                {!loadingHumints && humintList?.data?.map((h) => (
-                                    <option key={h._id} value={h._id}>
-                                        {h.humintSubject || "No Subject"}
-                                    </option>
-                                ))}
-                            </select>
-                        </div>
 
                         {/* DATE + DESCRIPTION */}
                         <div className={styles.rowTwo}>

@@ -162,80 +162,127 @@
     width: 100%;
 }
 
-/* Each box takes 1 column */
+/* Each box takes 1 column - UPDATED FOR TOP ALIGNMENT */
 .summaryBox {
     border-radius: 16px;
-    padding: 18px 20px;
+    padding: 20px; /* Increased padding */
     min-height: 104px;
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: flex-start; /* Changed from center to flex-start */
+    align-items: flex-start; /* Added for top alignment */
     width: 100%;
     border: 1px solid #e5e7eb;
 }
 
-/* Special box for Project Duration */
+/* Special box for Project Duration - UPDATED TO MATCH OTHER CARDS */
 .boxDuration {
     grid-column: 3 / span 2;
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
+    justify-content: flex-start; /* Changed from center to flex-start */
+    align-items: flex-start; /* Changed from center to flex-start */
+    text-align: left; /* Changed from center to left */
     padding: 20px;
     background: #f3f4f6;
     border-color: #d1d5db;
 }
 
-/* Special box for Profit */
+/* Special box for Profit - UPDATED FOR CORRECT ALIGNMENT */
 .boxProfit {
     grid-column: 1 / span 2;
     background: #e8ffe8;
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     justify-content: space-between;
     padding: 20px 25px;
     min-height: auto;
     border: 2px solid #bbf7d0;
 }
 
-/* All summary box labels */
+/* Profit container for better alignment */
+.profitContainer {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    gap: 15px; /* Increased gap for better spacing */
+}
+
+.profitTopRow {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+.profitBottomRow {
+    display: flex;
+    justify-content: flex-start; /* Align to left (under Profit) */
+    align-items: center;
+    width: 100%;
+}
+
+.profitPercentage {
+    font-size: 12px !important;
+    font-weight: 700 !important;
+    font-style: italic !important;
+    color: #15803d;
+}
+
+.profitValue {
+    font-size: 18px !important; /* Slightly larger for emphasis */
+    font-weight: 700 !important;
+    font-style: italic !important;
+    color: #15803d;
+    display: block;
+}
+
+/* All summary box labels - UPDATED */
 .sLabel {
-    font-size: 14px;
-    font-weight: 800;
-    margin-bottom: 6px;
+    font-size: 14px !important;
+    font-weight: 700 !important;
+    font-style: italic !important;
+    margin-bottom: 10px; /* Increased from 6px to 10px */
     display: block;
 }
 
 .sLabelGreen {
-    font-size: 14px;
-    font-weight: 800;
+    font-size: 14px !important;
+    font-weight: 700 !important;
+    font-style: italic !important;
     color: #15803d;
-    margin-bottom: 6px;
+    margin-bottom: 0; /* Reset for profit container */
     display: block;
 }
 
 .sLabelDuration {
-    font-size: 14px;
-    font-weight: 800;
+    font-size: 14px !important;
+    font-weight: 700 !important;
+    font-style: italic !important;
     color: #6b7280;
-    margin-bottom: 6px;
+    margin-bottom: 10px; /* Increased from 6px to 10px */
     display: block;
+    text-align: left; /* Ensure left alignment */
 }
 
+/* All summary box values - UPDATED */
 .sValue {
-    font-size: 22px;
-    font-weight: 800;
+    font-size: 18px !important;
+    font-weight: 700 !important;
+    font-style: italic !important;
     color: #111827;
     display: block;
+    margin-top: auto; /* Pushes value to bottom when combined with flex-start */
 }
 
 .sValueDuration {
-    font-size: 24px;
-    font-weight: 800;
+    font-size: 18px !important;
+    font-weight: 700 !important;
+    font-style: italic !important;
     color: #111827;
     display: block;
-    margin-top: 5px;
+    margin-top: auto; /* Push to bottom like other values */
+    text-align: left; /* Ensure left alignment */
 }
 
 /* Row 1: First 4 boxes - Updated colors */
@@ -313,27 +360,6 @@
     color: #374151;
 }
 
-/* profit section styling */
-.profitLeft {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    width: 100%;
-}
-
-.profitRight {
-    font-size: 18px;
-    font-weight: 800;
-    color: #15803d;
-    margin-right: 12px;
-}
-
-.boxProfit .sValue {
-    font-size: 24px;
-    font-weight: 800;
-    color: #15803d;
-}
-
 /* ========================= RESPONSIVE ========================= */
 
 /* Desktop (1400px - 1799px) */
@@ -385,6 +411,7 @@
     .summaryBox {
         min-height: 90px;
         padding: 16px 18px;
+        justify-content: flex-start; /* Ensure top alignment on mobile */
     }
 
     .formTitle {
@@ -405,21 +432,29 @@
         font-weight: 700;
     }
 
+    /* Responsive label sizes */
     .sLabel,
     .sLabelGreen,
     .sLabelDuration {
-        font-size: 13px;
-        font-weight: 700;
+        font-size: 14px !important;
+        font-weight: 700 !important;
+        font-style: italic !important;
+        margin-bottom: 8px; /* Adjusted for mobile */
     }
 
+    /* Responsive value sizes */
     .sValue {
-        font-size: 20px;
-        font-weight: 700;
+        font-size: 18px !important;
+        font-weight: 700 !important;
+        font-style: italic !important;
     }
 
-    .profitRight {
-        font-size: 16px;
-        font-weight: 700;
+    .profitPercentage {
+        font-size: 16px !important;
+    }
+
+    .profitValue {
+        font-size: 20px !important;
     }
 }
 
@@ -453,31 +488,35 @@
         font-weight: 700;
     }
 
+    /* Mobile label sizes */
     .sLabel,
     .sLabelGreen,
     .sLabelDuration {
-        font-size: 12px;
-        font-weight: 700;
+        font-size: 14px !important;
+        font-weight: 700 !important;
+        font-style: italic !important;
+        margin-bottom: 8px; /* Adjusted for mobile */
     }
 
+    /* Mobile value sizes */
     .sValue {
-        font-size: 18px;
-        font-weight: 700;
+        font-size: 18px !important;
+        font-weight: 700 !important;
+        font-style: italic !important;
     }
 
     .sValueDuration {
-        font-size: 20px;
-        font-weight: 700;
+        font-size: 18px !important;
+        font-weight: 700 !important;
+        font-style: italic !important;
     }
 
-    .boxProfit .sValue {
-        font-size: 20px;
-        font-weight: 700;
+    .profitPercentage {
+        font-size: 15px !important;
     }
 
-    .profitRight {
-        font-size: 15px;
-        font-weight: 700;
+    .profitValue {
+        font-size: 18px !important;
     }
 }
 
@@ -515,21 +554,39 @@
         gap: 10px;
     }
 
-    .profitLeft {
+    .profitTopRow {
         flex-direction: column;
         gap: 8px;
-        text-align: center;
+        text-align: left;
     }
 
-    .profitRight {
-        margin-right: 0;
-        font-size: 14px;
-        font-weight: 700;
+    .profitPercentage {
+        font-size: 14px !important;
+        text-align: left;
+        width: 100%;
     }
 
-    .boxProfit .sValue {
-        font-size: 18px;
-        text-align: center;
-        font-weight: 700;
+    .profitValue {
+        font-size: 18px !important;
+        text-align: left;
+        font-weight: 700 !important;
+        font-style: italic !important;
+    }
+
+    /* Small mobile label sizes */
+    .sLabel,
+    .sLabelGreen,
+    .sLabelDuration {
+        font-size: 14px !important;
+        font-weight: 700 !important;
+        font-style: italic !important;
+        margin-bottom: 6px; /* Adjusted for small mobile */
+    }
+
+    /* Small mobile value sizes */
+    .sValue {
+        font-size: 18px !important;
+        font-weight: 700 !important;
+        font-style: italic !important;
     }
 }

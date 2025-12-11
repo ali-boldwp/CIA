@@ -1,3 +1,5 @@
+/* HumintCostTable.module.css */
+
 .formCard {
     background: #ffffff;
     border-radius: 18px;
@@ -8,10 +10,11 @@
 }
 
 .formTitle {
-    font-size: 19px;
-    font-weight: 800;
+    font-size: 16px;
+    font-weight: 700;
+    font-style: italic;
     margin-bottom: 20px;
-    color: #111827;
+    color: #0F172A;
 }
 
 /* Table styles */
@@ -39,10 +42,20 @@
     height: 52px;
 }
 
+/* TABLE HEADERS */
 .costTable th {
-    font-size: 14px;
-    color: #6b7280;
-    font-weight: 700;
+    font-size: 12px !important;
+    font-weight: 700 !important;
+    font-style: italic !important;
+    color: #334155 !important;
+}
+
+/* ALL ROW DATA */
+.costTable td {
+    font-size: 14px !important;
+    font-weight: 700 !important;
+    font-style: italic !important;
+    color: #0F172A !important;
 }
 
 /* Specific column widths */
@@ -53,20 +66,17 @@
     white-space: nowrap;
 }
 
-
 .costTable th:nth-child(2),
 .costTable td:nth-child(2) {
     width: auto;
     min-width: 60px;
 }
 
-
 .costTable th:nth-child(3),
 .costTable td:nth-child(3) {
     width: 190px;
     min-width: 190px;
 }
-
 
 .costTable th:nth-child(4),
 .costTable td:nth-child(4) {
@@ -75,14 +85,12 @@
     text-align: right;
 }
 
-
 .costTable th:nth-child(5),
 .costTable td:nth-child(5) {
     width: 170px;
     min-width: 170px;
     text-align: right;
 }
-
 
 .costTable th:nth-child(6),
 .costTable td:nth-child(6) {
@@ -95,20 +103,23 @@
     border-bottom: none;
 }
 
-
+/* DATA COLUMN */
 .costTable td:nth-child(1) {
-    font-family: 'Courier New', monospace;
-    font-size: 14px;
-    color: #111827;
-    font-weight: 800 !important;
-    background-color: #f8fafc;
-    border-right: 2px solid #d1d5db;
+
+    font-size: 14px !important;
+    font-weight: 700 !important;
+    font-style: italic !important;
+    color: #0F172A !important;
+    background-color: #ffffff !important;
+    border-right: none !important;
 }
 
-
+/* DESCRIERE COLUMN */
 .costTable td:nth-child(2) {
-    color: #111827;
-    font-weight: 600;
+    font-size: 14px !important;
+    font-weight: 700 !important;
+    font-style: italic !important;
+    color: #0F172A !important;
     line-height: 1.5;
     word-break: break-word;
 }
@@ -121,69 +132,60 @@
     padding: 40px !important;
     font-size: 15px;
     vertical-align: middle;
+    font-style: normal !important;
 }
 
-/* Utility cell with progress bar - FIXED ALIGNMENT */
-.utilityCell {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    height: 100%;
-    min-height: 28px;
-}
-
+/* Utility value styling */
 .utilityValue {
-    min-width: 40px;
-    font-weight: 600;
-    color: #4f46e5;
+    font-size: 14px !important;
+    font-weight: 700 !important;
+    font-style: italic !important;
+    color: #0F172A !important;
+    display: inline-block;
 }
 
-.utilityBar {
-    flex: 1;
-    height: 8px;
-    background: #e5e7eb;
-    border-radius: 4px;
-    overflow: hidden;
-    margin: 0;
-}
-
-.utilityFill {
-    height: 100%;
-    background: linear-gradient(90deg, #22c55e, #10b981);
-    border-radius: 4px;
-    transition: width 0.3s ease;
-}
-
-/* Amount styling - IMPROVED ALIGNMENT */
+/* Amount styling */
 .costAmount {
-    color: #111827;
-    font-weight: 700;
-    font-size: 14px;
+    color: #0F172A !important;
+    font-weight: 700 !important;
+    font-size: 14px !important;
+    font-style: italic !important;
     display: block;
     text-align: right;
     line-height: 1.4;
 }
 
 .taxAmount {
-    color: #dc2626;
-    font-weight: 700;
-    font-size: 14px;
+    color: #0F172A !important;
+    font-weight: 700 !important;
+    font-size: 14px !important;
+    font-style: italic !important;
     display: block;
     text-align: right;
     line-height: 1.4;
 }
 
 .totalAmount {
-    color: #059669;
-    font-weight: 800;
-    font-size: 15px;
+    color: #0F172A !important;
+    font-weight: 700 !important;
+    font-size: 14px !important;
+    font-style: italic !important;
     display: block;
     text-align: right;
     line-height: 1.4;
 }
 
+/* blank strip under table */
+.tableEmptyStrip {
+    margin-top: 10px;
+    border-radius: 12px;
+    background: #f9fafb;
+    border: 1px solid #e5e7eb;
+    height: 60px;
+    width: 100%;
+}
 
-/* Total box */
+/* Total box - UPDATED FOR LEFT ALIGNMENT */
 .totalBox {
     margin: 20px 0 10px 0;
     padding: 16px 20px;
@@ -191,20 +193,24 @@
     border-radius: 12px;
     border: 1px solid #e5e7eb;
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-start; /* Changed from space-between to flex-start */
     align-items: center;
+    gap: 12px; /* Added gap between label and value */
 }
 
 .totalLabel {
     font-weight: 700;
-    font-size: 17px;
-    color: #111827;
+    font-size: 15px;
+    color: #0F172A;
+    font-style: italic;
+    white-space: nowrap; /* Prevents breaking */
 }
 
 .totalValue {
-    font-weight: 800;
-    font-size: 18px;
-    color: #059669;
+    font-weight: 700;
+    font-size: 15px;
+    color: #0F172A;
+    font-style: italic;
 }
 
 /* Button */
@@ -217,6 +223,7 @@
     border: none;
     font-size: 14px;
     font-weight: 700;
+    font-style: italic;
     cursor: pointer;
     width: auto;
     min-width: 180px;
@@ -224,7 +231,7 @@
 }
 
 .btnGreen:hover {
-    background: #15803d;
+    background: #16a34a;
 }
 
 /* Responsive */
@@ -239,21 +246,48 @@
         height: 48px;
     }
 
+    /* TABLE HEADERS FOR 1199px */
+    .costTable th {
+        font-size: 12px !important;
+        font-weight: 700 !important;
+        font-style: italic !important;
+        color: #334155 !important;
+    }
 
+    /* ALL ROW DATA FOR 1199px */
+    .costTable td {
+        font-size: 14px !important;
+        font-weight: 700 !important;
+        font-style: italic !important;
+        color: #0F172A !important;
+    }
+
+    /* Data column mobile */
     .costTable th:nth-child(1),
     .costTable td:nth-child(1) {
         width: 100px;
         min-width: 100px;
     }
 
-
+    /* Data column on mobile */
     .costTable td:nth-child(1) {
-        font-size: 13px;
+        font-size: 14px !important;
         font-weight: 700 !important;
+        font-style: italic !important;
+        color: #0F172A !important;
     }
 
+    /* Descriere on mobile */
     .costTable td:nth-child(2) {
-        font-weight: 600;
+        font-size: 14px !important;
+        font-weight: 700 !important;
+        font-style: italic !important;
+        color: #0F172A !important;
+    }
+
+    .utilityValue {
+        font-size: 14px !important;
+        font-style: italic !important;
     }
 }
 
@@ -263,18 +297,25 @@
     }
 
     .formTitle {
-        font-size: 18px;
+        font-size: 16px;
+        font-weight: 700;
+        font-style: italic;
     }
 
-    .utilityCell {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 6px;
-        min-height: 40px;
+    /* TABLE HEADERS FOR 991px */
+    .costTable th {
+        font-size: 12px !important;
+        font-weight: 700 !important;
+        font-style: italic !important;
+        color: #334155 !important;
     }
 
-    .utilityBar {
-        width: 100%;
+    /* ALL ROW DATA FOR 991px */
+    .costTable td {
+        font-size: 14px !important;
+        font-weight: 700 !important;
+        font-style: italic !important;
+        color: #0F172A !important;
     }
 }
 
@@ -285,14 +326,31 @@
     }
 
     .formTitle {
-        font-size: 17px;
+        font-size: 16px;
+        font-weight: 700;
+        font-style: italic;
+    }
+
+    /* TABLE HEADERS FOR MOBILE */
+    .costTable th {
+        font-size: 12px !important;
+        font-weight: 700 !important;
+        font-style: italic !important;
+        color: #334155 !important;
+    }
+
+    /* ALL ROW DATA FOR MOBILE */
+    .costTable td {
+        font-size: 14px !important;
+        font-weight: 700 !important;
+        font-style: italic !important;
+        color: #0F172A !important;
     }
 
     .costTable th,
     .costTable td {
         padding: 8px 10px;
-        font-size: 12px;
-        height: 44px; /* Adjusted for small mobile */
+        height: 44px;
     }
 
     .costTable {
@@ -301,33 +359,44 @@
         white-space: nowrap;
     }
 
-
+    /* Mobile mein fixed widths hata do */
     .costTable th:nth-child(n),
     .costTable td:nth-child(n) {
         width: auto !important;
         min-width: auto !important;
     }
 
-
+    /* Sirf Data column ki width rakho mobile mein bhi */
     .costTable th:nth-child(1),
     .costTable td:nth-child(1) {
         width: 90px !important;
         min-width: 90px !important;
     }
 
-
+    /* Data column on small mobile */
     .costTable td:nth-child(1) {
-        font-size: 12px;
+        font-size: 14px !important;
         font-weight: 700 !important;
+        font-style: italic !important;
+        color: #0F172A !important;
     }
 
+    /* Descriere on small mobile */
     .costTable td:nth-child(2) {
-        font-weight: 600;
+        font-size: 14px !important;
+        font-weight: 700 !important;
+        font-style: italic !important;
+        color: #0F172A !important;
     }
 
+    .tableEmptyStrip {
+        height: 50px;
+    }
 
     .totalBox {
         padding: 14px 16px;
+        justify-content: flex-start; /* Updated for mobile */
+        gap: 10px; /* Updated for mobile */
     }
 
     .totalLabel {
@@ -352,19 +421,44 @@
 
     .formTitle {
         font-size: 16px;
+        font-weight: 700;
+        font-style: italic;
         margin-bottom: 16px;
     }
 
+    /* TABLE HEADERS FOR SMALL MOBILE */
+    .costTable th {
+        font-size: 12px !important;
+        font-weight: 700 !important;
+        font-style: italic !important;
+        color: #334155 !important;
+    }
+
+    /* ALL ROW DATA FOR SMALL MOBILE */
+    .costTable td {
+        font-size: 14px !important;
+        font-weight: 700 !important;
+        font-style: italic !important;
+        color: #0F172A !important;
+    }
+
     .totalBox {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 8px;
+        flex-direction: row; /* Changed from column to row */
+        justify-content: flex-start; /* Added */
+        align-items: center; /* Added */
+        gap: 8px; /* Added */
+    }
+
+    .totalLabel, .totalValue {
+        white-space: nowrap; /* Prevents breaking on small screens */
     }
 
     /* Extra small screens */
     .costTable td:nth-child(1) {
-        font-size: 11px;
+        font-size: 14px !important;
         font-weight: 700 !important;
+        font-style: italic !important;
+        color: #0F172A !important;
     }
 
     .costTable th,
