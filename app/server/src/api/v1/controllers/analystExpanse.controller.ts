@@ -1,5 +1,6 @@
 import AnalystExpanse from "../models/analystExpanse.model";
 import User from "../models/user.model";
+import * as analystExpanseService from '../services/analystExpanse.service'
 
 export const getAnalystsFinalSalary = async (req, res) => {
     try {
@@ -60,5 +61,26 @@ export const getAnalystsFinalSalary = async (req, res) => {
     } catch (error) {
         console.log(error);
         res.status(500).json({ message: "Server error" });
+    }
+};
+
+
+export const getProjectAnalystExpanse = async (req, res) => {
+    try {
+        const { projectId } = req.params;
+
+        const expanses = await analystExpanseService.getAnalystExpansesByProject(projectId);
+
+        res.json({
+            success: true,
+            totalAnalysts: expanses.length,
+            expanses
+        });
+
+    } catch (err) {
+        res.status(500).json({
+            success: false,
+            message: err.message
+        });
     }
 };
