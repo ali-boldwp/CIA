@@ -1,6 +1,7 @@
 body{
         font-family: "Inter", sans-serif !important;
     letter-spacing: 0.55px;
+    overflow-x:hidden;
 }
 .App {
   text-align: center;

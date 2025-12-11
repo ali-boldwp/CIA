@@ -40,6 +40,8 @@ const ProjectTasks = () => {
     const [showEditingPopup, setShowEditingPopup] = useState(false);
     const [showPleaseWait, setShowPleaseWait] = useState(false);
     const [allBtn,setAllBtn]=useState(false);
+    const [isFinalizedLocal, setIsFinalizedLocal] = useState(false);
+
 
     const [startTask] = useStartTaskMutation();
     const [pauseTask] = usePauseTaskMutation();
@@ -73,6 +75,10 @@ const ProjectTasks = () => {
 
     const { data: projectData, isLoading, isError } = useGetCreateProjectByIdQuery(projectId);
     const project = projectData?.data;
+    const isFinalized = project?.status === "revision" || project?.isFinalized;
+    const isObservation = project?.status === "observation";
+
+
 
     const [createChapter] = useCreateChapterMutation();
 
@@ -81,6 +87,11 @@ const ProjectTasks = () => {
     const current = analystsProgress?.data?.find(
         (a) => a.analystId === analystId
     );
+    useEffect(() => {
+        if (project) {
+            setIsFinalizedLocal(project?.status === "revision" || project?.isFinalized);
+        }
+    }, [project]);
 
     useEffect(() => {
         const fetchAll = async () => {
@@ -112,8 +123,11 @@ const ProjectTasks = () => {
     const [editMode, setEditMode] = useState( false );
 
     useEffect(() => {
-        setEditMode( ( ( user?.role == "admin"  || user?.role == "manager" ) || ( project?.isEditable && user?.role == "analyst" ) ) );
+        if (project) {
+            setEditMode(project.isEditable);  // Always follow backend
+        }
     }, [project]);
+
 
 
     const handleCreateTask = async (chapterId) => {
@@ -285,24 +299,33 @@ const ProjectTasks = () => {
     };
 
     const handleFinalize = async (statusType) => {
-        // setShowReviewPopup(true);
+
+        // UI Should Update Immediately
+        setIsFinalizedLocal(true);
+
         setShowPleaseWait(true);
-        setAllBtn(true)
+        setAllBtn(true);
 
         try {
             await finalizeTask({
                 id: projectId,
                 status: statusType,
             }).unwrap();
-            refetchProgress();
+
             toast("Project Revision!");
+
         } catch (err) {
             console.error(err);
             toast.error("Finalization error!");
+
+            // Revert UI if backend fails
+            setIsFinalizedLocal(false);
+
         } finally {
             setShowPleaseWait(false);
         }
     };
+
 
 
 
@@ -412,23 +435,44 @@ const ProjectTasks = () => {
                         <div className="buttons-row">
                             {
                                 user?.role === "manager" ? (
+
+                                    // MANAGER BUTTON
                                     <button
                                         className="btn finalize"
-                                        onClick={allBtn ? () => setShowReviewPopup(true) : () => handleFinalize("revision")}
-
+                                        onClick={
+                                            isFinalizedLocal
+                                                ? () => setShowReviewPopup(true)
+                                                : () => handleFinalize("revision")
+                                        }
                                     >
-                                        {allBtn ? "Revision" : "Finalizează"}
+                                        {isFinalizedLocal ? "Revision" : "✔ Finalizează"}
                                     </button>
-                                ):(
-                                    <button
-                                        className="btn finalize"
-                                        onClick={() => handleFinalize("revision")}
 
-                                    >
-                                        { !allBtn ?   "✔ Finalizează" : "⏳ Așteptați" }
-                                    </button>
+                                ) : (
+
+                                    // ANALYST BUTTONS
+                                    isObservation ? (
+                                        <button
+                                            className="btn finalize"
+                                            onClick={() => setShowEditingPopup(true)}  // Or show observation popup
+                                        >
+                                            👁 View Observation
+                                        </button>
+                                    ) : (
+                                        <button
+                                            className="btn finalize"
+                                            onClick={() => handleFinalize("revision")}
+                                            disabled={isFinalizedLocal}
+                                        >
+                                            {isFinalizedLocal ? "⏳ Așteptați" : "✔ Finalizează"}
+                                        </button>
+                                    )
+
                                 )
                             }
+
+
+
 
                         </div>
                     </div>
@@ -644,7 +688,7 @@ const ProjectTasks = () => {
 
                                 {/* Actions */}
                                 <div className="col col-actions">
-                                    { allBtn ? (
+                                    { isFinalizedLocal ? (
                                             <span className="disabled-text"></span>
                                     ): !editMode  ? (
                                         <span className="disabled-text"></span>
@@ -705,7 +749,7 @@ const ProjectTasks = () => {
                         <div className="add-row">
 
 
-                            { editMode && !allBtn &&(
+                            { editMode && !isFinalizedLocal &&(
                                 <button
                                     className="add-btn"
                                     onClick={() => {
@@ -772,7 +816,7 @@ const ProjectTasks = () => {
                 />
             )}
 
-            <ChapterCreation mode={editMode} observe={allBtn} projectId={projectId} createChapter={createChapter} />
+            <ChapterCreation mode={editMode} observe={isFinalizedLocal} projectId={projectId} createChapter={createChapter} />
 
         </div>
     );
