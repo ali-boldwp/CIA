@@ -6,15 +6,16 @@ import {
     useCreateChapterMutation,
     useCreateTaskMutation,
     useGetChapterByIdQuery,
-    useGetCreateProjectByIdQuery,
     useStartTaskMutation,
     usePauseTaskMutation,
     useResumeTaskMutation,
     useCompleteTaskMutation,
-    useGetAnalystsProgressQuery,
     useUpdateEditableMutation,
     useFinalizeTaskMutation,
-} from "../../../../../services/projectApi";
+    useCreateObservationMutation,
+    useGetObservationsByProjectQuery,
+} from "../../../../../services/taskApi";
+import { useGetCreateProjectByIdQuery , useGetAnalystsProgressQuery } from "../../../../../services/projectApi";
 import {toast} from "react-toastify";
 import {FiEdit2, FiTrash2} from "react-icons/fi";
 import ChapterCreation from "../../../../taskPage/components/ChapterCreation";
@@ -38,6 +39,7 @@ const ProjectTasks = () => {
     const [showReviewPopup, setShowReviewPopup] = useState(false);
     const [showEditingPopup, setShowEditingPopup] = useState(false);
     const [showPleaseWait, setShowPleaseWait] = useState(false);
+    const [allBtn,setAllBtn]=useState(false);
 
     const [startTask] = useStartTaskMutation();
     const [pauseTask] = usePauseTaskMutation();
@@ -45,12 +47,17 @@ const ProjectTasks = () => {
     const [completeTask] = useCompleteTaskMutation();
     const [updateEditable] = useUpdateEditableMutation();
     const [finalizeTask, { isLoading: isFinalizing }] = useFinalizeTaskMutation();
+    const [createObservation, { isLoading: isCreatingObservation }] = useCreateObservationMutation();
+    const {data:Observation} = useGetObservationsByProjectQuery(projectId, {
+        skip: !projectId,
+    });
 
 
 
 
 
-    const { data: analystsProgress } = useGetAnalystsProgressQuery();
+    const { data: analystsProgress , refetch: refetchProgress} = useGetAnalystsProgressQuery(projectId);
+
     const [createTask, { isLoading: isCreatingTask }] = useCreateTaskMutation();
 
     const {data:chapter}=useGetChapterByIdQuery(projectId, {
@@ -74,6 +81,7 @@ const ProjectTasks = () => {
     const current = analystsProgress?.data?.find(
         (a) => a.analystId === analystId
     );
+
     useEffect(() => {
         const fetchAll = async () => {
             let result = {};
@@ -116,7 +124,7 @@ const ProjectTasks = () => {
                 name: newTaskName,
                 chapterId,
             }).unwrap();
-
+            refetchProgress();
             // Add task to UI immediately
             setTasksByChapter((prev) => ({
                 ...prev,
@@ -140,7 +148,7 @@ const ProjectTasks = () => {
     const handleStart = async (taskId, chapterId) => {
         try {
             const res = await startTask(taskId).unwrap();
-
+            refetchProgress();
             // UI update — analyst assign hua
             setTasksByChapter((prev) => ({
                 ...prev,
@@ -158,6 +166,7 @@ const ProjectTasks = () => {
     const handlePause = async (taskId, chapterId) => {
         try {
             const res = await pauseTask(taskId).unwrap();
+            refetchProgress();
 
             setTasksByChapter(prev => ({
                 ...prev,
@@ -174,10 +183,42 @@ const ProjectTasks = () => {
         }
     };
 
+    const handleAddObservation = async (notes) => {
+        if (!projectId) {
+            toast.error("Project not selected");
+            return;
+        }
+        if (!notes || !notes.trim()) {
+            toast.error("Observația este goală");
+            return;
+        }
+
+        try {
+            setShowPleaseWait(true);
+            const res = await createObservation({
+                projectId,
+                text: notes.trim(),
+            }).unwrap();
+
+            toast("Observație adăugată și proiect marcat ca observation");
+            // optionally disable buttons / lock UI
+            setAllBtn(true);
+
+            // close popup or keep open depending on UX
+            setShowReviewPopup(false);
+        } catch (err) {
+            console.error(err);
+            toast.error("Nu s-a putut salva observația");
+        } finally {
+            setShowPleaseWait(false);
+        }
+    };
+
+
     const handleResume = async (taskId, chapterId) => {
         try {
             const res = await resumeTask(taskId).unwrap();
-
+            refetchProgress();
             setTasksByChapter(prev => ({
                 ...prev,
                 [chapterId]: prev[chapterId].map(t =>
@@ -196,7 +237,7 @@ const ProjectTasks = () => {
     const handleComplete = async (taskId, chapterId) => {
         try {
             const res = await completeTask(taskId).unwrap();
-
+            refetchProgress();
             setTasksByChapter(prev => ({
                 ...prev,
                 [chapterId]: prev[chapterId].map(t =>
@@ -232,9 +273,7 @@ const ProjectTasks = () => {
     };
 
 
-    const progress = current?.progress || 0;
-    const totalTasks = current?.totalTasks || 0;
-    const completedTasks = current?.completedTasks || 0;
+
 
     const formatTime = (seconds) => {
         if (!seconds || seconds <= 0) return "0h00m";
@@ -245,25 +284,26 @@ const ProjectTasks = () => {
         return `${h}h ${m.toString().padStart(2, "0")}m`;
     };
 
-    const handleFinalize = async () => {
-        // yahan tum decide karo kis task ka id bhejna hai
-        // example: koi specific task, ya last task, ya kuch selected
-        const someTaskId = "123"; // <-- yahan real taskId dalo
-
-        console.log("Finalize clicked, taskId:", someTaskId);
+    const handleFinalize = async (statusType) => {
+        // setShowReviewPopup(true);
         setShowPleaseWait(true);
+        setAllBtn(true)
 
         try {
-            await finalizeTask(someTaskId).unwrap();
-            toast.success("Task finalizat cu succes!");
+            await finalizeTask({
+                id: projectId,
+                status: statusType,
+            }).unwrap();
+            refetchProgress();
+            toast("Project Revision!");
         } catch (err) {
             console.error(err);
-            toast.error("Eroare la finalizare!");
-        }
-        finally {
+            toast.error("Finalization error!");
+        } finally {
             setShowPleaseWait(false);
         }
     };
+
 
 
     const getInitials = (name) => {
@@ -298,6 +338,13 @@ const ProjectTasks = () => {
 
     const allTasks = Object.values(tasksByChapter).flat();
 
+    const totalTasks = allTasks.length;
+    const completedTasks = allTasks.filter(t => t.completed).length;
+    const progress = totalTasks > 0
+        ? Math.round((completedTasks / totalTasks) * 100)
+        : 0;
+
+
     const analystTimes = Object.entries(analystWorkMap)
         .map(([analystId, sec]) => {
             const taskAnalyst = allTasks.find(
@@ -309,6 +356,8 @@ const ProjectTasks = () => {
             return `${getInitials(taskAnalyst.name)} - ${formatTime(sec)}`;
         })
         .filter(Boolean);
+
+
 
 
     const getStatus = (task) => {
@@ -361,15 +410,25 @@ const ProjectTasks = () => {
                         </p>
 
                         <div className="buttons-row">
-                            <button
-                                className="btn finalize"
-                                onClick={() => {
-                                    console.log("Finalize button clicked, ID:", projectId); // 👈 ID console me
-                                    handleFinalize(projectId);
-                                }}
-                            >
-                                ✔ Finalizează
-                            </button>
+                            {
+                                user?.role === "manager" ? (
+                                    <button
+                                        className="btn finalize"
+                                        onClick={allBtn ? () => setShowReviewPopup(true) : () => handleFinalize("revision")}
+
+                                    >
+                                        {allBtn ? "Revision" : "Finalizează"}
+                                    </button>
+                                ):(
+                                    <button
+                                        className="btn finalize"
+                                        onClick={() => handleFinalize("revision")}
+
+                                    >
+                                        { !allBtn ?   "✔ Finalizează" : "⏳ Așteptați" }
+                                    </button>
+                                )
+                            }
 
                         </div>
                     </div>
@@ -585,12 +644,13 @@ const ProjectTasks = () => {
 
                                 {/* Actions */}
                                 <div className="col col-actions">
-
-                                    {!editMode ? (
+                                    { allBtn ? (
+                                            <span className="disabled-text"></span>
+                                    ): !editMode  ? (
                                         <span className="disabled-text"></span>
                                     ) : (
                                         <>
-                                            {task.completed ? (
+                                            {task.completed  ? (
                                                 <span className="btnActionBoth">
                     <FiEdit2 className="icon edit" />
                     <FiTrash2 className="icon delete" />
@@ -643,7 +703,9 @@ const ProjectTasks = () => {
 
                         {/* Add new task */}
                         <div className="add-row">
-                            { editMode &&(
+
+
+                            { editMode && !allBtn &&(
                                 <button
                                     className="add-btn"
                                     onClick={() => {
@@ -696,21 +758,21 @@ const ProjectTasks = () => {
 
 
             {showReviewPopup && (
-                <ReviewPopUp onClose={() => setShowReviewPopup(false)} />
+                <ReviewPopUp onClose={() => setShowReviewPopup(false)} onAddObservation={handleAddObservation} />
             )}
 
             {showEditingPopup && (
-                <EditingPopUp onClose={() => setShowEditingPopup(false)} />
+                <EditingPopUp data={Observation?.data || []} onClose={() => setShowEditingPopup(false)} />
             )}
 
-            {showPleaseWait && (
+            {showPleaseWait  && (
                 <PleaseWaitPopUp
                     message="Vă rugăm să așteptați..."
                     subText="Se procesează finalizarea task-ului."
                 />
             )}
 
-            <ChapterCreation mode={editMode} projectId={projectId} createChapter={createChapter} />
+            <ChapterCreation mode={editMode} observe={allBtn} projectId={projectId} createChapter={createChapter} />
 
         </div>
     );
