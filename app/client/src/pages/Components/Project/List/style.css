@@ -78,7 +78,7 @@
     /* columns header jese hi rakho */
     grid-template-columns: 22% 15% 18% 18% 27%;
     padding: 18px 5px;
-    margin: 10px 0px;
+    /*margin: 10px 0px;*/
     align-items: center;
     border-bottom: 1px solid #E5E7EB;
     padding: 20px;
@@ -108,20 +108,20 @@
 }
 
 .team-badge-approved:first-child {
-    padding: 8px 6px;
+    padding: 6px;
     background: #14b8a6;
     border-radius: 50%;
     color: white;
-    font-size: 10px;
+    font-size: 8px;
     margin-right: 5px;
 }
 
 .team-badge-approved {
-    padding: 8px 6px;
+    padding: 6px;
     background: #6d28d9;
     border-radius: 50%;
     color: white;
-    font-size: 10px;
+    font-size: 8px;
     margin-right: 5px;
 }
 

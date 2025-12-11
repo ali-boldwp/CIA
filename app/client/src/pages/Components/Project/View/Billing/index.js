@@ -1,8 +1,7 @@
-// /home/ubaid/workspace/app/client/src/pages/ProjectDetail/ProjectBilling.js
 import React from "react";
-import styles from "./ProjectBilling.module.css";
+import styles from "./style.module.css";
 
-const ProjectBilling = ({ billing }) => {
+const Billing = ({ billing }) => {
     return (
         <div className={styles.billingCard}>
             <h2 className={styles.sectionTitle}>Rezumat financiar</h2>
@@ -50,4 +49,4 @@ const ProjectBilling = ({ billing }) => {
     );
 };
 
-export default ProjectBilling;
+export default Billing;

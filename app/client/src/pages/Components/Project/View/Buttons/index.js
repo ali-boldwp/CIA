@@ -1,13 +1,13 @@
 // /home/ubaid/workspace/app/client/src/pages/ProjectDetail/ProjectDetailButton.js
 import React from "react";
-import styles from "./ProjectDetailButton.module.css";
+import styles from "./style.module.css";
 import {Link} from "react-router-dom";
 
-const ProjectDetailButton = ({
+const Buttons = ({
                                  onSave,
                                  onGoToTask,
                                  onViewCosts,
-                                    id
+                                 id
                              }) => {
     return (
         <div className={styles.wrapper}>
@@ -21,17 +21,17 @@ const ProjectDetailButton = ({
                 </button>
 
                 <Link  to={`/project/view/${id}/tasks`}
-                    type="button"
-                    className={styles.taskBtna}
-                    onClick={onGoToTask}
+                       type="button"
+                       className={styles.taskBtna}
+                       onClick={onGoToTask}
                 >
                     Mergi la Task Proiect
                 </Link>
 
                 <Link to={`/project/view/${id}/cost`}
-                    type="button"
-                    className={styles.costBtn}
-                    onClick={onViewCosts}
+                      type="button"
+                      className={styles.costBtn}
+                      onClick={onViewCosts}
                 >
                     Vezi Costuri
                 </Link>
@@ -40,4 +40,4 @@ const ProjectDetailButton = ({
     );
 };
 
-export default ProjectDetailButton;
+export default Buttons;
