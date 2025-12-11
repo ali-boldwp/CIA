@@ -12,7 +12,8 @@ import { ok } from "../../../utils/ApiResponse";
 
 export const createProject = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const userId = req.user
+        const userId = req.user?.id;
+
         const body = req.body;
         const { humintId } = body;
 
