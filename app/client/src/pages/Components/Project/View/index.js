@@ -1,17 +1,15 @@
-// /home/ubaid/workspace/app/client/src/pages/ProjectDetail/ProjectDetail.js
-import React, { useState, useEffect } from "react";
-import styles from "./ProjectDetail.module.css";
-import ProjectDetailHeader from "./ProjectDetailHeader";
-import ProjectBilling from "./ProjectBilling";
-import ProjectDetailButton from "./ProjectDetailButton";
-import { useParams } from "react-router-dom";
+import {useParams} from "react-router-dom";
 import {
-
     useCreateProjectMutation,
-    useUpdateProjectMutation, useGetCreateProjectByIdQuery,
-} from "../../services/projectApi";
+    useGetCreateProjectByIdQuery,
+    useUpdateProjectMutation
+} from "../../../../services/projectApi";
+import React, {useEffect, useState} from "react";
+import styles from "./style.module.css";
+import Header from "./Header";
+import Billing from "./Billing";
+import Buttons from "./Buttons";
 
-// ✅ DEFAULT VALUES — sab upar rakho!
 const defaultData = {
     name: "",
     subject: "",
@@ -42,16 +40,13 @@ const defaultData = {
     internalNotes: "",
 };
 
-const ProjectDetail = () => {
+const ProjectView = ({ data }) => {
+
     const { id } = useParams();
 
     // 🧲 RTK Query Hooks
     const [createProject] = useCreateProjectMutation();
     const [updateProject] = useUpdateProjectMutation();
-
-    const { data, isLoading } = useGetCreateProjectByIdQuery(id, {
-        skip: !id,
-    });
 
     // 📝 Component State
     const [project, setProject] = useState({ ...defaultData });
@@ -157,15 +152,8 @@ const ProjectDetail = () => {
         }));
     };
 
-    // 🌀 Loading UI
-    if (isLoading) return <h2 style={{ padding: 40 }}>Loading project…</h2>;
-
     return (
         <div className={styles.page}>
-            <ProjectDetailHeader
-                title={`Proiect: ${project.name}`}
-                onBack={handleBack}
-            />
 
             <div className={styles.contentWrapper}>
                 <div className={styles.card}>
@@ -460,10 +448,10 @@ const ProjectDetail = () => {
                 </div>
 
                 {/* Billing Component */}
-                <ProjectBilling billing={billingData} />
+                <Billing billing={billingData} />
 
                 {/* Save Button */}
-                <ProjectDetailButton
+                <Buttons
                     onSave={handleSave}
                     id={project._id}
                     onGoToTask={() => console.log("go to task clicked")}
@@ -472,6 +460,7 @@ const ProjectDetail = () => {
             </div>
         </div>
     );
-};
 
-export default ProjectDetail;
+}
+
+export default ProjectView;

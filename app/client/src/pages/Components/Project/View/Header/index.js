@@ -1,8 +1,8 @@
-// /home/ubaid/workspace/app/client/src/pages/ProjectDetail/ProjectDetailHeader.js
-import React from "react";
-import styles from "./ProjectDetailHeader.module.css";
 
-const ProjectDetailHeader = ({ title, onBack }) => {
+import React from "react";
+import styles from "./style.module.css";
+
+const Header = ({ title, onBack }) => {
     return (
         <div className={styles.headerBar}>
             <button type="button" className={styles.backBtn} onClick={onBack}>
@@ -14,4 +14,4 @@ const ProjectDetailHeader = ({ title, onBack }) => {
     );
 };
 
-export default ProjectDetailHeader;
+export default Header;
