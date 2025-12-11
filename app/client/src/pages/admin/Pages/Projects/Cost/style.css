@@ -32,7 +32,7 @@
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
 }
 
-/* Header titles (Cheltuieli cu angajații, Cheltuieli HUMINT, etc.) */
+/* Header titles (Cheltuieli HUMINT, etc.) */
 .form-title {
     font-size: 19px;
     font-weight: 800;
@@ -40,62 +40,7 @@
     color: #111827;
 }
 
-/* ========================= TABLES ========================= */
-.cost-table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 14px;
-    margin-top: 6px;
-    background: #ffffff;
-    border-radius: 12px;
-    overflow: hidden;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
-}
-
-.cost-table thead tr {
-    background: #f9fafb;
-}
-
-.cost-table th,
-.cost-table td {
-    padding: 12px 16px;
-    border-bottom: 1px solid #e5e7eb;
-    text-align: left;
-}
-
-.cost-table th {
-    font-size: 14px;
-    color: #6b7280;
-    font-weight: 700;
-}
-
-.cost-table tbody tr:last-child td {
-    border-bottom: none;
-}
-
-.input-cell {
-    width: 70px;
-    border-radius: 8px;
-    border: 1px solid #d1d5db;
-    padding: 6px 8px;
-    background: #f9fafb;
-}
-
-/* blank strip under employee table */
-.table-empty-strip {
-    margin-top: 10px;
-    border-radius: 12px;
-    background: #f9fafb;
-    border: 1px solid #e5e7eb;
-    height: 60px;
-    width: 100%;
-}
-
-/* edit column text */
-.edit-cell {
-    white-space: nowrap;
-}
-
+/* Total box for HUMINT section */
 .total-box {
     margin: 10px;
     width: 100%;
@@ -220,17 +165,6 @@
         padding: 20px 24px;
     }
 
-    .cost-table th,
-    .cost-table td {
-        padding: 10px 12px;
-        font-size: 13px;
-    }
-
-    .cost-table th {
-        font-size: 13px;
-        font-weight: 700;
-    }
-
     .btn-green,
     .btn-primary,
     .btn-secondary {
@@ -273,31 +207,6 @@
         margin-bottom: 16px;
     }
 
-    .cost-table {
-        font-size: 13px;
-    }
-
-    .cost-table th,
-    .cost-table td {
-        padding: 8px 10px;
-        font-size: 12px;
-    }
-
-    .cost-table th {
-        font-size: 12px;
-        font-weight: 700;
-    }
-
-    .input-cell {
-        width: 60px;
-        padding: 5px 6px;
-        font-size: 12px;
-    }
-
-    .table-empty-strip {
-        height: 50px;
-    }
-
     .total-box {
         font-size: 15px;
     }
@@ -335,13 +244,6 @@
     .form-title {
         font-size: 16px;
         margin-bottom: 14px;
-    }
-
-    .cost-table {
-        display: block;
-        overflow-x: auto;
-        white-space: nowrap;
-        -webkit-overflow-scrolling: touch;
     }
 
     .total-box {

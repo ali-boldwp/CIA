@@ -1,0 +1,177 @@
+/* EmployeeCostTable.module.css */
+
+.formCard {
+    background: #ffffff;
+    border-radius: 18px;
+    padding: 24px 28px;
+    margin-bottom: 24px;
+    width: 100%;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.formTitle {
+    font-size: 19px;
+    font-weight: 800;
+    margin-bottom: 20px;
+    color: #111827;
+}
+
+/* Table styles */
+.costTable {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+    margin-top: 6px;
+    background: #ffffff;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.costTable thead tr {
+    background: #f9fafb;
+}
+
+.costTable th,
+.costTable td {
+    padding: 12px 16px;
+    border-bottom: 1px solid #e5e7eb;
+    text-align: left;
+}
+
+.costTable th {
+    font-size: 14px;
+    color: #6b7280;
+    font-weight: 700;
+}
+
+.costTable tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.inputCell {
+    width: 70px;
+    border-radius: 8px;
+    border: 1px solid #d1d5db;
+    padding: 6px 8px;
+    background: #f9fafb;
+    font-size: 14px;
+    text-align: center;
+}
+
+/* Edit cell buttons */
+.editCell {
+    white-space: nowrap;
+}
+
+.editBtn, .saveBtn, .cancelBtn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 13px;
+    padding: 4px 8px;
+    margin: 0 2px;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+}
+
+.editBtn {
+    color: #4f46e5;
+}
+
+.editBtn:hover {
+    background: #f3f4f6;
+}
+
+.saveBtn {
+    color: #059669;
+    font-weight: 600;
+}
+
+.saveBtn:hover {
+    background: #d1fae5;
+}
+
+.cancelBtn {
+    color: #dc2626;
+    font-weight: 600;
+}
+
+.cancelBtn:hover {
+    background: #fee2e2;
+}
+
+/* blank strip under table */
+.tableEmptyStrip {
+    margin-top: 10px;
+    border-radius: 12px;
+    background: #f9fafb;
+    border: 1px solid #e5e7eb;
+    height: 60px;
+    width: 100%;
+}
+
+/* Loading and error states */
+.loading, .error {
+    text-align: center;
+    padding: 40px;
+    color: #6b7280;
+    font-size: 16px;
+}
+
+.error {
+    color: #dc2626;
+}
+
+/* Button */
+.btnGreen {
+    margin-top: 16px;
+    background: #22C55E;
+    color: #ffffff;
+    padding: 14px 20px;
+    border-radius: 8px;
+    border: none;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    width: auto;
+    min-width: 180px;
+    transition: all 0.2s ease;
+}
+
+.btnGreen:hover {
+    background: #15803d;
+}
+
+/* Responsive */
+@media (max-width: 767px) {
+    .formCard {
+        padding: 18px 20px;
+        border-radius: 14px;
+    }
+
+    .formTitle {
+        font-size: 17px;
+    }
+
+    .costTable th,
+    .costTable td {
+        padding: 8px 10px;
+        font-size: 12px;
+    }
+
+    .inputCell {
+        width: 60px;
+        padding: 5px 6px;
+        font-size: 12px;
+    }
+
+    .tableEmptyStrip {
+        height: 50px;
+    }
+
+    .btnGreen {
+        width: 100%;
+        min-width: auto;
+    }
+}
