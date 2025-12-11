@@ -7,6 +7,9 @@ const sectionNames = {
     management: "Management",
     investigatii: "Investigații",
     auxiliar: "Personal auxiliar",
+    vanzari: "Vânzări",
+    logistica: "Logistică",
+    tehnica: "Tehnică",
 };
 
 const AddEmployeeModal = ({ isOpen, sectionKey, editData, onClose }) => {
@@ -138,9 +141,25 @@ const AddEmployeeModal = ({ isOpen, sectionKey, editData, onClose }) => {
             { value: "sales", label: "Sales" },
             { value: "user", label: "User / Angajat simplu" },
         ],
+        vanzari: [
+            { value: "sales", label: "Agent vânzări" },
+            { value: "sales", label: "Consultant vânzări" },
+        ],
+
+
+        logistica: [
+            { value: "logistica", label: "Lucrător logistică" },
+            { value: "logistica", label: "Coordonator logistică" },
+        ],
+
+
+        tehnica: [
+            { value: "tehnica", label: "Specialist tehnic" },
+            { value: "tehnica", label: "Tehnician" },
+        ],
     };
 
-    // 🔥 If editing → show correct role group automatically
+  
     let options;
 
     if (editData) {
