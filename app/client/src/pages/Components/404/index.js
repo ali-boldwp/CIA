@@ -26,7 +26,7 @@ const NotFound = () => {
                     </div>
                 </div>
 
-                <Link href="/login" className={styles["cia-404-button"]}>
+                <Link to="/login" className={styles["cia-404-button"]}>
                     ← Înapoi la dashboard
                 </Link>
 
