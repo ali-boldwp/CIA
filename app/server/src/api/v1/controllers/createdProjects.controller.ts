@@ -12,7 +12,7 @@ import { ok } from "../../../utils/ApiResponse";
 
 export const createProject = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const userId = req.user.id
+        const userId = req.user
         const body = req.body;
         const { humintId } = body;
 
@@ -342,83 +342,6 @@ export const getAnalystsProgress = async (req: Request, res: Response, next: Nex
         }
 
         res.json({ success: true, data: result });
-
-    } catch (err) {
-        next(err);
-    }
-};
-
-
-export const updateEditableStatus = async (req, res, next) => {
-    try {
-        const projectId = req.params.id;
-        const { isEditable } = req.body;
-
-        if (typeof isEditable !== "boolean") {
-            return res.status(400).json({
-                success: false,
-                message: "isEditable must be a boolean (true/false)"
-            });
-        }
-
-        const updatedProject = await ProjectRequest.findByIdAndUpdate(
-            projectId,
-            { isEditable },
-            { new: true }
-        );
-
-        if (!updatedProject) {
-            return res.status(404).json({
-                success: false,
-                message: "Project not found"
-            });
-        }
-
-        return res.json({
-            success: true,
-            message: "Editable status updated successfully",
-            data: updatedProject
-        });
-
-    } catch (error) {
-        next(error);
-    }
-};
-
-
-export const updateProjectStatus = async (req, res, next) => {
-    try {
-        const projectId = req.params.id;
-        const { status } = req.body;
-
-        // Allowed statuses
-        const allowedStatuses = ["revision", "observation"];
-
-        if (!allowedStatuses.includes(status)) {
-            return res.status(400).json({
-                success: false,
-                message: "Invalid status. Allowed: revision, observation"
-            });
-        }
-
-        const project = await ProjectRequest.findByIdAndUpdate(
-            projectId,
-            { status },
-            { new: true }
-        );
-
-        if (!project) {
-            return res.status(404).json({
-                success: false,
-                message: "Project not found"
-            });
-        }
-
-        return res.json({
-            success: true,
-            message: `Project status updated to '${status}'`,
-            data: project
-        });
 
     } catch (err) {
         next(err);
