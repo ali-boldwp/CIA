@@ -2,6 +2,8 @@ import "./style.css";
 import { useState } from "react";
 import AddEmployeeCostPopup from "./PopUp/AddEmployeeCostPopup/AddEmployeeCostPopup";
 import AddHumintCostPopup from "./PopUp/AddHumintCostPopup/AddHumintCostPopup";
+import SummarySection from "./SummarySection/SummaaySection";
+import CostBar from "./CostBar/CostBar"; // Import the new component
 
 const ProjectCost = () => {
     // State for popups visibility
@@ -26,140 +28,10 @@ const ProjectCost = () => {
                 {/* REMOVED HEADER SECTION */}
 
                 {/* TOP ROW: PROJECT DETAILS + FINANCIAL SUMMARY */}
-                <div className="top-row">
-                    {/* LEFT: PROJECT DETAILS */}
-                    <div className="form-card project-card">
-                        <h2 className="form-title">Detalii proiect</h2>
-
-                        <div className="project-block">
-                            <ul>
-                                <li>
-                                    <b>Denumire proiect</b>
-                                    <span>Due Diligence: Societatea ABC</span>
-                                </li>
-                                <li>
-                                    <b>Tip raport</b>
-                                    <span>Enhanced Due Diligence</span>
-                                </li>
-                                <li>
-                                    <b>Tip entitate / caz</b>
-                                    <span>Societate</span>
-                                </li>
-                                <li>
-                                    <b>Nume client</b>
-                                    <span>ZZZ SRL</span>
-                                </li>
-                                <li>
-                                    <b>Responsabil proiect</b>
-                                    <span>Analist C</span>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-
-                    {/* RIGHT: FINANCIAL SUMMARY */}
-                    <div className="form-card finance-card">
-                        <div className="finance-header">
-                            <h2 className="form-title">Rezumat financiar</h2>
-                            <button className="currency-update-btn">
-                                Curs EURO (BNR) actualizat
-                            </button>
-                        </div>
-
-                        <div className="financial-grid">
-                            {/* Row 1 - First 4 boxes */}
-                            <div className="summary-box box-gray">
-                                <span className="s-label">Cheltuieli angajați Supraveghere</span>
-                                <span className="s-value">1050 EUR</span>
-                            </div>
-
-                            <div className="summary-box box-tfsa">
-                                <span className="s-label">Cheltuieli TFSA</span>
-                                <span className="s-value">1050 EUR</span>
-                            </div>
-
-                            <div className="summary-box box-cyan">
-                                <span className="s-label">Cheltuieli OSINT Tehnică</span>
-                                <span className="s-value">150 EUR</span>
-                            </div>
-
-                            <div className="summary-box box-yellow">
-                                <span className="s-label">Cheltuieli HUMINT (cu taxe)</span>
-                                <span className="s-value">554.4 EUR</span>
-                            </div>
-
-                            {/* Row 2 - Next 4 boxes */}
-                            <div className="summary-box box-blue">
-                                <span className="s-label">Cheltuieli fixe</span>
-                                <span className="s-value">300 EUR</span>
-                            </div>
-
-                            <div className="summary-box box-other">
-                                <span className="s-label">Alte cheltuieli</span>
-                                <span className="s-value">300 EUR</span>
-                            </div>
-
-                            <div className="summary-box box-purple">
-                                <span className="s-label">Preț proiect</span>
-                                <span className="s-value">3500 EUR</span>
-                            </div>
-
-                            <div className="summary-box box-lightgray">
-                                <span className="s-label">Total cheltuieli</span>
-                                <span className="s-value">2054.4 EUR</span>
-                            </div>
-
-                            {/* Row 3 - Last 2 boxes (each spanning 2 columns) */}
-                            <div className="summary-box box-profit">
-                                <div className="profit-left">
-                                    <span className="s-label-green">Profit</span>
-                                    <span className="profit-right">41.3%</span>
-                                </div>
-                                <div className="s-value">1445.6 EUR</div>
-                            </div>
-
-                            <div className="summary-box box-duration">
-                                <span className="s-label-duration">Durata proiect (zile lucrătoare)</span>
-                                <span className="s-value-duration">25 zile</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <SummarySection /> {/* Using the new component */}
 
                 {/* FIXED COSTS + OSINT COSTS BAR */}
-                <div className="form-card costs-bar">
-                    <div className="cost-block">
-                        <h2 className="cost-title">Cheltuieli fixe</h2>
-
-                        <div className="cost-row">
-                            <div className="form-field">
-                                <label>Cheltuieli totale (editabil)</label>
-                                <input className="input-box" defaultValue="180 EUR" />
-                            </div>
-
-                            <div className="form-field small-field">
-                                <label>Monedă</label>
-                                <input className="input-box" defaultValue="EUR ▾" />
-                            </div>
-                        </div>
-                    </div>
-
-                    <div className="cost-block">
-                        <h2 className="cost-title">Cheltuieli OSINT</h2>
-
-                        <div className="cost-row">
-                            <div className="form-field">
-                                <label>Cheltuieli totale (editabil)</label>
-                                <input className="input-box" defaultValue="180 EUR" />
-                            </div>
-
-                            <div className="form-field small-field">
-                                <label>Monedă</label>
-                                <input className="input-box" defaultValue="EUR ▾" />
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <CostBar /> {/* Using the new CostBar component */}
 
                 {/* EMPLOYEE COSTS TABLE */}
                 <div className="form-card">
