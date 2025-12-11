@@ -26,6 +26,7 @@
     font-size: 17px;
     font-weight: 800;
     margin-bottom: 16px;
+    color: #111827;
 }
 
 .costRow {
@@ -56,10 +57,24 @@
     background: #f9fafc;
     padding: 12px 14px;
     font-size: 14px;
+    color: #111827;
+    font-weight: 500;
+}
+
+.inputBox:focus {
+    outline: none;
+    border-color: #4f46e5;
+    background: #ffffff;
+    box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
 }
 
 .smallField {
     /* Additional styles for small field if needed */
+}
+
+/* Last row - Single column for Alte cheltuieli */
+.costsBar:last-child {
+    grid-template-columns: 1fr;
 }
 
 /* ========================= RESPONSIVE ========================= */
@@ -84,6 +99,10 @@
         grid-template-columns: 1fr;
         gap: 20px;
     }
+
+    .costsBar:last-child {
+        grid-template-columns: 1fr; /* Maintain single column */
+    }
 }
 
 /* Tablet Portrait (768px - 991px) */
@@ -94,6 +113,10 @@
 
     .costTitle {
         font-size: 16px;
+    }
+
+    .costRow {
+        gap: 15px;
     }
 }
 
@@ -122,5 +145,15 @@
 
     .formCard {
         border-radius: 12px;
+    }
+
+    .costTitle {
+        font-size: 14px;
+        margin-bottom: 12px;
+    }
+
+    .inputBox {
+        padding: 10px 12px;
+        font-size: 13px;
     }
 }

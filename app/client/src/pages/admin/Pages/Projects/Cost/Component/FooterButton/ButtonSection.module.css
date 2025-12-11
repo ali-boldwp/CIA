@@ -1,0 +1,191 @@
+/* ButtonSection.module.css */
+
+/* Footer Card Container */
+.footerCard {
+    background: #ffffff;
+    border-radius: 18px;
+    padding: 20px 28px;
+    margin-top: 20px;
+    margin-bottom: 30px;
+    width: 100%;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    border: 1px solid #e5e7eb;
+}
+
+/* Button Container */
+.buttonContainer {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    width: 100%;
+}
+
+/* Button Row */
+.buttonRow {
+    display: flex;
+    gap: 16px;
+    width: 100%;
+}
+
+/* Save Button (Green) */
+/* Save Button with Linear Gradient */
+.btnSecondary {
+    background: linear-gradient(135deg, #2563EB, #4F46E5) !important;
+    color: #ffffff;
+    padding: 16px 28px;
+    border-radius: 10px;
+    border: none;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    min-width: 220px;
+    transition: all 0.3s ease;
+    font-family: "Inter", sans-serif;
+    box-shadow: 0 2px 8px rgba(37, 99, 235, 0.3);
+    letter-spacing: 0.3px;
+}
+
+/* Hover Effect for Gradient Button */
+.btnSecondary:hover {
+    background: linear-gradient(135deg, #1d4ed8, #4338ca) !important;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(37, 99, 235, 0.4);
+}
+
+/* Active State */
+.btnSecondary:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 8px rgba(37, 99, 235, 0.3);
+    background: linear-gradient(135deg, #1e40af, #3730a3) !important;
+}
+
+/* Focus State */
+.btnSecondary:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.4);
+}
+
+/* Back Button (White with Blue Border) */
+.btnPrimary {
+    background: #ffffff !important; /* White background */
+    color: #2563EB !important; /* Blue text color */
+    padding: 16px 28px;
+    border-radius: 10px;
+    border: 2px solid #2563EB !important; /* Blue border */
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    min-width: 220px;
+    transition: all 0.3s ease;
+    font-family: "Inter", sans-serif;
+    box-shadow: 0 2px 8px rgba(37, 99, 235, 0.1);
+    letter-spacing: 0.3px;
+}
+
+
+
+.btnPrimary:hover {
+    background: #f0f4ff !important; /* Light blue background on hover */
+    color: #1d4ed8 !important; /* Darker blue text on hover */
+    border-color: #1d4ed8 !important; /* Darker blue border on hover */
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(37, 99, 235, 0.2);
+}
+
+
+.btnPrimary:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 8px rgba(37, 99, 235, 0.1);
+    background: #e0e7ff !important; /* Slightly darker blue on click */
+}
+
+
+.btnPrimary:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
+}
+
+/* Responsive Styles */
+@media (max-width: 1199px) {
+    .footerCard {
+        padding: 18px 24px;
+        border-radius: 16px;
+    }
+
+    .btnPrimary,
+    .btnSecondary {
+        min-width: 200px;
+        padding: 15px 24px;
+    }
+}
+
+@media (max-width: 991px) {
+    .footerCard {
+        padding: 16px 20px;
+        border-radius: 14px;
+    }
+
+    .btnPrimary,
+    .btnSecondary {
+        min-width: 180px;
+        padding: 14px 20px;
+        font-size: 14px;
+    }
+
+    .buttonRow {
+        gap: 12px;
+    }
+}
+
+@media (max-width: 767px) {
+    .footerCard {
+        padding: 16px 18px;
+        border-radius: 12px;
+    }
+
+    .buttonRow {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .btnPrimary,
+    .btnSecondary {
+        width: 100%;
+        min-width: auto;
+        padding: 14px 20px;
+    }
+
+    .btnPrimary {
+        border-width: 1.5px; /* Thinner border on mobile */
+    }
+}
+
+@media (max-width: 575px) {
+    .footerCard {
+        padding: 14px 16px;
+        border-radius: 10px;
+    }
+
+    .btnPrimary,
+    .btnSecondary {
+        padding: 12px 18px;
+        font-size: 13px;
+        border-radius: 8px;
+    }
+
+    .btnPrimary {
+        border-width: 1px; /* Even thinner border on small mobile */
+    }
+}
+
+@media (max-width: 319px) {
+    .footerCard {
+        padding: 12px 14px;
+    }
+
+    .btnPrimary,
+    .btnSecondary {
+        padding: 10px 15px;
+        font-size: 12px;
+    }
+}

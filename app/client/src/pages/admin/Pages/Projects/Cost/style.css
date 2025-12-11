@@ -22,102 +22,6 @@
     padding: 0 20px;
 }
 
-/* ========================= GENERIC CARD ========================= */
-.form-card {
-    background: #ffffff;
-    border-radius: 18px;
-    padding: 24px 28px;
-    margin-bottom: 24px;
-    width: 100%;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-}
-
-/* Header titles (Cheltuieli HUMINT, etc.) */
-.form-title {
-    font-size: 19px;
-    font-weight: 800;
-    margin-bottom: 20px;
-    color: #111827;
-}
-
-/* Total box for HUMINT section */
-.total-box {
-    margin: 10px;
-    width: 100%;
-    padding: 12px 16px;
-    background: #f8fafc;
-    border-radius: 8px;
-    border: 1px solid #e5e7eb;
-    font-weight: 800;
-    font-size: 17px;
-}
-
-/* ========================= BUTTONS ========================= */
-.btn-green {
-    margin-top: 16px;
-    background: #22C55E;
-    color: #ffffff;
-    padding: 14px 20px;
-    border-radius: 8px;
-    border: none;
-    font-size: 14px;
-    font-weight: 700;
-    cursor: pointer;
-    width: auto;
-    min-width: 180px;
-    transition: all 0.2s ease;
-}
-
-.btn-green:hover {
-    background: #15803d;
-}
-
-.button-row {
-    display: flex;
-    gap: 16px;
-    margin-top: 24px;
-    margin-bottom: 30px;
-    width: 100%;
-}
-
-.footer-row {
-    justify-content: flex-start;
-}
-
-.btn-primary {
-    background: #4f46e5;
-    color: #ffffff;
-    padding: 14px 22px;
-    border-radius: 8px;
-    border: none;
-    font-size: 14px;
-    font-weight: 700;
-    cursor: pointer;
-    min-width: 200px;
-    transition: all 0.2s ease;
-}
-
-.btn-secondary {
-    background: #0E65F7;
-    color: #ffffff;
-    padding: 14px 22px;
-    border-radius: 8px;
-    border: none;
-    font-size: 14px;
-    font-weight: 700;
-    cursor: pointer;
-    min-width: 200px;
-    transition: all 0.2s ease;
-}
-
-.btn-primary:hover {
-    background: #4338ca;
-}
-
-.btn-secondary:hover {
-    background: #0a53d4;
-}
-
 /* ========================= RESPONSIVE ========================= */
 
 /* Large Desktop (1800px+) */
@@ -160,31 +64,6 @@
     .page-container {
         padding: 0 15px;
     }
-
-    .form-card {
-        padding: 20px 24px;
-    }
-
-    .btn-green,
-    .btn-primary,
-    .btn-secondary {
-        min-width: 160px;
-        padding: 12px 18px;
-        font-size: 13px;
-    }
-
-    .button-row {
-        flex-wrap: wrap;
-        gap: 12px;
-    }
-
-    .form-title {
-        font-size: 18px;
-    }
-
-    .total-box {
-        font-size: 16px;
-    }
 }
 
 /* Mobile Large (576px - 767px) */
@@ -195,33 +74,6 @@
 
     .page-container {
         padding: 0 10px;
-    }
-
-    .form-card {
-        padding: 18px 20px;
-        border-radius: 14px;
-    }
-
-    .form-title {
-        font-size: 17px;
-        margin-bottom: 16px;
-    }
-
-    .total-box {
-        font-size: 15px;
-    }
-
-    .btn-green,
-    .btn-primary,
-    .btn-secondary {
-        width: 100%;
-        min-width: auto;
-        margin-top: 12px;
-    }
-
-    .button-row {
-        flex-direction: column;
-        gap: 10px;
     }
 }
 
@@ -234,21 +86,6 @@
     .page-container {
         padding: 0 8px;
     }
-
-    .form-card {
-        padding: 15px 18px;
-        border-radius: 12px;
-        margin-bottom: 18px;
-    }
-
-    .form-title {
-        font-size: 16px;
-        margin-bottom: 14px;
-    }
-
-    .total-box {
-        font-size: 14px;
-    }
 }
 
 /* Very Small Mobile (under 320px) */
@@ -259,20 +96,5 @@
 
     .page-container {
         padding: 0 5px;
-    }
-
-    .form-card {
-        padding: 12px 15px;
-    }
-
-    .form-title {
-        font-size: 15px;
-    }
-
-    .btn-green,
-    .btn-primary,
-    .btn-secondary {
-        padding: 10px 15px;
-        font-size: 12px;
     }
 }
