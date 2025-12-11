@@ -68,12 +68,12 @@ const projectRequestSchema = new Schema<IProjectRequest>(
         clientEmail: { type: String, required: false },
         clientPhone: { type: String, required: false },
 
-        projectPrice: { type: Number, required: false , select : false },
-        fixPrice:{ type: Number, required: false , select : false },
-        tesaPrice:{ type: Number, required: false , select : false },
-        osintPrice:{ type: Number, required: false , select : false },
-        tehnicaPrice:{ type: Number, required: false , select : false },
-        otherPrice:{ type: Number, required: false , select : false },
+        projectPrice: { type: Number, required: false , select : false , default:0 },
+        fixPrice:{ type: Number, required: false , select : false , default:0},
+        tesaPrice:{ type: Number, required: false , select : false , default:0},
+        osintPrice:{ type: Number, required: false , select : false , default:0},
+        tehnicaPrice:{ type: Number, required: false , select : false , default:0},
+        otherPrice:{ type: Number, required: false , select : false , default:0 },
 
         currency: { type: String, default: "EUR" },
 

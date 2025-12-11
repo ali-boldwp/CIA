@@ -13,6 +13,7 @@ import clarificationRoutes from "./clarification.routes";
 import dashboardRoutes from "./dashboard.routes";
 import notificationRoutes from "./notification.routes";
 import observationRoutes from "./observation.routes";
+import analystExpanseRoutes from "./analystExpanse.routes";
 
 const router = Router();
 
@@ -30,6 +31,6 @@ router.use("/" , clarificationRoutes);
 router.use("/" , dashboardRoutes);
 router.use("/notification" , notificationRoutes);
 router.use("/observation" , observationRoutes);
-
+router.use("/analyst" , analystExpanseRoutes);
 
 export default router;
