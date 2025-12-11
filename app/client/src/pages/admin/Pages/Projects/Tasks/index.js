@@ -787,7 +787,7 @@ const ProjectTasks = () => {
                                 }}
                             >
                                 Anuleaza
-                            </button>
+                             </button>
 
                             <button
                                 className="task-submit-btn"
