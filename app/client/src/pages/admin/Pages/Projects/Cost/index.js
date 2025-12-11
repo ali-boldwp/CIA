@@ -1,22 +1,29 @@
 import "./style.css";
+import { useState } from "react";
+import AddEmployeeCostPopup from "./PopUp/AddEmployeeCostPopup/AddEmployeeCostPopup";
+import AddHumintCostPopup from "./PopUp/AddHumintCostPopup/AddHumintCostPopup";
 
 const ProjectCost = () => {
+    // State for popups visibility
+    const [showEmployeePopup, setShowEmployeePopup] = useState(false);
+    const [showHumintPopup, setShowHumintPopup] = useState(false);
+
+    // Function to handle saving employee cost
+    const handleSaveEmployeeCost = (data) => {
+        console.log("Employee cost data saved:", data);
+        // Add your save logic here
+    };
+
+    // Function to handle saving HUMINT cost
+    const handleSaveHumintCost = (data) => {
+        console.log("HUMINT cost data saved:", data);
+        // Add your save logic here
+    };
 
     return (
         <div className="page-wrapper">
             <div className="page-container">
-                {/* HEADER */}
-                <div className="header-box">
-                    <span className="header-back">← Înapoi la Dashboard</span>
-                    <h1 className="header-title">
-                        Proiect: Due Diligence Societatea ABC — Costuri
-                    </h1>
-
-                    <div className="header-tags">
-                        <span className="tag blue">Creat la: 2025-12-01 09:20</span>
-                        <span className="tag yellow">Finalizat la: în lucru</span>
-                    </div>
-                </div>
+                {/* REMOVED HEADER SECTION */}
 
                 {/* TOP ROW: PROJECT DETAILS + FINANCIAL SUMMARY */}
                 <div className="top-row">
@@ -52,27 +59,28 @@ const ProjectCost = () => {
 
                     {/* RIGHT: FINANCIAL SUMMARY */}
                     <div className="form-card finance-card">
-                        <h2 className="form-title">Rezumat financiar</h2>
+                        <div className="finance-header">
+                            <h2 className="form-title">Rezumat financiar</h2>
+                            <button className="currency-update-btn">
+                                Curs EURO (BNR) actualizat
+                            </button>
+                        </div>
 
                         <div className="financial-grid">
-                            <div className="summary-box box-purple">
-                                <span className="s-label">Preț proiect</span>
-                                <span className="s-value">3500 EUR</span>
+                            {/* Row 1 - First 4 boxes */}
+                            <div className="summary-box box-gray">
+                                <span className="s-label">Cheltuieli angajați Supraveghere</span>
+                                <span className="s-value">1050 EUR</span>
                             </div>
 
-                            <div className="summary-box box-blue">
-                                <span className="s-label">Cheltuieli fixe</span>
-                                <span className="s-value">300 EUR</span>
+                            <div className="summary-box box-tfsa">
+                                <span className="s-label">Cheltuieli TFSA</span>
+                                <span className="s-value">1050 EUR</span>
                             </div>
 
                             <div className="summary-box box-cyan">
-                                <span className="s-label">Cheltuieli OSINT</span>
+                                <span className="s-label">Cheltuieli OSINT Tehnică</span>
                                 <span className="s-value">150 EUR</span>
-                            </div>
-
-                            <div className="summary-box box-gray">
-                                <span className="s-label">Cheltuieli angajați</span>
-                                <span className="s-value">1050 EUR</span>
                             </div>
 
                             <div className="summary-box box-yellow">
@@ -80,17 +88,39 @@ const ProjectCost = () => {
                                 <span className="s-value">554.4 EUR</span>
                             </div>
 
+                            {/* Row 2 - Next 4 boxes */}
+                            <div className="summary-box box-blue">
+                                <span className="s-label">Cheltuieli fixe</span>
+                                <span className="s-value">300 EUR</span>
+                            </div>
+
+                            <div className="summary-box box-other">
+                                <span className="s-label">Alte cheltuieli</span>
+                                <span className="s-value">300 EUR</span>
+                            </div>
+
+                            <div className="summary-box box-purple">
+                                <span className="s-label">Preț proiect</span>
+                                <span className="s-value">3500 EUR</span>
+                            </div>
+
                             <div className="summary-box box-lightgray">
                                 <span className="s-label">Total cheltuieli</span>
                                 <span className="s-value">2054.4 EUR</span>
                             </div>
 
+                            {/* Row 3 - Last 2 boxes (each spanning 2 columns) */}
                             <div className="summary-box box-profit">
                                 <div className="profit-left">
-                                    <span className="s-label-green">Marjă</span>
+                                    <span className="s-label-green">Profit</span>
                                     <span className="profit-right">41.3%</span>
                                 </div>
                                 <div className="s-value">1445.6 EUR</div>
+                            </div>
+
+                            <div className="summary-box box-duration">
+                                <span className="s-label-duration">Durata proiect (zile lucrătoare)</span>
+                                <span className="s-value-duration">25 zile</span>
                             </div>
                         </div>
                     </div>
@@ -186,60 +216,16 @@ const ProjectCost = () => {
                         </tbody>
                     </table>
 
-                    {/* Blank strip under table like in screenshot */}
+                    {/* Blank strip under table */}
                     <div className="table-empty-strip" />
 
-                    {/* ADD EMPLOYEE COST BLOCK */}
-                    <button className="btn-green">Adaugă cheltuiala</button>
-
-                    <div className="add-block">
-                        <p className="block-label">Adaugă cheltuiala (angajați)</p>
-
-                        <div className="row-three">
-                            <div className="form-field">
-                                <label>Analist</label>
-                                <input className="input-box soft" placeholder="Selectează..." />
-                            </div>
-                            <div className="form-field">
-                                <label>Rol</label>
-                                <input className="input-box soft" placeholder="Selectează..." />
-                            </div>
-                            <div className="form-field">
-                                <label>Data</label>
-                                <input
-                                    className="input-box soft"
-                                    placeholder="Selectează data"
-                                />
-                            </div>
-                        </div>
-
-                        <div className="row-five">
-                            <div className="form-field">
-                                <label>Ore lucrate</label>
-                                <input className="input-box soft" placeholder="ex: 6.5" />
-                            </div>
-                            <div className="form-field">
-                                <label>Zile (automat)</label>
-                                <input className="input-box soft" placeholder="ex: 0.5" />
-                            </div>
-                            <div className="form-field">
-                                <label>Cost/ora (auto)</label>
-                                <input className="input-box soft" placeholder="ex: 30" />
-                            </div>
-                            <div className="form-field">
-                                <label>Monedă</label>
-                                <input className="input-box soft" placeholder="EUR ▾" />
-                            </div>
-                            <div className="form-field">
-                                <label>Total (auto)</label>
-                                <input className="input-box soft" placeholder="195" />
-                            </div>
-                        </div>
-
-                        <div className="add-actions">
-                            <button className="btn-primary">Salvează cheltuiala</button>
-                        </div>
-                    </div>
+                    {/* ADD EMPLOYEE COST BUTTON - Opens popup */}
+                    <button
+                        className="btn-green"
+                        onClick={() => setShowEmployeePopup(true)}
+                    >
+                        Adaugă cheltuiala
+                    </button>
                 </div>
 
                 {/* HUMINT COSTS */}
@@ -281,74 +267,14 @@ const ProjectCost = () => {
 
                     <div className="total-box">Total HUMINT: 425 EUR</div>
 
-                    <button className="btn-green">Adaugă cheltuiala</button>
-
-                    {/* ADD HUMINT COST BLOCK */}
-                    <div className="add-block">
-                        <p className="block-label">Adaugă cheltuiala HUMINT</p>
-
-                        {/* Row 1 */}
-                        <div className="row-two">
-                            <div className="form-field">
-                                <label>Data</label>
-                                <input className="input-box soft" placeholder="Selectează data" />
-                            </div>
-
-                            <div className="form-field">
-                                <label>Descriere</label>
-                                <input
-                                    className="input-box soft"
-                                    placeholder="ex: Interviu sursa, deplasare, verificare locatie"
-                                />
-                            </div>
-                        </div>
-
-                        {/* Row 2 (6 columns) */}
-                        <div className="row-six">
-
-                            <div className="form-field utilitate-list">
-                                <label>Utilitate (1-5)</label>
-                                <div className="utilitate-box">
-                                    <span>1</span>
-                                    <span>2</span>
-                                    <span>3</span>
-                                    <span>4</span>
-                                    <span>5</span>
-                                </div>
-                            </div>
-
-                            <div className="form-field">
-                                <label>Cost</label>
-                                <input className="input-box soft" placeholder="ex: 200" />
-                            </div>
-
-                            <div className="form-field">
-                                <label>Monedă</label>
-                                <input className="input-box soft" placeholder="EUR ▾" />
-                            </div>
-
-                            <div className="form-field">
-                                <label>Cost cu taxe</label>
-                                <input className="input-box soft" placeholder="ex: 200 + 32%" />
-                            </div>
-
-                            <div className="form-field">
-                                <label>Procent total taxe</label>
-                                <input className="input-box soft" placeholder="32%" />
-                            </div>
-
-                            <div className="form-field">
-                                <label>Total (auto)</label>
-                                <input className="input-box soft" placeholder="260 EUR" />
-                            </div>
-                        </div>
-
-                        <div className="add-actions">
-                            <button className="btn-primary">Salvează cheltuiala</button>
-                        </div>
-                    </div>
+                    {/* ADD HUMINT COST BUTTON - Opens popup */}
+                    <button
+                        className="btn-green"
+                        onClick={() => setShowHumintPopup(true)}
+                    >
+                        Adaugă cheltuiala
+                    </button>
                 </div>
-
 
                 {/* PAGE FOOTER BUTTONS */}
                 <div className="button-row footer-row">
@@ -356,9 +282,22 @@ const ProjectCost = () => {
                     <button className="btn-primary">Înapoi la Pagina Proiect</button>
                 </div>
             </div>
+
+            {/* EMPLOYEE COST POPUP */}
+            <AddEmployeeCostPopup
+                isOpen={showEmployeePopup}
+                onClose={() => setShowEmployeePopup(false)}
+                onSave={handleSaveEmployeeCost}
+            />
+
+            {/* HUMINT COST POPUP */}
+            <AddHumintCostPopup
+                isOpen={showHumintPopup}
+                onClose={() => setShowHumintPopup(false)}
+                onSave={handleSaveHumintCost}
+            />
         </div>
     )
-
 }
 
 export default ProjectCost;

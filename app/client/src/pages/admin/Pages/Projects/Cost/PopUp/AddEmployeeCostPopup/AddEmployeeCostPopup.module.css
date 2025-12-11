@@ -1,0 +1,223 @@
+/* POPUP OVERLAY */
+.popupOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+/* POPUP CONTAINER */
+.popupContainer {
+    background: #ffffff;
+    border-radius: 20px;
+    width: 90%;
+    max-width: 900px;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    animation: slideUp 0.3s ease;
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* POPUP HEADER */
+.popupHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 24px 32px;
+    border-bottom: 2px solid #f3f4f6;
+}
+
+.popupTitle {
+    font-size: 22px;
+    font-weight: 700;
+    color: #111827;
+    margin: 0;
+}
+
+.closeButton {
+    background: none;
+    border: none;
+    font-size: 32px;
+    color: #6b7280;
+    cursor: pointer;
+    padding: 0;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: all 0.2s ease;
+}
+
+.closeButton:hover {
+    background: #f3f4f6;
+    color: #374151;
+}
+
+/* POPUP BODY */
+.popupBody {
+    padding: 32px;
+}
+
+.formSection {
+    margin-bottom: 20px;
+}
+
+/* GRID LAYOUTS */
+.rowThree {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    margin-bottom: 24px;
+}
+
+.rowFive {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 24px;
+}
+
+/* FORM CONTROLS */
+.formField {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.formField label {
+    font-size: 14px;
+    font-weight: 600;
+    color: #374151;
+}
+
+.inputBox {
+    width: 100%;
+    border-radius: 12px;
+    border: 2px solid #e5e7eb;
+    background: #f9fafc;
+    padding: 14px 16px;
+    font-size: 15px;
+    transition: all 0.3s ease;
+}
+
+.inputBox:focus {
+    outline: none;
+    border-color: #4f46e5;
+    box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+}
+
+.inputBox[readonly] {
+    background: #f3f4f6;
+    cursor: not-allowed;
+}
+
+select.inputBox {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%236b7280'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 16px center;
+    background-size: 20px;
+    padding-right: 40px;
+}
+
+/* POPUP FOOTER */
+.popupFooter {
+    display: flex;
+    justify-content: flex-end;
+    gap: 16px;
+    padding: 24px 32px;
+    border-top: 2px solid #f3f4f6;
+    background: #fafafa;
+    border-radius: 0 0 20px 20px;
+}
+
+.cancelButton {
+    background: #f3f4f6;
+    color: #374151;
+    padding: 14px 28px;
+    border-radius: 10px;
+    border: 2px solid #e5e7eb;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.cancelButton:hover {
+    background: #e5e7eb;
+    border-color: #d1d5db;
+}
+
+.saveButton {
+    background: #4f46e5;
+    color: #ffffff;
+    padding: 14px 28px;
+    border-radius: 10px;
+    border: none;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.saveButton:hover {
+    background: #4338ca;
+}
+
+/* RESPONSIVE */
+@media (max-width: 900px) {
+    .popupContainer {
+        width: 95%;
+        margin: 20px;
+    }
+
+    .rowThree,
+    .rowFive {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+}
+
+@media (max-width: 600px) {
+    .popupHeader {
+        padding: 20px;
+    }
+
+    .popupBody {
+        padding: 20px;
+    }
+
+    .popupFooter {
+        padding: 20px;
+        flex-direction: column;
+    }
+
+    .cancelButton,
+    .saveButton {
+        width: 100%;
+    }
+}
