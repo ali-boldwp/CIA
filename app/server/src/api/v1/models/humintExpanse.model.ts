@@ -9,7 +9,6 @@ export interface IHumintExpanse extends Document {
     taxPercent: number;
     taxIncludedCost: number;
     total: number;
-    humintId?: Schema.Types.ObjectId;
     createdBy: Schema.Types.ObjectId;
 }
 
@@ -26,8 +25,6 @@ const humintSchema = new Schema<IHumintExpanse>(
         taxIncludedCost: { type: Number, required: true },
 
         total: { type: Number, required: true },
-
-        humintId: { type: Schema.Types.ObjectId, ref: "Humint" },
 
         createdBy: { type: Schema.Types.ObjectId, ref: "User", required: true },
     },

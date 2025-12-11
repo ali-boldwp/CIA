@@ -7,13 +7,11 @@ export const createHumintExpanse = async (data: Partial<IHumintExpanse>) => {
 export const getAllHumintExpenses = async (filters: any = {}) => {
     return await HumintExpanse.find(filters)
         .populate("createdBy", "name email")
-        .populate("humintId", "humintSubject");
 };
 
 export const getHumintExpenseById = async (id: string) => {
     return await HumintExpanse.findById(id)
         .populate("createdBy", "name email")
-        .populate("humintId", "humintSubject");
 };
 
 export const updateHumintExpense = async (id: string, data: Partial<IHumintExpanse>) => {

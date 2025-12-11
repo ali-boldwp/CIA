@@ -70,21 +70,28 @@ export const pauseTask = async (req, res) => {
     if (!task.lastStartTimestamp)
         return res.status(400).json({ message: "Task was not running" });
 
-    // time difference
     const diffMs = Date.now() - task.lastStartTimestamp;
     const diffSec = Math.floor(diffMs / 1000);
 
-    // add to total time
     task.totalSeconds += diffSec;
-
     task.isPaused = true;
     task.lastStartTimestamp = undefined;
-
     await task.save();
-    task = await Task.findById(task._id).populate("analyst", "name");
 
-    res.json({ message: "Task paused", totalSeconds: task.totalSeconds });
+    // ✅ FIX: correct function name
+    const projectId = await taskService.getProjectIdByTaskId(task._id);
+
+    // update expanse
+    if (projectId && task.analyst) {
+        await taskService.addTimeToAnalystExpanse(task.analyst, projectId, diffSec);
+    }
+
+    res.json({
+        message: "Task paused",
+        totalSeconds: task.totalSeconds
+    });
 };
+
 
 
 export const resumeTask = async (req, res) => {
@@ -108,77 +115,30 @@ export const completeTask = async (req, res) => {
     let task = await Task.findById(req.params.id);
     if (!task) return res.status(404).json({ message: "Task not found" });
 
-    
+    let diffSec = 0;
+
     if (task.lastStartTimestamp) {
         const diffMs = Date.now() - task.lastStartTimestamp;
-        const diffSec = Math.floor(diffMs / 1000);
+        diffSec = Math.floor(diffMs / 1000);
 
         task.totalSeconds += diffSec;
     }
-
-
 
     task.completed = true;
     task.isPaused = false;
     task.lastStartTimestamp = undefined;
 
     await task.save();
-    task = await Task.findById(task._id).populate("analyst", "name");
 
-    res.json({ message: "Task completed", totalSeconds: task.totalSeconds });
-};
+    // ✅ Get Project ID
+    const projectId = await taskService.getProjectIdByTaskId(task._id);
+    await taskService.addTimeToAnalystExpanse(task.analyst, projectId, diffSec);
 
 
-export const analystTaskTime = async (req, res) => {
-    try {
-        const { newSeconds, analystId } = req.body;
-
-        let task = await Task.findById(req.params.id);
-        if (!task) return res.status(404).json({ message: "Task not found" });
-
-        // If manager wants to set analyst manually
-        if (analystId) {
-            task.analyst = analystId;
-        }
-
-        const analystTime = task.totalSeconds;
-        const managerTime = newSeconds;
-
-        // Update task seconds
-        task.totalSeconds = newSeconds;
-        await task.save();
-
-        // Create or update expanse
-        let expanse = await AnalystExpanse.findOne({
-            analystId: task.analyst,
-            projectId: task.chapterId
-        });
-
-        if (!expanse) {
-            expanse = new AnalystExpanse({
-                analystId: task.analyst,
-                projectId: task.chapterId,
-                totalSecands: 0
-            });
-        }
-
-        const finalToAdd = analystTime + managerTime;
-
-        expanse.totalSecands += finalToAdd;
-        await expanse.save();
-
-        return res.json({
-            message: "Manager updated time added to analyst expanse",
-            analystTime,
-            managerTime,
-            finalAdded: finalToAdd,
-            updatedExpanse: expanse.totalSecands
-        });
-
-    } catch (err) {
-        console.log(err);
-        res.status(500).json({ message: "Server error" });
-    }
+    res.json({
+        message: "Task completed",
+        totalSeconds: task.totalSeconds
+    });
 };
 
 
