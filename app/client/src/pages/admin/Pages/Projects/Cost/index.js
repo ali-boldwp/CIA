@@ -4,8 +4,12 @@ import AddEmployeeCostPopup from "./PopUp/AddEmployeeCostPopup/AddEmployeeCostPo
 import AddHumintCostPopup from "./PopUp/AddHumintCostPopup/AddHumintCostPopup";
 import SummarySection from "./SummarySection/SummaaySection";
 import CostBar from "./CostBar/CostBar";
+
+import EmployeeCostTable from "./EmployeeCostTable/EmployeeCostTable"; // Import the new component
+
 import { useGetHumintExpensesQuery, useGetHumintTotalsQuery }
     from "../../../../../services/humintExpanseApi";
+
 
 
 const ProjectCost = () => {
@@ -40,72 +44,10 @@ const ProjectCost = () => {
                 {/* FIXED COSTS + OSINT COSTS BAR */}
                 <CostBar /> {/* Using the new CostBar component */}
 
-                {/* EMPLOYEE COSTS TABLE */}
-                <div className="form-card">
-                    <h2 className="form-title">Cheltuieli cu angajații (timp & cost)</h2>
-
-                    <table className="cost-table">
-                        <thead>
-                        <tr>
-                            <th>Analist</th>
-                            <th>Rol</th>
-                            <th>Zile</th>
-                            <th>Ore</th>
-                            <th>Cost/ora</th>
-                            <th>Cost/zi</th>
-                            <th>Total</th>
-                            <th>Editare</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr>
-                            <td>Analist A</td>
-                            <td>Lead OSINT</td>
-                            <td>2.5</td>
-                            <td>20</td>
-                            <td>30 EUR</td>
-                            <td>240 EUR</td>
-                            <td>600 EUR</td>
-                            <td className="edit-cell">📎 Modifică</td>
-                        </tr>
-
-                        <tr>
-                            <td>Analist C</td>
-                            <td>OSINT</td>
-                            <td>Automat / 8</td>
-                            <td>
-                                <input className="input-cell" defaultValue="8" />
-                            </td>
-                            <td>35 EUR</td>
-                            <td>280 EUR</td>
-                            <td>280 EUR</td>
-                            <td className="edit-cell">✔ Salvează × Anulează</td>
-                        </tr>
-
-                        <tr>
-                            <td>Analist E</td>
-                            <td>OSINT</td>
-                            <td>0.5</td>
-                            <td>4</td>
-                            <td>25 EUR</td>
-                            <td>200 EUR</td>
-                            <td>100 EUR</td>
-                            <td className="edit-cell">📎 Modifică</td>
-                        </tr>
-                        </tbody>
-                    </table>
-
-                    {/* Blank strip under table */}
-                    <div className="table-empty-strip" />
-
-                    {/* ADD EMPLOYEE COST BUTTON - Opens popup */}
-                    <button
-                        className="btn-green"
-                        onClick={() => setShowEmployeePopup(true)}
-                    >
-                        Adaugă cheltuiala
-                    </button>
-                </div>
+                {/* EMPLOYEE COSTS TABLE - Now dynamic */}
+                <EmployeeCostTable
+                    onAddCost={() => setShowEmployeePopup(true)}
+                />
 
                 {/* HUMINT COSTS */}
                 {/* HUMINT COSTS */}
