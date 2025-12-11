@@ -17,6 +17,13 @@ export interface IProjectRequest extends Document {
     clientPhone: string;
 
     projectPrice: number;
+    fixPrice:number;
+    tesaPrice:number;
+    osintPrice:number;
+    tehnicaPrice:number;
+    otherPrice:number;
+
+
     currency: string;
 
 
@@ -61,7 +68,13 @@ const projectRequestSchema = new Schema<IProjectRequest>(
         clientEmail: { type: String, required: false },
         clientPhone: { type: String, required: false },
 
-        projectPrice: { type: Number, required: false },
+        projectPrice: { type: Number, required: false , select : false },
+        fixPrice:{ type: Number, required: false , select : false },
+        tesaPrice:{ type: Number, required: false , select : false },
+        osintPrice:{ type: Number, required: false , select : false },
+        tehnicaPrice:{ type: Number, required: false , select : false },
+        otherPrice:{ type: Number, required: false , select : false },
+
         currency: { type: String, default: "EUR" },
 
         // OPTIONAL FIELDS
