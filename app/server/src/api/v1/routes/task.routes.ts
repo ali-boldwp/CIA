@@ -1,8 +1,13 @@
 import { Router } from "express";
 import * as taskController from "../controllers/task.controller";
 import { auth } from "../../../middlewares/auth.middleware";
+import { authorizeRoles } from "../../../middlewares/role.middleware";
+import { Role } from "../../../constants/roles";
+import {getAnalystsFinalSalary} from "../controllers/task.controller";
 
 const router = Router();
+
+
 
 
 router.post("/", auth, taskController.createTask);
@@ -26,6 +31,18 @@ router.post("/:id/resume", auth, taskController.resumeTask);
 
 // ⭐ COMPLETE TASK
 router.post("/:id/complete", auth, taskController.completeTask);
+
+
+
+router.put(
+    "/:id/update-time",
+    auth,
+    authorizeRoles(Role.ADMIN, Role.MANAGER) ,
+    taskController.analystTaskTime
+);
+
+
+
 
 
 

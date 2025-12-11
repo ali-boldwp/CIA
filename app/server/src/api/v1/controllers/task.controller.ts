@@ -2,7 +2,8 @@ import { Request, Response, NextFunction } from "express";
 import * as taskService from '../services/task.service'
 import { ok } from "../../../utils/ApiResponse";
 import Task from "../models/task.model";
-import * as chapterService from "../services/chapter.service";
+import AnalystExpanse from "../models/analystExpanse.model";
+import User from "../models/user.model";
 
 
 
@@ -126,4 +127,59 @@ export const completeTask = async (req, res) => {
 
     res.json({ message: "Task completed", totalSeconds: task.totalSeconds });
 };
+
+
+export const analystTaskTime = async (req, res) => {
+    try {
+        const { newSeconds, analystId } = req.body;
+
+        let task = await Task.findById(req.params.id);
+        if (!task) return res.status(404).json({ message: "Task not found" });
+
+        // If manager wants to set analyst manually
+        if (analystId) {
+            task.analyst = analystId;
+        }
+
+        const analystTime = task.totalSeconds;
+        const managerTime = newSeconds;
+
+        // Update task seconds
+        task.totalSeconds = newSeconds;
+        await task.save();
+
+        // Create or update expanse
+        let expanse = await AnalystExpanse.findOne({
+            analystId: task.analyst,
+            projectId: task.chapterId
+        });
+
+        if (!expanse) {
+            expanse = new AnalystExpanse({
+                analystId: task.analyst,
+                projectId: task.chapterId,
+                totalSecands: 0
+            });
+        }
+
+        const finalToAdd = analystTime + managerTime;
+
+        expanse.totalSecands += finalToAdd;
+        await expanse.save();
+
+        return res.json({
+            message: "Manager updated time added to analyst expanse",
+            analystTime,
+            managerTime,
+            finalAdded: finalToAdd,
+            updatedExpanse: expanse.totalSecands
+        });
+
+    } catch (err) {
+        console.log(err);
+        res.status(500).json({ message: "Server error" });
+    }
+};
+
+
 
