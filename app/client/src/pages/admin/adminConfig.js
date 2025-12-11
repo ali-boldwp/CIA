@@ -16,6 +16,8 @@ import HumentRequest from "./Pages/Humint/Request";
 import Humints from "./Pages/Humint/List";
 import HumentRequestView from "./Pages/Humint/View";
 import RequestProject from "./Pages/Projects/Request/New";
+import Users from "./Pages/Users";
+import UsersList from "./Pages/Users/List";
 
 const AdminConfig = {
     settings: {
@@ -110,6 +112,16 @@ const AdminConfig = {
                         {
                             path: 'request/:id',
                             element: <HumentRequestView />
+                        }
+                    ]
+                },
+                {
+                    path: 'users',
+                    element: <Users />,
+                    children: [
+                        {
+                            index: true,
+                            element: <UsersList />
                         }
                     ]
                 }

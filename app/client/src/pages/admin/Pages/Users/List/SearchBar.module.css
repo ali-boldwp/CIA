@@ -1,0 +1,58 @@
+/* src/components/SearchBar/SearchBar.module.css */
+
+/* same centering & width as header */
+.container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+/* white search-card */
+.box {
+    width: 96%;           /* 🔄 90% se 96% */
+    max-width: 1500px;    /* 🔄 header ke barabar */
+    background: #ffffff;
+    padding: 10px 16px;   /* 🔄 pehle 14px tha -> height kam */
+    border-radius: 16px;
+    box-shadow: 0 8px 20px rgba(15, 23, 42, 0.04);
+}
+
+.inputWrap {
+    position: relative;
+    width: 100%;
+}
+
+.icon {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #9ca3af;
+    font-size: 14px;
+}
+
+.input {
+    width: 70%;
+    padding: 9px 14px;        /* 🔄 pehle 12px tha -> thinner */
+    padding-left: 38px;
+
+    background: #f9fafb;
+    border-radius: 14px;      /* 🔄 999px se 16px => div ke barabar  */
+    border: 1px solid #e2e8f0;
+
+    font-size: 14px;
+    color: #111827;
+
+    outline: none;
+    transition: 0.2s ease;
+}
+
+.input::placeholder {
+    color: #9ca3af;
+}
+
+.input:focus {
+    background: #ffffff;
+    border-color: #4f46e5;
+    box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.2);
+}

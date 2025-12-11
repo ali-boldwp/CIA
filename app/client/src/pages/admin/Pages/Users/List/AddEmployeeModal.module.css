@@ -1,0 +1,294 @@
+/* === OVERLAY & MODAL (same feel as analyst modal) === */
+.modalOverlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.35);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+}
+
+.modal {
+    background: #ffffff;
+    width: 1100px;
+    max-width: 96vw;
+    padding: 32px;
+    border-radius: 20px;
+    box-shadow: 0 30px 60px rgba(15, 23, 42, 0.14);
+    position: relative;
+    font-family: Inter, sans-serif;
+}
+
+/* close button */
+.modalClose {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    border: none;
+    background: #f1f5f9;
+    color: #475569;
+    font-size: 18px;
+    cursor: pointer;
+    width: 34px;
+    height: 34px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: all 0.2s ease-in-out;
+    font-weight: 700;
+}
+
+.modalClose:hover {
+    background: #334155;
+    color: #ffffff;
+    transform: scale(1.1);
+    box-shadow: 0px 4px 10px rgba(0,0,0,0.2);
+}
+
+/* === FORM INSIDE MODAL (GRID) === */
+.formContainer {
+    width: 100%;
+}
+
+.formTitle {
+    font-size: 18px;
+    font-weight: 700;
+    color: #111827;
+    margin-bottom: 8px;
+    font-style: italic;
+}
+
+.colorSmallBox {
+    width: 12px;
+    height: 38px;
+    border-radius: 10px;
+    border: 1px solid #ddd;
+    cursor: pointer;
+    padding: 0;
+    background: transparent;
+}
+
+/* Remove browser default UI */
+.colorSmallBox::-webkit-color-swatch-wrapper {
+    padding: 0;
+}
+
+.colorSmallBox::-webkit-color-swatch {
+    border: none;
+    border-radius: 10px;
+}
+
+/* Focus style to match inputs */
+.colorSmallBox:focus {
+    border-color: #2D9CDB;
+    box-shadow: 0 0 0 2px rgba(45,156,219,0.15);
+}
+
+
+.formSubtitle {
+    font-size: 12px;
+    color: #6b7280;
+    margin-bottom: 18px;
+    font-style: italic;
+}
+
+/* 3-column grid: col1 wide, col2+3 equal */
+.formGrid {
+    display: grid;
+    grid-template-columns: 2fr 1.1fr 1.1fr;
+    gap: 16px 18px;
+    align-items: flex-start;
+}
+
+/* base field groups */
+.field,
+.fieldSmall,
+.fieldCosts {
+    display: flex;
+    flex-direction: column;
+    font-style: italic;
+}
+
+/* left column (Nume, Funcție, Data) */
+.fieldLeft {
+    grid-column: 1 / 2;
+}
+
+/* top right wide (Salariu) spans col2+3 */
+.fieldRightWide {
+    grid-column: 2 / 4;
+}
+
+/* small fields (Ore/lună, Ore/zi, Bonus) */
+.fieldSmall {
+    flex: 1;
+}
+
+/* cost block */
+.fieldCosts {
+    flex: 1;
+}
+
+/* full width row (checkbox, login fields) */
+.fieldFull {
+    grid-column: 1 / 4;
+}
+
+/* labels */
+.field label,
+.fieldSmall label,
+.fieldCosts > label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: 600;
+    font-size: 12px;
+    color: #4b5563;
+}
+
+/* inputs / selects */
+.field input,
+.field select,
+.fieldSmall input {
+    width: 100%;
+    padding: 11px 14px;
+    background: #ffffff;
+    border: 1px solid #ddd;
+    border-radius: 12px;
+    outline: none;
+    font-size: 14px;
+    color: #111827;
+}
+
+.field input:focus,
+.field select:focus,
+.fieldSmall input:focus {
+    border-color: #2D9CDB;
+    box-shadow: 0 0 0 2px rgba(45,156,219,0.15);
+}
+
+/* cost grid & auto fields */
+.costGrid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+    margin-top: 0;
+}
+
+.costInput {
+    width: 100%;
+    padding: 11px 14px;
+    background: #f9fafb;
+    border: 1px solid #ddd;
+    border-radius: 12px;
+    font-size: 14px;
+    color: #111827;
+}
+
+.costInput:focus {
+    border-color: #2D9CDB;
+    box-shadow: 0 0 0 2px rgba(45,156,219,0.15);
+}
+
+.costInput[readonly],
+.costInput[disabled] {
+    background: #f9fafb !important;
+    border: 1px solid #ddd !important;
+    color: #6b7280 !important;
+    cursor: not-allowed;
+}
+
+.costInput[readonly]:focus,
+.costInput[disabled]:focus {
+    border-color: #2D9CDB !important;
+    box-shadow: 0 0 0 2px rgba(45,156,219,0.15) !important;
+    outline: none !important;
+}
+
+/* === CHECKBOX === */
+.checkboxRow {
+    margin-top: 4px;
+}
+
+.checkboxLabel {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    font-style: italic;
+    color: #6B7280;
+}
+
+.checkboxLabel input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+}
+
+/* === LOGIN FIELDS when checkbox checked === */
+.loginRow {
+    margin-top: 4px;
+}
+
+.loginGrid {
+    display: grid;
+    grid-template-columns: 1.2fr 1.2fr 0.6fr; /* 👈 3rd column ~ half width */
+    gap: 16px;
+    width: 100%;
+}
+
+
+/* === ERROR TEXT === */
+.error {
+    color: #dc2626;
+    font-size: 12px;
+    margin-top: 4px;
+    font-style: italic;
+}
+
+/* === FORM BUTTONS === */
+.buttons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.resetBtn {
+    background: #334155;
+    color: #ffffff;
+    padding: 10px 22px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 700;
+    font-style: italic;
+    transition: 0.2s ease-in-out;
+}
+
+.resetBtn:hover {
+    background: #1e293b;
+    transform: translateY(-1px);
+}
+
+.saveBtn {
+    background: #22c55e;
+    color: #ffffff;
+    padding: 10px 24px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    font-style: italic;
+}
+.colorInput {
+    height: 42px;     /* same as other fields */
+    border: 1px solid #ddd;
+    border-radius: 12px;
+    padding: 0;
+    cursor: pointer;
+}

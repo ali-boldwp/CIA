@@ -5,15 +5,24 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 15px;
-    border-radius: 12px;
-    margin-bottom: 25px;
+    gap: 20px;
+    border-radius: 0px;
     box-shadow: 0px 3px 12px rgba(0, 0, 0, 0.08);
 
 
     background: linear-gradient(90.5deg, rgba(37, 99, 235, 0.98) 0%, rgba(79, 70, 229, 0.98) 99.89%);
 
 
+}
+
+.header a.back-to-dashboard {
+    display: flex;
+    gap: 5px;
+    background: #FFF;
+    padding: 8px 14px;
+    border-radius: 50px;
+    font-size: 12px;
+    align-items: center;
 }
 
 .firstSec {
@@ -26,7 +35,7 @@
 }
 
 .secSec {
-    width: 40%;
+    width: 100%;
 
     display: flex;
     margin-right: 20px;
@@ -45,19 +54,21 @@
     margin-right: 10px;
     font-style: italic;
     color: #fff;
+    text-transform: capitalize;
 }
 
 .search-box {
     flex: 1;
     display: flex;
     align-items: center;
-    background: #ffffff;
-    padding: 10px 18px;
+    background: transparent;
+    padding: 9px 10px;
     border-radius: 4px;
     max-width: 26rem;
-    border: 1px solid rgba(0, 0, 0, 0.15);
-    box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.18);
+    border: 1px solid rgba( 255, 255, 255, 0.5);
+    /*box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.18);*/
     transition: all 0.2s ease-in-out;
+    gap: 10px;
 
 }
 
@@ -68,7 +79,33 @@
     background: transparent;
     font-size: 14px;
     height: 18px;
+    color: #FFF;
 }
+
+/* For modern browsers */
+.search-box input::placeholder {
+    color: #FFF;
+    opacity: 0.5;
+}
+
+/* For Webkit-based browsers (Chrome, Safari) */
+.search-box input::-webkit-input-placeholder {
+    color: #FFF;
+    opacity: 0.5;
+}
+
+/* For Mozilla Firefox */
+.search-box input::-moz-placeholder {
+    color: #FFF;
+    opacity: 0.5;
+}
+
+/* For Internet Explorer and Edge */
+.search-box input::-ms-input-placeholder {
+    color: #FFF;
+    opacity: 0.5;
+}
+
 
 
 .new-project-btn {
@@ -79,11 +116,10 @@
     border-radius: 12px;
     cursor: pointer;
     font-weight: 700;
-    width: 180px;
-    height: 40px;
-    display: flex;
+    display: block;
     justify-content: center;
     align-items: center;
+    padding: 10px 14px;
 }
 
 .right-buttons {
@@ -92,25 +128,39 @@
 }
 
 .icon-btn {
-    background: #ffffff;
-    border: 1px solid #e2e2e2;
-    border-radius: 12px;
+    background: transparent;
+    border: 1px solid #FFF;
+    border-radius: 4px;
     cursor: pointer;
     font-weight: 800;
     font-size: 14px;
     display: flex;
     align-items: center;
-    width: 100px;
-    height: 35px;
+    padding: 10px 14px;
+    gap: 5px;
+    min-height: 44px;
+    color: #FFF;
+}
+
+.icon-btn.new {
+    background: #FFF;
+    color: #4f46e5;
+    font-weight: bold !important;
 }
 
 
 .icon-btn .text {
-    font-style: italic; /* only text italic */
+    font-weight: normal; /* only text italic */
+    letter-spacing: 0.5px;
+}
+
+.icon-btn.new .text {
+    font-weight: bold !important;
 }
 
 .icon-btn .icon {
     font-style: normal; /* icons stay normal */
-    margin-left: 3px;
+    /*margin-left: 3px;*/
+    margin: 0;
 }
 

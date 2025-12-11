@@ -12,10 +12,10 @@ const ProjectList = ({ data }) => {
 
             <div className="projects-header" style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between" }}>
                 <div>
-                    <h3>Proiecte active în derulare</h3>
-                    <span className="count">{ data.length } proiecte</span>
+                    <h3>Proiecte active în derulare <span className="count">{ data.length } proiecte</span></h3>
+
                 </div>
-                <Link to={ "/project/all" } > View All Projects </Link>
+                <Link to={ "/project/all" } style={{ fontSize: '14px' }} > View All Projects </Link>
             </div>
 
             <div className="responsive-table-wrapper">
@@ -25,7 +25,7 @@ const ProjectList = ({ data }) => {
                         <span>Deadline</span>
                         <span>Progres</span>
                         <span>Status HUMINT</span>
-                        <span style={{ textAlign: "right" }}>Acțiuni</span>
+                        <span style={{ textAlign: "right !important" }}>Acțiuni</span>
                     </div>
                     <div className="projects-list">
                         { data.map((project, index) => (

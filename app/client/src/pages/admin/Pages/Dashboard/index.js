@@ -8,6 +8,9 @@ import ProjectList from "../../../Components/Project/List";
 import Team from "../../Components/Team/Team"
 import CalenderList from "../../Components/CalenderList"
 
+import Layout from "../../../../layouts";
+import Header from "../../Components/Header";
+
 const Index = () => {
 
     const [ stats, setStats ] = useState({
@@ -52,21 +55,31 @@ const Index = () => {
 
     }, [ projectsData ]);
 
-    if ( statsLoading || projectsLoading ) {
+    /*if ( statsLoading || projectsLoading ) {
 
         return (
             <div className="spinner"></div>
         )
 
-    }
+    }*/
 
     return (
-        <>
-            <Stats stats={ stats } />
-            <ProjectList data={ projects } />
-            <Team />
-            <CalenderList />
-        </>
+        <Layout
+            loading={ statsLoading || projectsLoading }
+            header={
+                {
+                    content: <Header />
+                }
+            }
+            content={
+                <>
+                    <Stats stats={ stats } />
+                    <ProjectList data={ projects } />
+                    <Team />
+                    <CalenderList />
+                </>
+            }
+        />
 
     )
 

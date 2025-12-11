@@ -1,0 +1,69 @@
+/* src/components/PageHeader/PageHeader.module.css */
+
+/* outer wrapper: center + top gap */
+.container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-top: 16px; /* gap from top of page */
+}
+
+/* inner white card like Figma */
+.box {
+    width: 96%;           /* 🔄 90% se 96% */
+    max-width: 1500px;
+
+    background: #ffffff;
+    padding: 16px 22px;
+    border-radius: 16px;
+    box-shadow: 0 8px 20px rgba(15, 23, 42, 0.08);
+
+    display: flex;
+    align-items: center; /* vertical align */
+    gap: 60px;          /* space between back & title */
+}
+
+/* BACK BUTTON - Figma gradient style */
+.backBtn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    padding: 10px 20px;
+    border-radius: 999px;
+
+    background: linear-gradient(90deg, #6D28D9 0%, #14B8A6 100%);
+    color: #ffffff;
+
+    font-size: 14px;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+
+    box-shadow: 0 4px 12px rgba(109, 40, 217, 0.25); /* soft purple glow */
+
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+/* hover effect */
+.backBtn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 18px rgba(109, 40, 217, 0.30);
+}
+
+/* arrow icon white */
+.backBtnIcon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    stroke: #ffffff;
+
+}
+
+
+
+.title {
+    font-size: 22px;
+    font-weight: 700;
+    color: #0f172a;
+}

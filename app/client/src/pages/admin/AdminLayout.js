@@ -5,13 +5,8 @@ const Layout = ({ children }) => {
 
     return (
         <>
-            <LayoutHeader>
-                <Header />
-            </LayoutHeader>
-            <div style={{ display: "flex", flexDirection: "column", flexGrow: 1, padding: '20px' }}>
-                { children }
-            </div>
-        </>
+            { children }
+            </>
     );
 
 }

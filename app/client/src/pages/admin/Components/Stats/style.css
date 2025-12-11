@@ -3,8 +3,8 @@
   flex-wrap: wrap;
   gap: 15px;
   justify-content: center;
-    margin-bottom: 60px;
-    margin-top: 20px;
+    /*margin-bottom: 60px;*/
+    /*margin-top: 20px;*/
 }
 .status1{
     display:flex;
@@ -77,4 +77,62 @@ a{
 
 .state-v2-wrapper {
 
+}
+
+
+
+.stats-wrap {
+    display: flex;
+    gap: 24px;
+    width: 100%;
+    flex-wrap: wrap;
+}
+
+.stats-wrap > .stats-block {
+    width: calc(20% - 20px);
+    /*flex-grow: 1;*/
+    background: #FFF;
+    border-radius: 4px;
+    padding: 24px;
+    display: flex;
+    flex-direction: row;
+    gap: 12px;
+}
+
+.stats-block-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 12px;
+    flex-grow: 1;
+}
+
+.stats-block-content > div {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.stats-block-content-title {
+    font-size: 15px;
+    font-weight: bold;
+    color: #040153;
+}
+
+.stats-block-content-value {
+    font-size: 24px;
+    font-weight: bold;
+    color: #666569;
+}
+
+.stats-block-content > a {
+    font-size: 14px;
+    background: linear-gradient(90deg, #1ec6cd, #4f46e5);
+    padding: 8px 12px;
+    color: #FFF;
+    border-radius: 4px;
+    align-self: flex-end;
+    display: flex;
+    gap: 8px;
+    align-items: center;
 }
