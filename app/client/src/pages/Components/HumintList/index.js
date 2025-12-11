@@ -1,29 +1,15 @@
 import React, { useMemo, useState ,useEffect } from "react";
-import Header from "./Header";
 import SearchBar from "./SearchBar";
 import TableSection from "./TableSection";
 
-import { useGetAllHumintsQuery, useApproveHumintMutation } from "../../../services/humintApi";
-import { useGetAnalystsQuery } from "../../../services/userApi";
+import { useApproveHumintMutation } from "../../../services/humintApi";
 import { toast } from "react-toastify";
 
-const Index = () => {
-    const { data: AnalystData } = useGetAnalystsQuery();
-    const { data: humintsData, isLoading } = useGetAllHumintsQuery();
+const Index = ({ data }) => {
 
     const [approveHumint] = useApproveHumintMutation();
 
-    const humints = humintsData?.data || [];
-    const analysts = AnalystData?.data || [];
-
-    // Resolve analyst name
-    const resolveAnalystName = (value) => {
-        if (!value) return "—";
-        if (typeof value === "object" && value.name) return value.name;
-
-        const found = analysts.find(a => a._id === value);
-        return found ? found.name : "—";
-    };
+    const humints = data?.data || [];
 
     // Merge data
     const [merged, setMerged] = useState([]);
@@ -99,7 +85,7 @@ const Index = () => {
                 (item.projectName || "").toLowerCase().includes(q) ||
                 (item.projectSubject || "").toLowerCase().includes(q) ||
                 (item.reportType || "").toLowerCase().includes(q) ||
-                (resolveAnalystName(item.responsible) || "").toLowerCase().includes(q)
+                ( item?.responsible?.name  || "").toLowerCase().includes(q)
             );
         }
 
@@ -122,8 +108,6 @@ const Index = () => {
 
     return (
         <>
-            <Header />
-
             <SearchBar
                 searchValue={searchValue}
                 onSearchChange={setSearchValue}
@@ -136,7 +120,6 @@ const Index = () => {
             />
 
             <TableSection
-                analystN={resolveAnalystName}
                 requests={visibleRequests}
                 selectedIds={selectedIds}
                 onToggleSelect={(id) =>

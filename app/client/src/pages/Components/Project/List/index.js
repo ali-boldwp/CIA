@@ -3,20 +3,20 @@ import {Link} from "react-router-dom";
 
 import "./style.css";
 
-const ProjectList = ({ data }) => {
+const ProjectList = ({ data, header = false }) => {
 
     console.log( data )
 
     return (
         <div className="main">
 
-            <div className="projects-header" style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between" }}>
+            { header && <div className="projects-header" style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between" }}>
                 <div>
                     <h3>Proiecte active în derulare <span className="count">{ data.length } proiecte</span></h3>
 
                 </div>
                 <Link to={ "/project/all" } style={{ fontSize: '14px' }} > View All Projects </Link>
-            </div>
+            </div> }
 
             <div className="responsive-table-wrapper">
                 <div className="projects-wrapper">

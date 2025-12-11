@@ -31,7 +31,6 @@ const statusClass = (status) => {
 
 const TableSection = ({
                           requests,
-                          analystN,
                           selectedIds,
                           onToggleSelect,
                           onToggleSelectAll,
@@ -131,7 +130,7 @@ const TableSection = ({
                                         </div>
                                     </td>
                                     <td>{item.reportType}</td>
-                                    <td>{analystN(item.responsible)}</td>
+                                    <td>{ item.responsible?.name }</td>
 
                                     <td>
                                             <span className={`${styles.pill} ${priorityClass(item.priority)}`}>

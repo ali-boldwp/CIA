@@ -69,7 +69,7 @@
 
 /* Acțiuni header ko center mein lao */
 .projects-table-header span:last-child {
-    /*text-align: center !important;*/
+    text-align: right !important;
 }
 
 /* Rows */
