@@ -22,6 +22,8 @@ import ChapterCreation from "../../../../taskPage/components/ChapterCreation";
 import ReviewPopUp from "./Popup/ReviewPop/ReviewPopUp";
 import EditingPopUp from "./Popup/EditingPopUp/EditingPopUp";
 import PleaseWaitPopUp from "./Popup/PleaseWaitPopUp/PleaseWaitPopUp";
+import Chapter from "./Components/Chapter";
+import Details from "./Components/Details";
 
 
 
@@ -45,10 +47,7 @@ const ProjectTasks = ({
     const [isFinalizedLocal, setIsFinalizedLocal] = useState(false);
 
 
-    const [startTask] = useStartTaskMutation();
-    const [pauseTask] = usePauseTaskMutation();
-    const [resumeTask] = useResumeTaskMutation();
-    const [completeTask] = useCompleteTaskMutation();
+
     const [updateEditable] = useUpdateEditableMutation();
     const [finalizeTask, { isLoading: isFinalizing }] = useFinalizeTaskMutation();
     const [createObservation, { isLoading: isCreatingObservation }] = useCreateObservationMutation();
@@ -169,45 +168,6 @@ const ProjectTasks = ({
         navigate("/");
     };
 
-    const handleStart = async (taskId, chapterId) => {
-        try {
-            const res = await startTask(taskId).unwrap();
-            refetchProgress();
-            // UI update — analyst assign hua
-            setTasksByChapter((prev) => ({
-                ...prev,
-                [chapterId]: prev[chapterId].map(t =>
-                    t._id === taskId ? { ...t, analyst: res.task.analyst } : t
-                )
-            }));
-
-            toast.success("Task started!");
-        } catch (error) {
-            toast.error("Failed to start task");
-        }
-    };
-
-    const handlePause = async (taskId, chapterId) => {
-        try {
-            const res = await pauseTask(taskId).unwrap();
-            refetchProgress();
-
-            setTasksByChapter(prev => ({
-                ...prev,
-                [chapterId]: prev[chapterId].map(t =>
-                    t._id === taskId
-                        ? { ...t, isPaused: true, lastStartTimestamp: undefined }
-                        : t
-                )
-            }));
-
-            toast("Task paused");
-        } catch (e) {
-            toast.error("Pause failed");
-        }
-    };
-
-
     const handleAddObservation = async (notes) => {
         if (!projectId) return toast.error("Project not selected");
         if (!notes || !notes.trim()) return toast.error("Observația este goală");
@@ -239,46 +199,6 @@ const ProjectTasks = ({
             // toast.promise already handled error
         } finally {
             setShowPleaseWait(false);
-        }
-    };
-
-
-
-    const handleResume = async (taskId, chapterId) => {
-        try {
-            const res = await resumeTask(taskId).unwrap();
-            refetchProgress();
-            setTasksByChapter(prev => ({
-                ...prev,
-                [chapterId]: prev[chapterId].map(t =>
-                    t._id === taskId
-                        ? { ...t, isPaused: false, lastStartTimestamp: Date.now() }
-                        : t
-                )
-            }));
-
-            toast("Task resumed");
-        } catch (e) {
-            toast.error("Resume failed");
-        }
-    };
-
-    const handleComplete = async (taskId, chapterId) => {
-        try {
-            const res = await completeTask(taskId).unwrap();
-            refetchProgress();
-            setTasksByChapter(prev => ({
-                ...prev,
-                [chapterId]: prev[chapterId].map(t =>
-                    t._id === taskId
-                        ? { ...t, completed: true, isPaused: false, lastStartTimestamp: undefined }
-                        : t
-                )
-            }));
-
-            toast.success("Task completed!");
-        } catch (e) {
-            toast.error("Complete failed");
         }
     };
 
@@ -403,445 +323,116 @@ const ProjectTasks = ({
         })
         .filter(Boolean);
 
-
-
-
-    const getStatus = (task) => {
-        if (task.completed) return "done";
-        if (task.analyst) return "inprogress";
-        return "unassigned";
-    };
-
-
-
     // if (!projectId) return <p>No project selected.</p>;
     // if (isLoading) return <p>Loading project data...</p>;
     // if (isError) return <p>Error fetching project data!</p>;
 
     return (
-        <div className="task-container">
+        <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
 
-            <div className="top-wrapper">
+            <Details
+                isFinalizedLocal={ isFinalizedLocal }
+                setShowReviewPopup={ setShowReviewPopup }
+                handleFinalize={ handleFinalize }
+                isObservation={ isObservation }
+                setShowEditingPopup={ setShowEditingPopup }
+                progress={ progress }
+                completedTasks={ completedTasks }
+                totalTasks={ totalTasks }
+                editMode={ editMode }
+                handleToggleEdit={ handleToggleEdit }
+                formatTime={ formatTime }
+                totalWorkedSeconds={ totalWorkedSeconds }
+                analystTimes={ analystTimes }
+                responsible={ responsible }
+                getInitials={ getInitials }
+                assigned={ assigned }
+                legendColors={ legendColors }
+                projectId={ projectId }
+            />
 
-                {/* LEFT SIDE */}
-                <div className="left-side">
-
-                    <div className="control-box">
-                        <p className="label">CONTROL PROJECT</p>
-                        <p className="status-text">
-                            Status proiect: <strong>În derulare</strong>
-                        </p>
-                        <div className="buttons-row">
-                            {(user?.role === "admin" || user?.role === "manager" || user?.role === "analyst") && (
-                                <>
-                                    {user?.role === "admin" || user?.role === "manager" ? (
-                                        // ADMIN & MANAGER BUTTON
-                                        <button
-                                            className="btn finalize"
-                                            onClick={
-                                                isFinalizedLocal
-                                                    ? () => setShowReviewPopup(true)
-                                                    : () => handleFinalize("revision")
-                                            }
-                                        >
-                                            {isFinalizedLocal ? "Revision" : "✔ Finalizează"}
-                                        </button>
-                                    ) : (
-                                        // ANALYST BUTTON
-                                        <>
-                                            {isObservation ? (
-                                                <button
-                                                    className="btn finalize"
-                                                    onClick={() => setShowEditingPopup(true)}
-                                                >
-                                                    👁 View Observation
-                                                </button>
-                                            ) : (
-                                                <button
-                                                    className="btn finalize"
-                                                    onClick={() => handleFinalize("revision")}
-                                                    disabled={isFinalizedLocal}
-                                                >
-                                                    {isFinalizedLocal ? "⏳ Așteptați" : "✔ Finalizează"}
-                                                </button>
-                                            )}
-                                        </>
-                                    )}
-                                </>
-                            )}
-                        </div>
-                    </div>
-
-                    {/* OVERVIEW */}
-                    <div className="overview-box">
-                        <p className="label">OVERVIEW PROJECT</p>
-                        <p className="progress-title">Progres general</p>
-
-                        <div className="progress-bar">
-                            <div
-                                className="progress-fill"
-                                style={{ width: `${progress}%` }}
-                            ></div>
-                        </div>
-
-                        <p className="progress-info">
-                            {completedTasks} / {totalTasks} taskuri finalizate ({progress}%)
-                        </p>
-                    </div>
-
-                </div>
-
-                {/* RIGHT SIDE – TIME BOX */}
-                <div className="right-side">
-                    { user?.role === "manager" && (
-                        <div className="edit-row">
-                            <span className="edit-label">Mod editare:</span>
-                            <label className="ios-switch">
-                                <input
-                                    type="checkbox"
-                                    checked={editMode}
-                                    onChange={handleToggleEdit}
-                                />
-                                <span className="slider"></span>
-                            </label>
-
-                        </div>
-                    )}
-
-
-                    <div className="time-box">
-                        <p className="time-title">REZUMAT TIMP LUCRU</p>
-
-                        <p className="time-info">
-                            Timp total lucrat:
-                            <strong> {formatTime(totalWorkedSeconds)} </strong>
-                            · Estimare ramas:
-                            <strong> 00h 00m</strong>
-                        </p>
-
-                        <p className="analyst-times">
-                            {analystTimes.length ? analystTimes.join(" | ") : "-"}
-                        </p>
-
-
-                    </div>
-                </div>
-
-
+            <div className="task-container" style={{ padding: "16px 24px", marginTop: '12px' }}>
+                <h3> Capitole </h3>
             </div>
 
-
-            <div className="legend-actions-wrapper">
-
-                {/* LEFT SIDE — LEGEND */}
-                <div className="legend-box">
-                    <p className="legend-title">LEGEND ANALISTI</p>
-
-                    <div className="legend-grid">
-
-                        {/* Responsible Analyst First */}
-                        <div className="firstButton">
-                            {responsible && (
-                                <div className="legend-item">
-                                    <span className="doted blue"></span>
-                                    <span className="legend-text">
-                        {getInitials(responsible.name)} - {responsible.name}
-                                        (Responsabil)
-                    </span>
-                                </div>
-                            )}
-                        </div>
-
-                        {/* Assigned Analysts */}
-
-                        {assigned.length > 0 ? (
-                            assigned.map((a, i) => (
-                                <div className="legend-item" key={a._id}>
-                                    <span className={`doted ${legendColors[i + 1] || "green"}`}></span>
-
-                                    <span className="legend-text">
-                            {getInitials(a.name)} - {a.name}
-
-                        </span>
-                                </div>
-                            ))
-                        ) : (
-                            <p className="fs-12 text-gray">Niciun analist asignat</p>
-                        )}
+            <Chapter
+                data={ chapterData }
+                tasksByChapter={ tasksByChapter }
+                setTasksByChapter={ setTasksByChapter }
+                getInitials={ getInitials }
+                isFinalizedLocal={ isFinalizedLocal }
+                editMode={ editMode }
+                formatTime={ formatTime }
+                refetchProgress={ refetchProgress }
+                setActiveChapterId={ setActiveChapterId }
+                setShowTaskForm={ setShowTaskForm }
+            />
 
 
-                    </div>
-                </div>
+            <div className="task-container">
 
+                {/* BOTTOM TASK FORM */}
+                {showTaskForm && (user?.role === "admin" || user?.role === "manager") && (
+                    <div className="task-form-container">
+                        <div className="task-form">
+                            <h3>Adauga Task Nou</h3>
 
-                {/* RIGHT SIDE — ACTION BUTTONS */}
-                <div className="actions-box">
+                            <input
+                                type="text"
+                                className="task-input"
+                                placeholder="Introdu numele taskului"
+                                value={newTaskName}
+                                onChange={(e) => setNewTaskName(e.target.value)}
+                            />
 
-                    <button
-                        className="project-btn save">
-                        Salveaza progres
-                    </button>
-
-
-                    <button className="project-btn">
-                        Cauta in Notes App
-                    </button>
-
-
-                    <div className="humint-wrapper">
-                        <span className="approval-badge">necesită aprobare</span>
-
-                        <Link to={`/humintRequest-Page/${projectId}`} className="project-btn">Solicita HUMINT</Link>
-                    </div>
-
-                    <div className="export-dropdown">
-                        <button className="project-btn">Exporta raport ▾</button>
-
-                        <div className="dropdown-menu">
-                            <button className="dropdown-item">Export Word</button>
-                            <button className="dropdown-item">Export PDF</button>
-                        </div>
-                    </div>
-
-                </div>
-
-            </div>
-
-            {chapterData?.length > 0 &&
-                chapterData.map((item,index) => (
-
-
-                    <div className="chapter-wrapper">
-
-
-                        <div className="chapter-title-row">
-                            <span className="chapter-label">CAPITOL {index + 1}</span>
-                            <br/>
-                            <div className="chapter-name">
-                                {item.name}
-                                <button className="edit-title-btn">Edit titlu</button>
-                            </div>
-
-                        </div>
-
-                        {/* Table Header */}
-                        <div className="task-table-header">
-                            <span>#</span>
-                            <span>Descriere task</span>
-                            <span>Status</span>
-                            <span>Analist / timp</span>
-                            <span>Acțiuni</span>
-                        </div>
-
-                        {/* Tasks */}
-                        {tasksByChapter[item._id]?.map((task, i) => (
-                            <div className="task-row new-task-row" key={task._id}>
-
-                                {/* # Number */}
-                                <div className="col col-number">{i + 1}.</div>
-
-                                {/* Checkbox + Title */}
-                                <div className="col col-title">
-                                    <input
-                                        type="checkbox"
-                                        checked={task.completed}
-                                        disabled={task.completed}
-                                        onChange={() => {}}
-                                    />
-
-                                    <span className="task-text">
-        {task.name}
-    </span>
-                                </div>
-
-
-                                {/* Status Pill */}
-                                <div className="col col-status">
-                                <span className={`status-pill ${getStatus(task)}`}>
-                                    {getStatus(task).toUpperCase()}
-                                </span>
-
-                                </div>
-
-                                {/* Analyst + Time */}
-                                <div className="col col-analyst">
-                                    <div className="col-analyst2">
-                                        <span className="analyst-dot" />
-
-                                        <span className="analyst-label">
-                                            {getInitials(task.analyst?.name)} • {formatTime(task.totalSeconds)}
-
-                                        </span>
-
-                                    </div>
-                                </div>
-
-                                {/* Actions */}
-                                {/* Actions */}
-                                <div className="col col-actions">
-                                    {isFinalizedLocal ? (
-                                        <span className="disabled-text"></span>
-                                    ) : !editMode ? (
-                                        <span className="disabled-text"></span>
-                                    ) : (
-                                        <>
-                                            {task.completed ? (
-                                                <>
-                                                    {/* Edit and Delete buttons - Only for admin and manager */}
-                                                    {(user?.role === "admin" || user?.role === "manager") && (
-                                                        <span className="btnActionBoth">
-                            <FiEdit2 className="icon edit" />
-                            <FiTrash2 className="icon delete" />
-                        </span>
-                                                    )}
-                                                </>
-                                            ) : (
-                                                <>
-                                                    {/* Start/Resume/Pause/Done buttons - For admin, manager and analyst */}
-                                                    {(user?.role === "admin" || user?.role === "manager" || user?.role === "analyst") && (
-                                                        <>
-                                                            {!task.analyst ? (
-                                                                <button
-                                                                    className="btn start"
-                                                                    onClick={() => handleStart(task._id, item._id)}
-                                                                >
-                                                                    Start
-                                                                </button>
-                                                            ) : (
-                                                                <>
-                                                                    {task.isPaused ? (
-                                                                        <button
-                                                                            className="btn start"
-                                                                            onClick={() => handleResume(task._id, item._id)}
-                                                                        >
-                                                                            Resume
-                                                                        </button>
-                                                                    ) : (
-                                                                        <button
-                                                                            className="btn stop"
-                                                                            onClick={() => handlePause(task._id, item._id)}
-                                                                        >
-                                                                            Pause
-                                                                        </button>
-                                                                    )}
-
-                                                                    <button
-                                                                        className="btn done"
-                                                                        onClick={() => handleComplete(task._id, item._id)}
-                                                                    >
-                                                                        Done
-                                                                    </button>
-                                                                </>
-                                                            )}
-                                                        </>
-                                                    )}
-
-                                                    {/* Edit and Delete buttons - Only for admin and manager */}
-                                                    {(user?.role === "admin" || user?.role === "manager") && (
-                                                        <span className="btnActionBoth">
-                            <FiEdit2 className="icon edit" />
-                            <FiTrash2 className="icon delete" />
-                        </span>
-                                                    )}
-                                                </>
-                                            )}
-                                        </>
-                                    )}
-                                </div>
-                            </div>
-                        ))}
-
-
-                        {/* Add new task */}
-                        <div className="add-row">
-                            {editMode && !isFinalizedLocal && (user?.role === "admin" || user?.role === "manager") && (
+                            <div className="task-form-buttons">
                                 <button
-                                    className="add-btn"
+                                    className="task-cancel-btn"
                                     onClick={() => {
-                                        setActiveChapterId(item._id);
-                                        setShowTaskForm(true);
+                                        setShowTaskForm(false);
+                                        setNewTaskName("");
                                     }}
                                 >
-                                    + Adauga punct nou in acest capitol
+                                    Anuleaza
                                 </button>
-                            )}
+
+                                <button
+                                    className="task-submit-btn"
+                                    onClick={() => handleCreateTask(activeChapterId)}
+                                >
+                                    Adauga
+                                </button>
+                            </div>
                         </div>
                     </div>
-                ))}
-
-            {/* BOTTOM TASK FORM */}
-            {showTaskForm && (user?.role === "admin" || user?.role === "manager") && (
-                <div className="task-form-container">
-                    <div className="task-form">
-                        <h3>Adauga Task Nou</h3>
-
-                        <input
-                            type="text"
-                            className="task-input"
-                            placeholder="Introdu numele taskului"
-                            value={newTaskName}
-                            onChange={(e) => setNewTaskName(e.target.value)}
-                        />
-
-                        <div className="task-form-buttons">
-                            <button
-                                className="task-cancel-btn"
-                                onClick={() => {
-                                    setShowTaskForm(false);
-                                    setNewTaskName("");
-                                }}
-                            >
-                                Anuleaza
-                            </button>
-
-                            <button
-                                className="task-submit-btn"
-                                onClick={() => handleCreateTask(activeChapterId)}
-                                disabled={isCreatingTask || !newTaskName.trim()}
-                            >
-                                {isCreatingTask ? "Se adaugă..." : "Adauga"}
-                            </button>
-
-                        </div>
-                    </div>
-                </div>
-            )}
+                )}
 
 
-            {showReviewPopup && (
-                <ReviewPopUp
-                    onClose={() => setShowReviewPopup(false)}
-                    onAddObservation={handleAddObservation}
-                    isLoading={isCreatingObservation || showPleaseWait}
-                />
-            )}
+                {showReviewPopup && (
+                    <ReviewPopUp onClose={() => setShowReviewPopup(false)} onAddObservation={handleAddObservation} />
+                )}
 
+                {showEditingPopup && (
+                    <EditingPopUp final={()=>handleFinalize("revision")} data={Observation?.data || []} onClose={() => setShowEditingPopup(false)} />
+                )}
 
-            {showEditingPopup && (
-                <EditingPopUp
-                    final={() => handleFinalize("revision")}
-                    data={Observation?.data || []}
-                    onClose={() => setShowEditingPopup(false)}
-                    isLoading={isFinalizing || showPleaseWait}
-                />
-            )}
+                {showPleaseWait  && (
+                    <PleaseWaitPopUp
+                        message="Vă rugăm să așteptați..."
+                        subText="Se procesează finalizarea task-ului."
+                    />
+                )}
 
-            {showPleaseWait  && (
-                <PleaseWaitPopUp
-                    message="Vă rugăm să așteptați..."
-                    subText="Se procesează finalizarea task-ului."
-                />
-            )}
+                {(user?.role === "admin" || user?.role === "manager") && (
+                    <ChapterCreation
+                        mode={editMode}
+                        observe={isFinalizedLocal}
+                        projectId={projectId}
+                        createChapter={createChapter}
+                    />
+                )}
 
-            {(user?.role === "admin" || user?.role === "manager") && (
-                <ChapterCreation
-                    mode={editMode}
-                    observe={isFinalizedLocal}
-                    projectId={projectId}
-                    createChapter={createChapter}
-                />
-            )}
-
+            </div>
         </div>
     );
 
