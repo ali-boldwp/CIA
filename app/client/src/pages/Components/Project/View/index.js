@@ -94,6 +94,7 @@ const ProjectView = ({ data }) => {
                 startDate: raw.updatedAt,
                 status: raw.status,
                 contractNumber: raw.contractNumber,
+                annexNumber:raw.annexNumber
             };
 
             setProject(mapped);
@@ -386,7 +387,7 @@ const ProjectView = ({ data }) => {
                         <div className={styles.clientItemQuarter}>
                             <span className={styles.label}>Preț</span>
                             <input
-                                type="text"
+                                type="number"
                                 className={styles.metaValueBox}
                                 value={project.price}
                                 onChange={handleFieldChange("price")}
