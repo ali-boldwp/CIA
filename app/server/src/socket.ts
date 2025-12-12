@@ -20,6 +20,12 @@ export const initSocket = (server: any) => {
             console.log(`User joined chat: ${chatId}`);
         });
 
+        socket.on("join_notification", (userId) => {
+            const room = `notification_${userId}`;
+            socket.join(room);
+            console.log(`User joined notification room: ${room}`);
+        });
+
         // SEND MESSAGE
         socket.on("send_message", (msg) => {
             io.to(msg.chatId).emit("new_message", msg);

@@ -40,7 +40,7 @@ export interface IProjectRequest extends Document {
     internalNotes?: string;
 
     files?: string[];
-    color? : string;
+
     surname?: string,
     humintId : Types.ObjectId;
     groupChatId: Types.ObjectId;
@@ -113,10 +113,6 @@ const projectRequestSchema = new Schema<IProjectRequest>(
 
         surname: {
           type: String,
-        },
-
-        color : {
-            type: String,
         },
 
         groupChatId: {
