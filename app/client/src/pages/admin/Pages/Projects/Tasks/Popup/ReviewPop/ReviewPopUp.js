@@ -11,6 +11,7 @@ const ReviewPopUp = ({
                          onReturnWithNotes,
                          onApprove,
                          onAddObservation,
+                         isLoading = false,
                      }) => {
     const [notes, setNotes] = useState(
         observationsText ||
@@ -69,9 +70,11 @@ const ReviewPopUp = ({
                         type="button"
                         className={styles.closeBtn}
                         onClick={onClose}
+                        disabled={isLoading}
                     >
                         ×
                     </button>
+
                 </div>
 
                 {/* Badges row */}
@@ -99,6 +102,7 @@ const ReviewPopUp = ({
                             type="button"
                             className={`${styles.actionBtn} ${styles.returnBtn}`}
                             onClick={handleReturnClick}
+                            disabled={isLoading}
                         >
                             Returnează cu observații
                         </button>
@@ -107,6 +111,7 @@ const ReviewPopUp = ({
                             type="button"
                             className={`${styles.actionBtn} ${styles.approveBtn}`}
                             onClick={handleApproveClick}
+                            disabled={isLoading}
                         >
                             Aprobă &amp; finalizează
                         </button>
@@ -123,6 +128,7 @@ const ReviewPopUp = ({
                             placeholder="Scrie observațiile aici..."
                             value={notes}
                             onChange={(e) => setNotes(e.target.value)}
+                            disabled={isLoading}
                         />
 
                         <div className={styles.footerRow}>
@@ -130,8 +136,9 @@ const ReviewPopUp = ({
                                 type="button"
                                 className={styles.addObservationBtn}
                                 onClick={handleAddObservationClick}
+                                disabled={isLoading || !notes.trim()}
                             >
-                                Adaugă observație
+                                {isLoading ? "Se salvează..." : "Adaugă observație"}
                             </button>
                         </div>
                     </div>
