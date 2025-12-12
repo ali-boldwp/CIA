@@ -71,7 +71,7 @@ export const requestProject = async (req: Request, res: Response, next: NextFunc
         // ✅ Send notifications
         await Promise.all(
             adminsAndManagers.map((admin) => {
-                const socketRoom = `notification_${admin._id}`;
+                const socketRoom = `notification_${user._id}`;
 
                 return createNotification({
                     user: admin._id.toString(),
