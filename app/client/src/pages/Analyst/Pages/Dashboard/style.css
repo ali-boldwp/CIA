@@ -219,8 +219,8 @@
 
 /* DOTS */
 .dot {
-    width: 10px;
-    height: 10px;
+    width: 20px;
+    height: 20px;
     border-radius: 999px;
 }
 
@@ -362,9 +362,8 @@
     font-size: 13px;
     table-layout: fixed; /* This ensures equal column width */
 }
-
 .humint-table th {
-    text-align: center;
+    text-align: start !important;
     color: #6b7280;
     font-weight: 600;
     padding: 12px 0;
@@ -375,7 +374,7 @@
 .humint-table td {
     padding: 10px 0;
     border-top: 1px solid #f3f4f6;
-    text-align: center;
+    text-align: start !important;
     font-weight: 700;
     width: 25%; /* Each column gets 25% width */
     vertical-align: middle; /* Center content vertically */
