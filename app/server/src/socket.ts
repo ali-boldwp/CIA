@@ -34,6 +34,7 @@ export const initSocket = (server: any) => {
         socket.on("disconnect", () => {
             console.log("🔴 User disconnected:", socket.id);
         });
+
     });
 
     return io;
@@ -42,4 +43,10 @@ export const initSocket = (server: any) => {
 export const getIO = () => {
     if (!io) throw new Error("Socket.io not initialized!");
     return io;
+};
+
+export const emitNotificationToUser = ( userId: string, payload: any) => {
+    const io = getIO();
+    const room = `notification_${userId}`;
+    io.to(room).emit("notification", payload);
 };

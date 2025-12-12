@@ -3,6 +3,7 @@ import {useEffect} from "react";
 import socket from "../socket";
 import { toast } from "react-toastify";
 import {useSelector} from "react-redux";
+import {Link} from "react-router-dom";
 
 const Layout = ({
         loading = true,
@@ -12,37 +13,43 @@ const Layout = ({
 
     const user = useSelector((state) => state.auth.user);
 
+    socket.emit( "notifications", user?._id );
+
     useEffect(() => {
 
         if (!user?._id) return;
 
-        const ID = `notification_${ user._id }`;
+        socket.emit( "join_notification", user?._id );
 
-        console.log( "ID", ID );
+        const handler = (payload) => {
+            toast(
+                <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+                    {payload?.title && <div style={{ fontWeight: 700 }}>{n.title}</div>}
+                    {payload?.text && <div style={{ opacity: 0.9 }}>{n.text}</div>}
 
-        socket.on( ID, async ( data ) => {
+                    {payload?.link && (
+                        <Link
+                            to={payload.link}
+                            style={{ textDecoration: "underline", fontWeight: 600 }}
+                        >
+                            {payload.linkText || "Open"}
+                        </Link>
+                    )}
 
-            toast ( "New Notification" );
-            
-            console.log( "Notification Data", data );
-
-            // auto-mark seen if user is viewing that chat
-            /*if (msg.chatId === chat) {
-                try {
-                    await markSeen(chat).unwrap();
-
-                    // update UI after marking seen
-                    msg.seenBy = [...(msg.seenBy || []), currentUserId];
-
-                } catch (e) {}
-            }*/
-
-        });
-
-
-        return () => {
-            socket.off( ID );
+                    {payload?.extra && <div style={{ fontSize: 12, opacity: 0.8 }}>{payload.extra}</div>}
+                </div>,
+                {
+                    autoClose: 6000,
+                    closeOnClick: false, // so clicking link doesn't instantly close
+                }
+            );
+            console.log("Notification payload:", payload);
         };
+
+        socket.on("notification", handler);
+
+
+        return () => socket.off("notification", handler);
 
     }, [ user?._id ]);
 

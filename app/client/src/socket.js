@@ -25,6 +25,7 @@ socket.on("disconnect", () => {
 const any = (eventName, ...args) => {
     console.log("🔔 any event:", eventName, args);
 };
+
 socket.onAny(any);
 
 export default socket;
