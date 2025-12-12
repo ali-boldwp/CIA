@@ -724,9 +724,7 @@ const ProjectTasks = ({
 
                         {/* Add new task */}
                         <div className="add-row">
-
-
-                            { editMode && !isFinalizedLocal &&(
+                            {editMode && !isFinalizedLocal && (user?.role === "admin" || user?.role === "manager") && (
                                 <button
                                     className="add-btn"
                                     onClick={() => {
@@ -737,12 +735,12 @@ const ProjectTasks = ({
                                     + Adauga punct nou in acest capitol
                                 </button>
                             )}
-
                         </div>
                     </div>
                 ))}
+
             {/* BOTTOM TASK FORM */}
-            {showTaskForm && (
+            {showTaskForm && (user?.role === "admin" || user?.role === "manager") && (
                 <div className="task-form-container">
                     <div className="task-form">
                         <h3>Adauga Task Nou</h3>
