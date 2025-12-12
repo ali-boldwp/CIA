@@ -51,9 +51,8 @@ const ProjectView = ({ data }) => {
 
     const { id } = useParams();
 
-    // 🧲 RTK Query Hooks
-    const [createProject] = useCreateProjectMutation();
-    const [updateProject] = useUpdateProjectMutation();
+
+
     const { data:allData }=useGetAnalystsQuery();
     const analyst=allData?.data || [];
     const [createProject, { isLoading: isCreating }] = useCreateProjectMutation();
