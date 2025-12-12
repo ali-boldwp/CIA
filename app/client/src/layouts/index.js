@@ -14,11 +14,17 @@ const Layout = ({
 
     useEffect(() => {
 
+        if (!user?._id) return;
+
         const ID = `notification_${ user._id }`;
 
-        socket.on( ID, async (msg) => {
+        console.log( "ID", ID );
+
+        socket.on( ID, async ( data ) => {
 
             toast ( "New Notification" );
+            
+            console.log( "Notification Data", data );
 
             // auto-mark seen if user is viewing that chat
             /*if (msg.chatId === chat) {
@@ -35,10 +41,10 @@ const Layout = ({
 
 
         return () => {
-            socket.off( `notification_${ user._id }` );
+            socket.off( ID );
         };
 
-    }, []);
+    }, [ user?._id ]);
 
     const {
         title = null,
