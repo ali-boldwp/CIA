@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useCreateHumintExpanseMutation } from "../../../../../../../services/humintExpanseApi";
+import { toast } from "react-toastify";
+
 
 import styles from "./AddHumintCostPopup.module.css";
 
@@ -44,17 +46,29 @@ const AddHumintCostPopup = ({ isOpen, onClose }) => {
     }, [formData.cost, formData.taxPercentage]);
 
     const handleSubmit = async () => {
+        const payload = {
+            ...formData,
+            taxPercent: Number(formData.taxPercentage),
+            taxIncludedCost: Number(formData.costWithTaxes),
+            total: Number(formData.total),
+        };
+
         try {
-            await createExpense({
-                ...formData,
-                taxPercent: Number(formData.taxPercentage),
-                taxIncludedCost: Number(formData.costWithTaxes),
-                total: Number(formData.total),
-            }).unwrap();
+            await toast.promise(
+                createExpense(payload).unwrap(),
+                {
+                    pending: "Se salvează cheltuiala HUMINT...",
+                    success: "Cheltuiala HUMINT salvată!",
+                    error: {
+                        render({ data }) {
+                            return data?.data?.message || "Failed to save expense";
+                        },
+                    },
+                },
+                { autoClose: 2000 }
+            );
 
-            // RESET FORM AFTER SUBMIT
             setFormData({
-
                 date: "",
                 description: "",
                 utility: "3",
@@ -66,12 +80,11 @@ const AddHumintCostPopup = ({ isOpen, onClose }) => {
             });
 
             onClose();
-
-        } catch (error) {
-            console.error(error);
-            alert("Failed to save expense");
+        } catch (err) {
+            console.error(err);
         }
     };
+
 
 
     if (!isOpen) return null;
@@ -189,8 +202,9 @@ const AddHumintCostPopup = ({ isOpen, onClose }) => {
                         onClick={handleSubmit}
                         disabled={isLoading}
                     >
-                        {isLoading ? "Saving..." : "Salvează cheltuiala"}
+                        {isLoading ? "Se salvează..." : "Salvează cheltuiala"}
                     </button>
+
                 </div>
             </div>
         </div>

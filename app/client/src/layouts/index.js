@@ -4,6 +4,8 @@ import socket from "../socket";
 import { toast } from "react-toastify";
 import {useSelector} from "react-redux";
 import {Link} from "react-router-dom";
+import store from "../store";
+import {notificationApi} from "../services/notificationApi";
 
 const Layout = ({
         loading = true,
@@ -43,7 +45,7 @@ const Layout = ({
                     closeOnClick: false, // so clicking link doesn't instantly close
                 }
             );
-            console.log("Notification payload:", payload);
+            store.dispatch( notificationApi.util.invalidateTags(["Notifications"]) );
         };
 
         socket.on("notification", handler);

@@ -1,4 +1,5 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
+
 import styles from "./AnalystList.module.css";
 import { toast } from "react-toastify";
 import { useForm } from "react-hook-form";
@@ -8,6 +9,8 @@ import { useUpdateUserMutation } from "../../services/userApi";
 
 export default function AddAnalystForm({ closeModal, editData }) {
     const isEdit = Boolean(editData);
+    const [submitting, setSubmitting] = useState(false);
+
 
     // Convert backend user → form-friendly values
     const convertEditData = (data) => {
@@ -61,35 +64,42 @@ export default function AddAnalystForm({ closeModal, editData }) {
     const onSubmit = async (data) => {
         const payload = {
             name: data.name,
-
-            // Analyst-specific fields (must match Mongoose schema)
-
             analystRole: data.analystRole,
-
             monthlySalary: Number(data.salary),
             hoursPerMonth: Number(data.hoursMonth),
             hoursPerDay: Number(data.hoursDay),
-
             bonus: Number(data.bonus),
             hiringDate: data.date,
             notes: data.notes,
-
             costPerHour: Number(costHour),
             costPerDay: Number(costDay),
         };
 
+        const actionPromise = isEdit
+            ? updateAnalyst({ id: editData._id, data: payload }).unwrap()
+            : createAnalyst(payload).unwrap();
+
+        setSubmitting(true);
+
         try {
-            if (isEdit) {
-                await updateAnalyst({ id: editData._id, data: payload }).unwrap();
-                toast("Analist actualizat!");
-            } else {
-                await createAnalyst(payload).unwrap();
-                toast("Analist creat!");
-            }
+            await toast.promise(
+                actionPromise,
+                {
+                    pending: isEdit ? "Se actualizează..." : "Se creează...",
+                    success: isEdit ? "Analist actualizat!" : "Analist creat!",
+                    error: {
+                        render({ data }) {
+                            return data?.data?.message || "Eroare la salvare!";
+                        },
+                    },
+                },
+                { autoClose: 3000 }
+            );
 
             closeModal();
-        } catch (err) {
-            toast.error(err?.data?.message || "Eroare la salvare!");
+        } finally {
+
+            setSubmitting(false);
         }
     };
 
@@ -169,12 +179,17 @@ export default function AddAnalystForm({ closeModal, editData }) {
             </div>
 
             <div className={styles.buttons}>
-                <button type="button" className={styles.resetBtn} onClick={() => reset()}>
+                <button
+                    type="button"
+                    className={styles.resetBtn}
+                    onClick={() => reset()}
+                    disabled={submitting}
+                >
                     Reset
                 </button>
 
-                <button className={styles.saveBtn} type="submit">
-                    {isEdit ? "Actualizează" : "Salvează"}
+                <button className={styles.saveBtn} type="submit" disabled={submitting}>
+                    {submitting ? "Se salvează..." : isEdit ? "Actualizează" : "Salvează"}
                 </button>
             </div>
         </form>

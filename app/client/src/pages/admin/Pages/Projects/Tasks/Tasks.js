@@ -408,49 +408,44 @@ const ProjectTasks = ({
                         <p className="status-text">
                             Status proiect: <strong>În derulare</strong>
                         </p>
-
                         <div className="buttons-row">
-                            {
-                                user?.role === "manager" ? (
-
-                                    // MANAGER BUTTON
-                                    <button
-                                        className="btn finalize"
-                                        onClick={
-                                            isFinalizedLocal
-                                                ? () => setShowReviewPopup(true)
-                                                : () => handleFinalize("revision")
-                                        }
-                                    >
-                                        {isFinalizedLocal ? "Revision" : "✔ Finalizează"}
-                                    </button>
-
-                                ) : (
-
-                                    // ANALYST BUTTONS
-                                    isObservation ? (
+                            {(user?.role === "admin" || user?.role === "manager" || user?.role === "analyst") && (
+                                <>
+                                    {user?.role === "admin" || user?.role === "manager" ? (
+                                        // ADMIN & MANAGER BUTTON
                                         <button
                                             className="btn finalize"
-                                            onClick={() => setShowEditingPopup(true)}  // Or show observation popup
+                                            onClick={
+                                                isFinalizedLocal
+                                                    ? () => setShowReviewPopup(true)
+                                                    : () => handleFinalize("revision")
+                                            }
                                         >
-                                            👁 View Observation
+                                            {isFinalizedLocal ? "Revision" : "✔ Finalizează"}
                                         </button>
                                     ) : (
-                                        <button
-                                            className="btn finalize"
-                                            onClick={() => handleFinalize("revision")}
-                                            disabled={isFinalizedLocal}
-                                        >
-                                            {isFinalizedLocal ? "⏳ Așteptați" : "✔ Finalizează"}
-                                        </button>
-                                    )
-
-                                )
-                            }
-
-
-
-
+                                        // ANALYST BUTTON
+                                        <>
+                                            {isObservation ? (
+                                                <button
+                                                    className="btn finalize"
+                                                    onClick={() => setShowEditingPopup(true)}
+                                                >
+                                                    👁 View Observation
+                                                </button>
+                                            ) : (
+                                                <button
+                                                    className="btn finalize"
+                                                    onClick={() => handleFinalize("revision")}
+                                                    disabled={isFinalizedLocal}
+                                                >
+                                                    {isFinalizedLocal ? "⏳ Așteptați" : "✔ Finalizează"}
+                                                </button>
+                                            )}
+                                        </>
+                                    )}
+                                </>
+                            )}
                         </div>
                     </div>
 
@@ -736,9 +731,7 @@ const ProjectTasks = ({
 
                         {/* Add new task */}
                         <div className="add-row">
-
-
-                            { editMode && !isFinalizedLocal &&(
+                            {editMode && !isFinalizedLocal && (user?.role === "admin" || user?.role === "manager") && (
                                 <button
                                     className="add-btn"
                                     onClick={() => {
@@ -749,12 +742,12 @@ const ProjectTasks = ({
                                     + Adauga punct nou in acest capitol
                                 </button>
                             )}
-
                         </div>
                     </div>
                 ))}
+
             {/* BOTTOM TASK FORM */}
-            {showTaskForm && (
+            {showTaskForm && (user?.role === "admin" || user?.role === "manager") && (
                 <div className="task-form-container">
                     <div className="task-form">
                         <h3>Adauga Task Nou</h3>
@@ -805,7 +798,14 @@ const ProjectTasks = ({
                 />
             )}
 
-            <ChapterCreation mode={editMode} observe={isFinalizedLocal} projectId={projectId} createChapter={createChapter} />
+            {(user?.role === "admin" || user?.role === "manager") && (
+                <ChapterCreation
+                    mode={editMode}
+                    observe={isFinalizedLocal}
+                    projectId={projectId}
+                    createChapter={createChapter}
+                />
+            )}
 
         </div>
     );

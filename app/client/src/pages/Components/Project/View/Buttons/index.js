@@ -7,7 +7,8 @@ const Buttons = ({
                                  onSave,
                                  onGoToTask,
                                  onViewCosts,
-                                 id
+                                 id,
+                     isLoading = false,
                              }) => {
     return (
         <div className={styles.wrapper}>
@@ -16,8 +17,9 @@ const Buttons = ({
                     type="button"
                     className={styles.saveBtn}
                     onClick={onSave}
+                    disabled={isLoading}
                 >
-                    Salvează modificările
+                    {isLoading ? "Se salvează..." : "Salvează modificările"}
                 </button>
 
                 <Link  to={`/project/view/${id}/tasks`}

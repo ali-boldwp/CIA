@@ -1,6 +1,8 @@
 import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import styles from "./AddEmployeeModal.module.css";
+import { toast } from "react-toastify";
+
 import { useCreateUserMutation, useUpdateUserMutation } from "../../../../../services/userApi";
 
 const sectionNames = {
@@ -13,8 +15,10 @@ const sectionNames = {
 };
 
 const AddEmployeeModal = ({ isOpen, sectionKey, editData, onClose }) => {
-    const [createUser, { isLoading }] = useCreateUserMutation();
-    const [updateUser] = useUpdateUserMutation();
+    const [createUser, { isLoading: isCreating }] = useCreateUserMutation();
+    const [updateUser, { isLoading: isUpdating }] = useUpdateUserMutation();
+
+    const submitting = isCreating || isUpdating;
 
     const sectionLabel = sectionNames[sectionKey] || "Angajat";
 
@@ -90,38 +94,42 @@ const AddEmployeeModal = ({ isOpen, sectionKey, editData, onClose }) => {
         const payload = {
             name: data.name,
             role: data.role.toLowerCase(),
-
-            // For analysts
             analystRole: data.role === "analyst" ? data.analystRole : undefined,
-
             monthlySalary: Number(data.salary),
             hoursPerMonth: Number(data.hoursMonth),
             hoursPerDay: Number(data.hoursDay),
             bonus: Number(data.bonus),
             hiringDate: data.date,
-
             isLogin: data.remember,
             email: data.remember ? data.rememberUser : undefined,
             password: data.remember ? data.rememberPassword : undefined,
-
-            // 🔥 Avatar color – only for Investigations + logged in
             avatarDotColor:
-                sectionKey === "investigatii" && data.remember
-                    ? data.avatarDotColor
-                    : undefined,
+                sectionKey === "investigatii" && data.remember ? data.avatarDotColor : undefined,
         };
 
+        const actionPromise = editData
+            ? updateUser({ id: editData._id, data: payload }).unwrap()
+            : createUser(payload).unwrap();
+
         try {
-            if (editData) {
-                await updateUser({ id: editData._id, data: payload }).unwrap();
-            } else {
-                await createUser(payload).unwrap();
-            }
+            await toast.promise(
+                actionPromise,
+                {
+                    pending: editData ? "Se actualizează angajatul..." : "Se salvează angajatul...",
+                    success: editData ? "Angajat actualizat!" : "Angajat salvat!",
+                    error: {
+                        render({ data }) {
+                            return data?.data?.message || "Error saving user";
+                        },
+                    },
+                },
+                { autoClose: 3000 }
+            );
 
             onClose();
             reset();
         } catch (err) {
-            alert(err?.data?.message || "Error saving user");
+           console.log(err);
         }
     };
 
@@ -452,12 +460,12 @@ const AddEmployeeModal = ({ isOpen, sectionKey, editData, onClose }) => {
                             type="button"
                             className={styles.resetBtn}
                             onClick={() => reset()}
+                            disabled={submitting}
                         >
                             Resetează
                         </button>
-
-                        <button className={styles.saveBtn}>
-                            {editData ? "Actualizează" : "Salvează"}
+                        <button className={styles.saveBtn} type="submit" disabled={submitting}>
+                            {submitting ? "Se salvează..." : editData ? "Actualizează" : "Salvează"}
                         </button>
                     </div>
                 </form>

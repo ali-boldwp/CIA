@@ -2,12 +2,12 @@ import "./style.css";
 import { useState, useMemo } from "react";
 import { Link } from "react-router-dom";
 import ProjectRow from "./ProjectRow";
-import { useGetAllRequestedProjectsQuery } from "../../../services/projectApi";
+import { useGetProjectRequestsQuery} from "../../../services/projectApi";
 
 const ProjectRequestList = () => {
-    const { data, isLoading } = useGetAllRequestedProjectsQuery();
-    const projectRequest = data?.data || [];
-
+    const { data, isLoading } = useGetProjectRequestsQuery();
+    const Request = data?.data || [];
+    const projectRequest = Request.filter((p)=>p.status === "requested")
     const [search, setSearch] = useState("");
     const [sortBy, setSortBy] = useState("deadline");
     const [priorityFilter, setPriorityFilter] = useState("all");

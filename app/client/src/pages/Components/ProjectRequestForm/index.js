@@ -292,8 +292,20 @@ const Index = () => {
         formData.append("status", "requested");
 
         try {
-            const response = await requestProject(formData).unwrap();
-            toast("Proiect creat cu succes!");
+            const response = await toast.promise(
+                requestProject(formData).unwrap(),
+                {
+                    pending: "Se trimite cererea...",
+                    success: "Proiect creat cu succes!",
+                    error: {
+                        render({ data }) {
+                            return data?.data?.message || "Eroare la crearea proiectului";
+                        },
+                    },
+                },
+                { autoClose: 3000 }
+            );
+
             console.log(response);
 
             // Clear form after successful submission
@@ -310,7 +322,10 @@ const Index = () => {
             setAdditionalInfo("");
             setEntityType("");
             setDeadline("");
-            setAssignedAnalysts("");
+
+            //  BUG FIX: this should be [] not ""
+            setAssignedAnalysts([]);
+
             setCategory("");
             setProjectPrice("");
             setSurname("");
@@ -323,10 +338,9 @@ const Index = () => {
             setInternalNotes("");
             setFiles([]);
             setErrors({});
-
         } catch (err) {
             console.error(err);
-            toast.error(err?.data?.message || "Eroare la crearea proiectului");
+            // toast.promise already handled error toast
         }
     };
     const removeFile = (index) => {
@@ -1020,16 +1034,14 @@ const Index = () => {
                     </div>
                 </div>
 
+
                 {/* BUTTONS */}
                 <div className={styles.buttonsCard}>
                     <div className={styles.actionsRow}>
-                        <button
-                            className={`${styles.actionBtn} ${styles.actionAdd}`}
-                            onClick={handleSubmit}
-                            disabled={isLoading}
-                        >
+                        <button onClick={handleSubmit} disabled={isLoading}  className={`${styles.actionBtn} ${styles.actionAdd}`}>
                             {isLoading ? "Se trimite..." : "Adaugă"}
                         </button>
+
                         <button
                             className={`${styles.actionBtn} ${styles.actionDraft}`}
                         >

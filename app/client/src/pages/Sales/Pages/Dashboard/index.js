@@ -14,6 +14,9 @@ const Dashboard = () => {
     return (
         <Layout
             loading={ isLoading || analystsLoading }
+            header={{
+                content: <Header />
+            }}
             content={ <View approve={ approve } analystsData={ analystsData } requested={requested} /> }
         />
     )
