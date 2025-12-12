@@ -11,17 +11,17 @@
     gap: 12px;
     text-decoration: none; /* remove underline for Link */
     color: #000;
-    border-radius: 18px;
+    border-radius: 4px;
     padding: 16px 20px;
     box-shadow: 0 8px 18px rgba(15, 23, 42, 0.06);
     }
 
 .message-label {
-    font-size: 14px;
+    font-weight: 700;
+    font-size: 18px;
     display: flex;
     align-items: center;
     gap: 6px;
-    font-weight: 500;
     color: #333;
     font-style: italic;
 }
@@ -88,7 +88,7 @@
 
 .summary-card {
     background: #ffffff;
-    border-radius: 18px;
+    border-radius: 4px;
     padding: 16px 20px;
     box-shadow: 0 8px 18px rgba(15, 23, 42, 0.06);
     display: flex;
@@ -148,7 +148,7 @@
 
 .project-card {
     background: #ffffff;
-    border-radius: 18px;
+    border-radius: 4px;
     padding: 18px 22px 18px;
     box-shadow: 0 8px 18px rgba(15, 23, 42, 0.06);
 }

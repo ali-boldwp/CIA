@@ -13,45 +13,43 @@ const ProjectCost = ({ data }) => {
     const [showEmployeePopup, setShowEmployeePopup] = useState(false);
     const [showHumintPopup, setShowHumintPopup] = useState(false);
 
-    // ✅ Extract projectId from data prop
+    // State for employee total cost
+    const [employeeTotalCost, setEmployeeTotalCost] = useState(0);
+
+    // Extract projectId from data prop
     const projectId = data?.data?._id || data?._id || "693c081dc1bd09040f202cda";
 
-    console.log("✅ Cost.js - Project ID:", projectId);
-    console.log("✅ Data structure:", {
-        hasData: !!data,
-        hasDataData: !!data?.data,
-        projectIdFromData: data?.data?._id,
-        projectIdFromRoot: data?._id
-    });
+    console.log("Cost.js - Project ID:", projectId);
+    console.log("Employee Total Cost:", employeeTotalCost);
 
     // Function to handle saving employee cost
     const handleSaveEmployeeCost = (data) => {
         console.log("Employee cost data saved:", data);
-        // Add your save logic here
     };
 
     // Function to handle saving HUMINT cost
     const handleSaveHumintCost = (data) => {
         console.log("HUMINT cost data saved:", data);
-        // Add your save logic here
     };
 
     // Function to handle save all changes
     const handleSaveAll = () => {
         console.log("Saving all changes...");
-        // Add your save all logic here
     };
 
     // Function to handle back to project page
     const handleBackToProject = () => {
         console.log("Navigating back to project page...");
-        // Add navigation logic here
+    };
+
+    // Function to update employee total cost
+    const handleEmployeeTotalCostUpdate = (cost) => {
+        setEmployeeTotalCost(cost);
     };
 
     return (
         <div className="page-wrapper">
             <div className="page-container">
-                {/* Project Info Header */}
                 <div style={{
                     backgroundColor: '#f8f9fa',
                     padding: '10px 15px',
@@ -75,26 +73,26 @@ const ProjectCost = ({ data }) => {
                     </div>
                 </div>
 
-                {/* TOP ROW: PROJECT DETAILS + FINANCIAL SUMMARY */}
-                <SummarySection projectId={projectId} projectData={data?.data} />
+                <SummarySection
+                    projectId={projectId}
+                    projectData={data?.data}
+                    employeeTotalCost={employeeTotalCost}
+                />
 
-                {/* FIXED COSTS + OSINT COSTS BAR */}
                 <CostBar projectId={projectId} />
 
-                {/* ✅ EMPLOYEE COSTS TABLE - PASS PROJECT ID */}
                 <EmployeeCostTable
                     projectId={projectId}
                     onAddCost={() => setShowEmployeePopup(true)}
                     projectData={data?.data}
+                    onTotalCostUpdate={handleEmployeeTotalCostUpdate}
                 />
 
-                {/* HUMINT COSTS TABLE */}
                 <HumintCostTable
                     projectId={projectId}
                     onAddCost={() => setShowHumintPopup(true)}
                 />
 
-                {/* PAGE FOOTER BUTTONS */}
                 <ButtonSection
                     onSave={handleSaveAll}
                     onBack={handleBackToProject}
@@ -106,7 +104,6 @@ const ProjectCost = ({ data }) => {
                 />
             </div>
 
-            {/* EMPLOYEE COST POPUP */}
             <AddEmployeeCostPopup
                 isOpen={showEmployeePopup}
                 onClose={() => setShowEmployeePopup(false)}
@@ -114,7 +111,6 @@ const ProjectCost = ({ data }) => {
                 projectId={projectId}
             />
 
-            {/* HUMINT COST POPUP */}
             <AddHumintCostPopup
                 isOpen={showHumintPopup}
                 onClose={() => setShowHumintPopup(false)}

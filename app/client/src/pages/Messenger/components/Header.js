@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
 import "../MessengerPage.css";
 import socket from "../../../socket";
-import {useGetMessagesQuery, useSendMessageMutation} from "../../../services/messageApi";
+import { useGetMessagesQuery, useSendMessageMutation } from "../../../services/messageApi";
 import {useGetAllUsersQuery} from "../../../services/userApi";
 import {
     FiDownload,
@@ -49,6 +49,7 @@ function Header() {
 }
 
 const MessengerPage = ({chatID}) => {
+
     const {id:ChatID}=useParams();
     const { user, loading } = useSelector((state) => state.auth);
 
@@ -73,21 +74,7 @@ const MessengerPage = ({chatID}) => {
 
     const [searchTerm, setSearchTerm] = useState("");
     const [messages, setMessages] = useState([]);
-    const [oldmessage, setOldMessage] = useState([
-        {
-            "_id": "6933f31daa597c5c197497e1",
-            "chatId": "6930b3f85caf3f703dd36c53",
-            "sender": {
-                "_id": "692aed2e0b6a92fd1ddbd157",
-                "name": "Zubair",
-                "role": "manager"
-            },
-            "text": "holla",
-            "createdAt": "2025-12-06T09:10:53.386Z",
-            "updatedAt": "2025-12-06T09:10:53.386Z",
-            "__v": 0
-        }
-    ]);
+    const [oldmessage, setOldMessage] = useState([]);
 
     const [text, setText] = useState("");
     const [sendMessage] = useSendMessageMutation();

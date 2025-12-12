@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import styles from './EmployeeCostTable.module.css';
 import { useGetProjectAnalystExpanseQuery } from '../../../../../../../services/humintExpanseApi';
 
-const EmployeeCostTable = ({ onAddCost, projectId, projectData }) => {
+const EmployeeCostTable = ({ onAddCost, projectId, projectData, onTotalCostUpdate }) => {
     // Get projectId from props
     console.log("EmployeeCostTable - Props received:", {
         projectId,
@@ -145,6 +145,16 @@ const EmployeeCostTable = ({ onAddCost, projectId, projectData }) => {
         return total.toFixed(2);
     };
 
+    // Calculate total cost and notify parent
+    const totalEmployeesCost = calculateTotalEmployeesCost();
+
+    // Notify parent component about total cost update
+    useEffect(() => {
+        if (onTotalCostUpdate && totalEmployeesCost) {
+            onTotalCostUpdate(totalEmployeesCost);
+        }
+    }, [totalEmployeesCost, onTotalCostUpdate]);
+
     // If no projectId
     if (!effectiveProjectId) {
         return (
@@ -191,20 +201,9 @@ const EmployeeCostTable = ({ onAddCost, projectId, projectData }) => {
         );
     }
 
-    const totalEmployeesCost = calculateTotalEmployeesCost();
-
     return (
         <div className={styles.formCard}>
             <h2 className={styles.formTitle}>Cheltuieli cu angajații (timp & cost)</h2>
-
-            {/* Simple debug info */}
-            {/*{process.env.NODE_ENV === 'development' && (*/}
-            {/*    <div className={styles.debugInfo}>*/}
-            {/*        Project: {effectiveProjectId} |*/}
-            {/*        Analysts: {analysts.length} |*/}
-            {/*        Expanses: {expanses.length}*/}
-            {/*    </div>*/}
-            {/*)}*/}
 
             <table className={styles.costTable}>
                 <thead>
@@ -317,14 +316,11 @@ const EmployeeCostTable = ({ onAddCost, projectId, projectData }) => {
                 </tbody>
             </table>
 
-            {/* TOTAL EMPLOYEES COST SECTION */}
             <div className={styles.totalSection}>
                 <div className={styles.totalLabel}>Total angajați:</div>
                 <div className={styles.totalValue}>{totalEmployeesCost} EUR</div>
-
             </div>
 
-            {/* ADD EMPLOYEE COST BUTTON */}
             <button className={styles.btnGreen} onClick={onAddCost}>
                 Adaugă cheltuiala
             </button>

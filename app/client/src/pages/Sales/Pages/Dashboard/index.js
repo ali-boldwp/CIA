@@ -3,6 +3,8 @@ import View from "./View";
 import { useGetProjectsQuery,useGetAllRequestedProjectsQuery } from "../../../../services/projectApi";
 import { useGetAnalystsQuery } from "../../../../services/analystApi";
 
+import Header from "../../Components/Header"
+
 const Dashboard = () => {
 
     const { data: approve, isLoading } = useGetProjectsQuery();
