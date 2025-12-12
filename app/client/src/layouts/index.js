@@ -43,7 +43,7 @@ const Layout = ({
                 display: "flex",
                 flexDirection: "column",
                 flexGrow: 1,
-                padding: '20px',
+                padding: '24px',
                 paddingTop: 0,
                 gap: "24px"
             }}>

@@ -2,8 +2,8 @@
 
 .formCard {
     background: #ffffff;
-    border-radius: 18px;
-    padding: 24px 28px;
+    border-radius: 4px;
+    padding: 24px;
     margin-bottom: 24px;
     width: 100%;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
@@ -21,9 +21,9 @@
     width: 100%;
     border-collapse: collapse;
     font-size: 14px;
-    margin-top: 6px;
+    margin-top: 12px;
     background: #ffffff;
-    border-radius: 12px;
+    border-radius: 4px;
     overflow: hidden;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
 }
@@ -104,7 +104,7 @@
 /* blank strip under table */
 .tableEmptyStrip {
     margin-top: 10px;
-    border-radius: 12px;
+    border-radius: 4px;
     background: #f9fafb;
     border: 1px solid #e5e7eb;
     height: 60px;
@@ -129,7 +129,7 @@
     background: #22C55E;
     color: #ffffff;
     padding: 14px 20px;
-    border-radius: 8px;
+    border-radius: 4px;
     border: none;
     font-size: 14px;
     font-weight: 700;

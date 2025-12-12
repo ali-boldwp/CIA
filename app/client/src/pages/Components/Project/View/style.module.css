@@ -23,9 +23,9 @@
 }
 
 .sectionTitle {
-    font-size: 15px;
+    font-size: 1.3rem;
     font-weight: 700;
-    color: #111827;
+    color: #0F172A;
     margin-bottom: 18px;
 }
 
@@ -55,6 +55,7 @@
     font-size: 14px;
     font-weight: 700;
     color: #111827;
+    margin-bottom: 5px;
 }
 
 /* wrapper for pill field */
@@ -67,7 +68,7 @@
 .nameValueBox {
     width: 100%;
     min-height: 52px;
-    border-radius: 14px;
+    border-radius: 4px;
     background: #f5f7ff;
     border: 1px solid #e0e7ff;
     padding: 12px 20px;
@@ -146,7 +147,7 @@
 .metaValueBox {
     width: 100%;
     min-height: 42px;
-    border-radius: 14px;
+    border-radius: 4px;
     background: #f5f7ff;
     border: 1px solid #e0e7ff;
     padding: 10px 16px;
@@ -295,7 +296,7 @@
     min-height: 120px;
     background: #f5f7ff;
     border: 1px solid #e0e7ff;
-    border-radius: 14px;
+    border-radius: 4px;
     padding: 16px 18px;
     font-size: 14px;
     color: #111827;

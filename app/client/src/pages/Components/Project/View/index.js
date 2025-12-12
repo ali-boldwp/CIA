@@ -165,31 +165,16 @@ const ProjectView = ({ data }) => {
                     <div className={styles.detailTop}>
                         <div className={styles.nameBlock}>
                             <span className={styles.label}>Denumire proiect</span>
-                            <div className={styles.valueWrapper}>
-                                <input
-                                    type="text"
-                                    className={styles.nameValueBox}
-                                    value={project.name}
-                                    onChange={handleFieldChange("name")}
-                                />
-                            </div>
+                            <input
+                                type="text"
+                                className={styles.nameValueBox}
+                                value={project.name}
+                                onChange={handleFieldChange("name")}
+                            />
                         </div>
 
                         <div className={styles.statusBlock}>
-                            <span className={`${styles.statusPill} ${styles.statusCreated}`}>
-                                <span className={styles.statusBold}>Creat la:</span>{" "}
-                                {project.createdAt}
-                            </span>
 
-                            <span className={`${styles.statusPill} ${styles.statusStart}`}>
-                                <span className={styles.statusBold}>Start proiect:</span>{" "}
-                                {project.startDate}
-                            </span>
-
-                            <span className={`${styles.statusPill} ${styles.statusState}`}>
-                                <span className={styles.statusBold}>Status:</span>{" "}
-                                {project.status}
-                            </span>
                         </div>
                     </div>
 
