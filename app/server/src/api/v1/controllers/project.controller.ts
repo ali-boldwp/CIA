@@ -62,6 +62,9 @@ export const requestProject = async (req: Request, res: Response, next: NextFunc
 
         const projectRequest = await Requested.create(payload);
 
+        // const user = {}
+        // const SocketID = `notification_${user?._id}`;
+
         return res.json(ok(projectRequest));
 
     } catch (err) {

@@ -46,7 +46,6 @@ export async function countProjects(filter = {}) {
     return total;
 }
 
-
 export const getProjectFinancialSummary = async (projectId: string) => {
     const project = await projectRequest.findById(projectId).select(
         "+projectPrice +fixPrice +tesaPrice +osintPrice +tehnicaPrice +otherPrice currency"

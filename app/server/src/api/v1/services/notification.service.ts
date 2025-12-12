@@ -4,8 +4,18 @@ export const createNotification = async (data: {
     user: string;
     text: string;
     type?: string;
+    socket?: string;
 }) => {
-    return await Notification.create(data);
+
+    const notification = await Notification.create(data);
+
+    if ( data?.socket ) {
+
+        // code...
+
+    }
+
+    return notification;
 };
 
 export const getUserNotifications = async (userId: string, page = 1, limit = 20) => {

@@ -53,8 +53,10 @@ router.put("/:id/editable", auth, createdProjectController.updateEditableStatus)
 
 router.put("/:id/status", auth, createdProjectController.updateProjectStatus);
 
-
-
 router.get("/analysts/progress", auth, createdProjectController.getAnalystsProgress);
+
+router.put("/:id/price/:type",auth,createdProjectController.updateProjectPrices
+);
+
 
 export default router;

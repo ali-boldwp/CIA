@@ -29,6 +29,11 @@ const NotificationSchema = new Schema<INotification>(
             default: "info",
         },
 
+        data: {
+            type: Object,
+            required: true,
+        },
+
         seen: {
             type: Boolean,
             default: false,
