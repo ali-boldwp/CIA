@@ -242,8 +242,9 @@
 
 /* Layout */
 .task-container {
-    padding: 25px;
+    padding: 24px;
     font-family: Arial, sans-serif;
+    border-radius: 4px;
 }
 
 /* Header */
@@ -885,7 +886,7 @@
 .time-box {
     background: #f8fafc;
     padding: 18px;
-    border-radius: 12px;
+    border-radius: 4px;
     width: 100%;
     border: 1px solid #e5e7eb;
     box-shadow: 0 2px 5px rgba(0,0,0,0.06);
@@ -1100,7 +1101,6 @@
 }
 .chapter-wrapper {
     width: 100%;
-    margin-top: 40px;
     font-family: "Inter", sans-serif;
 }
 
@@ -1114,13 +1114,13 @@
     font-size: 11px;
     font-weight: 600;
     color: #8f8f8f;
+    margin-bottom: 5px;
 }
 
 .chapter-name {
     flex: 1;
     font-size: 18px;
     font-weight: 600;
-    margin-left: 15px;
 }
 
 .edit-title-btn {
