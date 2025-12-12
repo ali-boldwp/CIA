@@ -7,6 +7,47 @@ import "./style.css";
 
 const Dashboard = () => {
 
+    const statusBackendToUi = {
+        approved: "in lucru",
+        requested: "Solicitat",
+        draft: "Draft",
+        completed: "Finalizat",
+        cancelled: "Anulat",
+        revision: "Revizie",
+        observation: "Observație",
+    };
+    const statusColorMap = {
+        Approved: "green",
+        Requested: "blue",
+        Draft: "gray",
+        Completed: "purple",
+        Cancelled: "red",
+        Revision: "orange",
+        Observation: "yellow",
+    };
+    const normalizeStatus = (status) => {
+        if (!status) return "";
+        return status.toLowerCase();
+    };
+
+    const capitalizeStatus = (status) => {
+        if (!status) return "";
+        return status.charAt(0).toUpperCase() + status.slice(1).toLowerCase();
+    };
+
+
+    const resolveStatusLabel = (status) => {
+        if (!status) return "—";
+        return statusBackendToUi[normalizeStatus(status)] || status;
+    };
+
+
+    const resolveStatusDotColor = (status) => {
+        return statusColorMap[capitalizeStatus(status)] || "gray";
+    };
+
+
+
     const { data:approve, isLoading }=useGetProjectsQuery();
     const approvedProject=approve?.data || [];
     const { data: analystsData } = useGetAnalystsQuery();
@@ -112,8 +153,9 @@ const Dashboard = () => {
                         </span>
 
                                 <div className="status-dot-wrapper">
-                                    <span className="status-sales-text">{p.status}</span>
-                                    <span className="dot green" />
+                                    <span className="status-sales-text">{resolveStatusLabel(p.status)}</span>
+                                    <span className={`dot ${resolveStatusDotColor(p.status)}`} />
+
                                 </div>
                             </div>
                         </div>
