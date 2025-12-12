@@ -37,8 +37,10 @@
 }
 
 .notif-item {
-    display: flex;
-    align-items: flex-start;
+    display: flex !important;
+    align-items: flex-start !important;
+    justify-content: start;
+    cursor: pointer;
     gap: 10px;
     padding: 10px 5px;
     border-bottom: 1px solid #f0f0f5;
