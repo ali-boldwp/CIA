@@ -1,6 +1,6 @@
 .calendar-page {
     display: flex;
-    gap: 30px;
+    gap: 12px;
     margin-bottom: 10px;
 }
 .calH3{
@@ -10,7 +10,7 @@
 .calendar-card, .deadline-card {
     background: white;
     padding: 20px;
-    border-radius: 12px;
+    border-radius: 4px;
     width: 55%;
     box-shadow: 0 2px 12px rgba(0,0,0,0.05);
 }

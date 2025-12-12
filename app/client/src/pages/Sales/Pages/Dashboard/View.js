@@ -128,7 +128,7 @@ const Dashboard = ({ approve, analystsData, requested }) => {
                 </Link>
             </div>
 
-            <div>
+            <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
                 <h2 className="sales-section-title">Proiecte solicitate</h2>
 
                 <div className="projects-row">
@@ -175,7 +175,7 @@ const Dashboard = ({ approve, analystsData, requested }) => {
 
             {/* PROJECTS */}
 
-            <div>
+            <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
             <h2 className="sales-section-title">Proiectele</h2>
 
             <div className="projects-row">
