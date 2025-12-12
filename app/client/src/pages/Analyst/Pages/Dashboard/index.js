@@ -1,8 +1,10 @@
 import {useGetAnalystsQuery} from "../../../../services/userApi";
 import {useGetProjectsQuery} from "../../../../services/projectApi";
 import React, {useMemo, useState} from "react";
+import './style.css'
 import Header from "../../../../layouts/Component/Header";
 import {Link} from "react-router-dom";
+import Calender from "../../Components/Calender";
 
 const Dashboard = () => {
 
@@ -129,6 +131,15 @@ const Dashboard = () => {
                             <div>Echipa: {resolveAnalystNames(project.assignedAnalysts)}</div>
                             <div>Progress (my tasks): 65%</div>
                         </div>
+                        <div className="progress-block">
+                            <div className="progress-header">
+                                <span>Progress: 0%</span>
+                            </div>
+                            <div className="progress-bar">
+                                <div className="progress-fill blue" style={{ width: "0%" }} />
+                            </div>
+                            <div className="progress-footer">0 taskuri efectuate</div>
+                        </div>
 
                         <div className="project-actions">
                             <Link to={`/project/view/${project._id}`} className="pill-analyst blue">Deschide</Link>
@@ -195,43 +206,8 @@ const Dashboard = () => {
                 </div>
             </div>
 
+            <Calender/>
 
-            {/* CALENDAR DEADLINES */}
-            <h2 className="analyst-title no-margin-analyst">Calendar Deadlines</h2>
-
-            <div className="calendar-card">
-                <ul className="calendar-list">
-                    {paginatedCalendar.map((p) => (
-                        <li key={p._id}>
-                            <span>
-                                {statusColors[p.status] === "green" ? "🟢"
-                                    : statusColors[p.status] === "orange" ? "🟠"
-                                        : statusColors[p.status] === "blue" ? "🔵"
-                                            : "⚪"}
-                                {" "}
-                                {p.deadline ? new Date(p.deadline).toLocaleDateString("ro-RO") : "—"}
-                                {" — "}
-                                {p.projectName}
-                            </span>
-                        </li>
-                    ))}
-                </ul>
-
-                {/* CALENDAR PAGINATION */}
-                <div className="pagination" style={{ marginTop: "15px" }}>
-                    <button disabled={calPage === 1} onClick={() => setCalPage(prev => prev - 1)}>
-                        ← Precedent
-                    </button>
-
-                    <span style={{ margin: "0 10px" }}>
-                        Pagina <strong>{calPage}</strong> din <strong>{calTotalPages}</strong>
-                    </span>
-
-                    <button disabled={calPage === calTotalPages} onClick={() => setCalPage(prev => prev + 1)}>
-                        Următor →
-                    </button>
-                </div>
-            </div>
         </>
     );
 

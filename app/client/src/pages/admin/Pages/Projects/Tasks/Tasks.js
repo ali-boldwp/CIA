@@ -560,17 +560,12 @@ const ProjectTasks = ({
                 <div className="actions-box">
 
                     <button
-                        className="project-btn save"
-                        onClick={() => setShowEditingPopup(true)}
-                    >
+                        className="project-btn save">
                         Salveaza progres
                     </button>
 
 
-                    <button
-                        className="project-btn"
-                        onClick={() => setShowReviewPopup(true)}
-                    >
+                    <button className="project-btn">
                         Cauta in Notes App
                     </button>
 
@@ -664,60 +659,77 @@ const ProjectTasks = ({
                                 </div>
 
                                 {/* Actions */}
+                                {/* Actions */}
                                 <div className="col col-actions">
-                                    { isFinalizedLocal ? (
+                                    {isFinalizedLocal ? (
                                         <span className="disabled-text"></span>
-                                    ): !editMode  ? (
+                                    ) : !editMode ? (
                                         <span className="disabled-text"></span>
                                     ) : (
                                         <>
-                                            {task.completed  ? (
-                                                <span className="btnActionBoth">
-                    <FiEdit2 className="icon edit" />
-                    <FiTrash2 className="icon delete" />
-                </span>
+                                            {task.completed ? (
+                                                <>
+                                                    {/* Edit and Delete buttons - Only for admin and manager */}
+                                                    {(user?.role === "admin" || user?.role === "manager") && (
+                                                        <span className="btnActionBoth">
+                            <FiEdit2 className="icon edit" />
+                            <FiTrash2 className="icon delete" />
+                        </span>
+                                                    )}
+                                                </>
                                             ) : (
                                                 <>
-                                                    {!task.analyst ? (
-                                                        <button className="btn start"
-                                                                onClick={() => handleStart(task._id, item._id)}>
-                                                            Start
-                                                        </button>
-                                                    ) : (
+                                                    {/* Start/Resume/Pause/Done buttons - For admin, manager and analyst */}
+                                                    {(user?.role === "admin" || user?.role === "manager" || user?.role === "analyst") && (
                                                         <>
-                                                            {task.isPaused ? (
-                                                                <button className="btn start"
-                                                                        onClick={() => handleResume(task._id, item._id)}>
-                                                                    Resume
+                                                            {!task.analyst ? (
+                                                                <button
+                                                                    className="btn start"
+                                                                    onClick={() => handleStart(task._id, item._id)}
+                                                                >
+                                                                    Start
                                                                 </button>
                                                             ) : (
-                                                                <button className="btn stop"
-                                                                        onClick={() => handlePause(task._id, item._id)}>
-                                                                    Pause
-                                                                </button>
-                                                            )}
+                                                                <>
+                                                                    {task.isPaused ? (
+                                                                        <button
+                                                                            className="btn start"
+                                                                            onClick={() => handleResume(task._id, item._id)}
+                                                                        >
+                                                                            Resume
+                                                                        </button>
+                                                                    ) : (
+                                                                        <button
+                                                                            className="btn stop"
+                                                                            onClick={() => handlePause(task._id, item._id)}
+                                                                        >
+                                                                            Pause
+                                                                        </button>
+                                                                    )}
 
-                                                            <button className="btn done"
-                                                                    onClick={() => handleComplete(task._id, item._id)}>
-                                                                Done
-                                                            </button>
+                                                                    <button
+                                                                        className="btn done"
+                                                                        onClick={() => handleComplete(task._id, item._id)}
+                                                                    >
+                                                                        Done
+                                                                    </button>
+                                                                </>
+                                                            )}
                                                         </>
                                                     )}
 
-                                                    <span className="btnActionBoth">
-                        <FiEdit2 className="icon edit" />
-                        <FiTrash2 className="icon delete" />
-                    </span>
+                                                    {/* Edit and Delete buttons - Only for admin and manager */}
+                                                    {(user?.role === "admin" || user?.role === "manager") && (
+                                                        <span className="btnActionBoth">
+                            <FiEdit2 className="icon edit" />
+                            <FiTrash2 className="icon delete" />
+                        </span>
+                                                    )}
                                                 </>
                                             )}
                                         </>
                                     )}
-
                                 </div>
-
-
-
-
                             </div>
                         ))}
 
