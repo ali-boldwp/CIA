@@ -1,101 +1,205 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styles from './EmployeeCostTable.module.css';
-import { useGetAnalystsQuery } from '../../../../../../../services/userApi';
+import { useGetProjectAnalystExpanseQuery } from '../../../../../../../services/humintExpanseApi';
 
-const EmployeeCostTable = ({ onAddCost }) => {
-    // Fetch analysts data from API
-    const { data: response = {}, isLoading, error } = useGetAnalystsQuery();
+const EmployeeCostTable = ({ onAddCost, projectId, projectData, onTotalCostUpdate }) => {
+    // Get projectId from props
+    console.log("EmployeeCostTable - Props received:", {
+        projectId,
+        hasProjectData: !!projectData,
+        projectName: projectData?.projectName
+    });
 
-    // Extract analysts array from response
-    const analysts = response?.data || response || [];
+    // Use projectId from props
+    const effectiveProjectId = projectId || "693c081dc1bd09040f202cda";
+
+    console.log("EmployeeCostTable - Using Project ID:", effectiveProjectId);
+
+    // Fetch analysts data for specific project
+    const {
+        data: response = {},
+        isLoading,
+        error,
+        refetch
+    } = useGetProjectAnalystExpanseQuery(effectiveProjectId, {
+        skip: !effectiveProjectId,
+    });
+
+    // Debug logging
+    useEffect(() => {
+        console.log("API Response:", response);
+        console.log("API Success:", response?.success);
+        console.log("Total Expanses:", response?.expanses?.length);
+        console.log("API Error:", error);
+        console.log("API Loading:", isLoading);
+    }, [response, error, isLoading]);
+
+    // Extract analysts from expanses
+    const expanses = response?.expanses || [];
+
+    // Convert expanses to analysts array (unique analysts)
+    const analystsMap = new Map();
+
+    expanses.forEach(expanse => {
+        const analyst = expanse.analystId;
+        if (analyst && !analystsMap.has(analyst._id)) {
+            const analystExpanses = expanses.filter(e =>
+                e.analystId?._id === analyst._id
+            );
+            const totalHours = analystExpanses.reduce(
+                (sum, e) => sum + (e.totalHours || (e.totalSecands / 3600) || 0),
+                0
+            );
+
+            analystsMap.set(analyst._id, {
+                analystId: analyst._id,
+                analystName: analyst.name,
+                role: analyst.analystRole || analyst.role,
+                monthlySalary: analyst.monthlySalary || 0,
+                costPerHour: analyst.costPerHour || 0,
+                costPerDay: analyst.costPerDay || 0,
+                hoursPerDay: analyst.hoursPerDay || 8,
+                bonus: analyst.bonus || 0,
+                totalHours: totalHours,
+                expansesCount: analystExpanses.length
+            });
+        }
+    });
+
+    const analysts = Array.from(analystsMap.values());
+
+    // If no analysts from expanses, use assigned analysts from project data
+    if (analysts.length === 0 && projectData?.assignedAnalysts) {
+        console.log("Using assigned analysts from project data");
+        projectData.assignedAnalysts.forEach(analyst => {
+            if (!analystsMap.has(analyst._id)) {
+                analystsMap.set(analyst._id, {
+                    analystId: analyst._id,
+                    analystName: analyst.name,
+                    role: analyst.role,
+                    monthlySalary: 0,
+                    costPerHour: 0,
+                    costPerDay: 0,
+                    hoursPerDay: 8,
+                    bonus: 0,
+                    totalHours: 0,
+                    expansesCount: 0
+                });
+            }
+        });
+        analysts.length = 0;
+        analysts.push(...Array.from(analystsMap.values()));
+    }
 
     const [editingRow, setEditingRow] = useState(null);
     const [editedHours, setEditedHours] = useState({});
 
-    // Function to handle edit
     const handleEdit = (index) => {
         setEditingRow(index);
         if (analysts[index]) {
-            setEditedHours({ ...editedHours, [index]: analysts[index].hoursPerDay || 8 });
+            const hours = analysts[index].totalHours > 0 ?
+                analysts[index].totalHours :
+                analysts[index].hoursPerDay || 8;
+            setEditedHours({ ...editedHours, [index]: hours });
         }
     };
 
-    // Function to handle save
     const handleSave = (index) => {
         console.log(`Saving hours for analyst ${index}: ${editedHours[index]}`);
+        console.log(`For project: ${effectiveProjectId}`);
         setEditingRow(null);
     };
 
-    // Function to handle cancel
     const handleCancel = () => {
         setEditingRow(null);
     };
 
-    // Function to handle hours change
     const handleHoursChange = (index, value) => {
-        setEditedHours({ ...editedHours, [index]: value });
+        setEditedHours({ ...editedHours, [index]: parseFloat(value) || 0 });
     };
 
-    // Function to calculate days based on hours (assuming 8 hours per day)
     const calculateDays = (hours) => {
         return hours / 8;
     };
 
-    // Function to calculate total cost
     const calculateTotal = (analyst, hours) => {
-        const actualHours = hours || analyst.hoursPerDay || 8;
+        const actualHours = hours || analyst.totalHours || analyst.hoursPerDay || 8;
         const costPerHour = analyst.costPerHour || 0;
         return actualHours * costPerHour;
     };
 
-    // Function to calculate cost per day
     const calculateCostPerDay = (analyst) => {
         const costPerHour = analyst.costPerHour || 0;
         const hoursPerDay = analyst.hoursPerDay || 8;
         return costPerHour * hoursPerDay;
     };
 
-    // Calculate total for all analysts
     const calculateTotalEmployeesCost = () => {
         let total = 0;
         analysts.forEach((analyst, index) => {
-            const hours = editedHours[index] !== undefined ? editedHours[index] : analyst.hoursPerDay || 8;
+            const hours = editedHours[index] !== undefined ?
+                editedHours[index] :
+                analyst.totalHours || analyst.hoursPerDay || 8;
             total += calculateTotal(analyst, hours);
         });
         return total.toFixed(2);
     };
 
+    // Calculate total cost and notify parent
+    const totalEmployeesCost = calculateTotalEmployeesCost();
+
+    // Notify parent component about total cost update
+    useEffect(() => {
+        if (onTotalCostUpdate && totalEmployeesCost) {
+            onTotalCostUpdate(totalEmployeesCost);
+        }
+    }, [totalEmployeesCost, onTotalCostUpdate]);
+
+    // If no projectId
+    if (!effectiveProjectId) {
+        return (
+            <div className={styles.formCard}>
+                <h2 className={styles.formTitle}>Cheltuieli cu angajații (timp & cost)</h2>
+                <div className={styles.error}>
+                    Error: Project ID is required
+                    <br />
+                    Please pass projectId as prop to EmployeeCostTable
+                </div>
+            </div>
+        );
+    }
+
     if (isLoading) {
         return (
             <div className={styles.formCard}>
                 <h2 className={styles.formTitle}>Cheltuieli cu angajații (timp & cost)</h2>
-                <div className={styles.loading}>Loading analysts data...</div>
+                <div className={styles.loading}>
+                    Loading analysts for project: {effectiveProjectId}
+                </div>
             </div>
         );
     }
 
     if (error) {
+        console.error("API Error Details:", error);
         return (
             <div className={styles.formCard}>
                 <h2 className={styles.formTitle}>Cheltuieli cu angajații (timp & cost)</h2>
-                <div className={styles.error}>Error loading analysts data</div>
+                <div className={styles.error}>
+                    <p>Error loading project analysts data</p>
+                    <p>Project ID: {effectiveProjectId}</p>
+                    <p>Status: {error.status}</p>
+                    <p>Message: {error.data?.message || error.error || "Unknown error"}</p>
+                    <button
+                        onClick={refetch}
+                        className={styles.retryBtn}
+                    >
+                        Retry
+                    </button>
+                </div>
             </div>
         );
     }
-
-    // Check if analysts is actually an array
-    if (!Array.isArray(analysts)) {
-        console.error('Analysts is not an array:', analysts);
-        return (
-            <div className={styles.formCard}>
-                <h2 className={styles.formTitle}>Cheltuieli cu angajații (timp & cost)</h2>
-                <div className={styles.error}>Invalid data format received from API</div>
-            </div>
-        );
-    }
-
-    // Calculate total cost for display
-    const totalEmployeesCost = calculateTotalEmployeesCost();
 
     return (
         <div className={styles.formCard}>
@@ -118,54 +222,68 @@ const EmployeeCostTable = ({ onAddCost }) => {
                 {analysts.length === 0 ? (
                     <tr>
                         <td colSpan="8" className={styles.noData}>
-                            No analysts found
+                            No analysts assigned to this project
+                            {expanses.length > 0 && (
+                                <div className={styles.expansesNote}>
+                                    (Found {expanses.length} expanses but no analyst data)
+                                </div>
+                            )}
                         </td>
                     </tr>
                 ) : (
                     analysts.map((analyst, index) => {
-                        const hours = editedHours[index] !== undefined ? editedHours[index] : analyst.hoursPerDay || 8;
+                        const hours = editedHours[index] !== undefined ?
+                            editedHours[index] :
+                            analyst.totalHours || analyst.hoursPerDay || 8;
                         const days = calculateDays(hours);
-                        const costPerHour = analyst.costPerHour?.toFixed(2) || '0.00';
+                        const costPerHour = (analyst.costPerHour || 0).toFixed(2);
                         const costPerDay = calculateCostPerDay(analyst).toFixed(2);
                         const total = calculateTotal(analyst, hours).toFixed(2);
 
                         return (
-                            <tr key={analyst._id || index}>
-                                {/* Analist Name */}
-                                <td className={styles.analystName}>{analyst.name}</td>
+                            <tr key={analyst.analystId || index}>
+                                <td className={styles.analystName}>
+                                    {analyst.analystName}
+                                    {analyst.expansesCount > 0 && (
+                                        <span className={styles.expansesCount}>
+                                                ({analyst.expansesCount})
+                                            </span>
+                                    )}
+                                </td>
 
-                                {/* Rol - analystRole from API */}
-                                <td>{analyst.analystRole || 'N/A'}</td>
+                                <td>{analyst.role || 'N/A'}</td>
 
-                                {/* Zile - Calculated days */}
                                 <td>{days.toFixed(1)}</td>
 
-                                {/* Ore - Editable field */}
                                 <td>
                                     {editingRow === index ? (
                                         <input
                                             className={styles.inputCell}
                                             type="number"
                                             value={hours}
-                                            onChange={(e) => handleHoursChange(index, parseInt(e.target.value) || 0)}
-                                            min="1"
-                                            max="24"
+                                            onChange={(e) => handleHoursChange(index, e.target.value)}
+                                            min="0"
+                                            max="720"
+                                            step="0.5"
                                         />
                                     ) : (
-                                        <span className={styles.hoursValue}>{hours}</span>
+                                        <span className={styles.hoursValue}>
+                                                {hours.toFixed(2)}
+                                            {analyst.totalHours > 0 && (
+                                                <span className={styles.actualWork}>
+                                                        (actual)
+                                                    </span>
+                                            )}
+                                            </span>
                                     )}
                                 </td>
 
-                                {/* Cost/ora - From API */}
                                 <td className={styles.costPerHour}>{costPerHour} EUR</td>
 
-                                {/* Cost/zi - Calculated */}
                                 <td className={styles.costPerDay}>{costPerDay} EUR</td>
 
-                                {/* Total - Calculated */}
                                 <td className={styles.totalCost}>{total} EUR</td>
 
-                                {/* Editare - Edit/Save buttons */}
                                 <td className={styles.editCell}>
                                     {editingRow === index ? (
                                         <>
@@ -198,13 +316,11 @@ const EmployeeCostTable = ({ onAddCost }) => {
                 </tbody>
             </table>
 
-            {/* TOTAL EMPLOYEES COST SECTION (not blank strip) */}
             <div className={styles.totalSection}>
                 <div className={styles.totalLabel}>Total angajați:</div>
                 <div className={styles.totalValue}>{totalEmployeesCost} EUR</div>
             </div>
 
-            {/* ADD EMPLOYEE COST BUTTON */}
             <button className={styles.btnGreen} onClick={onAddCost}>
                 Adaugă cheltuiala
             </button>

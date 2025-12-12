@@ -3,15 +3,14 @@ import styles from './SummarySection.module.css';
 import { useParams } from "react-router-dom";
 import {useGetProjectFinancialStatesQuery , useGetCreateProjectByIdQuery} from "../../../../../../../services/projectApi";
 
-const SummarySection = () => {
-
+const SummarySection = ({ employeeTotalCost = 0 }) => {
     const { id: projectId } = useParams();
 
-    // 🔹 Financial stats
+    // Financial stats
     const { data: financialRes } =
         useGetProjectFinancialStatesQuery(projectId);
 
-    // 🔹 Project details
+    // Project details
     const { data: projectRes } =
         useGetCreateProjectByIdQuery(projectId);
 
@@ -67,59 +66,59 @@ const SummarySection = () => {
                 <div className={styles.financialGrid}>
                     {/* Row 1 */}
                     <div className={`${styles.summaryBox} ${styles.boxGray}`}>
-            <span className={styles.sValue}>
-              {stats.cheltuieliTESA ?? 0} {currency}
-            </span>
+                        <span className={styles.sValue}>
+                            {employeeTotalCost} {currency}
+                        </span>
                     </div>
 
                     <div className={`${styles.summaryBox} ${styles.boxTfsa}`}>
                         <span className={styles.sLabel}>Cheltuieli TESA</span>
                         <span className={styles.sValue}>
-              {stats.cheltuieliTESA ?? 0} {currency}
-            </span>
+                            {stats.cheltuieliTESA ?? 0} {currency}
+                        </span>
                     </div>
 
                     <div className={`${styles.summaryBox} ${styles.boxCyan}`}>
                         <span className={styles.sLabel}>Cheltuieli OSINT</span>
                         <span className={styles.sValue}>
-              {stats.cheltuieliOSINT ?? 0} {currency}
-            </span>
+                            {stats.cheltuieliOSINT ?? 0} {currency}
+                        </span>
                     </div>
 
                     <div className={`${styles.summaryBox} ${styles.boxYellow}`}>
                         <span className={styles.sLabel}>Cheltuieli Supraveghere Tehnică</span>
                         <span className={styles.sValue}>
-              {stats.supraveghereTehnica ?? 0} {currency}
-            </span>
+                            {stats.supraveghereTehnica ?? 0} {currency}
+                        </span>
                     </div>
 
                     {/* Row 2 */}
                     <div className={`${styles.summaryBox} ${styles.boxBlue}`}>
                         <span className={styles.sLabel}>Cheltuieli fixe</span>
                         <span className={styles.sValue}>
-              {stats.cheltuieliFixe ?? 0} {currency}
-            </span>
+                            {stats.cheltuieliFixe ?? 0} {currency}
+                        </span>
                     </div>
 
                     <div className={`${styles.summaryBox} ${styles.boxOther}`}>
                         <span className={styles.sLabel}>Alte cheltuieli</span>
                         <span className={styles.sValue}>
-              {stats.alteCheltuieli ?? 0} {currency}
-            </span>
+                            {stats.alteCheltuieli ?? 0} {currency}
+                        </span>
                     </div>
 
                     <div className={`${styles.summaryBox} ${styles.boxPurple}`}>
                         <span className={styles.sLabel}>Preț proiect</span>
                         <span className={styles.sValue}>
-              {stats.pretProject ?? 0} {currency}
-            </span>
+                            {stats.pretProject ?? 0} {currency}
+                        </span>
                     </div>
 
                     <div className={`${styles.summaryBox} ${styles.boxLightgray}`}>
                         <span className={styles.sLabel}>Total cheltuieli</span>
                         <span className={styles.sValue}>
-              {stats.totalCheltuieli ?? 0} {currency}
-            </span>
+                            {stats.totalCheltuieli ?? 0} {currency}
+                        </span>
                     </div>
 
                     {/* Row 3 */}
@@ -128,21 +127,21 @@ const SummarySection = () => {
                             <div className={styles.profitTopRow}>
                                 <span className={styles.sLabelGreen}>Profit</span>
                                 <span className={styles.profitPercentage}>
-                  {stats.profitPercentage ?? 0}%
-                </span>
+                                    {stats.profitPercentage ?? 0}%
+                                </span>
                             </div>
                             <div className={styles.profitBottomRow}>
-                <span className={styles.profitValue}>
-                  {stats.profit ?? 0} {currency}
-                </span>
+                                <span className={styles.profitValue}>
+                                    {stats.profit ?? 0} {currency}
+                                </span>
                             </div>
                         </div>
                     </div>
 
                     <div className={`${styles.summaryBox} ${styles.boxDuration}`}>
-            <span className={styles.sLabelDuration}>
-              Durata proiect (zile lucrătoare)
-            </span>
+                        <span className={styles.sLabelDuration}>
+                            Durata proiect (zile lucrătoare)
+                        </span>
                         <span className={styles.sValueDuration}>—</span>
                     </div>
                 </div>

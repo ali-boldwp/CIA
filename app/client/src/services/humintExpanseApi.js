@@ -4,11 +4,9 @@ import baseQuery from "./apiSlice";
 export const humintExpanseApi = createApi({
     reducerPath: "humintExpanseApi",
     baseQuery: baseQuery,
-
     tagTypes: ["HumintExpanse"],
 
     endpoints: (builder) => ({
-
         // CREATE EXPENSE
         createHumintExpanse: builder.mutation({
             query: (body) => ({
@@ -38,7 +36,7 @@ export const humintExpanseApi = createApi({
         }),
 
         // UPDATE
-        updateHumintExpense: builder.mutation({
+        updateHumintExpanse: builder.mutation({
             query: ({ id, ...body }) => ({
                 url: `/humint-expanse/${id}`,
                 method: "PUT",
@@ -48,7 +46,7 @@ export const humintExpanseApi = createApi({
         }),
 
         // DELETE
-        deleteHumintExpense: builder.mutation({
+        deleteHumintExpanse: builder.mutation({
             query: (id) => ({
                 url: `/humint-expanse/${id}`,
                 method: "DELETE",
@@ -65,6 +63,33 @@ export const humintExpanseApi = createApi({
             providesTags: ["HumintExpanse"],
         }),
 
+        // GET PROJECT ANALYST EXPENSE
+        getProjectAnalystExpanse: builder.query({
+            query: (projectId) => ({
+                url: `/analyst/${projectId}/analyst-expanse`,
+                method: "GET",
+            }),
+            providesTags: ["HumintExpanse"],
+        }),
+
+        // GET ANALYST FINAL SALARY
+        getAnalystsFinalSalary: builder.query({
+            query: () => ({
+                url: `/analyst-expanse/total-salary`,
+                method: "GET",
+            }),
+            providesTags: ["HumintExpanse"],
+        }),
+
+         // UPDATE PROJECT PRICE
+        updateProjectPrice: builder.mutation({
+            query: ({ projectId, type, price }) => ({
+                url: `/project/${projectId}/price/${type}`,
+                method: "PUT",
+                body: { price },
+            }),
+            invalidatesTags: ["ProjectStats"],
+        }),
     }),
 });
 
@@ -72,7 +97,10 @@ export const {
     useCreateHumintExpanseMutation,
     useGetHumintExpensesQuery,
     useGetHumintExpenseByIdQuery,
-    useUpdateHumintExpenseMutation,
-    useDeleteHumintExpenseMutation,
-    useGetHumintTotalsQuery
+    useUpdateHumintExpanseMutation,
+    useDeleteHumintExpanseMutation,
+    useGetHumintTotalsQuery,
+    useGetProjectAnalystExpanseQuery,
+    useGetAnalystsFinalSalaryQuery,
+    useUpdateProjectPriceMutation,
 } = humintExpanseApi;

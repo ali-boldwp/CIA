@@ -1,11 +1,29 @@
 import Notification from "../models/notification.model";
+import { getIO } from "../../../socket"
 
 export const createNotification = async (data: {
     user: string;
     text: string;
     type?: string;
+    socket?: string;
+    data?: any;
 }) => {
-    return await Notification.create(data);
+
+    // 🔹 DB save (data field REQUIRED)
+    const notification = await Notification.create({
+        user: data.user,
+        text: data.text,
+        type: data.type || "info",
+        data: data.data || {},
+    });
+
+    // 🔹 Socket emit
+    if (data.socket) {
+        const io = getIO();
+        io.to(data.socket).emit("notification", notification);
+    }
+
+    return notification;
 };
 
 export const getUserNotifications = async (userId: string, page = 1, limit = 20) => {

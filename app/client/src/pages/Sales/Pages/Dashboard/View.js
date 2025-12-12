@@ -1,9 +1,9 @@
 import {useMemo, useState} from "react";
 import {Link} from "react-router-dom";
-
+import Calender from "./Components/Calender";
 import "./style.css";
 
-const Dashboard = ({ approve, analystsData }) => {
+const Dashboard = ({ approve, analystsData, requested }) => {
 
     const statusBackendToUi = {
         approved: "in lucru",
@@ -46,6 +46,8 @@ const Dashboard = ({ approve, analystsData }) => {
 
     const approvedProject=approve?.data || [];
     const analysts = analystsData?.data || [];
+    const requestedProject=requested?.data||[];
+
 
     const resolveAnalystName = (value) => {
         if (!value) return "—";
@@ -87,6 +89,9 @@ const Dashboard = ({ approve, analystsData }) => {
         return approvedProject.slice((page - 1) * limit, page * limit);
     }, [page, approvedProject]);
 
+
+
+
     return (
         <>
             {/* TOP SUMMARY CARDS */}
@@ -101,9 +106,12 @@ const Dashboard = ({ approve, analystsData }) => {
                 <Link to="/project">
                     <div className="summary-card">
                         <div className="summary-title">
-                            🕵️‍♀️ Adauga solicitare noua de proiect ➕
+                            🕵️‍♀️ solicitare noua de proiect
                         </div>
-                        <div className="summary-value">1</div>
+                        <div className="requestedCount">
+                            <div>{requestedProject.length}</div>
+                        <button className="add-button">Adauga</button>
+                        </div>
                     </div>
                 </Link>
                 <Link to="/messenger">
@@ -120,7 +128,54 @@ const Dashboard = ({ approve, analystsData }) => {
                 </Link>
             </div>
 
+            <div>
+                <h2 className="sales-section-title">Proiecte solicitate</h2>
+
+                <div className="projects-row">
+
+                    {requestedProject.length === 0 && (
+                        <div>No approved projects found.</div>
+                    )}
+
+                    {requestedProject.map((p) => (
+                        <div key={p._id} className="project-card">
+                            <div className="project-header">
+
+                                <div className="project-name">{p.projectName}</div>
+
+                                <div className="project-deadline-wrapper">
+                        <span className="deadline-pill">
+                            Deadline: {formatDate(p.deadline)}
+                        </span>
+
+                                    <div className="status-dot-wrapper">
+                                        <span className="status-sales-text">{resolveStatusLabel(p.status)}</span>
+                                        <span className={`dot ${resolveStatusDotColor(p.status)}`} />
+
+                                    </div>
+                                </div>
+                            </div>
+
+
+                                <div className="project-info">
+                                    <div>
+                                        Responsabil proiect: {resolveAnalystName(p.responsibleAnalyst)}
+                                    </div>
+
+                                    <div>
+                                        Echipa: {resolveAnalystNames(p.assignedAnalysts)}
+                                    </div>
+                                </div>
+
+                        </div>
+                    ))}
+
+                </div>
+            </div>
+
             {/* PROJECTS */}
+
+            <div>
             <h2 className="sales-section-title">Proiectele</h2>
 
             <div className="projects-row">
@@ -155,7 +210,7 @@ const Dashboard = ({ approve, analystsData }) => {
                             <div>
                                 Echipa: {resolveAnalystNames(p.assignedAnalysts)}
 
-                            </div>
+                             </div>
                         </div>
 
                         <div className="progress-block">
@@ -184,53 +239,10 @@ const Dashboard = ({ approve, analystsData }) => {
                 ))}
 
             </div>
-
-            {/* BOTTOM ROW: CALENDAR + MESSENGER */}
-            <div className="bottom-row">
-
-                <h2 className="section-sales-title no-margin-analyst">Calendar Deadlines </h2>
-
-                <div className="calendar-card">
-                    <ul className="calendar-list">
-
-                        {paginatedDeadlines.map((p) => (
-                            <li key={p._id}>
-                                <span>
-                                    🟢 {formatDate(p.deadline)} — (56%)
-                                </span>
-                            </li>
-                        ))}
-
-                        {approvedProject.length === 0 && (
-                            <li><span>Nu exista deadline-uri.</span></li>
-                        )}
-
-                    </ul>
-                    <div className="pagination" style={{ marginTop: "15px" }}>
-                        <button
-                            disabled={page === 1}
-                            onClick={() => setPage((prev) => prev - 1)}
-                        >
-                            ← Precedent
-                        </button>
-
-                        <span style={{ margin: "0 10px" }}>
-            Pagina <strong>{page}</strong> din{" "}
-                            <strong>{totalPages}</strong>
-        </span>
-
-                        <button
-                            disabled={page === totalPages}
-                            onClick={() => setPage((prev) => prev + 1)}
-                        >
-                            Următor →
-                        </button>
-                    </div>
-
-                </div>
-
-
             </div>
+
+             <Calender/>
+
         </>
     )
 
