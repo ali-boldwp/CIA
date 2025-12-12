@@ -14,9 +14,11 @@ const Layout = ({
 
     useEffect(() => {
 
+        if (!user?._id) return;
+
         const ID = `notification_${ user._id }`;
 
-        console.log( "ID", ID )
+        console.log( "ID", ID );
 
         socket.on( ID, async ( data ) => {
 
@@ -39,10 +41,10 @@ const Layout = ({
 
 
         return () => {
-            socket.off( `notification_${ user._id }` );
+            socket.off( ID );
         };
 
-    }, []);
+    }, [ user?._id ]);
 
     const {
         title = null,
