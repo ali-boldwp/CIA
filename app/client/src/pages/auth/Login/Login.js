@@ -16,38 +16,48 @@ const Login = () => {
     const navigate = useNavigate();
 
     const onSubmit = async (formData) => {
+        // RTK Query promise (unwrap throws on error)
+        const loginPromise = login(formData).unwrap();
+
         try {
-            const response = await login(formData).unwrap();
+            const response = await toast.promise(
+                loginPromise,
+                {
+                    pending: "Se conectează...",
+                    success: "Autentificare reușită",
+                    error: {
+                        render({ data }) {
+                            // data = error thrown by unwrap()
+                            return data?.data?.message || "Autentificare eșuată";
+                        },
+                    },
+                },
+                {
+                    // optional toast options
+                    autoClose: 3000,
+                }
+            );
 
             const loggedUser = response.data.user;
             const token = response.data.accessToken;
 
-            // ✅ Save user in Redux + localStorage
             dispatch(setUser(loggedUser));
             localStorage.setItem("user", JSON.stringify(loggedUser));
-
-            // ✅ Still keep this for now (so old code keeps working)
             localStorage.setItem("token", token);
 
-            // ✅ NEW: save access token in cookie
             Cookies.set("accessToken", token, {
-                // how long the cookie lives – adjust if you want
-                expires: 1,          // 1 day
+                expires: 1,
                 sameSite: "strict",
-                // secure must be false on http://localhost, true only on HTTPS
                 secure: false,
             });
 
-            toast("Autentificare reușită");
-
-            const role = loggedUser.role;
-
             navigate("/");
         } catch (err) {
+            // toast.promise already showed error toast
             console.error("LOGIN ERROR:", err);
-            toast.error("Autentificare eșuată");
         }
     };
+
 
     return (
         <div className="login-page">
@@ -103,6 +113,7 @@ const Login = () => {
                         <button type="submit" className="login-btn" disabled={isLoading}>
                             {isLoading ? "Se conectează..." : "Conectează-te"}
                         </button>
+
 
                         {/* Divider line */}
                         <hr className="login-divider" />
