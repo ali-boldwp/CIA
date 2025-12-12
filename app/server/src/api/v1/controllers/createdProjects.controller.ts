@@ -8,13 +8,18 @@ import Task from "../models/task.model";
 import projectData from "../data/data.js"
 import Requested from "../models/requested.model"
 import Humint from "../models/humint.model";
+import { createNotification } from "../services/notification.service";
 import { ok } from "../../../utils/ApiResponse";
 
 
-export const createProject = async (req: Request, res: Response, next: NextFunction) => {
+export const createProject = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+) => {
     try {
-        const userId = req.user?.id;
-
+        const approver = req.user;
+        const userId = approver?.id;
         const body = req.body;
         const { humintId } = body;
 
@@ -27,13 +32,10 @@ export const createProject = async (req: Request, res: Response, next: NextFunct
         let requestData: any = {};
 
 
-        // Load request data if ID provided
         if (body.requestedId) {
             const reqProject = await Requested.findById(body.requestedId);
-            console.log(reqProject)
 
             if (reqProject) {
-                // Update request status to "approved"
                 reqProject.status = "approved";
                 await reqProject.save();
 
@@ -46,8 +48,7 @@ export const createProject = async (req: Request, res: Response, next: NextFunct
         }
 
 
-        // Merge payload
-        const payload = {
+        const payload: any = {
             ...requestData,
             ...body,
             humintId: humintId || requestData.humintId || null,
@@ -55,7 +56,7 @@ export const createProject = async (req: Request, res: Response, next: NextFunct
             servicesRequested: toArray(body.servicesRequested ?? requestData.servicesRequested),
             createdBy: userId,
             files: [...(requestData.files || []), ...files],
-            status: body.status ? body.status : "approved"
+            status: body.status || "approved",
         };
 
         const project = await createdProjectService.createProject(payload);
@@ -72,20 +73,15 @@ export const createProject = async (req: Request, res: Response, next: NextFunct
             );
         }
 
+
         const reportType = project.reportType;
-
         if (projectData[reportType]) {
-            const chaptersForProject = projectData[reportType];
-
-            for (const chapterObj of chaptersForProject) {
-
-                // Create chapter linked to project
+            for (const chapterObj of projectData[reportType]) {
                 const chapter = await Chapter.create({
                     name: chapterObj.name,
                     projectId: project._id
                 });
 
-                // Create tasks belonging to this chapter
                 if (chapterObj.tasks?.length) {
                     for (const t of chapterObj.tasks) {
                         await Task.create({
@@ -98,7 +94,7 @@ export const createProject = async (req: Request, res: Response, next: NextFunct
             }
         }
 
-        // CHAT GROUP CREATION
+
         const admins = await User.find({ role: "admin" }).select("_id");
         const managers = await User.find({ role: "manager" }).select("_id");
 
@@ -113,7 +109,6 @@ export const createProject = async (req: Request, res: Response, next: NextFunct
             groupMembers.add(String(a))
         );
 
-
         const chatGroup = await Chat.create({
             participants: Array.from(groupMembers).map(id => ({
                 user: id,
@@ -124,11 +119,64 @@ export const createProject = async (req: Request, res: Response, next: NextFunct
             groupName: `Project: ${payload.projectName}`
         });
 
-
         project.groupChatId = chatGroup._id;
         await project.save();
 
 
+
+        if (requestData?.fromRequestId) {
+            await createNotification({
+                user: requestData.fromRequestId.toString(),
+                title: "Cererea de proiect a fost aprobată",
+                text: `Managerul ${approver.name || "responsabil"} a aprobat cererea pentru proiectul „${project.projectName}”`,
+                link: `/project/view/${project._id}`,
+                type: "info",
+            });
+        }
+
+
+        const allAnalysts = await User.find({ role: "analyst" }).select("name");
+
+        const analystsToNotify = allAnalysts.filter((analyst) => {
+            const analystId = analyst._id.toString();
+
+            if (payload.responsibleAnalyst?.toString() === analystId) {
+                return true;
+            }
+
+            if (
+                Array.isArray(payload.assignedAnalysts) &&
+                payload.assignedAnalysts.map(String).includes(analystId)
+            ) {
+                return true;
+            }
+
+            return false;
+        });
+
+        console.log(
+            "Analysts to notify:",
+            analystsToNotify.map(a => a._id.toString())
+        );
+
+
+        await Promise.all(
+            analystsToNotify.map((analyst) => {
+                const socketRoom = `notification_${analyst._id}`;
+
+                return createNotification({
+                    user: analyst._id.toString(),
+                    title: "Ați fost alocat unui proiect",
+                    text: `Managerul ${approver.name || "responsabil"} v-a alocat proiectul „${project.projectName}”`,
+                    link: `/project/view/${project._id}`,
+                    type: "info",
+                    socket: socketRoom,
+                });
+            })
+        );
+
+
+        // ===============================
         return res.json(ok(project));
 
     } catch (err) {
@@ -156,7 +204,7 @@ export const getAllProjects = async (req: Request, res: Response, next: NextFunc
     let roleFilter: any;
     if (user.role === "sales") {
         roleFilter = {
-            fromRequestId: user._id,
+            fromRequestId: user.id,
             status: { $in: ["approved", "revision", "observation", "finished"] }
         };
 
