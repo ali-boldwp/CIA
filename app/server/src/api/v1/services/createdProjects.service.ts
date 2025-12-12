@@ -68,6 +68,6 @@ export const getProjectFinancialSummary = async (projectId: string) => {
         pretProject: project.projectPrice,
 
         profit: project.profit,
-        profitPercentage: project.profitPercentage
+        profitPercentage: project.profitPercentage,
     };
 };

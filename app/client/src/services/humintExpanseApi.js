@@ -63,7 +63,7 @@ export const humintExpanseApi = createApi({
             providesTags: ["HumintExpanse"],
         }),
 
-        // ✅ GET PROJECT ANALYST EXPENSE
+        // GET PROJECT ANALYST EXPENSE
         getProjectAnalystExpanse: builder.query({
             query: (projectId) => ({
                 url: `/analyst/${projectId}/analyst-expanse`,
@@ -72,7 +72,7 @@ export const humintExpanseApi = createApi({
             providesTags: ["HumintExpanse"],
         }),
 
-        // ✅ GET ANALYST FINAL SALARY
+        // GET ANALYST FINAL SALARY
         getAnalystsFinalSalary: builder.query({
             query: () => ({
                 url: `/analyst-expanse/total-salary`,
@@ -81,7 +81,7 @@ export const humintExpanseApi = createApi({
             providesTags: ["HumintExpanse"],
         }),
 
-        // ✅ UPDATE PROJECT PRICE
+         // UPDATE PROJECT PRICE
         updateProjectPrice: builder.mutation({
             query: ({ projectId, type, price }) => ({
                 url: `/project/${projectId}/price/${type}`,
@@ -102,5 +102,5 @@ export const {
     useGetHumintTotalsQuery,
     useGetProjectAnalystExpanseQuery,
     useGetAnalystsFinalSalaryQuery,
-    useUpdateProjectPriceMutation, // ✅ CORRECT EXPORT NAME
+    useUpdateProjectPriceMutation,
 } = humintExpanseApi;

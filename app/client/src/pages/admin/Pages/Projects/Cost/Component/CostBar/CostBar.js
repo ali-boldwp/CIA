@@ -2,13 +2,12 @@ import React, { useState } from "react";
 import styles from "./CostBar.module.css";
 import { useParams } from "react-router-dom";
 import { useGetProjectFinancialStatesQuery } from "../../../../../../../services/projectApi";
-import { useUpdateProjectPriceMutation } from "../../../../../../../services/humintExpanseApi"; // ✅ CORRECT IMPORT NAME
+import { useUpdateProjectPriceMutation } from "../../../../../../../services/humintExpanseApi";
 
 const CostBar = () => {
     const { id: projectId } = useParams();
     const { data, isLoading, refetch } = useGetProjectFinancialStatesQuery(projectId);
 
-    // ✅ USE CORRECT MUTATION HOOK
     const [updatePrice] = useUpdateProjectPriceMutation();
 
     const costs = data?.data || {};
@@ -31,7 +30,7 @@ const CostBar = () => {
         }));
     };
 
-    // Handle blur (focus out) - call API
+    // Handle blur
     const handleBlur = async (field, value) => {
         const priceValue = parseFloat(value) || 0;
 
@@ -46,12 +45,12 @@ const CostBar = () => {
 
         try {
             await updatePrice({
-                projectId: projectId, // ✅ Parameter name must match endpoint definition
+                projectId: projectId,
                 type: typeMap[field],
                 price: priceValue
             }).unwrap();
 
-            // ✅ REFETCH DATA AFTER SUCCESS
+
             refetch();
             console.log(`${field} updated successfully`);
         } catch (error) {
