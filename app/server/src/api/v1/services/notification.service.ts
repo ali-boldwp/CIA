@@ -3,6 +3,8 @@ import { emitNotificationToUser } from "../../../socket"
 
 export const createNotification = async (data: {
     user: string;
+    title?:string;
+    link?:string;
     text: string;
     type?: string;
     socket?: string;
@@ -13,6 +15,8 @@ export const createNotification = async (data: {
     const notification = await Notification.create({
         user: data.user,
         text: data.text,
+        title:data.title,
+        link: data.link,
         type: data.type || "info",
         data: data.data || {},
     });
