@@ -23,7 +23,7 @@ const EmployeeSection = ({ type, rows = [], onAddClick, onEdit, onDelete }) => {
         },
 
         investigatii: {
-            title: "Investigații",
+            title: "Analiza si Investigatii",
             taxLabel: "Nivel taxe (%)",
             columns: [
                 { key: "name", label: "Nume" },
@@ -36,12 +36,13 @@ const EmployeeSection = ({ type, rows = [], onAddClick, onEdit, onDelete }) => {
                 { key: "bonusWithTax", label: "Bonus incl. taxe" },
                 { key: "totalCost", label: "Cost total" },
                 { key: "costPerDay", label: "Cost/zi" },
+                { key: "costPerHour", label: "Cost/ora" },
                 { key: "actions", label: "Acțiuni" },
             ],
         },
 
         auxiliar: {
-            title: "Personal auxiliar",
+            title: "Personal TESA",
             taxLabel: "Nivel taxe (%)",
             columns: [
                 { key: "name", label: "Nume" },
@@ -51,6 +52,59 @@ const EmployeeSection = ({ type, rows = [], onAddClick, onEdit, onDelete }) => {
                 { key: "monthlySalary", label: "Salariu brut/lună" },
                 { key: "bonus", label: "Bonus lunar" },
                 { key: "bonusWithTax", label: "Bonus lunar incl. taxe" },
+                { key: "totalCost", label: "Cost total angajat" },
+                { key: "costPerDay", label: "Cost/zi" },
+                { key: "hoursPerMonth", label: "Cost/oră" },
+                { key: "actions", label: "Acțiuni" },
+            ],
+        },
+        vanzari: {
+            title: "Vânzări",
+            taxLabel: "Nivel taxe (%)",
+            columns: [
+                { key: "name", label: "Nume" },
+                { key: "role", label: "Funcție" },
+                { key: "hiringDate", label: "Data angajării" },
+                { key: "seniority", label: "Vechime" },
+                { key: "monthlySalary", label: "Salariu brut/lună" },
+                { key: "bonus", label: "Bonus lunar" },
+                { key: "bonusWithTax", label: "Bonus incl. taxe" },
+                { key: "totalCost", label: "Cost total angajat" },
+                { key: "costPerDay", label: "Cost/zi" },
+                { key: "costPerHour", label: "Cost/oră" },
+                { key: "actions", label: "Acțiuni" },
+            ],
+        },
+
+        logistica: {
+            title: "Logistică",
+            taxLabel: "Nivel taxe (%)",
+            columns: [
+                { key: "name", label: "Nume" },
+                { key: "role", label: "Funcție" },
+                { key: "hiringDate", label: "Data angajării" },
+                { key: "seniority", label: "Vechime" },
+                { key: "monthlySalary", label: "Salariu brut/lună" },
+                { key: "bonus", label: "Bonus lunar" },
+                { key: "bonusWithTax", label: "Bonus incl. taxe" },
+                { key: "totalCost", label: "Cost total angajat" },
+                { key: "costPerDay", label: "Cost/zi" },
+                { key: "costPerHour", label: "Cost/oră" },
+                { key: "actions", label: "Acțiuni" },
+            ],
+        },
+
+        tehnica: {
+            title: "Tehnică",
+            taxLabel: "Nivel taxe (%)",
+            columns: [
+                { key: "name", label: "Nume" },
+                { key: "role", label: "Funcție" },
+                { key: "hiringDate", label: "Data angajării" },
+                { key: "seniority", label: "Vechime" },
+                { key: "monthlySalary", label: "Salariu brut/lună" },
+                { key: "bonus", label: "Bonus lunar" },
+                { key: "bonusWithTax", label: "Bonus incl. taxe" },
                 { key: "totalCost", label: "Cost total angajat" },
                 { key: "costPerDay", label: "Cost/zi" },
                 { key: "costPerHour", label: "Cost/oră" },
@@ -179,6 +233,9 @@ const EmployeeSection = ({ type, rows = [], onAddClick, onEdit, onDelete }) => {
 
                                     // Format costPerDay and costPerHour to 1 decimal place
                                     if (col.key === "costPerDay" || col.key === "costPerHour") {
+                                        value = formatNumberToOneDecimal(row[col.key]);
+                                    }
+                                    if (col.key === "hoursPerMonth" || col.key === "hoursPerMonth") {
                                         value = formatNumberToOneDecimal(row[col.key]);
                                     }
 

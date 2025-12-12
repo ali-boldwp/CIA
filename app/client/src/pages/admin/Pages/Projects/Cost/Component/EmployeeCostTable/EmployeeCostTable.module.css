@@ -10,10 +10,11 @@
 }
 
 .formTitle {
-    font-size: 19px;
-    font-weight: 800;
+    font-size: 16px;
+    font-weight: 700;
+    font-style: italic;
     margin-bottom: 20px;
-    color: #111827;
+    color: #0F172A;
 }
 
 /* Table styles */
@@ -22,6 +23,7 @@
     border-collapse: collapse;
     font-size: 14px;
     margin-top: 12px;
+
     background: #ffffff;
     border-radius: 4px;
     overflow: hidden;
@@ -37,12 +39,17 @@
     padding: 12px 16px;
     border-bottom: 1px solid #e5e7eb;
     text-align: left;
+    vertical-align: middle;
+    font-size: 14px;
+    font-weight: 700;
+    color: #0F172A;
 }
 
+/* HEADER SPECIFIC STYLES */
 .costTable th {
-    font-size: 14px;
-    color: #6b7280;
-    font-weight: 700;
+    font-size: 12px !important;
+    font-weight: 700 !important;
+    color: #334155 !important;
 }
 
 .costTable tbody tr:last-child td {
@@ -55,7 +62,6 @@
     border: 1px solid #d1d5db;
     padding: 6px 8px;
     background: #f9fafb;
-    font-size: 14px;
     text-align: center;
 }
 
@@ -73,66 +79,78 @@
     margin: 0 2px;
     border-radius: 4px;
     transition: all 0.2s ease;
-}
-
-.editBtn {
-    color: #4f46e5;
+    color: #0F172A;
+    font-weight: 700;
 }
 
 .editBtn:hover {
     background: #f3f4f6;
 }
 
-.saveBtn {
-    color: #059669;
-    font-weight: 600;
-}
-
 .saveBtn:hover {
-    background: #d1fae5;
-}
-
-.cancelBtn {
-    color: #dc2626;
-    font-weight: 600;
+    background: #f3f4f6;
 }
 
 .cancelBtn:hover {
-    background: #fee2e2;
+    background: #f3f4f6;
 }
 
-/* blank strip under table */
-.tableEmptyStrip {
-    margin-top: 10px;
+
+/* TOTAL EMPLOYEES COST SECTION - UPDATED FOR LEFT ALIGNMENT */
+.totalSection {
+    margin-top: 20px;
+    margin-bottom: 5px;
+    padding: 16px 20px;
+    background: #f8fafc;
     border-radius: 4px;
-    background: #f9fafb;
+
     border: 1px solid #e5e7eb;
-    height: 60px;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
     width: 100%;
+    gap: 12px;
+}
+
+.totalLabel {
+    font-weight: 700;
+    font-size: 15px;
+    font-style: italic;
+    color: #0F172A;
+    white-space: nowrap;
+}
+
+.totalValue {
+    font-weight: 700;
+    font-size: 15px;
+    color: #0F172A;
+    font-style: italic;
 }
 
 /* Loading and error states */
 .loading, .error {
     text-align: center;
     padding: 40px;
-    color: #6b7280;
+    color: #0F172A;
     font-size: 16px;
+    font-weight: 700;
 }
 
 .error {
-    color: #dc2626;
+    color: #0F172A;
 }
 
-/* Button */
+/* Button - UPDATED */
 .btnGreen {
     margin-top: 16px;
-    background: #22C55E;
-    color: #ffffff;
+    background: #22C55E; /* Changed from #0F172A to #22C55E */
+    color: #FFFFFF; /* Changed from #ffffff to #FFFFFF (same but explicit) */
     padding: 14px 20px;
     border-radius: 4px;
     border: none;
-    font-size: 14px;
-    font-weight: 700;
+    font-size: 14px; /* Added explicitly */
+    font-weight: 700; /* Added explicitly */
+    font-style: italic; /* Added */
     cursor: pointer;
     width: auto;
     min-width: 180px;
@@ -140,7 +158,7 @@
 }
 
 .btnGreen:hover {
-    background: #15803d;
+    background: #16a34a; /* Darker green for hover */
 }
 
 /* Responsive */
@@ -151,27 +169,100 @@
     }
 
     .formTitle {
-        font-size: 17px;
+        font-size: 16px;
+        font-weight: 700;
+        font-style: italic;
     }
 
     .costTable th,
     .costTable td {
         padding: 8px 10px;
-        font-size: 12px;
+        font-size: 14px;
+        font-weight: 700;
+    }
+
+    /* HEADER SPECIFIC STYLES FOR MOBILE */
+    .costTable th {
+        font-size: 12px !important;
+        font-weight: 700 !important;
+        color: #334155 !important;
     }
 
     .inputCell {
         width: 60px;
         padding: 5px 6px;
-        font-size: 12px;
+        font-size: 14px;
+        font-weight: 700;
     }
 
-    .tableEmptyStrip {
-        height: 50px;
+    .totalSection {
+        margin-top: 16px;
+        padding: 14px 16px;
+        justify-content: flex-start;
+        gap: 10px;
+    }
+
+    .totalLabel {
+        font-size: 16px;
+        font-weight: 700;
+    }
+
+    .totalValue {
+        font-size: 17px;
+        font-weight: 800;
     }
 
     .btnGreen {
         width: 100%;
         min-width: auto;
+        font-size: 14px; /* Added for mobile */
+        font-weight: 700; /* Added for mobile */
+        font-style: italic; /* Added for mobile */
+    }
+}
+
+@media (max-width: 575px) {
+    .formCard {
+        padding: 15px 18px;
+        border-radius: 12px;
+    }
+
+    .formTitle {
+        font-size: 16px;
+        font-weight: 700;
+        font-style: italic;
+        margin-bottom: 16px;
+    }
+
+    .totalSection {
+        margin-top: 14px;
+        padding: 12px 14px;
+        flex-direction: row;
+        justify-content: flex-start;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .costTable th,
+    .costTable td {
+        font-size: 14px;
+        font-weight: 700;
+    }
+
+    /* HEADER SPECIFIC STYLES FOR SMALL MOBILE */
+    .costTable th {
+        font-size: 12px !important;
+        font-weight: 700 !important;
+        color: #334155 !important;
+    }
+
+    .totalLabel, .totalValue {
+        white-space: nowrap;
+    }
+
+    .btnGreen {
+        font-size: 14px; /* Added for small mobile */
+        font-weight: 700; /* Added for small mobile */
+        font-style: italic; /* Added for small mobile */
     }
 }

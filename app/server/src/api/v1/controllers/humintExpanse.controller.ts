@@ -4,7 +4,7 @@ import * as humintExpanseService from "../services/humintExpanse.service";
 export const createHumintExpanse = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const userId = (req as any).user.id;
-        const { date, description, utility, cost, currency, taxPercent, humintId } = req.body;
+        const { date, description, utility, cost, currency, taxPercent} = req.body;
 
         const taxIncludedCost = cost + (cost * (taxPercent / 100));
         const total = taxIncludedCost;
@@ -18,7 +18,6 @@ export const createHumintExpanse = async (req: Request, res: Response, next: Nex
             taxPercent,
             taxIncludedCost,
             total,
-            humintId,
             createdBy: userId
         });
 

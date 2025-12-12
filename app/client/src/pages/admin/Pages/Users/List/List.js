@@ -97,6 +97,7 @@ const List = ({ isLoading, usersData, deleteUser }) => {
             {/* ========= MANAGEMENT ========= */}
             <EmployeeSection
                 type="management"
+                title="Management"
                 onAddClick={openModal}
                 rows={managementUsers}
                 onEdit={handleEdit}
@@ -105,6 +106,7 @@ const List = ({ isLoading, usersData, deleteUser }) => {
 
             <EmployeeSection
                 type="investigatii"
+                title="Investigații"
                 onAddClick={openModal}
                 rows={investigationsUsers}
                 onEdit={handleEdit}
@@ -113,12 +115,39 @@ const List = ({ isLoading, usersData, deleteUser }) => {
 
             <EmployeeSection
                 type="auxiliar"
+                title="Auxiliar"
                 onAddClick={openModal}
                 rows={auxiliaryUsers}
                 onEdit={handleEdit}
                 onDelete={handleDelete}
             />
 
+            <EmployeeSection
+                type="vanzari"
+                title="Vânzări"
+                onAddClick={openModal}
+                rows={filteredUsers.filter(u => u.role === "sales")}
+                onEdit={handleEdit}
+                onDelete={handleDelete}
+            />
+
+            <EmployeeSection
+                type="logistica"
+                title="Logistică"
+                onAddClick={openModal}
+                rows={filteredUsers.filter(u => u.role === "logistica")}
+                onEdit={handleEdit}
+                onDelete={handleDelete}
+            />
+
+            <EmployeeSection
+                type="tehnica"
+                title="Tehnică"
+                onAddClick={openModal}
+                rows={filteredUsers.filter(u => u.role === "tehnica")}
+                onEdit={handleEdit}
+                onDelete={handleDelete}
+            />
 
             {/* ========= REZUMAT ========= */}
             <SummarySection

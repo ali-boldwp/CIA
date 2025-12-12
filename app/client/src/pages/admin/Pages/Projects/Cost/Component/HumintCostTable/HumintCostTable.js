@@ -54,15 +54,10 @@ const HumintCostTable = ({ onAddCost }) => {
                                 <td>{formatDate(exp.date)}</td>
                                 <td>{exp.description || 'N/A'}</td>
                                 <td>
-                                    <div className={styles.utilityCell}>
-                                        <span className={styles.utilityValue}>{exp.utility || 0}/5</span>
-                                        <div className={styles.utilityBar}>
-                                            <div
-                                                className={styles.utilityFill}
-                                                style={{ width: `${(exp.utility || 0) * 20}%` }}
-                                            />
-                                        </div>
-                                    </div>
+                                    {/* REMOVED PROGRESS BAR - Only showing utility value */}
+                                    <span className={styles.utilityValue}>
+                                        {exp.utility || 0}/5
+                                    </span>
                                 </td>
                                 <td>
                                     <span className={styles.costAmount}>

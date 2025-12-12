@@ -1,21 +1,18 @@
 import { Schema, model, Document } from "mongoose";
 
 export interface IAnalystExpanse extends Document {
-
     analystId?: Schema.Types.ObjectId;
     projectId: Schema.Types.ObjectId;
-    totalSecands?:number;
-
+    totalSecands?: number;
 }
 
 const analystExpanseSchema = new Schema<IAnalystExpanse>(
     {
-       analystId:{
-           type: Schema.Types.ObjectId,
-           ref: "User",
-           default: null,
-
-       },
+        analystId: {
+            type: Schema.Types.ObjectId,
+            ref: "User",
+            default: null,
+        },
 
         projectId: {
             type: Schema.Types.ObjectId,
@@ -23,16 +20,23 @@ const analystExpanseSchema = new Schema<IAnalystExpanse>(
             default: null,
         },
 
-        totalSecands:{
-           type: Number,
-           required: false,default: 0,
+        totalSecands: {
+            type: Number,
+            default: 0,
         },
-
-
     },
-    { timestamps: true }
+    {
+        timestamps: true,
+        toJSON: { virtuals: true },
+        toObject: { virtuals: true }
+    }
 );
 
-const AnalystExpanse = model<IAnalystExpanse>("AnalystExpanse", analystExpanseSchema);
+// ⭐ Virtual Field: Convert seconds → hours
+analystExpanseSchema.virtual("totalHours").get(function () {
+    if (!this.totalSecands) return 0;
+    return this.totalSecands / 3600; // convert seconds to hours
+});
 
+const AnalystExpanse = model<IAnalystExpanse>("AnalystExpanse", analystExpanseSchema);
 export default AnalystExpanse;
