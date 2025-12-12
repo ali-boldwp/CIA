@@ -4,6 +4,8 @@ import { ok } from "../../../utils/ApiResponse";
 import ProjectRequest from "../models/projectRequest.model";
 import * as requestedService from "../services/requested.service";
 import Requested from "../models/requested.model";
+import User from "../models/user.model"
+import {createNotification} from "../services/notification.service";
 
 
 export const requestProject = async (req: Request, res: Response, next: NextFunction) => {
@@ -62,8 +64,27 @@ export const requestProject = async (req: Request, res: Response, next: NextFunc
 
         const projectRequest = await Requested.create(payload);
 
-        // const user = {}
-        // const SocketID = `notification_${user?._id}`;
+        const adminsAndManagers = await User.find({
+            role: { $in: ["admin", "manager"] }
+        }).select("_id");
+
+        // ✅ Send notifications
+        await Promise.all(
+            adminsAndManagers.map((admin) => {
+                const socketRoom = `notification_${admin._id}`;
+
+                return createNotification({
+                    user: admin._id.toString(),
+                    text: `New project request: ${projectRequest.projectName}`,
+                    type: "task",
+                    socket: socketRoom,
+                    data: {
+                        projectId: projectRequest._id,
+
+                    },
+                });
+            })
+        );
 
         return res.json(ok(projectRequest));
 

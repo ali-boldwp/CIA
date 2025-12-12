@@ -9,6 +9,7 @@ export interface IUser extends Document {
 
     email?: string;
     password?: string;
+    color? : string;
 
     role: Role;
 
@@ -49,6 +50,10 @@ const userSchema = new Schema<IUser>(
             type: String,
             required: false,
             select: false
+        },
+
+        color : {
+            type: String,
         },
 
         role: {
