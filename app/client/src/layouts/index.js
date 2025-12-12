@@ -1,10 +1,44 @@
 import HeaderLayout from "./Component/Header"
+import {useEffect} from "react";
+import socket from "../socket";
+import { toast } from "react-toastify";
+import {useSelector} from "react-redux";
 
 const Layout = ({
         loading = true,
         header = { title: null, logo: true, search: true, back: false, content: <></> },
         content = <></>,
     }) => {
+
+    const user = useSelector((state) => state.auth.user);
+
+    useEffect(() => {
+
+        const ID = `notification_${ user._id }`;
+
+        socket.on( ID, async (msg) => {
+
+            toast ( "New Notification" );
+
+            // auto-mark seen if user is viewing that chat
+            /*if (msg.chatId === chat) {
+                try {
+                    await markSeen(chat).unwrap();
+
+                    // update UI after marking seen
+                    msg.seenBy = [...(msg.seenBy || []), currentUserId];
+
+                } catch (e) {}
+            }*/
+
+        });
+
+
+        return () => {
+            socket.off( `notification_${ user._id }` );
+        };
+
+    }, []);
 
     const {
         title = null,

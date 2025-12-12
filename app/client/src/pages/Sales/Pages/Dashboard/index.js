@@ -3,6 +3,8 @@ import View from "./View";
 import { useGetProjectsQuery } from "../../../../services/projectApi";
 import { useGetAnalystsQuery } from "../../../../services/analystApi";
 
+import Header from "../../Components/Header"
+
 const Dashboard = () => {
 
     const { data: approve, isLoading } = useGetProjectsQuery();
@@ -12,6 +14,9 @@ const Dashboard = () => {
     return (
         <Layout
             loading={ isLoading || analystsLoading }
+            header={{
+                content: <Header />
+            }}
             content={ <View approve={ approve } analystsData={ analystsData } /> }
         />
     )
