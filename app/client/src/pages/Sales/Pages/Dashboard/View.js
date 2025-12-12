@@ -1,6 +1,6 @@
 import {useMemo, useState} from "react";
 import {Link} from "react-router-dom";
-
+import Calender from "./Components/Calender";
 import "./style.css";
 
 const Dashboard = ({ approve, analystsData, requested }) => {
@@ -89,6 +89,11 @@ const Dashboard = ({ approve, analystsData, requested }) => {
         return approvedProject.slice((page - 1) * limit, page * limit);
     }, [page, approvedProject]);
 
+    const completed = p.progress?.completed || 0;
+    const total = p.progress?.total || 0;
+    const percent = p.progress?.percent || 0;
+
+
     return (
         <>
             {/* TOP SUMMARY CARDS */}
@@ -153,7 +158,7 @@ const Dashboard = ({ approve, analystsData, requested }) => {
                                 </div>
                             </div>
 
-                            {p.responsibleAnalyst && (
+
                                 <div className="project-info">
                                     <div>
                                         Responsabil proiect: {resolveAnalystName(p.responsibleAnalyst)}
@@ -163,7 +168,6 @@ const Dashboard = ({ approve, analystsData, requested }) => {
                                         Echipa: {resolveAnalystNames(p.assignedAnalysts)}
                                     </div>
                                 </div>
-                            )}
 
                         </div>
                     ))}
@@ -239,52 +243,8 @@ const Dashboard = ({ approve, analystsData, requested }) => {
             </div>
             </div>
 
-            {/* BOTTOM ROW: CALENDAR + MESSENGER */}
-            <div className="bottom-row">
+             <Calender/>
 
-                <h2 className="section-sales-title no-margin-analyst">Calendar Deadlines </h2>
-
-                <div className="calendar-card">
-                    <ul className="calendar-list">
-
-                        {paginatedDeadlines.map((p) => (
-                            <li key={p._id}>
-                                <span>
-                                    🟢 {formatDate(p.deadline)} — (56%)
-                                </span>
-                            </li>
-                        ))}
-
-                        {approvedProject.length === 0 && (
-                            <li><span>Nu exista deadline-uri.</span></li>
-                        )}
-
-                    </ul>
-                    <div className="pagination" style={{ marginTop: "15px" }}>
-                        <button
-                            disabled={page === 1}
-                            onClick={() => setPage((prev) => prev - 1)}
-                        >
-                            ← Precedent
-                        </button>
-
-                        <span style={{ margin: "0 10px" }}>
-            Pagina <strong>{page}</strong> din{" "}
-                            <strong>{totalPages}</strong>
-        </span>
-
-                        <button
-                            disabled={page === totalPages}
-                            onClick={() => setPage((prev) => prev + 1)}
-                        >
-                            Următor →
-                        </button>
-                    </div>
-
-                </div>
-
-
-            </div>
         </>
     )
 
