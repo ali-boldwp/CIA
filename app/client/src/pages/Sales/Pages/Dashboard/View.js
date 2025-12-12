@@ -89,9 +89,7 @@ const Dashboard = ({ approve, analystsData, requested }) => {
         return approvedProject.slice((page - 1) * limit, page * limit);
     }, [page, approvedProject]);
 
-    const completed = p.progress?.completed || 0;
-    const total = p.progress?.total || 0;
-    const percent = p.progress?.percent || 0;
+
 
 
     return (
