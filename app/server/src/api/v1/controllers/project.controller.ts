@@ -277,30 +277,15 @@ export const getSalesRequestedProjects = async (
     try {
         const user = req.user;
 
-        // ❌ safety check
-        if (user.role !== "sales") {
-            return res.status(403).json({
-                status: "error",
-                message: "Only sales can access this"
-            });
-        }
-
-        // pagination
-        let page  = parseInt(req.query.page as string, 10) || 1;
-        let limit = parseInt(req.query.limit as string, 10) || 10;
-        if (page < 1) page = 1;
-        if (limit < 1) limit = 1;
-
-        const skip = (page - 1) * limit;
         const search = req.query.search
             ? String(req.query.search).trim()
             : "";
 
         // 🔎 base filter
         let filter: any = {
-            fromRequestId: user.id
+            fromRequestId: user.id,
+            status: "requested",
         };
-        filter.status = "requested";
 
         // 🔍 search filter
         if (search) {
@@ -315,21 +300,11 @@ export const getSalesRequestedProjects = async (
 
         const requests = await Requested
             .find(filter)
-            .sort({ createdAt: -1 })
-            .skip(skip)
-            .limit(limit);
-
-        const total = await Requested.countDocuments(filter);
+            .sort({ createdAt: -1 });
 
         return res.status(200).json({
             status: "success",
-            data: requests,
-            pagination: {
-                page,
-                limit,
-                total,
-                totalPages: Math.ceil(total / limit)
-            }
+            data: requests
         });
 
     } catch (err) {
