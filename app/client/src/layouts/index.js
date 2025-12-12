@@ -4,7 +4,7 @@ import socket from "../socket";
 import { toast } from "react-toastify";
 import {useSelector} from "react-redux";
 import {Link} from "react-router-dom";
-import {store} from "../store";
+import store from "../store";
 import {notificationApi} from "../services/notificationApi";
 
 const Layout = ({
