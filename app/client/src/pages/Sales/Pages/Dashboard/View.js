@@ -23,6 +23,7 @@ const Dashboard = ({ approve, analystsData }) => {
         Revision: "orange",
         Observation: "yellow",
     };
+
     const normalizeStatus = (status) => {
         if (!status) return "";
         return status.toLowerCase();

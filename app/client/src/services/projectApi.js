@@ -64,6 +64,13 @@ export const projectApi = createApi({
             query: (id) => `/getRequestedProjectById/${id}`,
         }),
 
+        getSalesRequestedProjects: builder.query({
+            query: ({ page = 1, limit = 10, search = "" }) => ({
+                url: `/project-requests/sales`,
+                params: { page, limit, search },
+            }),
+        }),
+
         updateProject: builder.mutation({
             query: ({ id, data }) => ({
                 url: `/projects/${id}/approve`,
@@ -95,6 +102,7 @@ export const {
     useRequestProjectMutation,
     useGetAllRequestedProjectsQuery,
     useGetRequestedProjectByIdQuery,
+    useGetSalesRequestedProjectsQuery,
     useGetProjectRequestsQuery,
     useGetChapterByIdQuery,
     useGetCreateProjectByIdQuery,
