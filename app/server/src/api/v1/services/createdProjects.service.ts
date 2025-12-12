@@ -8,6 +8,7 @@ export const getAllProjects = async (query = {}, options = {}) => {
     const { skip = 0, limit = 0 } = options;
 
     let q = projectRequest.find(query)
+        .select("+projectPrice")
         .populate("responsibleAnalyst", "name email role")
         .populate("assignedAnalysts", "name email role")
         .populate("humintId")
@@ -25,6 +26,7 @@ export const getAllProjects = async (query = {}, options = {}) => {
 
 export const getProjectById = async (id: string) => {
     return projectRequest.findById(id)
+        .select("+projectPrice")
         .populate("responsibleAnalyst", "name email role")
         .populate("assignedAnalysts", "name email role")
         .populate("humintId");
