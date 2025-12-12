@@ -1,6 +1,6 @@
 import Admin from "./Admin"
 
-import Index from "./Pages/Dashboard";
+import View from "./Pages/Dashboard";
 import Projects from "./Pages/Projects";
 import ProjectsList from "./Pages/Projects/List";
 import ProjectSearch from "./Pages/Projects/Search";
@@ -33,7 +33,7 @@ const AdminConfig = {
             children: [
                 {
                     index: true,
-                    element: <Index />
+                    element: <View />
                 },
                 {
                     path: 'project',

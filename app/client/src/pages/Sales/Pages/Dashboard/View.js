@@ -1,16 +1,50 @@
-import {useGetProjectsQuery} from "../../../../services/projectApi";
-import {useGetAnalystsQuery} from "../../../../services/userApi";
-import React, {useMemo, useState} from "react";
+import {useMemo, useState} from "react";
 import {Link} from "react-router-dom";
 
 import "./style.css";
 
-const Dashboard = () => {
+const Dashboard = ({ approve, analystsData }) => {
 
-    const { data:approve, isLoading }=useGetProjectsQuery();
+    const statusBackendToUi = {
+        approved: "in lucru",
+        requested: "Solicitat",
+        draft: "Draft",
+        completed: "Finalizat",
+        cancelled: "Anulat",
+        revision: "Revizie",
+        observation: "Observație",
+    };
+    const statusColorMap = {
+        Approved: "green",
+        Requested: "blue",
+        Draft: "gray",
+        Completed: "purple",
+        Cancelled: "red",
+        Revision: "orange",
+        Observation: "yellow",
+    };
+    const normalizeStatus = (status) => {
+        if (!status) return "";
+        return status.toLowerCase();
+    };
+
+    const capitalizeStatus = (status) => {
+        if (!status) return "";
+        return status.charAt(0).toUpperCase() + status.slice(1).toLowerCase();
+    };
+
+
+    const resolveStatusLabel = (status) => {
+        if (!status) return "—";
+        return statusBackendToUi[normalizeStatus(status)] || status;
+    };
+
+
+    const resolveStatusDotColor = (status) => {
+        return statusColorMap[capitalizeStatus(status)] || "gray";
+    };
+
     const approvedProject=approve?.data || [];
-    const { data: analystsData } = useGetAnalystsQuery();
-
     const analysts = analystsData?.data || [];
 
     const resolveAnalystName = (value) => {
@@ -34,11 +68,6 @@ const Dashboard = () => {
             .map((item) => resolveAnalystName(item))
             .join(", ");
     };
-
-
-
-
-
 
     const formatDate = (date) => {
         if (!date) return "—";
@@ -112,8 +141,9 @@ const Dashboard = () => {
                         </span>
 
                                 <div className="status-dot-wrapper">
-                                    <span className="status-sales-text">{p.status}</span>
-                                    <span className="dot green" />
+                                    <span className="status-sales-text">{resolveStatusLabel(p.status)}</span>
+                                    <span className={`dot ${resolveStatusDotColor(p.status)}`} />
+
                                 </div>
                             </div>
                         </div>
@@ -165,9 +195,9 @@ const Dashboard = () => {
 
                         {paginatedDeadlines.map((p) => (
                             <li key={p._id}>
-            <span>
-                🟢 {formatDate(p.deadline)} — (56%)
-            </span>
+                                <span>
+                                    🟢 {formatDate(p.deadline)} — (56%)
+                                </span>
                             </li>
                         ))}
 

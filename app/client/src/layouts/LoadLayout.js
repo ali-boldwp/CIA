@@ -4,8 +4,6 @@ import AppContext from "@libs/AppContext";
 import {makeStyles} from "@mui/material";
 import {matchRoutes, useLocation} from "react-router-dom";
 
-import routes from "../config/routesConfig";
-
 const useStyles = makeStyles(theme => ({
     '@global': {
         'code:not([class*="language-"])': {
