@@ -65,6 +65,24 @@ export const humintExpanseApi = createApi({
             providesTags: ["HumintExpanse"],
         }),
 
+        // ✅ NEW: GET PROJECT ANALYST EXPENSE (Tumhari working API)
+        getProjectAnalystExpanse: builder.query({
+            query: (projectId) => ({
+                url: `/analyst/${projectId}/analyst-expanse`,
+                method: "GET",
+            }),
+            providesTags: ["HumintExpanse"],
+        }),
+
+        // ✅ NEW: GET ANALYST FINAL SALARY (Agar chahiye toh)
+        getAnalystsFinalSalary: builder.query({
+            query: () => ({
+                url: `/analyst-expanse/total-salary`,
+                method: "GET",
+            }),
+            providesTags: ["HumintExpanse"],
+        }),
+
     }),
 });
 
@@ -72,7 +90,10 @@ export const {
     useCreateHumintExpanseMutation,
     useGetHumintExpensesQuery,
     useGetHumintExpenseByIdQuery,
-    useUpdateHumintExpenseMutation,
-    useDeleteHumintExpenseMutation,
-    useGetHumintTotalsQuery
+    useUpdateHumintExpanseMutation,
+    useDeleteHumintExpanseMutation,
+    useGetHumintTotalsQuery,
+    // ✅ NEW HOOKS
+    useGetProjectAnalystExpanseQuery,
+    useGetAnalystsFinalSalaryQuery,
 } = humintExpanseApi;

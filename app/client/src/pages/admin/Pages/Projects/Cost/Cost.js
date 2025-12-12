@@ -1,5 +1,5 @@
 import "./style.css";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import AddEmployeeCostPopup from "./PopUp/AddEmployeeCostPopup/AddEmployeeCostPopup";
 import AddHumintCostPopup from "./PopUp/AddHumintCostPopup/AddHumintCostPopup";
 import SummarySection from "./Component/SummarySection/SummaaySection";
@@ -12,6 +12,17 @@ const ProjectCost = ({ data }) => {
     // State for popups visibility
     const [showEmployeePopup, setShowEmployeePopup] = useState(false);
     const [showHumintPopup, setShowHumintPopup] = useState(false);
+
+    // ✅ Extract projectId from data prop
+    const projectId = data?.data?._id || data?._id || "693c081dc1bd09040f202cda";
+
+    console.log("✅ Cost.js - Project ID:", projectId);
+    console.log("✅ Data structure:", {
+        hasData: !!data,
+        hasDataData: !!data?.data,
+        projectIdFromData: data?.data?._id,
+        projectIdFromRoot: data?._id
+    });
 
     // Function to handle saving employee cost
     const handleSaveEmployeeCost = (data) => {
@@ -29,38 +40,61 @@ const ProjectCost = ({ data }) => {
     const handleSaveAll = () => {
         console.log("Saving all changes...");
         // Add your save all logic here
-        // Example: Save employee changes, HUMINT changes, etc.
     };
 
     // Function to handle back to project page
     const handleBackToProject = () => {
         console.log("Navigating back to project page...");
         // Add navigation logic here
-        // Example: window.location.href = "/project-page";
     };
 
     return (
         <div className="page-wrapper">
             <div className="page-container">
-                {/* REMOVED HEADER SECTION */}
+                {/* Project Info Header */}
+                <div style={{
+                    backgroundColor: '#f8f9fa',
+                    padding: '10px 15px',
+                    marginBottom: '15px',
+                    borderRadius: '6px',
+                    border: '1px solid #dee2e6'
+                }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                        <div>
+                            <h3 style={{ margin: 0, color: '#333' }}>
+                                {data?.data?.projectName || "Project Cost Management"}
+                            </h3>
+                            <div style={{ fontSize: '14px', color: '#666', marginTop: '5px' }}>
+                                Project ID: <strong>{projectId}</strong>
+                                {data?.data?.projectName && ` | ${data.data.projectName}`}
+                            </div>
+                        </div>
+                        <div style={{ fontSize: '12px', color: '#28a745', backgroundColor: '#d4edda', padding: '3px 8px', borderRadius: '4px' }}>
+                            Status: {data?.data?.status || 'Active'}
+                        </div>
+                    </div>
+                </div>
 
                 {/* TOP ROW: PROJECT DETAILS + FINANCIAL SUMMARY */}
-                <SummarySection /> {/* Using the SummarySection component */}
+                <SummarySection projectId={projectId} projectData={data?.data} />
 
                 {/* FIXED COSTS + OSINT COSTS BAR */}
-                <CostBar /> {/* Using the CostBar component */}
+                <CostBar projectId={projectId} />
 
-                {/* EMPLOYEE COSTS TABLE */}
+                {/* ✅ EMPLOYEE COSTS TABLE - PASS PROJECT ID */}
                 <EmployeeCostTable
+                    projectId={projectId}
                     onAddCost={() => setShowEmployeePopup(true)}
+                    projectData={data?.data}
                 />
 
                 {/* HUMINT COSTS TABLE */}
                 <HumintCostTable
+                    projectId={projectId}
                     onAddCost={() => setShowHumintPopup(true)}
                 />
 
-                {/* PAGE FOOTER BUTTONS - Using ButtonSection component */}
+                {/* PAGE FOOTER BUTTONS */}
                 <ButtonSection
                     onSave={handleSaveAll}
                     onBack={handleBackToProject}
@@ -77,6 +111,7 @@ const ProjectCost = ({ data }) => {
                 isOpen={showEmployeePopup}
                 onClose={() => setShowEmployeePopup(false)}
                 onSave={handleSaveEmployeeCost}
+                projectId={projectId}
             />
 
             {/* HUMINT COST POPUP */}
@@ -84,6 +119,7 @@ const ProjectCost = ({ data }) => {
                 isOpen={showHumintPopup}
                 onClose={() => setShowHumintPopup(false)}
                 onSave={handleSaveHumintCost}
+                projectId={projectId}
             />
         </div>
     )
