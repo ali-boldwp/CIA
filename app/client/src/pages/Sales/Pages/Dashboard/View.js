@@ -212,7 +212,7 @@ const Dashboard = ({ approve, analystsData, requested }) => {
                             <div>
                                 Echipa: {resolveAnalystNames(p.assignedAnalysts)}
 
-                            </div>
+                             </div>
                         </div>
 
                         <div className="progress-block">
