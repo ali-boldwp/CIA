@@ -19,7 +19,7 @@ const CostBar = () => {
             {/* Row 1 */}
             <div className={`${styles.formCard} ${styles.costsBar}`}>
                 <div className={styles.costBlock}>
-                    <h2 className={styles.costTitle}>Cheltuieli fixe</h2>
+                    <h2 className={styles.costTitle}>fixe</h2>
                     <div className={styles.costRow}>
                         <div className={styles.formField}>
                             <label>Cheltuieli totale</label>
@@ -37,7 +37,7 @@ const CostBar = () => {
                 </div>
 
                 <div className={styles.costBlock}>
-                    <h2 className={styles.costTitle}>Cheltuieli OSINT</h2>
+                    <h2 className={styles.costTitle}>OSINT</h2>
                     <div className={styles.costRow}>
                         <div className={styles.formField}>
                             <label>Cheltuieli totale</label>
@@ -58,7 +58,7 @@ const CostBar = () => {
             {/* Row 2 */}
             <div className={`${styles.formCard} ${styles.costsBar}`}>
                 <div className={styles.costBlock}>
-                    <h2 className={styles.costTitle}>Cheltuieli TESA</h2>
+                    <h2 className={styles.costTitle}>TESA</h2>
                     <div className={styles.costRow}>
                         <div className={styles.formField}>
                             <label>Cheltuieli totale</label>
@@ -77,7 +77,7 @@ const CostBar = () => {
 
                 <div className={styles.costBlock}>
                     <h2 className={styles.costTitle}>
-                        Cheltuieli Supraveghere Operativa / Tehnica
+                      Tehnica
                     </h2>
                     <div className={styles.costRow}>
                         <div className={styles.formField}>
@@ -99,7 +99,7 @@ const CostBar = () => {
             {/* Row 3 */}
             <div className={`${styles.formCard} ${styles.costsBar}`}>
                 <div className={styles.costBlock}>
-                    <h2 className={styles.costTitle}>Alte cheltuieli</h2>
+                    <h2 className={styles.costTitle}>other</h2>
                     <div className={styles.costRow}>
                         <div className={styles.formField}>
                             <label>Cheltuieli totale</label>
