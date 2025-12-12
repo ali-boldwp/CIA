@@ -10,6 +10,9 @@ import Header from "./Header";
 import Billing from "./Billing";
 import Buttons from "./Buttons";
 
+import { toast } from "react-toastify";
+
+
 const defaultData = {
     name: "",
     subject: "",
@@ -45,8 +48,10 @@ const ProjectView = ({ data }) => {
     const { id } = useParams();
 
     // 🧲 RTK Query Hooks
-    const [createProject] = useCreateProjectMutation();
-    const [updateProject] = useUpdateProjectMutation();
+    const [createProject, { isLoading: isCreating }] = useCreateProjectMutation();
+    const [updateProject, { isLoading: isUpdating }] = useUpdateProjectMutation();
+
+    const submitting = isCreating || isUpdating;
 
     // 📝 Component State
     const [project, setProject] = useState({ ...defaultData });
@@ -102,21 +107,31 @@ const ProjectView = ({ data }) => {
     }, [data]);
 
 
-    // 💾 SAVE HANDLER
     const handleSave = async () => {
+        const actionPromise = id
+            ? updateProject({ id, data: project }).unwrap()
+            : createProject(project).unwrap();
+
         try {
-            if (id) {
-                await updateProject({ id, data: project }).unwrap();
-                alert("Project updated!");
-            } else {
-                await createProject(project).unwrap();
-                alert("Project created!");
-            }
+            await toast.promise(
+                actionPromise,
+                {
+                    pending: id ? "Se actualizează proiectul..." : "Se creează proiectul...",
+                    success: id ? "Proiect actualizat!" : "Proiect creat!",
+                    error: {
+                        render({ data }) {
+                            return data?.data?.message || "Something went wrong!";
+                        },
+                    },
+                },
+                { autoClose: 3000 }
+            );
         } catch (error) {
             console.error(error);
-            alert("Something went wrong!");
+            // toast.promise already showed error
         }
     };
+
 
     const handleBack = () => {
         window.history.back();
@@ -440,9 +455,11 @@ const ProjectView = ({ data }) => {
                 <Buttons
                     onSave={handleSave}
                     id={project._id}
+                    isLoading={submitting}
                     onGoToTask={() => console.log("go to task clicked")}
                     onViewCosts={() => console.log("view costs clicked")}
                 />
+
             </div>
         </div>
     );

@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import styles from './EmployeeCostTable.module.css';
 import { useGetProjectAnalystExpanseQuery } from '../../../../../../../services/humintExpanseApi';
+import { toast } from "react-toastify";
+
 
 const EmployeeCostTable = ({ onAddCost, projectId, projectData, onTotalCostUpdate }) => {
     // Get projectId from props

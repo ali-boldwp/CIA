@@ -242,7 +242,8 @@ const CreateProject = () => {
     // ============================
     // API MUTATIONS
     // ============================
-    const [createProject] = useCreateProjectMutation();
+    const [createProject, { isLoading: isCreating }] = useCreateProjectMutation();
+
     const [requestProject] = useRequestProjectMutation();
 
     // ============================
@@ -279,11 +280,10 @@ const CreateProject = () => {
 
     });
 
-    // ============================
-    // SAVE HANDLER
-    // ============================
+
     const handleSave = async (e) => {
-        e.preventDefault(); // safety
+        e.preventDefault();
+
         if (!validateForm()) {
             toast.error("Please fill all required fields!");
             return;
@@ -291,17 +291,25 @@ const CreateProject = () => {
 
         const payload = buildPayload();
 
-        console.log(payload)
         try {
+            const response = await toast.promise(
+                createProject(payload).unwrap(),
+                {
+                    pending: "Se creează proiectul...",
+                    success: "Proiect final creat cu succes!",
+                    error: {
+                        render({ data }) {
+                            return data?.data?.message || "Eroare la salvare!";
+                        },
+                    },
+                },
+                { autoClose: 3000 }
+            );
 
-            const response = await createProject(payload).unwrap();
-            toast("Proiect final creat cu succes!");
             navigate(`/project/view/${response.data._id}`);
-
-
         } catch (err) {
             console.log(err);
-            toast.error("Eroare la salvare!");
+
         }
     };
 
@@ -935,23 +943,23 @@ const CreateProject = () => {
 
                     {/* SAVE BUTTON */}
                     <div className="button-row">
-                        <button
-                            className="draftProject"
-                            onClick={handleDraft}
-                        >
+                        <button className="draftProject" onClick={handleDraft} disabled={isCreating}>
                             Salvează draft
                         </button>
+
 
 
                         <button
                             className="createProject"
                             onClick={handleSave}
+                            disabled={isCreating}
                         >
-                            {id
-                                ? "Creeaza proiect nou"
-                                : "Creează proiect nou"}
+                            {isCreating ? "Se creează..." : (id ? "Creează proiect nou" : "Creează proiect nou")}
                         </button>
+
                     </div>
+
+
                 </div>
             </div>
         </div>
