@@ -1,6 +1,8 @@
 import {useMemo, useState} from "react";
 import {Link} from "react-router-dom";
 
+import "./style.css";
+
 const Dashboard = ({ approve, analystsData }) => {
 
     const statusBackendToUi = {
