@@ -326,11 +326,27 @@
     font-size: 13px;
     color: #111827;
     font-weight: 700;
-    display: block;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
     border: 1px solid #e5e7eb;
     cursor: pointer;
 }
 
+
+.chipGhostAddBtn {
+    background: #f3f4ff;
+    border-radius: 999px;
+    padding: 4px 10px;
+    font-size: 17px;
+    color: #111827;
+    font-weight: 700;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid #e5e7eb;
+    cursor: pointer;
+}
 /* Large input container wrapper */
 .bigInputWrapper {
     position: relative;

@@ -4,7 +4,7 @@ import AnalystOptionsPopup from "../../../admin/Pages/Projects/View/popup/Analys
 import { BsThreeDots } from "react-icons/bs";
 import {
     useCreateProjectMutation,
-    useGetCreateProjectByIdQuery,
+
     useUpdateProjectMutation
 } from "../../../../services/projectApi";
 import { useGetAnalystsQuery } from "../../../../services/userApi";
@@ -65,6 +65,7 @@ const ProjectView = ({ data }) => {
     const [showPopup, setShowPopup] = useState(false);
     const [selectedMember, setSelectedMember] = useState(null);
     const [showMemberPopup, setShowMemberPopup] = useState(false);
+    const [showAddAnalystPopup, setShowAddAnalystPopup] = useState(false);
 
 
 
@@ -96,9 +97,11 @@ const ProjectView = ({ data }) => {
                 files: raw.files || [],
 
                 responsible:
-                    typeof raw.responsibleAnalyst === "object" && raw.responsibleAnalyst !== null
-                        ? raw.responsibleAnalyst.name
-                        : raw.responsibleAnalyst || "—",
+                    raw.responsibleAnalyst?.name || "—",
+
+                responsibleId:
+                    raw.responsibleAnalyst?._id || null,
+
 
                 team: raw.assignedAnalysts || [],
 
@@ -119,29 +122,48 @@ const ProjectView = ({ data }) => {
 
 
     const handleSave = async () => {
-        const actionPromise = id
-            ? updateProject({ id, data: project }).unwrap()
-            : createProject(project).unwrap();
+        const payload = {
+            projectName: project.name,
+            projectSubject: project.subject,
+            reportType: project.reportType,
+            entityType: project.entityType,
+            priority: project.priority,
+            deliverableLanguage: project.language,
+            projectDescription: project.description,
+
+            deadline: project.deadline,
+            currency: project.currency,
+            contractNumber: project.contractNumber,
+            annexNumber: project.annexNumber,
+            contractInfo: project.contractNotes,
+            referenceRequest: project.referenceRequest,
+            internalNotes: project.internalNotes,
+
+            clientName: project.clientName,
+            clientContactPerson: project.contactPerson,
+            clientPosition: project.contactRole,
+            clientEmail: project.email,
+            clientPhone: project.phone,
+
+            // 🔴 MOST IMPORTANT
+            responsibleAnalyst: project.responsibleId,
+            assignedAnalysts: project.team.map(m => m._id),
+        };
 
         try {
             await toast.promise(
-                actionPromise,
+                updateProject({ id: project._id, data: payload }).unwrap(),
                 {
-                    pending: id ? "Se actualizează proiectul..." : "Se creează proiectul...",
-                    success: id ? "Proiect actualizat!" : "Proiect creat!",
-                    error: {
-                        render({ data }) {
-                            return data?.data?.message || "Something went wrong!";
-                        },
-                    },
-                },
-                { autoClose: 3000 }
+                    pending: "Se actualizează proiectul...",
+                    success: "Proiect actualizat!",
+                    error: "Eroare la actualizare",
+                }
             );
-        } catch (error) {
-            console.error(error);
-            // toast.promise already showed error
+        } catch (err) {
+            console.error(err);
         }
     };
+
 
 
     const handleBack = () => {
@@ -341,6 +363,18 @@ const ProjectView = ({ data }) => {
 
                                 ))}
 
+                                <span
+                                    className={`${styles.chipGhostAddBtn} ${styles.addChip}`}
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        setSelectedMember(null);
+                                        setShowMemberPopup(true);
+                                    }}
+                                >
+    +
+</span>
+
+
                             </div>
                         </div>
                     </div>
@@ -518,27 +552,37 @@ const ProjectView = ({ data }) => {
                 )}
 
 
-                {showMemberPopup && selectedMember && (
+                {showMemberPopup && (
                     <AnalystOptionsPopup
-                        analysts={analyst}
-                        onReplace={(newId) => {
-                            console.log("Replace", selectedMember._id, "with", newId);
+                        analysts={
+                            selectedMember
+                                ? analyst // EDIT → sab analysts
+                                : analyst.filter(a =>
+                                    !project.team.some(m => m._id === a._id)
+                                ) // ADD → sirf unassigned
+                        }
 
-                            // UI update example
+                        mode={selectedMember ? "edit" : "add"} // 👈 OPTIONAL (nice)
+
+                        onReplace={(newId) => {
+                            const selected = analyst.find(a => a._id === newId);
+                            if (!selected) return;
+
                             setProject(prev => ({
                                 ...prev,
-                                team: prev.team.map(m =>
-                                    m._id === selectedMember._id
-                                        ? analyst.find(a => a._id === newId)
-                                        : m
-                                )
+                                team: selectedMember
+                                    ? prev.team.map(m =>
+                                        m._id === selectedMember._id ? selected : m
+                                    )
+                                    : [...prev.team, selected] // 👈 ADD MODE
                             }));
 
                             setShowMemberPopup(false);
                             setSelectedMember(null);
                         }}
+
                         onRemove={() => {
-                            console.log("Remove", selectedMember._id);
+                            if (!selectedMember) return;
 
                             setProject(prev => ({
                                 ...prev,
@@ -548,12 +592,14 @@ const ProjectView = ({ data }) => {
                             setShowMemberPopup(false);
                             setSelectedMember(null);
                         }}
+
                         onClose={() => {
                             setShowMemberPopup(false);
                             setSelectedMember(null);
                         }}
                     />
                 )}
+
 
 
 
