@@ -17,6 +17,7 @@ Cap. II – Terminologie neunitară`,
                           onAddNote,
                           onMarkAllResolved,
                           onResubmit,
+                          isLoading = false,
                       }) => {
     const [notes, setNotes] = useState("");
 
@@ -41,14 +42,15 @@ Cap. II – Terminologie neunitară`,
             TASK INDIVIDUAL — întors la redactat (cu observații)
           </span>
 
-                    {/* sirf X button, "Acțiuni" text hata diya */}
                     <button
                         type="button"
                         className={styles.closeBtn}
                         onClick={onClose}
+                        disabled={isLoading}
                     >
                         ×
                     </button>
+
                 </div>
 
                 {/* Badges */}
@@ -91,7 +93,9 @@ Cap. II – Terminologie neunitară`,
                         className={styles.notesArea}
                         value={notes}
                         onChange={(e) => setNotes(e.target.value)}
+                        disabled={isLoading}
                     />
+
                 </div>
 
                 {/* 🔻 Separate actions section, textarea se bahar */}
@@ -100,9 +104,8 @@ Cap. II – Terminologie neunitară`,
                         <button
                             type="button"
                             className={styles.secondaryBtn}
-                            onClick={() => {
-                                if (onAddNote) onAddNote(notes);
-                            }}
+                            disabled={isLoading}
+                            onClick={() => onAddNote && onAddNote(notes)}
                         >
                             Adaugă notă/atașament
                         </button>
@@ -110,9 +113,8 @@ Cap. II – Terminologie neunitară`,
                         <button
                             type="button"
                             className={styles.outlineBtn}
-                            onClick={() => {
-                                if (onMarkAllResolved) onMarkAllResolved();
-                            }}
+                            disabled={isLoading}
+                            onClick={() => onMarkAllResolved && onMarkAllResolved()}
                         >
                             Marchează toate rezolvate
                         </button>
@@ -122,8 +124,9 @@ Cap. II – Terminologie neunitară`,
                                 type="button"
                                 className={styles.primaryBtn}
                                 onClick={final}
+                                disabled={isLoading}
                             >
-                                Trimite din nou la revizie
+                                {isLoading ? "Se trimite..." : "Trimite din nou la revizie"}
                             </button>
 
                             <p className={styles.helperText}>

@@ -129,30 +129,40 @@ const ProjectTasks = ({
     }, [project]);
 
 
-
     const handleCreateTask = async (chapterId) => {
         if (!newTaskName.trim()) return;
 
         try {
-            const response = await createTask({
-                name: newTaskName,
-                chapterId,
-            }).unwrap();
+            const response = await toast.promise(
+                createTask({ name: newTaskName, chapterId }).unwrap(),
+                {
+                    pending: "Se adaugă task-ul...",
+                    success: "Task adăugat cu succes!",
+                    error: {
+                        render({ data }) {
+                            return data?.data?.message || "Eroare la adăugarea taskului!";
+                        },
+                    },
+                },
+                { autoClose: 2000, toastId: `create-task-${chapterId}` }
+            );
+
             refetchProgress();
-            // Add task to UI immediately
+
+            // UI update
             setTasksByChapter((prev) => ({
                 ...prev,
                 [chapterId]: [...(prev[chapterId] || []), response.data],
             }));
 
-            // Close form
             setShowTaskForm(false);
             setNewTaskName("");
-            toast("Task adăugat cu succes!");
         } catch (error) {
-            toast.error("Eroare la adăugarea taskului!");
+            console.error(error);
+            // toast.promise already handled error
         }
     };
+
     const navigate=useNavigate();
 
     const goBack = () => {
@@ -197,36 +207,41 @@ const ProjectTasks = ({
         }
     };
 
+
     const handleAddObservation = async (notes) => {
-        if (!projectId) {
-            toast.error("Project not selected");
-            return;
-        }
-        if (!notes || !notes.trim()) {
-            toast.error("Observația este goală");
-            return;
-        }
+        if (!projectId) return toast.error("Project not selected");
+        if (!notes || !notes.trim()) return toast.error("Observația este goală");
+
+        setShowPleaseWait(true);
 
         try {
-            setShowPleaseWait(true);
-            const res = await createObservation({
-                projectId,
-                text: notes.trim(),
-            }).unwrap();
+            await toast.promise(
+                createObservation({
+                    projectId,
+                    text: notes.trim(),
+                }).unwrap(),
+                {
+                    pending: "Se salvează observația...",
+                    success: "Observație adăugată! Proiect marcat ca observation.",
+                    error: {
+                        render({ data }) {
+                            return data?.data?.message || "Nu s-a putut salva observația";
+                        },
+                    },
+                },
+                { autoClose: 2000, toastId: `add-observation-${projectId}` }
+            );
 
-            toast("Observație adăugată și proiect marcat ca observation");
-            // optionally disable buttons / lock UI
             setAllBtn(true);
-
-            // close popup or keep open depending on UX
             setShowReviewPopup(false);
         } catch (err) {
             console.error(err);
-            toast.error("Nu s-a putut salva observația");
+            // toast.promise already handled error
         } finally {
             setShowPleaseWait(false);
         }
     };
+
 
 
     const handleResume = async (taskId, chapterId) => {
@@ -298,33 +313,41 @@ const ProjectTasks = ({
         return `${h}h ${m.toString().padStart(2, "0")}m`;
     };
 
+
     const handleFinalize = async (statusType) => {
-
-        // UI Should Update Immediately
+        // UI immediate
         setIsFinalizedLocal(true);
-
         setShowPleaseWait(true);
         setAllBtn(true);
 
         try {
-            await finalizeTask({
-                id: projectId,
-                status: statusType,
-            }).unwrap();
-
-            toast("Project Revision!");
-
+            await toast.promise(
+                finalizeTask({
+                    id: projectId,
+                    status: statusType,
+                }).unwrap(),
+                {
+                    pending: "Se trimite din nou la revizie...",
+                    success: "Project trimis la revizie!",
+                    error: {
+                        render({ data }) {
+                            return data?.data?.message || "Finalization error!";
+                        },
+                    },
+                },
+                { autoClose: 2000, toastId: `finalize-${projectId}-${statusType}` }
+            );
         } catch (err) {
             console.error(err);
-            toast.error("Finalization error!");
 
-            // Revert UI if backend fails
+            // revert if backend fails
             setIsFinalizedLocal(false);
-
+            setAllBtn(false);
         } finally {
             setShowPleaseWait(false);
         }
     };
+
 
 
 
@@ -774,9 +797,11 @@ const ProjectTasks = ({
                             <button
                                 className="task-submit-btn"
                                 onClick={() => handleCreateTask(activeChapterId)}
+                                disabled={isCreatingTask || !newTaskName.trim()}
                             >
-                                Adauga
+                                {isCreatingTask ? "Se adaugă..." : "Adauga"}
                             </button>
+
                         </div>
                     </div>
                 </div>
@@ -784,11 +809,21 @@ const ProjectTasks = ({
 
 
             {showReviewPopup && (
-                <ReviewPopUp onClose={() => setShowReviewPopup(false)} onAddObservation={handleAddObservation} />
+                <ReviewPopUp
+                    onClose={() => setShowReviewPopup(false)}
+                    onAddObservation={handleAddObservation}
+                    isLoading={isCreatingObservation || showPleaseWait}
+                />
             )}
 
+
             {showEditingPopup && (
-                <EditingPopUp final={()=>handleFinalize("revision")} data={Observation?.data || []} onClose={() => setShowEditingPopup(false)} />
+                <EditingPopUp
+                    final={() => handleFinalize("revision")}
+                    data={Observation?.data || []}
+                    onClose={() => setShowEditingPopup(false)}
+                    isLoading={isFinalizing || showPleaseWait}
+                />
             )}
 
             {showPleaseWait  && (
