@@ -75,13 +75,11 @@ export const requestProject = async (req: Request, res: Response, next: NextFunc
 
                 return createNotification({
                     user: admin._id.toString(),
-                    text: `New project request: ${projectRequest.projectName}`,
-                    type: "task",
+                    title: "Cerere nouă de proiect",
+                    text: `A fost trimisă o cerere pentru proiectul ${projectRequest.projectName}`,
+                    link: `/project/new/${projectRequest._id}`,
+                    type: "info",
                     socket: socketRoom,
-                    data: {
-                        projectId: projectRequest._id,
-
-                    },
                 });
             })
         );
