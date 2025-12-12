@@ -4,11 +4,9 @@ import baseQuery from "./apiSlice";
 export const humintExpanseApi = createApi({
     reducerPath: "humintExpanseApi",
     baseQuery: baseQuery,
-
     tagTypes: ["HumintExpanse"],
 
     endpoints: (builder) => ({
-
         // CREATE EXPENSE
         createHumintExpanse: builder.mutation({
             query: (body) => ({
@@ -38,7 +36,7 @@ export const humintExpanseApi = createApi({
         }),
 
         // UPDATE
-        updateHumintExpense: builder.mutation({
+        updateHumintExpanse: builder.mutation({
             query: ({ id, ...body }) => ({
                 url: `/humint-expanse/${id}`,
                 method: "PUT",
@@ -48,7 +46,7 @@ export const humintExpanseApi = createApi({
         }),
 
         // DELETE
-        deleteHumintExpense: builder.mutation({
+        deleteHumintExpanse: builder.mutation({
             query: (id) => ({
                 url: `/humint-expanse/${id}`,
                 method: "DELETE",
@@ -65,7 +63,7 @@ export const humintExpanseApi = createApi({
             providesTags: ["HumintExpanse"],
         }),
 
-        // ✅ NEW: GET PROJECT ANALYST EXPENSE (Tumhari working API)
+        // ✅ GET PROJECT ANALYST EXPENSE
         getProjectAnalystExpanse: builder.query({
             query: (projectId) => ({
                 url: `/analyst/${projectId}/analyst-expanse`,
@@ -74,7 +72,7 @@ export const humintExpanseApi = createApi({
             providesTags: ["HumintExpanse"],
         }),
 
-        // ✅ NEW: GET ANALYST FINAL SALARY (Agar chahiye toh)
+        // ✅ GET ANALYST FINAL SALARY
         getAnalystsFinalSalary: builder.query({
             query: () => ({
                 url: `/analyst-expanse/total-salary`,
@@ -83,16 +81,15 @@ export const humintExpanseApi = createApi({
             providesTags: ["HumintExpanse"],
         }),
 
-        // UpdatedSummaryBy
-
-        updatedSummmary: builder.mutation({
-            query: ({ id, feedback }) => ({
-                url: `/humint/${id}/clarification`,
-                method: "PATCH",
-                body: { managerFeedback: feedback },
+        // ✅ UPDATE PROJECT PRICE
+        updateProjectPrice: builder.mutation({
+            query: ({ projectId, type, price }) => ({
+                url: `/project/${projectId}/price/${type}`,
+                method: "PUT",
+                body: { price },
             }),
+            invalidatesTags: ["ProjectStats"],
         }),
-
     }),
 });
 
@@ -103,8 +100,7 @@ export const {
     useUpdateHumintExpanseMutation,
     useDeleteHumintExpanseMutation,
     useGetHumintTotalsQuery,
-    // ✅ NEW HOOKS
     useGetProjectAnalystExpanseQuery,
     useGetAnalystsFinalSalaryQuery,
-    useUpdatedSummmary,
+    useUpdateProjectPriceMutation, // ✅ CORRECT EXPORT NAME
 } = humintExpanseApi;
