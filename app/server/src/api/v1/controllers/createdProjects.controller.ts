@@ -154,13 +154,11 @@ export const getAllProjects = async (req: Request, res: Response, next: NextFunc
     // -------- ROLE FILTER ----------
     let roleFilter: any;
     if (user.role === "sales") {
-        console.log(user)
         roleFilter = {
-            $and: [
-                { fromRequestId: user._id },
-                { status: "approved" }
-            ]
+            fromRequestId: user._id,
+            status: { $in: ["approved", "revision", "observation", "finished"] }
         };
+
     } else if (user.role === "analyst") {
         roleFilter = {
             $or: [

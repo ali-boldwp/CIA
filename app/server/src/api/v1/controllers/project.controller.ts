@@ -245,3 +245,72 @@ export const getAllRequestedProjects = async ( req, res, next) => {
         next(err);
     }
 };
+
+
+export const getSalesRequestedProjects = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+) => {
+    try {
+        const user = req.user;
+
+        // ❌ safety check
+        if (user.role !== "sales") {
+            return res.status(403).json({
+                status: "error",
+                message: "Only sales can access this"
+            });
+        }
+
+        // pagination
+        let page  = parseInt(req.query.page as string, 10) || 1;
+        let limit = parseInt(req.query.limit as string, 10) || 10;
+        if (page < 1) page = 1;
+        if (limit < 1) limit = 1;
+
+        const skip = (page - 1) * limit;
+        const search = req.query.search
+            ? String(req.query.search).trim()
+            : "";
+
+        // 🔎 base filter
+        let filter: any = {
+            fromRequestId: user.id
+        };
+        filter.status = "requested";
+
+        // 🔍 search filter
+        if (search) {
+            filter.$or = [
+                { projectName:         { $regex: search, $options: "i" } },
+                { projectSubject:      { $regex: search, $options: "i" } },
+                { clientName:          { $regex: search, $options: "i" } },
+                { clientContactPerson: { $regex: search, $options: "i" } },
+                { referenceRequest:    { $regex: search, $options: "i" } }
+            ];
+        }
+
+        const requests = await Requested
+            .find(filter)
+            .sort({ createdAt: -1 })
+            .skip(skip)
+            .limit(limit);
+
+        const total = await Requested.countDocuments(filter);
+
+        return res.status(200).json({
+            status: "success",
+            data: requests,
+            pagination: {
+                page,
+                limit,
+                total,
+                totalPages: Math.ceil(total / limit)
+            }
+        });
+
+    } catch (err) {
+        next(err);
+    }
+};

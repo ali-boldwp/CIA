@@ -16,6 +16,10 @@ router.get(
     projectController.getRequestedProjectById
 );
 
-
+router.get(
+    "/project-requests/sales",
+    auth,
+    projectController.getSalesRequestedProjects
+);
 
 export default router;
