@@ -1,7 +1,8 @@
 import React from "react";
 import styles from "./Button.module.css";
 
-const Button = ({ onApprove, onSaveDraft, onGenerateBrief }) => {
+const Button = ({ onApprove, onSaveDraft, onGenerateBrief, disabled = false }) => {
+
     return (
         <div className={styles.wrapper}>
             <div className={styles.card}>
@@ -12,22 +13,25 @@ const Button = ({ onApprove, onSaveDraft, onGenerateBrief }) => {
                         type="button"
                         className={`${styles.btn} ${styles.btnPrimary}`}
                         onClick={onApprove}
+                        disabled={disabled}
                     >
-                        Trimite spre aprobare
+                        {disabled ? "Se trimite..." : "Trimite spre aprobare"}
                     </button>
 
                     <button
                         type="button"
                         className={`${styles.btn} ${styles.btnSecondary}`}
                         onClick={onSaveDraft}
+                        disabled={disabled}
                     >
-                        Salvează draft
+                        {disabled ? "Se salvează..." : "Salvează draft"}
                     </button>
 
                     <button
                         type="button"
                         className={`${styles.btn} ${styles.btnTertiary}`}
                         onClick={onGenerateBrief}
+                        disabled={disabled}
                     >
                         Generează brief printabil
                     </button>

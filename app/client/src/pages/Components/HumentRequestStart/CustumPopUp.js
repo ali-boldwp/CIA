@@ -3,12 +3,16 @@
 import React, { useState } from "react";
 import styles from "./CustumPop.module.css";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+
 
 // 🔥 Fetch Analysts API
 import { useGetAnalystsQuery } from "../../../services/userApi";
 
 const CustumPopUp = () => {
     const navigate = useNavigate();
+    const [submitting, setSubmitting] = useState(false);
+
 
     // GET ANALYSTS FROM BACKEND
     const { data: AnalystData } = useGetAnalystsQuery();
@@ -63,27 +67,30 @@ const CustumPopUp = () => {
             return;
         }
 
-        // Independent Payload
         const cleanPayload = {
             isLinkedToProject: false,
             humintSubject: form.subject,
             reportType: form.reportType,
             deadline: form.deadline,
-            priority: form.priority,    // Backend enum
-            responsible: form.responsible, // Analyst ID
+            priority: form.priority,
+            responsible: form.responsible,
             createProjectFromRequest: form.createProject === "da",
             notifyManager: form.notifyManager === "da",
         };
 
-        console.log("Independent HUMINT →", cleanPayload);
+        setSubmitting(true);
+
+        toast.info("Se deschide formularul HUMINT...");
 
         navigate("/humintRequest-Page", {
-            state: {
-                humintType: "independent",
-                data: cleanPayload,
-            },
+            state: { humintType: "independent", data: cleanPayload },
         });
+
+        // navigate ke baad component unmount ho jata, but safe:
+        setSubmitting(false);
     };
+
+
 
     return (
         <div className={styles.wrapper}>
@@ -236,7 +243,14 @@ const CustumPopUp = () => {
 
                     {/* SUBMIT */}
                     <div className={styles.buttonRow}>
-                        <button type="submit" className={styles.continueBtn}>Continuă</button>
+                        <button
+                            type="submit"
+                            className={styles.continueBtn}
+                            disabled={submitting}
+                        >
+                            {submitting ? "Se deschide..." : "Continuă"}
+                        </button>
+
                     </div>
 
                 </form>

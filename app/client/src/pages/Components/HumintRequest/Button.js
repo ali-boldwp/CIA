@@ -1,7 +1,8 @@
 import React from "react";
 import styles from "./Button.module.css";
 
-const RequestButton = ({ status, onApprove, onReject, onClarify }) => {
+const RequestButton = ({ status, onApprove, onReject, onClarify, disabled = false }) => {
+
     const normalized = (status || "").trim().toLowerCase();
 
     const isRequested = normalized === "requested";
@@ -16,16 +17,18 @@ const RequestButton = ({ status, onApprove, onReject, onClarify }) => {
                         type="button"
                         className={`${styles.btn} ${styles.btnApprove}`}
                         onClick={onApprove}
+                        disabled={disabled}
                     >
-                        Aprobă
+                        {disabled ? "Se aprobă..." : "Aprobă"}
                     </button>
 
                     <button
                         type="button"
                         className={`${styles.btn} ${styles.btnReject}`}
                         onClick={onReject}
+                        disabled={disabled}
                     >
-                        Respinge
+                        {disabled ? "Se respinge..." : "Respinge"}
                     </button>
                 </>
             )}
@@ -36,15 +39,17 @@ const RequestButton = ({ status, onApprove, onReject, onClarify }) => {
                     type="button"
                     className={`${styles.btn} ${styles.btnClarify}`}
                     onClick={onClarify}
+                    disabled={disabled}
                 >
-                    Solicită clarificări
+                    {disabled ? "Se trimite..." : "Solicită clarificări"}
                 </button>
             )}
         </>
     );
 };
 
-const ActionButtons = ({ data, onApprove, onReject, onClarify, onPrint }) => {
+const ActionButtons = ({ data, onApprove, onReject, onClarify, onPrint, disabled = false }) => {
+
     const status = data?.status;
     const normalized = (status || "").trim().toLowerCase();
 
@@ -66,6 +71,7 @@ const ActionButtons = ({ data, onApprove, onReject, onClarify, onPrint }) => {
                             onApprove={onApprove}
                             onReject={onReject}
                             onClarify={onClarify}
+                            disabled={disabled}
                         />
                     )}
 
@@ -73,6 +79,7 @@ const ActionButtons = ({ data, onApprove, onReject, onClarify, onPrint }) => {
                         type="button"
                         className={`${styles.btn} ${styles.btnPrint}`}
                         onClick={onPrint}
+                        disabled={disabled}
                     >
                         Generează brief printabil
                     </button>

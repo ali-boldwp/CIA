@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import styles from "./Clarification.module.css";
 
-const ClarificationSectiom = ({ onSubmit, onCancel }) => {
+const ClarificationSectiom = ({ onSubmit, onCancel, disabled = false }) => {
+
     const [text, setText] = useState("");
 
     const handleClick = () => {
@@ -25,6 +26,7 @@ const ClarificationSectiom = ({ onSubmit, onCancel }) => {
 
                 <textarea
                     className={styles.textarea}
+                    disabled={disabled}
                     placeholder="Scrie clarificarea ta aici..."
                     value={text}
                     onChange={(e) => setText(e.target.value)}
@@ -36,6 +38,7 @@ const ClarificationSectiom = ({ onSubmit, onCancel }) => {
                             type="button"
                             className={`${styles.btn} ${styles.btnSecondary}`}
                             onClick={onCancel}
+                            disabled={disabled}
                         >
                             Înapoi la acțiuni
                         </button>
@@ -45,9 +48,9 @@ const ClarificationSectiom = ({ onSubmit, onCancel }) => {
                         type="button"
                         className={`${styles.btn} ${styles.btnPrimary}`}
                         onClick={handleClick}
-                        disabled={!text.trim()}
+                        disabled={disabled || !text.trim()}
                     >
-                        Clarifică
+                        {disabled ? "Se trimite..." : "Clarifică"}
                     </button>
                 </div>
             </div>
