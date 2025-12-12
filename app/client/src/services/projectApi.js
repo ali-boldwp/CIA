@@ -67,7 +67,7 @@ export const projectApi = createApi({
 
         updateProject: builder.mutation({
             query: ({ id, data }) => ({
-                url: `/projects/${id}/approve`,
+                url: `/project/${id}`,
                 method: "PUT",
                 body: data,
             }),

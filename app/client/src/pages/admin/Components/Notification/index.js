@@ -1,10 +1,34 @@
 import React, { useEffect, useState } from "react";
 import "./Notification.css";
+import { useNavigate } from "react-router-dom";
 import {
     useGetNotificationsQuery,
     useMarkAsSeenMutation,
     useGetUnseenCountQuery
 } from "../../../../services/notificationApi";
+
+const timeAgo = (date) => {
+    const seconds = Math.floor((new Date() - new Date(date)) / 1000);
+
+    const intervals = [
+        { label: "an", seconds: 31536000 },
+        { label: "lună", seconds: 2592000 },
+        { label: "zi", seconds: 86400 },
+        { label: "oră", seconds: 3600 },
+        { label: "minut", seconds: 60 },
+        { label: "secundă", seconds: 1 },
+    ];
+
+    for (const interval of intervals) {
+        const count = Math.floor(seconds / interval.seconds);
+        if (count >= 1) {
+            return `${count} ${interval.label}${count > 1 ? "e" : ""} în urmă`;
+        }
+    }
+
+    return "chiar acum";
+};
+
 
 const Notification = ({ onClose }) => {
 
@@ -15,6 +39,8 @@ const Notification = ({ onClose }) => {
     const notifications = data?.data || [];
 
     const [markAsSeen] = useMarkAsSeenMutation();
+
+    const navigate=useNavigate();
 
     // Close popup when clicking outside
     useEffect(() => {
@@ -27,7 +53,9 @@ const Notification = ({ onClose }) => {
 
     const handleSeen = async (id) => {
         await markAsSeen(id);
+        navigate(id)
     };
+
 
     return (
         <div className="notif-container">
@@ -52,13 +80,13 @@ const Notification = ({ onClose }) => {
                             <div
                                 key={notif._id}
                                 className={`notif-item ${notif.seen ? "" : "unread"}`}
-                                onClick={() => handleSeen(notif._id)}
+                                onClick={() => handleSeen(notif.link)}
                             >
-                                <span className="notif-dot" />
+
                                 <div>
                                     <p className="notif-text">{notif.text}</p>
                                     <small className="notif-time">
-                                        {new Date(notif.createdAt).toLocaleString("ro-RO")}
+                                        {timeAgo(notif.createdAt)}
                                     </small>
                                 </div>
                             </div>

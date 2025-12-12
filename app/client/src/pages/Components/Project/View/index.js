@@ -1,9 +1,13 @@
 import {useParams} from "react-router-dom";
+import ReplaceResponsiblePopup from "../../../admin/Pages/Projects/View/popup/ReplaceResponsiblePopup";
+import AnalystOptionsPopup from "../../../admin/Pages/Projects/View/popup/AnalystOptionsPopup";
+import { BsThreeDots } from "react-icons/bs";
 import {
     useCreateProjectMutation,
     useGetCreateProjectByIdQuery,
     useUpdateProjectMutation
 } from "../../../../services/projectApi";
+import { useGetAnalystsQuery } from "../../../../services/userApi";
 import React, {useEffect, useState} from "react";
 import styles from "./style.module.css";
 import Header from "./Header";
@@ -48,6 +52,10 @@ const ProjectView = ({ data }) => {
     const { id } = useParams();
 
     // 🧲 RTK Query Hooks
+    const [createProject] = useCreateProjectMutation();
+    const [updateProject] = useUpdateProjectMutation();
+    const { data:allData }=useGetAnalystsQuery();
+    const analyst=allData?.data || [];
     const [createProject, { isLoading: isCreating }] = useCreateProjectMutation();
     const [updateProject, { isLoading: isUpdating }] = useUpdateProjectMutation();
 
@@ -55,6 +63,10 @@ const ProjectView = ({ data }) => {
 
     // 📝 Component State
     const [project, setProject] = useState({ ...defaultData });
+    const [showPopup, setShowPopup] = useState(false);
+    const [selectedMember, setSelectedMember] = useState(null);
+    const [showMemberPopup, setShowMemberPopup] = useState(false);
+
 
 
     useEffect(() => {
@@ -308,15 +320,26 @@ const ProjectView = ({ data }) => {
 
                             <div className={styles.chipRow}>
                                 <span className={styles.chipLabel}>Responsabil:</span>
-                                <span className={styles.chipPrimary}>{project.responsible}</span>
+                                <div className={styles.chipMainPrimary} onClick={() => setShowPopup(true)}>
+                                <span className={styles.chipPrimary}>{project.responsible} <span className={styles.moreDots}  ><BsThreeDots /></span></span>
+                                </div>
                             </div>
 
-                            <div className={styles.chipRow}>
+                            <div className={styles.chipMainPrimary2}>
                                 <span className={styles.chipLabel}>Analiști alocați:</span>
                                 {project.team.map((member) => (
-                                    <span key={member._id} className={styles.chipGhost}>
-        {member.name}
-    </span>
+
+                                    <span key={member._id} className={styles.chipGhost} onClick={(e) => {
+                                        e.stopPropagation(); // IMPORTANT
+                                        setSelectedMember(member);
+                                        setShowMemberPopup(true);
+                                    }}>
+                                        {member.name}
+                                        <span className={styles.moreDots2}  ><BsThreeDots /></span>
+                                    </span>
+
+
+
                                 ))}
 
                             </div>
@@ -447,6 +470,93 @@ const ProjectView = ({ data }) => {
                         </div>
                     </div>
                 </div>
+
+                {showPopup && (
+                    <ReplaceResponsiblePopup
+                        analysts={analyst}
+                        currentResponsibleId={project.responsibleId}
+                        onReplace={(newId) => {
+
+                            const selected = analyst.find(a => a._id === newId);
+
+                            if (!selected) return;
+
+                            // ✅ UI UPDATE IMMEDIATELY
+                            setProject(prev => ({
+                                ...prev,
+                                responsibleId: selected._id,
+                                responsible: selected.name
+                            }));
+
+                            // 🔌 BACKEND UPDATE (recommended)
+                            updateProject({
+                                id: project._id,
+                                data: {
+                                    responsibleAnalyst: selected._id
+                                }
+                            });
+
+                            setShowPopup(false);
+                        }}
+                        onRemove={() => {
+                            setProject(prev => ({
+                                ...prev,
+                                responsibleId: "",
+                                responsible: "—"
+                            }));
+
+                            updateProject({
+                                id: project._id,
+                                data: {
+                                    responsibleAnalyst: null
+                                }
+                            });
+
+                            setShowPopup(false);
+                        }}
+                        onClose={() => setShowPopup(false)}
+                    />
+                )}
+
+
+                {showMemberPopup && selectedMember && (
+                    <AnalystOptionsPopup
+                        analysts={analyst}
+                        onReplace={(newId) => {
+                            console.log("Replace", selectedMember._id, "with", newId);
+
+                            // UI update example
+                            setProject(prev => ({
+                                ...prev,
+                                team: prev.team.map(m =>
+                                    m._id === selectedMember._id
+                                        ? analyst.find(a => a._id === newId)
+                                        : m
+                                )
+                            }));
+
+                            setShowMemberPopup(false);
+                            setSelectedMember(null);
+                        }}
+                        onRemove={() => {
+                            console.log("Remove", selectedMember._id);
+
+                            setProject(prev => ({
+                                ...prev,
+                                team: prev.team.filter(m => m._id !== selectedMember._id)
+                            }));
+
+                            setShowMemberPopup(false);
+                            setSelectedMember(null);
+                        }}
+                        onClose={() => {
+                            setShowMemberPopup(false);
+                            setSelectedMember(null);
+                        }}
+                    />
+                )}
+
+
 
                 {/* Billing Component */}
                 <Billing billing={billingData} />
