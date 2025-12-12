@@ -2,10 +2,10 @@ import "./style.css";
 import { useState, useMemo } from "react";
 import { Link } from "react-router-dom";
 import ProjectRow from "./ProjectRow";
-import { useGetAllRequestedProjectsQuery } from "../../../services/projectApi";
+import {useGetAllRequestedProjectsQuery, useGetProjectRequestsQuery} from "../../../services/projectApi";
 
 const ProjectRequestList = () => {
-    const { data, isLoading } = useGetAllRequestedProjectsQuery();
+    const { data, isLoading } = useGetProjectRequestsQuery();
     const projectRequest = data?.data || [];
 
     const [search, setSearch] = useState("");
