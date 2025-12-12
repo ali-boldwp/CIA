@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styles from "./CostBar.module.css";
 import { useParams } from "react-router-dom";
 import { useGetProjectFinancialStatesQuery } from "../../../../../../../services/projectApi";
@@ -13,14 +13,25 @@ const CostBar = () => {
     const costs = data?.data || {};
     const currency = costs.currency || "EUR";
 
-    // State for input values
+
     const [inputValues, setInputValues] = useState({
-        fixe: costs.cheltuieliFixe || 0,
-        osint: costs.cheltuieliOSINT || 0,
-        tesa: costs.cheltuieliTESA || 0,
-        tehnica: costs.supraveghereTehnica || 0,
-        other: costs.alteCheltuieli || 0
+        fixe: costs.fixPrice || costs.cheltuieliFixe || 0,
+        osint: costs.osintPrice || costs.cheltuieliOSINT || 0,
+        tesa: costs.tesaPrice || costs.cheltuieliTESA || 0,
+        tehnica: costs.tehnicaPrice || costs.supraveghereTehnica || 0,
+        other: costs.otherPrice || costs.alteCheltuieli || 0
     });
+
+
+    useEffect(() => {
+        setInputValues({
+            fixe: costs.fixPrice || costs.cheltuieliFixe || 0,
+            osint: costs.osintPrice || costs.cheltuieliOSINT || 0,
+            tesa: costs.tesaPrice || costs.cheltuieliTESA || 0,
+            tehnica: costs.tehnicaPrice || costs.supraveghereTehnica || 0,
+            other: costs.otherPrice || costs.alteCheltuieli || 0
+        });
+    }, [costs]);
 
     // Handle input change
     const handleChange = (field, value) => {
@@ -49,7 +60,6 @@ const CostBar = () => {
                 type: typeMap[field],
                 price: priceValue
             }).unwrap();
-
 
             refetch();
             console.log(`${field} updated successfully`);
