@@ -8,21 +8,38 @@ const ChapterCreation = ({ projectId, createChapter , mode,observe}) => {
     const [isCreating, setIsCreating] = useState(false);
 
     const handleAddChapter = async () => {
-        if (!chapterName.trim()) return alert("Enter chapter name");
+        if (!chapterName.trim()) {
+            toast.error("Enter chapter name");
+            return;
+        }
+
+        setIsCreating(true);
 
         try {
-            setIsCreating(true);
-            await createChapter({ name: chapterName, projectId }).unwrap();
-           toast("Chapter added successfully!");
+            await toast.promise(
+                createChapter({ name: chapterName, projectId }).unwrap(),
+                {
+                    pending: "Se adaugă capitolul...",
+                    success: "Capitol adăugat cu succes!",
+                    error: {
+                        render({ data }) {
+                            return data?.data?.message || "Failed to add chapter";
+                        },
+                    },
+                },
+                { autoClose: 2000, toastId: `create-chapter-${projectId}` }
+            );
+
             setChapterName("");
             setShowChapterInput(false);
         } catch (err) {
             console.error(err);
-            toast.error("Failed to add chapter");
+            // toast.promise already handled error
         } finally {
             setIsCreating(false);
         }
     };
+
 
     return !showChapterInput  ? (
         mode && !observe && (
@@ -43,6 +60,7 @@ const ChapterCreation = ({ projectId, createChapter , mode,observe}) => {
             <button className="submit-chapter-btn" onClick={handleAddChapter} disabled={isCreating}>
                 {isCreating ? "Adding..." : "Add"}
             </button>
+
         </div>
     );
 };
