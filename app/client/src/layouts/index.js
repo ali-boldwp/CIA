@@ -24,8 +24,8 @@ const Layout = ({
         const handler = (payload) => {
             toast(
                 <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
-                    {payload?.title && <div style={{ fontWeight: 700 }}>{n.title}</div>}
-                    {payload?.text && <div style={{ opacity: 0.9 }}>{n.text}</div>}
+                    {payload?.title && <div style={{ fontWeight: 700 }}>{payload.title}</div>}
+                    {payload?.text && <div style={{ opacity: 0.9 }}>{payload.text}</div>}
 
                     {payload?.link && (
                         <Link
