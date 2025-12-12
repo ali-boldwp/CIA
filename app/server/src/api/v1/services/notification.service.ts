@@ -1,5 +1,5 @@
 import Notification from "../models/notification.model";
-import { getIO } from "../../../socket"
+import { emitNotificationToUser } from "../../../socket"
 
 export const createNotification = async (data: {
     user: string;
@@ -18,10 +18,7 @@ export const createNotification = async (data: {
     });
 
     // 🔹 Socket emit
-    if (data.socket) {
-        const io = getIO();
-        io.to(data.socket).emit("notification", notification);
-    }
+    emitNotificationToUser( data.user, notification );
 
     return notification;
 };
