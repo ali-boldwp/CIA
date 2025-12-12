@@ -57,12 +57,13 @@ export const projectApi = createApi({
         }),
 
         getAllRequestedProjects: builder.query({
-            query: () => `/getAllRequestedProjects`,
+            query: () => `project-requests/sales`,
         }),
 
         getRequestedProjectById: builder.query({
             query: (id) => `/getRequestedProjectById/${id}`,
         }),
+
 
         updateProject: builder.mutation({
             query: ({ id, data }) => ({

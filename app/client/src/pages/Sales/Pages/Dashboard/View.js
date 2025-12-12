@@ -3,7 +3,7 @@ import {Link} from "react-router-dom";
 
 import "./style.css";
 
-const Dashboard = ({ approve, analystsData }) => {
+const Dashboard = ({ approve, analystsData, requested }) => {
 
     const statusBackendToUi = {
         approved: "in lucru",
@@ -46,6 +46,7 @@ const Dashboard = ({ approve, analystsData }) => {
 
     const approvedProject=approve?.data || [];
     const analysts = analystsData?.data || [];
+    const requestedProject=requested?.data||[];
 
     const resolveAnalystName = (value) => {
         if (!value) return "—";
@@ -101,9 +102,12 @@ const Dashboard = ({ approve, analystsData }) => {
                 <Link to="/project">
                     <div className="summary-card">
                         <div className="summary-title">
-                            🕵️‍♀️ Adauga solicitare noua de proiect ➕
+                            🕵️‍♀️ solicitare noua de proiect
                         </div>
-                        <div className="summary-value">1</div>
+                        <div className="requestedCount">
+                            <div>{requestedProject.length}</div>
+                        <button className="add-button">Adauga</button>
+                        </div>
                     </div>
                 </Link>
                 <Link to="/messenger">
@@ -120,7 +124,52 @@ const Dashboard = ({ approve, analystsData }) => {
                 </Link>
             </div>
 
+            <div>
+                <h2 className="sales-section-title">Proiecte solicitate</h2>
+
+                <div className="projects-row">
+
+                    {requestedProject.length === 0 && (
+                        <div>No approved projects found.</div>
+                    )}
+
+                    {requestedProject.map((p) => (
+                        <div key={p._id} className="project-card">
+                            <div className="project-header">
+
+                                <div className="project-name">{p.projectName}</div>
+
+                                <div className="project-deadline-wrapper">
+                        <span className="deadline-pill">
+                            Deadline: {formatDate(p.deadline)}
+                        </span>
+
+                                    <div className="status-dot-wrapper">
+                                        <span className="status-sales-text">{resolveStatusLabel(p.status)}</span>
+                                        <span className={`dot ${resolveStatusDotColor(p.status)}`} />
+
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="project-info">
+                                <div>Responsabil proiect: {resolveAnalystName(p.responsibleAnalyst)}</div>
+
+
+                                <div>
+                                    Echipa: {resolveAnalystNames(p.assignedAnalysts)}
+
+                                </div>
+                            </div>
+                        </div>
+                    ))}
+
+                </div>
+            </div>
+
             {/* PROJECTS */}
+
+            <div>
             <h2 className="sales-section-title">Proiectele</h2>
 
             <div className="projects-row">
@@ -183,6 +232,7 @@ const Dashboard = ({ approve, analystsData }) => {
                     </div>
                 ))}
 
+            </div>
             </div>
 
             {/* BOTTOM ROW: CALENDAR + MESSENGER */}

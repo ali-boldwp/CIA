@@ -37,6 +37,26 @@
     font-size: 24px;
     font-weight: bold;
 }
+.requestedCount{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.requestedCount>div:first-child{
+    font-weight: bold;
+    font-size: 24px;
+}
+.add-button{
+    padding: 8px 14px;
+    border-radius: 8px;
+    border: none;
+    font-size: 14px;
+    color: white;
+    cursor: pointer;
+    font-weight: 600;
+    width:150px;
+    background: linear-gradient(90deg, #4f46e5 , #1ec6cd);
+}
 
 .message-button {
     padding: 8px 14px;
@@ -73,6 +93,7 @@
     box-shadow: 0 8px 18px rgba(15, 23, 42, 0.06);
     display: flex;
     flex-direction: column;
+    gap:25px;
     justify-content: space-between;
 
 }
@@ -90,7 +111,6 @@
 }
 
 .summary-value {
-    margin-top: 12px;
     font-size: 24px;
     font-weight: 700;
 }
@@ -241,7 +261,18 @@
 .dot.red {
     background: #f43f5e;
 }
-
+.dot.yellow{
+    background: #fdd302;
+}
+.dot.gray{
+    background: #50504f;
+}
+.dot.purple{
+    background: #7b02fd;
+}
+.dot.blue{
+    background: #023dfd;
+}
 .project-info {
     margin-top: 12px;
     font-size: 13px;
