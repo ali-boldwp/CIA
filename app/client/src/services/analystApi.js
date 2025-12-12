@@ -44,6 +44,7 @@ export const analystApi = createApi({
             }),
             invalidatesTags: ["Analysts"],
         }),
+
     }),
 });
 

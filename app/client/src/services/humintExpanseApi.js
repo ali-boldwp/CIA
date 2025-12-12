@@ -83,6 +83,16 @@ export const humintExpanseApi = createApi({
             providesTags: ["HumintExpanse"],
         }),
 
+        // UpdatedSummaryBy
+
+        updatedSummmary: builder.mutation({
+            query: ({ id, feedback }) => ({
+                url: `/humint/${id}/clarification`,
+                method: "PATCH",
+                body: { managerFeedback: feedback },
+            }),
+        }),
+
     }),
 });
 
@@ -96,4 +106,5 @@ export const {
     // ✅ NEW HOOKS
     useGetProjectAnalystExpanseQuery,
     useGetAnalystsFinalSalaryQuery,
+    useUpdatedSummmary,
 } = humintExpanseApi;
