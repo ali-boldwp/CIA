@@ -1,4 +1,5 @@
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
+
 import Header from "./Header";
 import RequestForm from "./RequestForm";
 import { useGetCreateProjectByIdQuery } from "../../../services/projectApi";
@@ -18,6 +19,7 @@ const Index = () => {
     const independentData = state?.data || null;
 
     const formRef = useRef(null);
+    const [submitting, setSubmitting] = useState(false);
 
     const [createHumint] = useCreateHumintMutation();
 
@@ -36,6 +38,8 @@ const Index = () => {
     // HANDLE APPROVE
     // ========================================================================
     const handleApprove = async () => {
+        if (submitting) return;
+
         const ok = formRef.current?.submitForm();
         if (!ok) return;
 
@@ -45,17 +49,14 @@ const Index = () => {
         let payload = {};
 
         if (isIndependent) {
-            // 🔥 Independent HUMINT Payload
             payload = {
                 ...independentData,
                 ...formValues,
                 createdBy: userId,
                 status: "Requested",
-                isLinkedToProject: false
+                isLinkedToProject: false,
             };
-        }
-        else {
-            // 🔥 Project-Based HUMINT Payload
+        } else {
             payload = {
                 projectId: id,
                 ...formValues,
@@ -63,16 +64,31 @@ const Index = () => {
                 status: "Requested",
                 responsible: projects?.responsibleAnalyst?._id,
                 isLinkedToProject: true,
-
             };
         }
 
+        setSubmitting(true);
+
+        const actionPromise = createHumint(payload).unwrap();
+
         try {
-            await createHumint(payload).unwrap();
-            toast("Cererea HUMINT trimisă!");
-        } catch (error) {
-            console.error(error);
-            toast.error("Eroare la trimiterea cererii!");
+            await toast.promise(
+                actionPromise,
+                {
+                    pending: "Se trimite cererea HUMINT...",
+                    success: "Cererea HUMINT trimisă!",
+                    error: {
+                        render({ data }) {
+                            return data?.data?.message || "Eroare la trimiterea cererii!";
+                        },
+                    },
+                },
+                { autoClose: 3000 }
+            );
+        } catch (e) {
+            console.error(e);
+        } finally {
+            setSubmitting(false);
         }
     };
 
@@ -80,6 +96,11 @@ const Index = () => {
     // HANDLE SAVE DRAFT
     // ========================================================================
     const handleSaveDraft = async () => {
+        if (submitting) return;
+
+        const ok = formRef.current?.submitForm();
+        if (!ok) return;
+
         const values = formRef.current.getValues();
         const userId = localStorage.getItem("userId");
 
@@ -87,18 +108,35 @@ const Index = () => {
             projectId: id,
             ...values,
             createdBy: userId,
-            responsible: projects.responsibleAnalyst?._id,
-            status: "Draft"
+            responsible: projects?.responsibleAnalyst?._id,
+            status: "Draft",
         };
 
+        setSubmitting(true);
+
+        const actionPromise = createHumint(payload).unwrap();
+
         try {
-            await createHumint(payload).unwrap();
-            toast("Draft salvat cu succes!");
-        } catch (error) {
-            console.error(error);
-            toast.error("Eroare la salvarea draftului!");
+            await toast.promise(
+                actionPromise,
+                {
+                    pending: "Se salvează draft-ul...",
+                    success: "Draft salvat cu succes!",
+                    error: {
+                        render({ data }) {
+                            return data?.data?.message || "Eroare la salvarea draftului!";
+                        },
+                    },
+                },
+                { autoClose: 3000 }
+            );
+        } catch (e) {
+            console.error(e);
+        } finally {
+            setSubmitting(false);
         }
     };
+
 
     return (
         <>
@@ -110,13 +148,16 @@ const Index = () => {
                 independent={isIndependent}
                 independentData={independentData}
                 analysts={analysts}
+                disabled={submitting}
             />
 
             <Button
                 onApprove={handleApprove}
                 onSaveDraft={handleSaveDraft}
                 onGenerateBrief={() => console.log("Generate brief")}
+                disabled={submitting}
             />
+
         </>
     );
 };

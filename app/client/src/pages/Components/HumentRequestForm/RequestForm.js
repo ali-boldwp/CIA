@@ -7,7 +7,8 @@ import React, {
 import styles from "./RequestForm.module.css";
 
 const RequestForm = forwardRef((props, ref) => {
-    const { projects, independent, independentData, analysts } = props;
+    const { projects, independent, independentData, analysts, disabled = false } = props;
+
 
     const [values, setValues] = useState({
         projectName: "",

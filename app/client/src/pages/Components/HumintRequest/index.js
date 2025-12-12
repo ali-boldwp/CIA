@@ -26,6 +26,8 @@ import { toast } from "react-toastify";
 const ClarificationHistoryCard = ({ messages, currentUserId }) => {
     const chatEndRef = useRef(null);
 
+
+
     useEffect(() => {
         if (chatEndRef.current) {
             chatEndRef.current.scrollIntoView({ behavior: "smooth" });
@@ -104,6 +106,7 @@ const ClarificationHistoryCard = ({ messages, currentUserId }) => {
 
 const Index = () => {
     const { id } = useParams(); // HUMINT id
+    const [submitting, setSubmitting] = useState(false);
 
     // HUMINT detail
     const { data, isLoading } = useGetHumintByIdQuery(id);
@@ -188,33 +191,69 @@ const Index = () => {
 
     // Approve
     const handleApprove = async () => {
+        if (submitting) return;
+
         const values = validateAndGetValues();
         if (!values) return;
 
+        setSubmitting(true);
+
+        const actionPromise = approveHumint(id).unwrap();
+
         try {
-            await approveHumint(id).unwrap();
-            toast("Aprobat!");
+            await toast.promise(
+                actionPromise,
+                {
+                    pending: "Se aprobă...",
+                    success: "Aprobat!",
+                    error: {
+                        render({ data }) {
+                            return data?.data?.message || "Eroare la aprobare";
+                        },
+                    },
+                },
+                { autoClose: 3000 }
+            );
         } catch (err) {
             console.error(err);
-            toast("Eroare la aprobare");
+        } finally {
+            setSubmitting(false);
         }
     };
 
+
     // Reject
     const handleReject = async () => {
+        if (submitting) return;
+
         const values = validateAndGetValues();
         if (!values) return;
 
-        try {
-            await rejectHumint({
-                id,
-                feedback: values.managerFeedback,
-            }).unwrap();
+        setSubmitting(true);
 
-            toast("Respins!");
+        const actionPromise = rejectHumint({
+            id,
+            feedback: values.managerFeedback,
+        }).unwrap();
+
+        try {
+            await toast.promise(
+                actionPromise,
+                {
+                    pending: "Se respinge...",
+                    success: "Respins!",
+                    error: {
+                        render({ data }) {
+                            return data?.data?.message || "Eroare la respingere";
+                        },
+                    },
+                },
+                { autoClose: 3000 }
+            );
         } catch (err) {
             console.error(err);
-            toast.error("Eroare la respingere");
+        } finally {
+            setSubmitting(false);
         }
     };
 
@@ -227,31 +266,43 @@ const Index = () => {
 
     // "Clarifică" → status + message save + refetch messages
     const handleClarifySubmit = async (message) => {
+        if (submitting) return;
+
         const values = validateAndGetValues();
         if (!values) return;
 
-        try {
-            // 1) HUMINT status ko "Clarification" + feedback update
-            await clarificationHumint({
-                id,
-                feedback: message,
-            }).unwrap();
+        setSubmitting(true);
 
-            // 2) Clarification collection me chat message save
-            await createClarification({
-                humintId: id,
-                clarificationText: message,
-            }).unwrap();
-
-            // 3) latest list fetch (card automatically update ho jayega)
+        const actionPromise = (async () => {
+            await clarificationHumint({ id, feedback: message }).unwrap();
+            await createClarification({ humintId: id, clarificationText: message }).unwrap();
             await refetchClarifications();
+        })();
 
-            toast("Solicitare trimisă!");
+        try {
+            await toast.promise(
+                actionPromise,
+                {
+                    pending: "Se trimit clarificările...",
+                    success: "Solicitare trimisă!",
+                    error: {
+                        render({ data }) {
+                            return data?.data?.message || "Eroare la clarificări";
+                        },
+                    },
+                },
+                { autoClose: 3000 }
+            );
+
+            // optional: clarify box close after success
+            // setIsClarifyMode(false);
         } catch (err) {
             console.error(err);
-            toast.error("Eroare la clarificări");
+        } finally {
+            setSubmitting(false);
         }
     };
+
 
     const handleUpdate = async () => {
         const values = validateAndGetValues();
@@ -274,19 +325,21 @@ const Index = () => {
                 ref={formRef}
                 humint={enrichedHumint}
                 analysts={analysts}
+                disabled={submitting}
             />
 
-            {/* 🔹 Messages card – sirf jab clarifications hon */}
+            {/* messages card */}
             <ClarificationHistoryCard
                 messages={clarifications}
                 currentUserId={currentUserId}
             />
 
-            {/* 🔹 Ya to clarify form, ya action buttons */}
+            {/* actions vs clarify */}
             {isClarifyMode ? (
                 <ClarificationSectiom
                     onSubmit={handleClarifySubmit}
                     onCancel={() => setIsClarifyMode(false)}
+                    disabled={submitting}
                 />
             ) : (
                 <ActionButtons
@@ -295,8 +348,8 @@ const Index = () => {
                     onReject={handleReject}
                     onClarify={handleShowClarifyBox}
                     onPrint={() => console.log("Print soon")}
+                    disabled={submitting}
                 />
-
             )}
         </>
     );
