@@ -1,7 +1,24 @@
 import React from 'react';
 import styles from './SummarySection.module.css';
+import { useParams } from "react-router-dom";
+import {useGetProjectFinancialStatesQuery , useGetCreateProjectByIdQuery} from "../../../../../../../services/projectApi";
 
 const SummarySection = () => {
+
+    const { id: projectId } = useParams();
+
+    // 🔹 Financial stats
+    const { data: financialRes } =
+        useGetProjectFinancialStatesQuery(projectId);
+
+    // 🔹 Project details
+    const { data: projectRes } =
+        useGetCreateProjectByIdQuery(projectId);
+
+    const stats = financialRes?.data || {};
+    const project = projectRes?.data || {};
+    const currency = stats.currency || "EUR";
+
     return (
         <div className={styles.topRow}>
             {/* LEFT: PROJECT DETAILS */}
@@ -12,23 +29,27 @@ const SummarySection = () => {
                     <ul>
                         <li>
                             <b>Denumire proiect</b>
-                            <span>Due Diligence: Societatea ABC</span>
+                            <span>{project.projectName || "—"}</span>
                         </li>
+
                         <li>
                             <b>Tip raport</b>
-                            <span>Enhanced Due Diligence</span>
+                            <span>{project.reportType || "—"}</span>
                         </li>
+
                         <li>
                             <b>Tip entitate / caz</b>
-                            <span>Societate</span>
+                            <span>{project.entityType || "—"}</span>
                         </li>
+
                         <li>
                             <b>Nume client</b>
-                            <span>ZZZ SRL</span>
+                            <span>{project.clientName || "—"}</span>
                         </li>
+
                         <li>
                             <b>Responsabil proiect</b>
-                            <span>Analist C</span>
+                            <span>{project.responsibleAnalyst?.name || "—"}</span>
                         </li>
                     </ul>
                 </div>
@@ -44,64 +65,85 @@ const SummarySection = () => {
                 </div>
 
                 <div className={styles.financialGrid}>
-                    {/* Row 1 - First 4 boxes */}
+                    {/* Row 1 */}
                     <div className={`${styles.summaryBox} ${styles.boxGray}`}>
-                        {/* REMOVED LABEL - Only showing value */}
-                        <span className={styles.sValue}>1050 EUR</span>
+            <span className={styles.sValue}>
+              {stats.cheltuieliTESA ?? 0} {currency}
+            </span>
                     </div>
 
                     <div className={`${styles.summaryBox} ${styles.boxTfsa}`}>
-                        <span className={styles.sLabel}>Cheltuieli TFSA</span>
-                        <span className={styles.sValue}>1050 EUR</span>
+                        <span className={styles.sLabel}>Cheltuieli TESA</span>
+                        <span className={styles.sValue}>
+              {stats.cheltuieliTESA ?? 0} {currency}
+            </span>
                     </div>
 
                     <div className={`${styles.summaryBox} ${styles.boxCyan}`}>
-                        <span className={styles.sLabel}>Cheltuieli OSINT Tehnică</span>
-                        <span className={styles.sValue}>150 EUR</span>
+                        <span className={styles.sLabel}>Cheltuieli OSINT</span>
+                        <span className={styles.sValue}>
+              {stats.cheltuieliOSINT ?? 0} {currency}
+            </span>
                     </div>
 
                     <div className={`${styles.summaryBox} ${styles.boxYellow}`}>
-                        <span className={styles.sLabel}>Cheltuieli HUMINT (cu taxe)</span>
-                        <span className={styles.sValue}>554.4 EUR</span>
+                        <span className={styles.sLabel}>Cheltuieli Supraveghere Tehnică</span>
+                        <span className={styles.sValue}>
+              {stats.supraveghereTehnica ?? 0} {currency}
+            </span>
                     </div>
 
-                    {/* Row 2 - Next 4 boxes */}
+                    {/* Row 2 */}
                     <div className={`${styles.summaryBox} ${styles.boxBlue}`}>
                         <span className={styles.sLabel}>Cheltuieli fixe</span>
-                        <span className={styles.sValue}>300 EUR</span>
+                        <span className={styles.sValue}>
+              {stats.cheltuieliFixe ?? 0} {currency}
+            </span>
                     </div>
 
                     <div className={`${styles.summaryBox} ${styles.boxOther}`}>
                         <span className={styles.sLabel}>Alte cheltuieli</span>
-                        <span className={styles.sValue}>300 EUR</span>
+                        <span className={styles.sValue}>
+              {stats.alteCheltuieli ?? 0} {currency}
+            </span>
                     </div>
 
                     <div className={`${styles.summaryBox} ${styles.boxPurple}`}>
                         <span className={styles.sLabel}>Preț proiect</span>
-                        <span className={styles.sValue}>3500 EUR</span>
+                        <span className={styles.sValue}>
+              {stats.pretProject ?? 0} {currency}
+            </span>
                     </div>
 
                     <div className={`${styles.summaryBox} ${styles.boxLightgray}`}>
                         <span className={styles.sLabel}>Total cheltuieli</span>
-                        <span className={styles.sValue}>2054.4 EUR</span>
+                        <span className={styles.sValue}>
+              {stats.totalCheltuieli ?? 0} {currency}
+            </span>
                     </div>
 
-                    {/* Row 3 - Last 2 boxes (each spanning 2 columns) */}
+                    {/* Row 3 */}
                     <div className={`${styles.summaryBox} ${styles.boxProfit}`}>
                         <div className={styles.profitContainer}>
                             <div className={styles.profitTopRow}>
                                 <span className={styles.sLabelGreen}>Profit</span>
-                                <span className={styles.profitPercentage}>41.3%</span>
+                                <span className={styles.profitPercentage}>
+                  {stats.profitPercentage ?? 0}%
+                </span>
                             </div>
                             <div className={styles.profitBottomRow}>
-                                <span className={styles.profitValue}>1445.6 EUR</span>
+                <span className={styles.profitValue}>
+                  {stats.profit ?? 0} {currency}
+                </span>
                             </div>
                         </div>
                     </div>
 
                     <div className={`${styles.summaryBox} ${styles.boxDuration}`}>
-                        <span className={styles.sLabelDuration}>Durata proiect (zile lucrătoare)</span>
-                        <span className={styles.sValueDuration}>25 zile</span>
+            <span className={styles.sLabelDuration}>
+              Durata proiect (zile lucrătoare)
+            </span>
+                        <span className={styles.sValueDuration}>—</span>
                     </div>
                 </div>
             </div>

@@ -507,7 +507,7 @@ const MessengerPage = ({chatID}) => {
                                 ))}
                             </div>
                             {oldmessage.map((msg, i) => {
-                                const isMe = msg.sender._id === currentUserId;
+                                const isMe = msg.sender?._id === currentUserId;
                                 const hasSeen = msg.seenBy?.some(uid => uid !== currentUserId);
 
 
@@ -517,7 +517,7 @@ const MessengerPage = ({chatID}) => {
 
                                         <div className="bubble-footer">
                 <span className="bubble-name">
-                    {isMe ? "Me" : msg.sender.name}
+                    {isMe ? "Me" : msg.sender?.name}
                 </span>
 
                                             <span className="bubble-time">

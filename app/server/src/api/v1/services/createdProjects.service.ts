@@ -43,3 +43,30 @@ export async function countProjects(filter = {}) {
     const total = await projectRequest.countDocuments(filter).exec();
     return total;
 }
+
+
+export const getProjectFinancialSummary = async (projectId: string) => {
+    const project = await projectRequest.findById(projectId).select(
+        "+projectPrice +fixPrice +tesaPrice +osintPrice +tehnicaPrice +otherPrice currency"
+    );
+
+    if (!project) {
+        throw new Error("Project not found");
+    }
+
+    return {
+        currency: project.currency,
+
+        cheltuieliTESA: project.tesaPrice,
+        cheltuieliOSINT: project.osintPrice,
+        supraveghereTehnica: project.tehnicaPrice,
+        cheltuieliFixe: project.fixPrice,
+        alteCheltuieli: project.otherPrice,
+
+        totalCheltuieli: project.totalCheltuieli,
+        pretProject: project.projectPrice,
+
+        profit: project.profit,
+        profitPercentage: project.profitPercentage
+    };
+};

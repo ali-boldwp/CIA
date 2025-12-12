@@ -154,14 +154,36 @@ const projectRequestSchema = new Schema<IProjectRequest>(
     },
     {
         timestamps: true,
-        toJSON: {
-            transform(_doc, ret) {
-                delete ret.__v;
-                return ret;
-            }
-        }
+        toJSON: { virtuals: true },
+        toObject: { virtuals: true },
+
     }
 );
+
+projectRequestSchema.virtual("totalCheltuieli").get(function () {
+    return (
+        (this.fixPrice || 0) +
+        (this.tesaPrice || 0) +
+        (this.osintPrice || 0) +
+        (this.tehnicaPrice || 0) +
+        (this.otherPrice || 0)
+    );
+});
+
+
+projectRequestSchema.virtual("profit").get(function () {
+    return Number(
+        ((this.projectPrice || 0) - (this as any).totalCheltuieli).toFixed(2)
+    );
+});
+
+
+projectRequestSchema.virtual("profitPercentage").get(function () {
+    const price = this.projectPrice || 0;
+    if (price === 0) return 0;
+
+    return Number((((this as any).profit / price) * 100).toFixed(1));
+});
 
 const ProjectRequest = model<IProjectRequest>("ProjectRequest", projectRequestSchema);
 
