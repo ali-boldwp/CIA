@@ -48,6 +48,7 @@ const Dashboard = ({ approve, analystsData, requested }) => {
     const analysts = analystsData?.data || [];
     const requestedProject=requested?.data||[];
 
+
     const resolveAnalystName = (value) => {
         if (!value) return "—";
 
@@ -152,15 +153,18 @@ const Dashboard = ({ approve, analystsData, requested }) => {
                                 </div>
                             </div>
 
-                            <div className="project-info">
-                                <div>Responsabil proiect: {resolveAnalystName(p.responsibleAnalyst)}</div>
+                            {p.responsibleAnalyst && (
+                                <div className="project-info">
+                                    <div>
+                                        Responsabil proiect: {resolveAnalystName(p.responsibleAnalyst)}
+                                    </div>
 
-
-                                <div>
-                                    Echipa: {resolveAnalystNames(p.assignedAnalysts)}
-
+                                    <div>
+                                        Echipa: {resolveAnalystNames(p.assignedAnalysts)}
+                                    </div>
                                 </div>
-                            </div>
+                            )}
+
                         </div>
                     ))}
 

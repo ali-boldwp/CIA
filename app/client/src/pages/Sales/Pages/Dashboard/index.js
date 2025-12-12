@@ -1,7 +1,7 @@
 import Layout from "../../../../layouts"
 import View from "./View";
 import { useGetProjectsQuery,useGetAllRequestedProjectsQuery } from "../../../../services/projectApi";
-import { useGetAnalystsQuery } from "../../../../services/analystApi";
+import { useGetAnalystsQuery } from "../../../../services/userApi";
 
 import Header from "../../Components/Header"
 
