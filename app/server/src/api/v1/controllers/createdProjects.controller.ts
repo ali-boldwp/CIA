@@ -10,6 +10,7 @@ import Requested from "../models/requested.model"
 import Humint from "../models/humint.model";
 import { ok } from "../../../utils/ApiResponse";
 
+
 export const createProject = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const userId = req.user?.id;
@@ -440,5 +441,46 @@ export const projectFinancialSummary = async (
         });
     } catch (error) {
         next(error);
+    }
+};
+
+
+export const updateProjectPrices = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+) => {
+    try {
+        const { id , type} = req.params;
+
+        const {
+           price
+        } = req.body;
+
+        const updateData: any = {};
+
+        if (type == "fixed") updateData.fixPrice = Number(price);
+        if (type == "tesa") updateData.tesaPrice = Number(price);
+        if (type == "osint" ) updateData.osintPrice = Number(price);
+        if (type == "tehnica") updateData.tehnicaPrice = Number(price);
+        if (type == "other") updateData.otherPrice = Number(price);
+
+        const project = await ProjectRequest.findByIdAndUpdate(
+            id,
+            { $set: updateData },
+            { new: true }
+        );
+
+        if (!project) {
+            return res.status(404).json({ message: "Project not found" });
+        }
+
+        return res.json({
+            success: true,
+            message: "Prices updated successfully",
+        });
+
+    } catch (err) {
+        next(err);
     }
 };
