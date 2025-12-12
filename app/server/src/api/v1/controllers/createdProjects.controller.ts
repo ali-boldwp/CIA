@@ -424,3 +424,23 @@ export const updateProjectStatus = async (req, res, next) => {
         next(err);
     }
 };
+
+
+export const projectFinancialSummary = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+) => {
+    try {
+        const { projectId } = req.params;
+
+        const summary = await createdProjectService.getProjectFinancialSummary(projectId);
+
+        res.status(200).json({
+            success: true,
+            data: summary
+        });
+    } catch (error) {
+        next(error);
+    }
+};

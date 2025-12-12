@@ -17,6 +17,11 @@ router.post(
 
 
 router.get(
+    "/:projectId/financial-states",
+    createdProjectController.projectFinancialSummary
+);
+
+router.get(
     "/",
     auth,
     createdProjectController.getAllProjects

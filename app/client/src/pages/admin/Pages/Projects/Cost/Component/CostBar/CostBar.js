@@ -1,93 +1,117 @@
-import React from 'react';
-import styles from './CostBar.module.css';
+import React from "react";
+import styles from "./CostBar.module.css";
+import { useParams } from "react-router-dom";
+import {useGetProjectFinancialStatesQuery} from "../../../../../../../services/projectApi";
 
 const CostBar = () => {
+    const { id: projectId } = useParams();
+
+    const { data, isLoading } =
+        useGetProjectFinancialStatesQuery(projectId);
+
+    const costs = data?.data || {};
+    const currency = costs.currency || "EUR";
+
+    if (isLoading) return null; // UI safe (no flicker)
+
     return (
         <>
-            {/* Row 1: Cheltuieli fixe + Cheltuieli OSINT */}
+            {/* Row 1 */}
             <div className={`${styles.formCard} ${styles.costsBar}`}>
                 <div className={styles.costBlock}>
                     <h2 className={styles.costTitle}>Cheltuieli fixe</h2>
-
                     <div className={styles.costRow}>
                         <div className={styles.formField}>
                             <label>Cheltuieli totale</label>
-                            <input className={styles.inputBox} defaultValue="180 EUR" />
-                        </div>
+                            <input
+                                className={styles.inputBox}
+                                defaultValue={`${costs.cheltuieliFixe ?? 0} ${currency}`}
 
+                            />
+                        </div>
                         <div className={`${styles.formField} ${styles.smallField}`}>
                             <label>Monedă</label>
-                            <input className={styles.inputBox} defaultValue="EUR ▾" />
+                            <input className={styles.inputBox} defaultValue={currency} />
                         </div>
                     </div>
                 </div>
 
                 <div className={styles.costBlock}>
                     <h2 className={styles.costTitle}>Cheltuieli OSINT</h2>
-
                     <div className={styles.costRow}>
                         <div className={styles.formField}>
                             <label>Cheltuieli totale</label>
-                            <input className={styles.inputBox} defaultValue="180 EUR" />
-                        </div>
+                            <input
+                                className={styles.inputBox}
+                                defaultValue={`${costs.cheltuieliOSINT ?? 0} ${currency}`}
 
+                            />
+                        </div>
                         <div className={`${styles.formField} ${styles.smallField}`}>
                             <label>Monedă</label>
-                            <input className={styles.inputBox} defaultValue="EUR ▾" />
+                            <input className={styles.inputBox} defaultValue={currency}  />
                         </div>
                     </div>
                 </div>
             </div>
 
-            {/* Row 2: Cheltuieli TESA + Cheltuieli Supraveghere */}
+            {/* Row 2 */}
             <div className={`${styles.formCard} ${styles.costsBar}`}>
                 <div className={styles.costBlock}>
                     <h2 className={styles.costTitle}>Cheltuieli TESA</h2>
-
                     <div className={styles.costRow}>
                         <div className={styles.formField}>
-                            <label>Cheltuieli totale </label>
-                            <input className={styles.inputBox} defaultValue="180 EUR" />
-                        </div>
+                            <label>Cheltuieli totale</label>
+                            <input
+                                className={styles.inputBox}
+                                defaultValue={`${costs.cheltuieliTESA ?? 0} ${currency}`}
 
+                            />
+                        </div>
                         <div className={`${styles.formField} ${styles.smallField}`}>
                             <label>Monedă</label>
-                            <input className={styles.inputBox} defaultValue="EUR ▾" />
+                            <input className={styles.inputBox} defaultValue={currency}  />
                         </div>
                     </div>
                 </div>
 
                 <div className={styles.costBlock}>
-                    <h2 className={styles.costTitle}>Cheltuieli Supraveghere Operativa / Tehnica</h2>
-
+                    <h2 className={styles.costTitle}>
+                        Cheltuieli Supraveghere Operativa / Tehnica
+                    </h2>
                     <div className={styles.costRow}>
                         <div className={styles.formField}>
-                            <label>Cheltuieli totale </label>
-                            <input className={styles.inputBox} defaultValue="180 EUR" />
-                        </div>
+                            <label>Cheltuieli totale</label>
+                            <input
+                                className={styles.inputBox}
+                                defaultValue={`${costs.supraveghereTehnica ?? 0} ${currency}`}
 
+                            />
+                        </div>
                         <div className={`${styles.formField} ${styles.smallField}`}>
                             <label>Monedă</label>
-                            <input className={styles.inputBox} defaultValue="EUR ▾" />
+                            <input className={styles.inputBox} defaultValue={currency}  />
                         </div>
                     </div>
                 </div>
             </div>
 
-            {/* Row 3: Alte cheltuieli */}
+            {/* Row 3 */}
             <div className={`${styles.formCard} ${styles.costsBar}`}>
                 <div className={styles.costBlock}>
                     <h2 className={styles.costTitle}>Alte cheltuieli</h2>
-
                     <div className={styles.costRow}>
                         <div className={styles.formField}>
-                            <label>Cheltuieli totale </label>
-                            <input className={styles.inputBox} defaultValue="180 EUR" />
-                        </div>
+                            <label>Cheltuieli totale</label>
+                            <input
+                                className={styles.inputBox}
+                                defaultValue={`${costs.alteCheltuieli ?? 0} ${currency}`}
 
+                            />
+                        </div>
                         <div className={`${styles.formField} ${styles.smallField}`}>
                             <label>Monedă</label>
-                            <input className={styles.inputBox} defaultValue="EUR ▾" />
+                            <input className={styles.inputBox} defaultValue={currency}  />
                         </div>
                     </div>
                 </div>
