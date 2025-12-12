@@ -3,7 +3,7 @@
 /* Footer Card Container */
 .footerCard {
     background: #ffffff;
-    border-radius: 18px;
+    border-radius: 4px;
     padding: 20px 28px;
     margin-top: 20px;
     margin-bottom: 30px;
@@ -33,7 +33,7 @@
     background: linear-gradient(135deg, #2563EB, #4F46E5) !important;
     color: #ffffff;
     padding: 16px 28px;
-    border-radius: 10px;
+    border-radius: 4px;
     border: none;
     font-size: 14px;
     font-weight: 700;
@@ -71,7 +71,7 @@
     background: #ffffff !important; /* White background */
     color: #2563EB !important; /* Blue text color */
     padding: 16px 28px;
-    border-radius: 10px;
+    border-radius: 4px;
     border: 2px solid #2563EB !important; /* Blue border */
     font-size: 14px;
     font-weight: 700;

@@ -3,6 +3,7 @@ import {useGetCreateProjectByIdQuery} from "../../../../../services/projectApi";
 import ProjectView from "../../../../Components/Project/View";
 import {useParams} from "react-router-dom";
 import Header from "../../../Components/Header";
+import ProjectHeader from "../../../../Components/Project/Components/Header";
 
 const View = () => {
 
@@ -18,9 +19,7 @@ const View = () => {
             header={{
                 search: false,
                 back: true,
-                title: <div>
-                    <h3> `Proiect: ${ data?.data?.projectName }` </h3>
-                </div>,
+                title: <ProjectHeader data={ data?.data } />,
                 content: <Header createProject={ false } />
             }}
             content={ <ProjectView data={ data } /> }

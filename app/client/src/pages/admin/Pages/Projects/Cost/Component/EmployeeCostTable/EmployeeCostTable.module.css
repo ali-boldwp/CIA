@@ -2,8 +2,8 @@
 
 .formCard {
     background: #ffffff;
-    border-radius: 18px;
-    padding: 24px 28px;
+    border-radius: 4px;
+    padding: 24px;
     margin-bottom: 24px;
     width: 100%;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
@@ -21,9 +21,11 @@
 .costTable {
     width: 100%;
     border-collapse: collapse;
-    margin-top: 6px;
+    font-size: 14px;
+    margin-top: 12px;
+
     background: #ffffff;
-    border-radius: 12px;
+    border-radius: 4px;
     overflow: hidden;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
 }
@@ -93,13 +95,15 @@
     background: #f3f4f6;
 }
 
+
 /* TOTAL EMPLOYEES COST SECTION - UPDATED FOR LEFT ALIGNMENT */
 .totalSection {
     margin-top: 20px;
     margin-bottom: 5px;
     padding: 16px 20px;
     background: #f8fafc;
-    border-radius: 12px;
+    border-radius: 4px;
+
     border: 1px solid #e5e7eb;
     display: flex;
     justify-content: flex-start;
@@ -142,7 +146,7 @@
     background: #22C55E; /* Changed from #0F172A to #22C55E */
     color: #FFFFFF; /* Changed from #ffffff to #FFFFFF (same but explicit) */
     padding: 14px 20px;
-    border-radius: 8px;
+    border-radius: 4px;
     border: none;
     font-size: 14px; /* Added explicitly */
     font-weight: 700; /* Added explicitly */

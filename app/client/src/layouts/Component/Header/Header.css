@@ -1,7 +1,7 @@
 .header {
     width: 100%;
     background: #ffffff;
-    padding: 20px 10px;
+    padding: 24px;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -31,14 +31,13 @@
     align-items: center;
     gap: 50px;
     justify-content: start;
-    padding-inline: 2rem;
+    flex-grow: 1;
 }
 
 .secSec {
-    width: 100%;
+    width: auto;
 
     display: flex;
-    margin-right: 20px;
     align-items: center;
     gap: 10px;
     justify-content: end;

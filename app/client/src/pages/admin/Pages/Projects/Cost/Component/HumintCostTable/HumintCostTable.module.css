@@ -2,7 +2,7 @@
 
 .formCard {
     background: #ffffff;
-    border-radius: 18px;
+    border-radius: 4px;
     padding: 24px 28px;
     margin-bottom: 24px;
     width: 100%;
@@ -24,7 +24,7 @@
     font-size: 14px;
     margin-top: 6px;
     background: #ffffff;
-    border-radius: 12px;
+    border-radius: 4px;
     overflow: hidden;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
 }
@@ -190,7 +190,7 @@
     margin: 20px 0 10px 0;
     padding: 16px 20px;
     background: #f8fafc;
-    border-radius: 12px;
+    border-radius: 4px;
     border: 1px solid #e5e7eb;
     display: flex;
     justify-content: flex-start; /* Changed from space-between to flex-start */
@@ -219,7 +219,7 @@
     background: #22C55E;
     color: #ffffff;
     padding: 14px 20px;
-    border-radius: 8px;
+    border-radius: 4px;
     border: none;
     font-size: 14px;
     font-weight: 700;

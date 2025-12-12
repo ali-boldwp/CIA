@@ -1,10 +1,9 @@
 /* Background container */
 .wrapper {
     width: 100%;
-    margin-top: 24px;
     background: #ffffff;
-    border-radius: 18px;
-    padding: 28px 26px;   /* 👈 container height increased */
+    border-radius: 4px;
+    padding: 24px 24px;   /* 👈 container height increased */
     box-shadow: 0 8px 20px rgba(15, 23, 42, 0.05);
 }
 
@@ -19,7 +18,7 @@
 /* Base button style */
 .buttonRow button {
     border: none;
-    border-radius: 10px;   /* 👈 rectangle with soft corners (INPUT FIELD STYLE) */
+    border-radius: 4px;   /* 👈 rectangle with soft corners (INPUT FIELD STYLE) */
     padding: 14px 28px;    /* 👈 bigger height & width */
     min-width: 170px;      /* 👈 width increased */
     font-size: 15px;       /* 👈 bigger text */
@@ -27,9 +26,9 @@
     cursor: pointer;
     color: #ffffff;
 
-    /* Subtle shadow */
-    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.12);
     transition: all 0.15s ease;
+    background: linear-gradient(90deg, #2563EB 0%, #4F46E5 100%);
+
 }
 
 /* Colors */
@@ -37,38 +36,35 @@
     background: #22c55e;
 }
 .taskBtna{
-    border: none;
-    border-radius: 10px;   /* 👈 rectangle with soft corners (INPUT FIELD STYLE) */
+    border: 1px solid #2563EB;
+    border-radius: 4px;   /* 👈 rectangle with soft corners (INPUT FIELD STYLE) */
     padding: 14px 28px;    /* 👈 bigger height & width */
     min-width: 170px;      /* 👈 width increased */
     font-size: 15px;       /* 👈 bigger text */
     font-weight: 600;
     cursor: pointer;
-    color: #ffffff;
+    color: #2563EB;
 
     /* Subtle shadow */
-    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.12);
+
     transition: all 0.15s ease;
-    background: #2563eb;
+    background: #FFF;
 }
 .taskBtn {
     background: #2563eb;
 }
 
 .costBtn {
-    background: #ef4444;
-    border: none;
-    border-radius: 10px;   /* 👈 rectangle with soft corners (INPUT FIELD STYLE) */
+    background: #EEF2FF;
+    border: 1px solid #C7D2FE;
+    border-radius: 4px;   /* 👈 rectangle with soft corners (INPUT FIELD STYLE) */
     padding: 14px 28px;    /* 👈 bigger height & width */
     min-width: 170px;      /* 👈 width increased */
     font-size: 15px;       /* 👈 bigger text */
     font-weight: 600;
     cursor: pointer;
-    color: #ffffff;
+    color: #1E40AF;
 
-    /* Subtle shadow */
-    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.12);
-    transition: all 0.15s ease;
 }
 
 /* Hover */
