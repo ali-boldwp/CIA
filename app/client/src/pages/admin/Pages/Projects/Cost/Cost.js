@@ -9,11 +9,11 @@ import HumintCostTable from "./Component/HumintCostTable/HumintCostTable";
 import ButtonSection from "./Component/FooterButton/ButtonSection";
 
 const ProjectCost = ({ data }) => {
-    // State for popups visibility
+
     const [showEmployeePopup, setShowEmployeePopup] = useState(false);
     const [showHumintPopup, setShowHumintPopup] = useState(false);
 
-    // State for employee total cost
+
     const [employeeTotalCost, setEmployeeTotalCost] = useState(0);
 
     // Extract projectId from data prop
