@@ -10,7 +10,7 @@ const sectionNames = {
 };
 
 const AddEmployeeModal = ({ isOpen, sectionKey, editData, onClose }) => {
-    const [createUser, { isLoading }] = useCreateUserMutation();
+    const [ createUser ] = useCreateUserMutation();
     const [updateUser] = useUpdateUserMutation();
 
     const sectionLabel = sectionNames[sectionKey] || "Angajat";

@@ -12,8 +12,6 @@ const Header = ({ children, search, logo, title, back = false }) => {
     const user = useSelector((state) => state.auth.user);
 
     const location = useLocation();
-    const isSale = location.pathname.includes("sales");
-    const isAnalyst = location.pathname.includes("analyst");
     let dashboardTitle = `Dashboard ${user.role}`;
 
     const [input, setInput] = useState(keyword);

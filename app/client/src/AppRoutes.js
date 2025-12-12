@@ -1,5 +1,4 @@
 // src/AppRoutes.js
-import React from "react";
 import { useSelector } from "react-redux";
 import { useRoutes } from "react-router-dom";
 import { getRoutesForRole } from "./config/routesConfig";

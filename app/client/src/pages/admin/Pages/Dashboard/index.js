@@ -11,7 +11,7 @@ import CalenderList from "../../Components/CalenderList"
 import Layout from "../../../../layouts";
 import Header from "../../Components/Header";
 
-const Index = () => {
+const View = () => {
 
     const [ stats, setStats ] = useState({
         projects: 5,
@@ -77,4 +77,4 @@ const Index = () => {
 
 }
 
-export default Index
+export default View
