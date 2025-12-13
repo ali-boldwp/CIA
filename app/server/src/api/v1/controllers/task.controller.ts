@@ -2,8 +2,6 @@ import { Request, Response, NextFunction } from "express";
 import * as taskService from '../services/task.service'
 import { ok } from "../../../utils/ApiResponse";
 import Task from "../models/task.model";
-import AnalystExpanse from "../models/analystExpanse.model";
-import User from "../models/user.model";
 
 
 
@@ -25,14 +23,42 @@ export const getAllTasks = async (_req: Request, res: Response, next: NextFuncti
     }
 };
 
-// export const updatetask = async (req: Request, res: Response, next: NextFunction) => {
-//     try {
-//         const updateTask = await taskService.updatetask(req.params.id, req.body);
-//         res.json(ok(updateTask));
-//     } catch (err) {
-//         next(err);
-//     }
-// };
+export const updateTask = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+) => {
+    try {
+        const updatedTask = await taskService.updateTask(
+            req.params.id,
+            req.body.name
+        );
+
+        res.json(ok(updatedTask));
+    } catch (err) {
+        next(err);
+    }
+};
+
+
+export const deleteTask = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+) => {
+    try {
+        const deletedTask = await taskService.deleteTask(req.params.id);
+
+        if (!deletedTask) {
+            return res.status(404).json({ message: "Task not found" });
+        }
+
+        res.json(ok(deletedTask));
+    } catch (err) {
+        next(err);
+    }
+};
+
 
 export const getTaskById = async (req: Request, res: Response, next: NextFunction) => {
     try {

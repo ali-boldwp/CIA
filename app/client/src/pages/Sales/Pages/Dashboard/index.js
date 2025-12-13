@@ -2,6 +2,7 @@ import Layout from "../../../../layouts"
 import View from "./View";
 import { useGetProjectsQuery,useGetAllRequestedProjectsQuery } from "../../../../services/projectApi";
 import { useGetAnalystsQuery } from "../../../../services/userApi";
+import { useGetAnalystsProjectProgressQuery} from "../../../../services/projectApi";
 
 import Header from "../../Components/Header"
 
