@@ -1,5 +1,3 @@
-import {useGetAnalystsQuery} from "../../../../services/userApi";
-import {useGetProjectsQuery} from "../../../../services/projectApi";
 import React, {useMemo, useState ,useEffect} from "react";
 import './style.css'
 import {Link} from "react-router-dom";
@@ -62,6 +60,7 @@ const Dashboard = ({ analyst, projectData , humintData ,analystProgressBar }) =>
     const analysts = analyst?.data || [];
     const projects = projectData?.data || [];
     const humint = humintData?.data || [];
+
 
     /** === 1. PAGINATION HUMINT === */
     const [humintPage, setHumintPage] = useState(1);
@@ -149,7 +148,9 @@ const Dashboard = ({ analyst, projectData , humintData ,analystProgressBar }) =>
             <h2 className="analyst-title">Proiectele mele</h2>
 
             <div className="projects-row">
-                {projects.map((project) => (
+                {projects.map((project) => {
+                    const chatId=project.groupChatId;
+                    return (
                     <div className="project-card-analyst" key={project._id}>
                         <div className="project-header">
                             <div className="project-name">{project.projectName}</div>
@@ -203,11 +204,19 @@ const Dashboard = ({ analyst, projectData , humintData ,analystProgressBar }) =>
 
                         <div className="project-actions">
                             <Link to={`/project/view/${project._id}`} className="pill-analyst blue">Deschide</Link>
-                            <button className="pill-analyst green">Mesaj</button>
+                            <Link
+                                to={chatId ? `/messenger/${chatId}` : "#"}
+                                onClick={(e) => {
+                                if (!chatId) {
+                                    e.preventDefault();
+                                    alert("Is project ke liye groupChatId set nahi hai.");
+                                }
+                            }} className="pill-analyst green">Mesaj</Link>
                             <button className="pill-analyst red">HUMINT Primit</button>
                         </div>
                     </div>
-                ))}
+                )}
+                )}
             </div>
 
 
