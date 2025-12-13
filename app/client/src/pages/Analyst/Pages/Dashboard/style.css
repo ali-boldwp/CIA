@@ -227,16 +227,19 @@
 }
 
 
-.dot.green {
-    background: #22c55e;
+.dot.green1 {
+    background: #85e8aa;
 }
 
-.dot.orange {
-    background: #f97316;
+.dot.orange1 {
+    background: #f4b78c;
 }
 
-.dot.red {
-    background: #f43f5e;
+.dot.red1 {
+    background: #ca9da5;
+}
+.dot.yellow1 {
+    background: #f5fd63;
 }
 
 .project-info {

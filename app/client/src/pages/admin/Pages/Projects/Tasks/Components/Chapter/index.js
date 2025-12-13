@@ -195,7 +195,7 @@ const Chapter = ({ data, tasksByChapter, setTasksByChapter, getInitials, isFinal
                                                 ) : (
                                                     <>
                                                         {/* Start/Resume/Pause/Done buttons - For admin, manager and analyst */}
-                                                        {(user?.role === "admin" || user?.role === "manager" || user?.role === "analyst") && (
+                                                        {(user?.role === "analyst") && (
                                                             <>
                                                                 {!task.analyst ? (
                                                                     <button
