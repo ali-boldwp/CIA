@@ -7,7 +7,7 @@ export interface IRequested extends Document {
     reportType: string;
     entityType: string;
     priority: string;
-    deliverableLanguage: string;
+    deliverableLanguage: string[];
     projectDescription: string;
 
     clientName: string;
@@ -47,7 +47,10 @@ const requestSchema = new Schema<IRequested>(
         reportType: { type: String, required: false },
         entityType: { type: String, required: false },
         priority: { type: String, required: false },
-        deliverableLanguage: { type: String, required: false },
+        deliverableLanguage: {
+            type: [String],
+            default: []
+        },
         projectDescription: { type: String, required: false },
 
         clientName: { type: String, required: false },
@@ -85,7 +88,8 @@ const requestSchema = new Schema<IRequested>(
             type:String,
         },
 
-        contractInfo: String,
+
+                contractInfo: String,
         referenceRequest: String,
         internalNotes: String,
 

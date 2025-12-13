@@ -33,7 +33,7 @@ const Index = () => {
     const [projectPrice, setProjectPrice] = useState("");
 
     const [priority, setPriority] = useState("Normal");
-    const [language, setLanguage] = useState("Română");
+    const [languages, setLanguages] = useState(["Română"]);
 
     const [preferredAnalyst, setPreferredAnalyst] = useState("");
     const [referenceRequest, setReferenceRequest] = useState("");
@@ -252,10 +252,13 @@ const Index = () => {
         formData.append("reportType", category);
         formData.append("entityType", entityType);
         formData.append("priority", priority);
-        formData.append(
-            "deliverableLanguage",
-            language === "Română" ? "Romanian" : "English"
-        );
+        languages.forEach((lng) => {
+            formData.append(
+                "deliverableLanguage",
+                lng === "Română" ? "Romanian" : "English"
+            );
+        });
+
         formData.append("projectDescription", projectDescription);
 
         // CLIENT FIELDS
@@ -343,7 +346,7 @@ const Index = () => {
             setProjectPrice("");
             setSurname("");
             setPriority("Normal");
-            setLanguage("Română");
+            setLanguages(["Română"]);
             setPreferredAnalyst("");
             setReferenceRequest("");
             setServices(["OSINT"]);
@@ -363,6 +366,14 @@ const Index = () => {
         id: String(a._id),
         name: a.name
     }));
+
+    const toggleLanguage = (lng) => {
+        setLanguages((prev) =>
+            prev.includes(lng)
+                ? prev.filter((l) => l !== lng)
+                : [...prev, lng]
+        );
+    };
 
 
     return (
@@ -809,17 +820,14 @@ const Index = () => {
                                                     key={lng}
                                                     type="button"
                                                     className={`${styles.chip} ${
-                                                        language === lng
-                                                            ? styles.chipActive
-                                                            : ""
+                                                        languages.includes(lng) ? styles.chipActive : ""
                                                     }`}
-                                                    onClick={() =>
-                                                        setLanguage(lng)
-                                                    }
+                                                    onClick={() => toggleLanguage(lng)}
                                                 >
                                                     {lng}
                                                 </button>
                                             ))}
+
                                         </div>
                                     </div>
                                 </div>
