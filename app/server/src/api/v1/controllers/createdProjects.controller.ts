@@ -211,13 +211,10 @@ export const getAllProjects = async (req: Request, res: Response, next: NextFunc
 
     } else if (user.role === "analyst") {
         roleFilter = {
-            $or: [
-                { responsibleAnalyst: user.id },
-                { assignedAnalysts: user.id },
-
-            ]
+            responsibleAnalyst: user.id
         };
-    } else if (user.role === "admin" || user.role === "manager") {
+    }
+    else if (user.role === "admin" || user.role === "manager") {
         roleFilter = {};      // no restriction
     } else {
         return res.status(403).json({ status: "error", message: "Forbidden" });
@@ -396,6 +393,53 @@ export const getAnalystsProgress = async (req: Request, res: Response, next: Nex
         next(err);
     }
 };
+
+
+export const getAnalystProjectProgress = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+) => {
+    try {
+        const analystId = req.user.id;
+
+        // 🔹 Find projects where analyst is responsible
+        const projects = await ProjectRequest.find({
+            status: "approved",
+            responsibleAnalyst: analystId
+        }).select("_id projectName");
+
+        const result = [];
+
+        for (const project of projects) {
+            const chapters = await Chapter.find({ projectId: project._id }).select("_id");
+            const chapterIds = chapters.map(c => c._id);
+
+            const tasks = await Task.find({ chapterId: { $in: chapterIds } });
+
+            const totalTasks = tasks.length;
+            const completedTasks = tasks.filter(t => t.completed).length;
+
+            const progress = totalTasks > 0
+                ? Math.round((completedTasks / totalTasks) * 100)
+                : 0;
+
+            result.push({
+                projectId: project._id,
+                projectName: project.projectName,
+                progress,
+                totalTasks,
+                completedTasks
+            });
+        }
+
+        res.json({ success: true, data: result });
+
+    } catch (err) {
+        next(err);
+    }
+};
+
 
 export const updateEditableStatus = async (req, res, next) => {
     try {

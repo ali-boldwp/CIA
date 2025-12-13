@@ -3,12 +3,20 @@ import View from "./View";
 import Header from "../../Components/Header"
 
 import {useGetAnalystsQuery} from "../../../../services/userApi";
-import {useGetProjectsQuery} from "../../../../services/projectApi";
+import {
+    useGetProjectsQuery,
+    useGetAnalystsProjectProgressQuery,
+} from "../../../../services/projectApi";
+import { useGetAllHumintsQuery } from "../../../../services/humintApi";
+
 
 const Dashboard = () => {
 
     const { data: analyst, isLoading:  analystIsLoading } = useGetAnalystsQuery();
     const { data: projectData, isLoading, isError } = useGetProjectsQuery();
+    const { data: humintData, isHumintLoading, isHumintError } = useGetAllHumintsQuery();
+    const { data: analystProgressBar } = useGetAnalystsProjectProgressQuery();
+
 
     return (
         <Layout
@@ -16,7 +24,7 @@ const Dashboard = () => {
             header={{
                 content: <Header />
             }}
-            content={ <View analyst={ analyst } projectData={ projectData } /> }
+            content={ <View analyst={ analyst } projectData={ projectData } humintData = { humintData } analystProgressBar={analystProgressBar} /> }
         />
     );
 

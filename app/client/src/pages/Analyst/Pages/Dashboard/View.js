@@ -5,11 +5,16 @@ import './style.css'
 import {Link} from "react-router-dom";
 import Calender from "../../Components/Calender";
 
-const Dashboard = ({ analyst, projectData }) => {
+const Dashboard = ({ analyst, projectData , humintData ,analystProgressBar }) => {
     useEffect(() => {
         console.log("projectData:", projectData);
         console.log("analyst:", analyst);
     }, [projectData]);
+
+    useEffect(() => {
+        console.log("ANALYST PROGRESS BAR:", analystProgressBar);
+    }, [analystProgressBar]);
+
 
     const statusBackendToUi = {
         approved: "in lucru",
@@ -56,16 +61,17 @@ const Dashboard = ({ analyst, projectData }) => {
 
     const analysts = analyst?.data || [];
     const projects = projectData?.data || [];
+    const humint = humintData?.data || [];
 
     /** === 1. PAGINATION HUMINT === */
     const [humintPage, setHumintPage] = useState(1);
     const humintLimit = 10;
 
-    const humintTotalPages = Math.ceil(projects.length / humintLimit);
+    const humintTotalPages = Math.ceil(humint.length / humintLimit);
 
     const paginatedHumint = useMemo(() => {
-        return projects.slice((humintPage - 1) * humintLimit, humintPage * humintLimit);
-    }, [humintPage, projects]);
+        return humint.slice((humintPage - 1) * humintLimit, humintPage * humintLimit);
+    }, [humintPage, humint]);
 
 
     /** === NAME RESOLVERS === */
@@ -80,6 +86,15 @@ const Dashboard = ({ analyst, projectData }) => {
         if (!arr || arr.length === 0) return "—";
         return arr.map(resolveAnalystName).join(", ");
     };
+
+
+    const getProjectProgress = (projectId) => {
+        return analystProgressBar?.data?.find(
+            p => String(p.projectId) === String(projectId)
+        );
+    };
+
+
 
 
     /** === STATUS COLORS === */
@@ -158,17 +173,33 @@ const Dashboard = ({ analyst, projectData }) => {
                         <div className="project-info">
                             <div>Responsabil proiect: {resolveAnalystName(project.responsibleAnalyst)}</div>
                             <div>Echipa: {resolveAnalystNames(project.assignedAnalysts)}</div>
-                            <div>Progress (my tasks): 65%</div>
+
                         </div>
-                        <div className="progress-block">
-                            <div className="progress-header">
-                                <span>Progress: 0%</span>
-                            </div>
-                            <div className="progress-bar">
-                                <div className="progress-fill blue" style={{ width: "0%" }} />
-                            </div>
-                            <div className="progress-footer">0 taskuri efectuate</div>
-                        </div>
+                        {(() => {
+                            const p = getProjectProgress(project._id);
+
+                            return (
+                                <div className="progress-block">
+                                    <div className="progress-header">
+                                        <span>Progress: {p?.progress || 0}%</span>
+                                    </div>
+
+                                    <div className="progress-bar">
+                                        <div
+                                            className="progress-fill blue"
+                                            style={{ width: `${p?.progress || 0}%` }}
+                                        />
+                                    </div>
+
+                                    <div className="progress-footer">
+                                        {p?.completedTasks || 0} / {p?.totalTasks || 0} taskuri
+                                    </div>
+                                </div>
+                            );
+                        })()}
+
+
+
 
                         <div className="project-actions">
                             <Link to={`/project/view/${project._id}`} className="pill-analyst blue">Deschide</Link>
@@ -218,7 +249,7 @@ const Dashboard = ({ analyst, projectData }) => {
                             </td>
 
                             <td>
-                                <button className="pill-analyst blue">Deschide solicitarea</button>
+                                <Link  to={`/humint/request/${item._id}`} className="pill-analyst blue">Deschide solicitarea</Link>
                             </td>
                         </tr>
                     ))}
