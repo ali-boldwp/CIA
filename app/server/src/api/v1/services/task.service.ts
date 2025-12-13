@@ -48,14 +48,23 @@ export const addTimeToAnalystExpanse = async (analystId, projectId, diffSeconds)
 };
 
 
-// export const updateTask = async (id: string, data: Partial<ITask>) => {
-//     const task = await Task.findById(id);
-//     if (!task) throw new Error("Task not found");
-//
-//     Object.assign(task, data);
-//     await task.save();
-//     return task;
-// };
+export const updateTask = async (id: string, name: string) => {
+    const task = await Task.findById(id);
+    if (!task) throw new Error("Task not found");
+
+    task.name = name;
+    await task.save();
+
+    return task;
+};
+
+
+export const deleteTask = async (id: string) => {
+    const task = await Task.findByIdAndDelete(id);
+    return task;
+};
+
+
 //
 // export const finalizeTask = async (id: string) => {
 //     const task = await Task.findById(id);
@@ -67,9 +76,7 @@ export const addTimeToAnalystExpanse = async (analystId, projectId, diffSeconds)
 //     return task;
 // };
 //
-// export const deleteTask = async (id: string) => {
-//     return await Task.findByIdAndDelete(id);
-// };
+
 //
 // export const getTasksByProjectId = async (projectId: string) => {
 //     return await Task.find({ projectId }).sort({ createdAt: -1 });

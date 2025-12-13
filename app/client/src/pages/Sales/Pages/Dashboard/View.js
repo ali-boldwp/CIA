@@ -3,7 +3,7 @@ import {Link} from "react-router-dom";
 import Calender from "./Components/Calender";
 import "./style.css";
 
-const Dashboard = ({ approve, analystsData, requested }) => {
+const Dashboard = ({ approve, analystsData, requested  }) => {
 
     const statusBackendToUi = {
         approved: "in lucru",
@@ -49,6 +49,7 @@ const Dashboard = ({ approve, analystsData, requested }) => {
     const requestedProject=requested?.data||[];
 
 
+
     const resolveAnalystName = (value) => {
         if (!value) return "—";
 
@@ -88,6 +89,9 @@ const Dashboard = ({ approve, analystsData, requested }) => {
     const paginatedDeadlines = useMemo(() => {
         return approvedProject.slice((page - 1) * limit, page * limit);
     }, [page, approvedProject]);
+
+
+
 
 
 
@@ -215,13 +219,22 @@ const Dashboard = ({ approve, analystsData, requested }) => {
 
                         <div className="progress-block">
                             <div className="progress-header">
-                                <span>Progress: 0%</span>
+                                <span>Progress: {p.progress || 0}%</span>
                             </div>
+
                             <div className="progress-bar">
-                                <div className="progress-fill blue" style={{ width: "0%" }} />
+                                <div
+                                    className="progress-fill blue"
+                                    style={{ width: `${p.progress || 0}%` }}
+                                />
                             </div>
-                            <div className="progress-footer">0 taskuri efectuate</div>
+
+                            <div className="progress-footer">
+                                {p.completedTasks || 0} / {p.totalTasks || 0} taskuri efectuate
+                            </div>
                         </div>
+
+
 
                         <div className="project-actions">
                             <Link
