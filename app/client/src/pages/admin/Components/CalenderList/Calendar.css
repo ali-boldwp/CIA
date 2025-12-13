@@ -23,6 +23,8 @@
 }
 .deadline-info{
     position: relative;
+    display: flex;
+    flex-direction: column;
 
 }
 .calendar-header button {
@@ -38,6 +40,7 @@
     display: grid;
     grid-template-columns: repeat(7, 1fr);
     gap: 8px;
+    height:400px !important;
     margin-top: 20px;
 }
 
@@ -53,6 +56,13 @@
     border-radius: 8px;
     padding: 5px;
     position: relative;
+
+}
+
+.day-box .calendar-dot{
+    position:absolute;
+    bottom:5px;
+    right:5px;
 }
 
 .day-box span {
@@ -76,8 +86,10 @@
     height: 12px;
     border-radius: 50%;
     position: absolute;
+    margin-bottom: 50px;
 
 }
+
 
 .deadline-card h3 {
     margin-bottom: 15px;
@@ -101,7 +113,7 @@
     font-size: 14px;
 }
 
-.deadline-dateCal {
+.deadline-date {
     font-size: 12px;
     opacity: 0.6;
     margin-left:18px;
