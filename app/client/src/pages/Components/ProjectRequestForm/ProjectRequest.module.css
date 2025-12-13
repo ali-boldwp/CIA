@@ -296,22 +296,28 @@
     display: none;
 }
 
-/* drop zone container */
-.dropZone {
-    position: relative;
-    margin-top: 0.6rem;
-    border-radius: 4px;
-    border: 1px dashed #c7cff5;
-    background: #f9fbff;
-    padding: 0.9rem 1rem;
-    font-size: 0.85rem;
-    color: #6c72a2;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 0.3rem;
-    min-height: 130px; /* same feel as textarea */
+
+.dropzone {
+    border: 2px dashed #cbd5e1;
+    border-radius: 10px;
+    padding: 28px;
+    text-align: center;
+    cursor: pointer;
+    background: #f8fafc;
+    transition: 0.2s ease;
+    margin-top: 5px;
+
 }
+
+.dropzone:hover {
+    background: #eef2ff;
+    border-color: #6366f1;
+}
+.halfWidthBlock{
+     width: 50%;
+    margin-top:30px ;
+}
+
 
 /* custom upload button: shape like Adaugă but soft colors */
 .uploadButton {
