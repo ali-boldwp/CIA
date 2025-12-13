@@ -104,16 +104,16 @@ const ClarificationHistoryCard = ({ messages, currentUserId }) => {
 };
 
 
-const Index = () => {
+const Index = ({ data, analystData, clarificationData, refetchClarifications }) => {
     const { id } = useParams(); // HUMINT id
     const [submitting, setSubmitting] = useState(false);
 
     // HUMINT detail
-    const { data, isLoading } = useGetHumintByIdQuery(id);
+
     const humint = data?.data;
 
     // analysts
-    const { data: analystData } = useGetAnalystsQuery();
+
     const analysts = analystData?.data || [];
 
     const formRef = useRef(null);
@@ -134,10 +134,7 @@ const Index = () => {
     }
 
     // CLARIFICATIONS LIST (messages for chat card)
-    const {
-        data: clarificationData,
-        refetch: refetchClarifications,
-    } = useGetClarificationsByHumintQuery(id);
+
 
     const clarifications = clarificationData?.data || [];
 
@@ -173,10 +170,6 @@ const Index = () => {
         const found = analysts.find((a) => a._id === responsible);
         return found ? found.name : "";
     };
-
-    if (isLoading || !humint) {
-        return <h2 style={{ padding: 20 }}>Loading HUMINT…</h2>;
-    }
 
     const enrichedHumint = {
         ...humint,
@@ -319,8 +312,6 @@ const Index = () => {
 
     return (
         <>
-            <Header />
-
             <RequestDetailForm
                 ref={formRef}
                 humint={enrichedHumint}
