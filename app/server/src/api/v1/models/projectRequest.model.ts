@@ -8,7 +8,7 @@ export interface IProjectRequest extends Document {
     reportType: string;
     entityType: string;
     priority: string;
-    deliverableLanguage: string;
+    deliverableLanguage: string[];
     projectDescription: string;
 
     clientName: string;
@@ -60,7 +60,10 @@ const projectRequestSchema = new Schema<IProjectRequest>(
         reportType: { type: String, required: false },
         entityType: { type: String, required: false },
         priority: { type: String, required: false },
-        deliverableLanguage: { type: String, required: false },
+        deliverableLanguage: {
+            type: [String],
+            default: []
+        },
         projectDescription: { type: String, required: false },
 
         clientName: { type: String, required: false },
