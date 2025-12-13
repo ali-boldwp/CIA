@@ -226,159 +226,189 @@ const Dashboard = ({ analyst, projectData, humintData, analystProgressBar }) => 
             </div>
 
             {/* PROJECT CARDS */}
-            <h2 className="analyst-title">Proiectele mele</h2>
+            {projects && projects.length > 0 && (
+                <>
+                    <h2 className="analyst-title">Proiectele mele</h2>
 
-            <div className="projects-row">
-                {projects.map((project) => {
-                    const chatId = project.groupChatId;
+                    <div className="projects-row">
+                        {projects.map((project) => {
+                            const chatId = project.groupChatId;
 
-                    return (
-                        <div className="project-card-analyst" key={project._id}>
-                            <div className="project-header">
-                                <div className="project-name">{project.projectName}</div>
+                            return (
+                                <div className="project-card-analyst" key={project._id}>
+                                    <div className="project-header">
+                                        <div className="project-name">{project.projectName}</div>
 
-                                <div className="project-deadline-wrapper">
-                  <span className="deadline-pill">
-                    Deadline:
-                      {project.deadline
-                          ? new Date(project.deadline).toLocaleDateString("ro-RO")
-                          : "—"}
+                                        <div className="project-deadline-wrapper">
+                <span className="deadline-pill">
+                  Deadline:
+                    {project.deadline
+                        ? new Date(project.deadline).toLocaleDateString("ro-RO")
+                        : "—"}
+                </span>
+
+                                            <div className="status-dot-wrapper-analyst">
+                                                <span className={`dot ${resolveStatusDotColor(project.status)}`} />
+                                                <span className="status-sales-text">
+                    {resolveStatusLabel(project.status)}
                   </span>
-
-                                    <div className="status-dot-wrapper-analyst">
-                                        <span className={`dot ${resolveStatusDotColor(project.status)}`} />
-                                        <span className="status-sales-text">{resolveStatusLabel(project.status)}</span>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div className="project-info">
-                                <div>Responsabil proiect: {resolveAnalystName(project.responsibleAnalyst)}</div>
-                                <div>Echipa: {resolveAnalystNames(project.assignedAnalysts)}</div>
-                            </div>
-
-                            {(() => {
-                                const p = getProjectProgress(project._id);
-
-                                return (
-                                    <div className="progress-block">
-                                        <div className="progress-header">
-                                            <span>Progress: {p?.progress || 0}%</span>
-                                        </div>
-
-                                        <div className="progress-bar">
-                                            <div className="progress-fill blue" style={{ width: `${p?.progress || 0}%` }} />
-                                        </div>
-
-                                        <div className="progress-footer">
-                                            {p?.completedTasks || 0} / {p?.totalTasks || 0} taskuri
+                                            </div>
                                         </div>
                                     </div>
-                                );
-                            })()}
 
-                            <div className="project-actions">
-                                <Link to={`/project/view/${project._id}`} className="pill-analyst blue">
-                                    Deschide
-                                </Link>
+                                    <div className="project-info">
+                                        <div>Responsabil proiect: {resolveAnalystName(project.responsibleAnalyst)}</div>
+                                        <div>Echipa: {resolveAnalystNames(project.assignedAnalysts)}</div>
+                                    </div>
 
-                                <Link
-                                    to={chatId ? `/messenger/${chatId}` : "#"}
-                                    onClick={(e) => {
-                                        if (!chatId) {
-                                            e.preventDefault();
-                                            alert("Is project ke liye groupChatId set nahi hai.");
-                                        }
-                                    }}
-                                    className="pill-analyst green"
-                                >
-                                    Mesaj
-                                </Link>
-
-                                {/* ✅ Existing HUMINT button (same) */}
-                                {(() => {
-                                    const humintUI = getHumintButtonUI(project.humintId);
-
-                                    return (
-                                        <button className="pill-analyst" style={humintUI.style} type="button">
-                                            {humintUI.label}
-                                        </button>
-                                    );
-                                })()}
-                            </div>
-                        </div>
-                    );
-                })}
-            </div>
-
-            {/* HUMINT REQUEST TABLE */}
-            <h2 className="analyst-title">Solicitarile mele de HUMINT</h2>
-
-            <div className="humint-card">
-                <table className="humint-table">
-                    <thead>
-                    <tr>
-                        <th>Proiect</th>
-                        <th>Status</th>
-                        <th>Deadline</th>
-                        <th>Actiuni</th>
-                    </tr>
-                    </thead>
-
-                    <tbody>
-                    {paginatedHumint.map((item) => {
-                        console.log("item", item);
-
-                        return (
-                            <tr key={item._id}>
-                                <td>{item.projectName}</td>
-
-                                {/* ✅ UPDATED: Same label/style as HUMINT button */}
-                                <td>
                                     {(() => {
-                                        const humintUI = getHumintButtonUI(item);
+                                        const p = getProjectProgress(project._id);
 
                                         return (
-                                            <span className="status-badge" style={humintUI.style}>
-                          {humintUI.label}
-                        </span>
+                                            <div className="progress-block">
+                                                <div className="progress-header">
+                                                    <span>Progress: {p?.progress || 0}%</span>
+                                                </div>
+
+                                                <div className="progress-bar">
+                                                    <div
+                                                        className="progress-fill blue"
+                                                        style={{ width: `${p?.progress || 0}%` }}
+                                                    />
+                                                </div>
+
+                                                <div className="progress-footer">
+                                                    {p?.completedTasks || 0} / {p?.totalTasks || 0} taskuri
+                                                </div>
+                                            </div>
                                         );
                                     })()}
-                                </td>
 
-                                <td>
-                                    {item.deadline ? new Date(item.deadline).toLocaleDateString("ro-RO") : "—"}
-                                </td>
+                                    <div className="project-actions">
+                                        <Link
+                                            to={`/project/view/${project._id}`}
+                                            className="pill-analyst blue"
+                                        >
+                                            Deschide
+                                        </Link>
 
-                                <td>
-                                    <Link to={`/humint/request/${item._id}`} className="pill-analyst blue">
-                                        Deschide solicitarea
-                                    </Link>
-                                </td>
+                                        <Link
+                                            to={chatId ? `/messenger/${chatId}` : "#"}
+                                            onClick={(e) => {
+                                                if (!chatId) {
+                                                    e.preventDefault();
+                                                    alert("Is project ke liye groupChatId set nahi hai.");
+                                                }
+                                            }}
+                                            className="pill-analyst green"
+                                        >
+                                            Mesaj
+                                        </Link>
+
+                                        {(() => {
+                                            const humintUI = getHumintButtonUI(project.humintId);
+
+                                            return (
+                                                <button
+                                                    className="pill-analyst"
+                                                    style={humintUI.style}
+                                                    type="button"
+                                                >
+                                                    {humintUI.label}
+                                                </button>
+                                            );
+                                        })()}
+                                    </div>
+                                </div>
+                            );
+                        })}
+                    </div>
+                </>
+            )}
+
+
+            {/* HUMINT REQUEST TABLE */}
+            {paginatedHumint && paginatedHumint.length > 0 && (
+                <>
+                    <h2 className="analyst-title">Solicitarile mele de HUMINT</h2>
+
+                    <div className="humint-card">
+                        <table className="humint-table">
+                            <thead>
+                            <tr>
+                                <th>Proiect</th>
+                                <th>Status</th>
+                                <th>Deadline</th>
+                                <th>Actiuni</th>
                             </tr>
-                        );
-                    })}
-                    </tbody>
-                </table>
+                            </thead>
 
-                {/* HUMINT PAGINATION */}
-                <div className="pagination" style={{ marginTop: "15px" }}>
-                    <button disabled={humintPage === 1} onClick={() => setHumintPage((prev) => prev - 1)}>
-                        ← Precedent
-                    </button>
+                            <tbody>
+                            {paginatedHumint.map((item) => {
+                                return (
+                                    <tr key={item._id}>
+                                        <td>{item.projectName}</td>
 
-                    <span style={{ margin: "0 10px" }}>
-            Pagina <strong>{humintPage}</strong> din <strong>{humintTotalPages}</strong>
-          </span>
+                                        <td>
+                                            {(() => {
+                                                const humintUI = getHumintButtonUI(item);
 
-                    <button
-                        disabled={humintPage === humintTotalPages}
-                        onClick={() => setHumintPage((prev) => prev + 1)}
-                    >
-                        Următor →
-                    </button>
-                </div>
-            </div>
+                                                return (
+                                                    <span
+                                                        className="status-badge"
+                                                        style={humintUI.style}
+                                                    >
+                        {humintUI.label}
+                      </span>
+                                                );
+                                            })()}
+                                        </td>
+
+                                        <td>
+                                            {item.deadline
+                                                ? new Date(item.deadline).toLocaleDateString("ro-RO")
+                                                : "—"}
+                                        </td>
+
+                                        <td>
+                                            <Link
+                                                to={`/humint/request/${item._id}`}
+                                                className="pill-analyst blue"
+                                            >
+                                                Deschide solicitarea
+                                            </Link>
+                                        </td>
+                                    </tr>
+                                );
+                            })}
+                            </tbody>
+                        </table>
+
+                        {/* HUMINT PAGINATION */}
+                        <div className="pagination" style={{ marginTop: "15px" }}>
+                            <button
+                                disabled={humintPage === 1}
+                                onClick={() => setHumintPage((prev) => prev - 1)}
+                            >
+                                ← Precedent
+                            </button>
+
+                            <span style={{ margin: "0 10px" }}>
+          Pagina <strong>{humintPage}</strong> din{" "}
+                                <strong>{humintTotalPages}</strong>
+        </span>
+
+                            <button
+                                disabled={humintPage === humintTotalPages}
+                                onClick={() => setHumintPage((prev) => prev + 1)}
+                            >
+                                Următor →
+                            </button>
+                        </div>
+                    </div>
+                </>
+            )}
+
 
             <Calender />
         </>
