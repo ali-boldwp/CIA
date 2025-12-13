@@ -63,7 +63,7 @@ const ProjectTasks = ({
 
     const [createTask, { isLoading: isCreatingTask }] = useCreateTaskMutation();
 
-    const {data:chapter}=useGetChapterByIdQuery(projectId, {
+    const {data:chapter, refetch: refetchChapters}=useGetChapterByIdQuery(projectId, {
         skip: !projectId,
     });
     const chapterData=chapter?.data || [];
@@ -367,6 +367,7 @@ const ProjectTasks = ({
                 refetchProgress={ refetchProgress }
                 setActiveChapterId={ setActiveChapterId }
                 setShowTaskForm={ setShowTaskForm }
+                refetchChapters={ refetchChapters }
             />
 
 

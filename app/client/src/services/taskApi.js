@@ -98,6 +98,16 @@ export const taskApi = createApi({
                 result ? [{ type: "Observation", id: "LIST" }] : [],
         }),
 
+        updateChapter: builder.mutation({
+            query: ({ id, name }) => ({
+                url: `/chapter/${id}`,
+                method: "PUT",
+                body: { name },
+            }),
+            invalidatesTags: ["Chapters"],
+        }),
+
+
 
     }),
 });
@@ -115,5 +125,7 @@ export const {
     useUpdateEditableMutation,
     useFinalizeTaskMutation,
     useCreateObservationMutation,
-    useGetObservationsByProjectQuery
+    useGetObservationsByProjectQuery,
+    useUpdateChapterMutation,
+
 } = taskApi;

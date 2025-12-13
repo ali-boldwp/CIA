@@ -4,11 +4,25 @@ import {
     useCompleteTaskMutation,
     usePauseTaskMutation,
     useResumeTaskMutation,
-    useStartTaskMutation
+    useStartTaskMutation,
+    useUpdateChapterMutation
 } from "../../../../../../../services/taskApi";
 import {FiEdit2, FiTrash2} from "react-icons/fi";
+import { useState } from "react";
 
-const Chapter = ({ data, tasksByChapter, setTasksByChapter, getInitials, isFinalizedLocal, editMode, formatTime, refetchProgress, setActiveChapterId, setShowTaskForm }) => {
+const Chapter = ({
+                     data,
+                     tasksByChapter,
+                     setTasksByChapter,
+                     getInitials,
+                     isFinalizedLocal,
+                     editMode,
+                     formatTime,
+                     refetchProgress,
+                     setActiveChapterId,
+                     setShowTaskForm,
+                     refetchChapters
+                 }) => {
 
     const { user } = useSelector((state) => state.auth);
 
@@ -16,6 +30,53 @@ const Chapter = ({ data, tasksByChapter, setTasksByChapter, getInitials, isFinal
     const [pauseTask] = usePauseTaskMutation();
     const [resumeTask] = useResumeTaskMutation();
     const [completeTask] = useCompleteTaskMutation();
+    const [updateChapter, { isLoading: isUpdatingChapter }] = useUpdateChapterMutation();
+
+    // ✅ Edit title popup state
+    const [showEditChapterForm, setShowEditChapterForm] = useState(false);
+    const [editingChapterId, setEditingChapterId] = useState(null);
+    const [chapterTitle, setChapterTitle] = useState("");
+
+    const openEditChapter = (chapter) => {
+        setEditingChapterId(chapter._id);
+        setChapterTitle(chapter.name || "");
+        setShowEditChapterForm(true);
+    };
+
+    const handleUpdateChapterTitle = async () => {
+        if (!chapterTitle.trim() || !editingChapterId) return;
+
+        try {
+            await toast.promise(
+                updateChapter({
+                    id: editingChapterId,
+                    name: chapterTitle.trim()
+                }).unwrap(),
+                {
+                    pending: "Se modifică titlul capitolului...",
+                    success: "Titlu actualizat cu succes!",
+                    error: {
+                        render({ data }) {
+                            return data?.data?.message || "Actualizarea a eșuat";
+                        },
+                    },
+                },
+                { autoClose: 2000, toastId: `update-chapter-${editingChapterId}` }
+            );
+
+            // ✅ close popup after success
+            setShowEditChapterForm(false);
+            setEditingChapterId(null);
+            setChapterTitle("");
+
+            // ✅ refresh chapters list
+            if (refetchChapters) refetchChapters();
+
+        } catch (err) {
+            console.error(err);
+            // toast.promise already handles error
+        }
+    };
 
     const getStatus = (task) => {
         if (task.completed) return "done";
@@ -61,8 +122,6 @@ const Chapter = ({ data, tasksByChapter, setTasksByChapter, getInitials, isFinal
         }
     };
 
-
-
     const handleResume = async (taskId, chapterId) => {
         try {
             const res = await resumeTask(taskId).unwrap();
@@ -107,18 +166,20 @@ const Chapter = ({ data, tasksByChapter, setTasksByChapter, getInitials, isFinal
 
                 data.map((item,index) => (
 
-                    <div className="task-container">
+                    <div className="task-container" key={item._id}>
                         <div className="chapter-wrapper">
-
 
                             <div className="chapter-title-row">
                                 <span className="chapter-label">CAPITOL {index + 1}</span>
                                 <br/>
                                 <div className="chapter-name">
                                     {item.name}
-                                    <button className="edit-title-btn">Edit titlu</button>
+                                    {(user?.role === "admin" || user?.role === "manager") && editMode && !isFinalizedLocal && (
+                                        <button className="edit-title-btn" onClick={() => openEditChapter(item)}>
+                                            Edit titlu
+                                        </button>
+                                    )}
                                 </div>
-
                             </div>
 
                             {/* Table Header */}
@@ -147,17 +208,15 @@ const Chapter = ({ data, tasksByChapter, setTasksByChapter, getInitials, isFinal
                                         />
 
                                         <span className="task-text">
-            {task.name}
-        </span>
+                                            {task.name}
+                                        </span>
                                     </div>
-
 
                                     {/* Status Pill */}
                                     <div className="col col-status">
-                                    <span className={`status-pill ${getStatus(task)}`}>
-                                        {getStatus(task).toUpperCase()}
-                                    </span>
-
+                                        <span className={`status-pill ${getStatus(task)}`}>
+                                            {getStatus(task).toUpperCase()}
+                                        </span>
                                     </div>
 
                                     {/* Analyst + Time */}
@@ -167,13 +226,10 @@ const Chapter = ({ data, tasksByChapter, setTasksByChapter, getInitials, isFinal
 
                                             <span className="analyst-label">
                                                 {getInitials(task.analyst?.name)} • {formatTime(task.totalSeconds)}
-
                                             </span>
-
                                         </div>
                                     </div>
 
-                                    {/* Actions */}
                                     {/* Actions */}
                                     <div className="col col-actions">
                                         {isFinalizedLocal ? (
@@ -187,9 +243,9 @@ const Chapter = ({ data, tasksByChapter, setTasksByChapter, getInitials, isFinal
                                                         {/* Edit and Delete buttons - Only for admin and manager */}
                                                         {(user?.role === "admin" || user?.role === "manager") && (
                                                             <span className="btnActionBoth">
-                                <FiEdit2 className="icon edit" />
-                                <FiTrash2 className="icon delete" />
-                            </span>
+                                                                <FiEdit2 className="icon edit" />
+                                                                <FiTrash2 className="icon delete" />
+                                                            </span>
                                                         )}
                                                     </>
                                                 ) : (
@@ -236,9 +292,9 @@ const Chapter = ({ data, tasksByChapter, setTasksByChapter, getInitials, isFinal
                                                         {/* Edit and Delete buttons - Only for admin and manager */}
                                                         {(user?.role === "admin" || user?.role === "manager") && (
                                                             <span className="btnActionBoth">
-                                <FiEdit2 className="icon edit" />
-                                <FiTrash2 className="icon delete" />
-                            </span>
+                                                                <FiEdit2 className="icon edit" />
+                                                                <FiTrash2 className="icon delete" />
+                                                            </span>
                                                         )}
                                                     </>
                                                 )}
@@ -247,7 +303,6 @@ const Chapter = ({ data, tasksByChapter, setTasksByChapter, getInitials, isFinal
                                     </div>
                                 </div>
                             ))}
-
 
                             {/* Add new task */}
                             <div className="add-row">
@@ -267,6 +322,44 @@ const Chapter = ({ data, tasksByChapter, setTasksByChapter, getInitials, isFinal
                     </div>
 
                 ))}
+
+            {/* ✅ SAME UI POPUP FOR EDIT TITLE */}
+            {showEditChapterForm && (user?.role === "admin" || user?.role === "manager") && (
+                <div className="task-form-container">
+                    <div className="task-form">
+                        <h3>Modifică titlu capitol</h3>
+
+                        <input
+                            type="text"
+                            className="task-input"
+                            placeholder="Introdu titlul capitolului"
+                            value={chapterTitle}
+                            onChange={(e) => setChapterTitle(e.target.value)}
+                        />
+
+                        <div className="task-form-buttons">
+                            <button
+                                className="task-cancel-btn"
+                                onClick={() => {
+                                    setShowEditChapterForm(false);
+                                    setEditingChapterId(null);
+                                    setChapterTitle("");
+                                }}
+                            >
+                                Anuleaza
+                            </button>
+
+                            <button
+                                className="task-submit-btn"
+                                onClick={handleUpdateChapterTitle}
+                                disabled={isUpdatingChapter}
+                            >
+                                {isUpdatingChapter ? "Se modifică..." : "Modifică"}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </>
     )
 
