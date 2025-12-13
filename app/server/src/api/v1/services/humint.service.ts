@@ -1,16 +1,34 @@
 import Humint, { IHumint } from "../models/humint.model";
+import { Role } from "../../../constants/roles";
 
 
 export const createHumint = async (data: Partial<IHumint>) => {
     return await Humint.create(data);
 };
 
-export const getAllHumints = async (filters: any = {}) => {
-    const humints = await Humint.find(filters)
+export const getAllHumints = async (
+    filters: any = {},
+    user: any
+) => {
+    const query: any = { ...filters };
+
+    
+    if (user?.role === Role.ANALYST) {
+        query.$or = [
+            { responsible: user.id },
+            { createdBy: user.id }
+        ];
+    }
+
+    const humints = await Humint.find(query)
         .populate({
             path: "projectId",
             select: "projectName projectSubject reportType responsibleAnalyst",
-            model: "ProjectRequest"
+            model: "ProjectRequest",
+            populate: {
+                path: "responsibleAnalyst",
+                select: "name email"
+            }
         })
         .populate({
             path: "responsible",
@@ -24,31 +42,24 @@ export const getAllHumints = async (filters: any = {}) => {
         })
         .sort({ createdAt: -1 });
 
-    // ----- Attach derived project fields -----
     return humints.map((h: any) => {
         const obj = h.toObject();
 
         if (h.isLinkedToProject && h.projectId) {
             obj.projectName = h.projectId.projectName;
             obj.reportType = h.projectId.reportType;
-
-            // Responsible analyst from project
             obj.projectResponsible =
-                h.projectId.responsibleAnalyst?.name ||
-                h.projectId.responsibleAnalyst ||
-                "N/A";
+                h.projectId.responsibleAnalyst?.name || "N/A";
         } else {
-            // Independent HUMINT request
             obj.projectName = h.humintSubject || "Independent Request";
             obj.reportType = h.reportType || "HUMINT";
-
-            // Responsible analyst populated from User
             obj.projectResponsible = h.responsible?.name || "N/A";
         }
 
         return obj;
     });
 };
+
 
 export const getHumintById = async (id: string) => {
     return await Humint.findById(id)

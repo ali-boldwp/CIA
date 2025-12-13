@@ -4,16 +4,14 @@ import { ok } from "../../../utils/ApiResponse";
 import Humint from "../models/humint.model";
 import User from "../models/user.model";
 import { Types } from "mongoose";
+import { createNotification } from "../services/notification.service";
 
 export const createClarification = async (req, res, next) => {
     try {
         const userId = (req as any).user.id;
 
-        console.log("REQ BODY:", req.body);  // DEBUG LINE
-
         const { humintId } = req.body;
 
-        // Accept multiple possible message field names
         const clarificationText =
             req.body.clarificationText ||
             req.body.message ||
@@ -28,15 +26,16 @@ export const createClarification = async (req, res, next) => {
             return res.status(400).json({ message: "clarificationText/message is required" });
         }
 
-        // Get the user role
-        const user = await User.findById(userId).select("role");
-        if (!user) return res.status(404).json({ message: "User not found" });
+        // 🔹 Get analyst (for name)
+        const analyst = await User.findById(userId).select("name role");
+        if (!analyst) return res.status(404).json({ message: "User not found" });
 
         const humint = await Humint.findById(humintId);
         if (!humint) return res.status(404).json({ message: "Humint not found" });
 
+        // 🔹 Status logic
         let newStatus = "Requested";
-        if (user.role === "admin" || user.role === "manager") {
+        if (analyst.role === "admin" || analyst.role === "manager") {
             newStatus = "Clarification";
         }
 
@@ -49,7 +48,20 @@ export const createClarification = async (req, res, next) => {
             userId: new Types.ObjectId(userId)
         });
 
-        res.json(ok(clarification));
+        /* ============================
+           🔔 NOTIFY MANAGER
+        ============================ */
+        if (humint.managerId) {
+            await createNotification({
+                user: humint.managerId.toString(),
+                title: "Clarificare HUMINT",
+                text: `Analistul ${analyst.name || "analist"} a trimis o clarificare pentru solicitarea HUMINT`,
+                link: `/humint/request/${humint._id}`,
+                type: "info",
+            });
+        }
+
+        return res.json(ok(clarification));
     } catch (err) {
         next(err);
     }

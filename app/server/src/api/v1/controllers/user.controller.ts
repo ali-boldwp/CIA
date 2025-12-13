@@ -29,7 +29,8 @@ export const createUser = async (req: Request, res: Response, next: NextFunction
             hoursPerDay,
             bonus,
             hiringDate,
-            notes
+            notes,
+            color
         } = req.body;
 
         // If login enabled → require credentials
@@ -64,7 +65,8 @@ export const createUser = async (req: Request, res: Response, next: NextFunction
             hoursPerDay,
             bonus,
             hiringDate,
-            notes
+            notes,
+            color: color || undefined
         });
 
         await user.save();
@@ -173,7 +175,12 @@ export const updateUser = async (req: Request, res: Response, next: NextFunction
         }
 
         // Merge + save → triggers pre-save for salary cost calculation
-        Object.assign(user, data);
+        Object.keys(data).forEach((key) => {
+            if (data[key] !== undefined) {
+                (user as any)[key] = data[key];
+            }
+        });
+
         await user.save();
 
         return res.json(ok(user));

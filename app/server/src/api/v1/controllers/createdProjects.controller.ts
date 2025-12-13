@@ -135,8 +135,11 @@ export const createProject = async (
         }
 
 
-        const allAnalysts = await User.find({ role: "analyst" }).select("name");
+        // 🔔 6.2 Notify RESPONSIBLE + ASSIGNED ANALYSTS
 
+        const allAnalysts = await User.find({ role: "analyst" }).select("_id");
+
+// 🔔 6.3 FILTER ONLY RESPONSIBLE + ASSIGNED
         const analystsToNotify = allAnalysts.filter((analyst) => {
             const analystId = analyst._id.toString();
 
@@ -159,21 +162,19 @@ export const createProject = async (
             analystsToNotify.map(a => a._id.toString())
         );
 
-
+// 🔔 6.4 SEND NOTIFICATIONS
         await Promise.all(
-            analystsToNotify.map((analyst) => {
-                const socketRoom = `notification_${analyst._id}`;
-
-                return createNotification({
-                    user: analyst._id.toString(),
+            analystsToNotify.map((analyst) =>
+                createNotification({
+                    user: analyst._id.toString(),   // ✅ FIXED
                     title: "Ați fost alocat unui proiect",
                     text: `Managerul ${approver.name || "responsabil"} v-a alocat proiectul „${project.projectName}”`,
                     link: `/project/view/${project._id}`,
                     type: "info",
-                    socket: socketRoom,
-                });
-            })
+                })
+            )
         );
+
 
 
         // ===============================
@@ -437,8 +438,10 @@ export const updateProjectStatus = async (req, res, next) => {
     try {
         const projectId = req.params.id;
         const { status } = req.body;
+        const currentUser = req.user;
+        console.log( "fsdfsdfsdfsdf" , currentUser.name)
+        const dbUser = await User.findById(currentUser.id).select("name");
 
-        // Allowed statuses
         const allowedStatuses = ["revision", "observation"];
 
         if (!allowedStatuses.includes(status)) {
@@ -448,6 +451,28 @@ export const updateProjectStatus = async (req, res, next) => {
             });
         }
 
+        if (status === "revision") {
+
+            // 1️⃣ Get all chapters of this project
+            const chapters = await Chapter.find({ projectId }).select("_id");
+
+            const chapterIds = chapters.map(c => c._id);
+
+            // 2️⃣ Find incomplete tasks
+            const incompleteTasks = await Task.find({
+                chapterId: { $in: chapterIds },
+                completed: { $ne: true }
+            }).select("_id");
+
+            if (incompleteTasks.length > 0) {
+                return res.status(400).json({
+                    success: false,
+                    message: "Nu toate task-urile sunt finalizate. Proiectul nu poate fi trimis la revizuire."
+                });
+            }
+        }
+
+        // ✅ Update project status
         const project = await ProjectRequest.findByIdAndUpdate(
             projectId,
             { status },
@@ -461,6 +486,36 @@ export const updateProjectStatus = async (req, res, next) => {
             });
         }
 
+
+        if (status === "revision") {
+            const managers = await User.find({ role: "manager" }).select("_id");
+
+            await Promise.all(
+                managers.map((manager) =>
+                    createNotification({
+                        user: manager._id.toString(),
+                        title: "Cerere de revizuire",
+                        text: `Analistul ${dbUser?.name || "analist"} a solicitat revizuirea proiectului „${project.projectName}”`,
+
+                        link: `/project/view/${project._id}/tasks`,
+                        type: "info",
+                    })
+                )
+            );
+        }
+
+
+        if (status === "observation" && project.responsibleAnalyst) {
+            await createNotification({
+                user: project.responsibleAnalyst.toString(),
+                title: "Observații asupra proiectului",
+                text: `Managerul ${dbUser?.name || "manager"} a adăugat observații pentru proiectul „${project.projectName}”`,
+
+                link: `/project/view/${project._id}/tasks`,
+                type: "info",
+            });
+        }
+
         return res.json({
             success: true,
             message: `Project status updated to '${status}'`,
@@ -471,7 +526,6 @@ export const updateProjectStatus = async (req, res, next) => {
         next(err);
     }
 };
-
 
 export const projectFinancialSummary = async (
     req: Request,

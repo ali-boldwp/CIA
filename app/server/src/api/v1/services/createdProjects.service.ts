@@ -9,7 +9,7 @@ export const getAllProjects = async (query = {}, options = {}) => {
 
     let q = projectRequest.find(query)
         .select("+projectPrice")
-        .populate("responsibleAnalyst", "name email role")
+        .populate("responsibleAnalyst", "name email role color")
         .populate("assignedAnalysts", "name email role")
         .populate("humintId")
         .sort({ createdAt: -1 });
@@ -27,7 +27,7 @@ export const getAllProjects = async (query = {}, options = {}) => {
 export const getProjectById = async (id: string) => {
     return projectRequest.findById(id)
         .select("+projectPrice")
-        .populate("responsibleAnalyst", "name email role")
+        .populate("responsibleAnalyst", "name email role color")
         .populate("assignedAnalysts", "name email role")
         .populate("humintId");
 };
