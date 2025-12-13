@@ -1,8 +1,8 @@
 import { useState, useMemo } from "react";
-import { useGetProjectCreateQuery } from "../../../../services/projectApi";
+import { useGetProjectsQuery} from "../../../../services/projectApi";
 
 const Calender = () => {
-    const { data, isLoading } = useGetProjectCreateQuery();
+    const { data, isLoading } = useGetProjectsQuery();
     const projects = data?.data || [];
     console.log(projects,"color")
     const today = new Date();

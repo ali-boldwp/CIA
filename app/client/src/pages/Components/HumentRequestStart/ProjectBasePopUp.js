@@ -1,9 +1,11 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo  } from "react";
 import styles from "./ProjectBasePopUp.module.css";
 import { useGetProjectsQuery } from "../../../services/projectApi";
-import { Link } from "react-router-dom";
+import { Link ,useNavigate } from "react-router-dom";
+import {toast} from "react-toastify";
 
 const ProjectBasePopUp = () => {
+    const navigate = useNavigate();
 
     const { data, isLoading } = useGetProjectsQuery({
         onlyWithoutHumint: true
@@ -173,12 +175,20 @@ const ProjectBasePopUp = () => {
 
                 {/* BUTTON */}
                 <div className={styles.buttonRow}>
-                    <Link
-                        to={`/humint/new/${selectedProject?._id}`}
+                    <button
                         className={styles.continueBtn}
+                        onClick={() => {
+                            if (!selectedProject?._id) {
+                                toast("Te rog selectează un proiect mai întâi");
+                                return;
+                            }
+
+                            navigate(`/humint/new/${selectedProject._id}`);
+                        }}
                     >
                         Continuă
-                    </Link>
+                    </button>
+
                 </div>
 
             </div>

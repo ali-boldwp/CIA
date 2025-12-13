@@ -26,7 +26,7 @@ export interface IHumint extends Document {
 
     status:
         | "Draft"
-        | "Pending"
+        | "Requested"
         | "Clarification"
         | "Approved"
         | "Rejected"

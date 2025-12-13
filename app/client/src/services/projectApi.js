@@ -80,8 +80,8 @@ export const projectApi = createApi({
                 body: status,
             }),
         }),
-        getAnalystsProgress: builder.query({
-            query: () => "/project/analysts/progress"
+        getAnalystsProjectProgress: builder.query({
+            query: () => "/project/analysts/project-progress"
         }),
         getProjectFinancialStates: builder.query({
             query: (projectId) => `/project/${projectId}/financial-states`
@@ -104,7 +104,7 @@ export const {
     useGetTasksByChapterIdQuery,
     useCreateTaskMutation,
     useGetAnalystsProgressQuery,
-    useGetAnalystsProgress,
+    useGetAnalystsProjectProgressQuery,
     useGetProjectFinancialStatesQuery
 
 } = projectApi;

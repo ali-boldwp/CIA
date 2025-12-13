@@ -80,9 +80,7 @@ const CustumPopUp = () => {
 
         setSubmitting(true);
 
-        toast.info("Se deschide formularul HUMINT...");
-
-        navigate("/humintRequest-Page", {
+        navigate("/humint/new/:id", {
             state: { humintType: "independent", data: cleanPayload },
         });
 
