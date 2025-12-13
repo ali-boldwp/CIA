@@ -21,11 +21,16 @@ const Details = (
         projectId,
         formatTime,
         totalWorkedSeconds,
-        analystTimes
+        analystTimes,
+        project
     }
 ) => {
 
     const { user } = useSelector((state) => state.auth);
+    const hasHumint = !!project?.humintId;
+
+
+
 
     return(
         <div className="task-container">
@@ -199,8 +204,11 @@ const Details = (
                     <div className="humint-wrapper">
                         <span className="approval-badge">necesită aprobare</span>
 
-                        <Link to={`/humint/new/${projectId}`} className="project-btn">Solicita HUMINT</Link>
+                        <Link to={`/humint/new/${projectId}`} className="project-btn">
+                            {hasHumint ? "S-a solicitat HUMINT" : "Solicita HUMINT"}
+                        </Link>
                     </div>
+
 
                     <div className="export-dropdown">
                         <button className="project-btn">Exporta raport ▾</button>

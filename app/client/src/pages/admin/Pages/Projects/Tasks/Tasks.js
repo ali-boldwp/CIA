@@ -349,6 +349,7 @@ const ProjectTasks = ({
                 assigned={ assigned }
                 legendColors={ legendColors }
                 projectId={ projectId }
+                project={project}
             />
 
             <div className="task-container" style={{ padding: "16px 24px", marginTop: '12px' }}>
