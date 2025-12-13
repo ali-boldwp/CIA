@@ -1,17 +1,16 @@
 import React from "react";
+import { useSelector } from "react-redux";
 import styles from "./Button.module.css";
 
-const RequestButton = ({ status, onApprove, onReject, onClarify, disabled = false }) => {
-
+const RequestButton = ({ status, onApprove, onReject, onClarify, disabled = false, canApproveReject }) => {
     const normalized = (status || "").trim().toLowerCase();
-
     const isRequested = normalized === "requested";
     const isClarification = normalized === "clarification";
 
     return (
         <>
-            {/* APPROVE + REJECT only for Requested */}
-            {isRequested && (
+
+            {canApproveReject && isRequested && (
                 <>
                     <button
                         type="button"
@@ -33,7 +32,7 @@ const RequestButton = ({ status, onApprove, onReject, onClarify, disabled = fals
                 </>
             )}
 
-            {/* Clarify button for both Requested & Clarification */}
+
             {(isRequested || isClarification) && (
                 <button
                     type="button"
@@ -49,15 +48,13 @@ const RequestButton = ({ status, onApprove, onReject, onClarify, disabled = fals
 };
 
 const ActionButtons = ({ data, onApprove, onReject, onClarify, onPrint, disabled = false }) => {
+    const { user } = useSelector((state) => state.auth);
+
+    const role = (user?.role || "").toLowerCase();
+    const isAdminOrManager = role === "admin" || role === "manager";
+    const isAnalyst = role === "analyst";
 
     const status = data?.status;
-    const normalized = (status || "").trim().toLowerCase();
-
-    const isRequested = normalized === "requested";
-    const isClarification = normalized === "clarification";
-
-    // debug ke liye (1 dafa dekh lo console me kya aa raha hai)
-    console.log("Humint status raw:", status, "normalized:", normalized);
 
     return (
         <div className={styles.wrapper}>
@@ -65,24 +62,29 @@ const ActionButtons = ({ data, onApprove, onReject, onClarify, onPrint, disabled
                 <h3 className={styles.title}>Acțiuni</h3>
 
                 <div className={styles.actionsRow}>
-                    {(isRequested || isClarification) && (
+
+                    {(isAdminOrManager || isAnalyst) && (
                         <RequestButton
                             status={status}
                             onApprove={onApprove}
                             onReject={onReject}
                             onClarify={onClarify}
                             disabled={disabled}
+                            canApproveReject={isAdminOrManager}
                         />
                     )}
 
-                    <button
-                        type="button"
-                        className={`${styles.btn} ${styles.btnPrint}`}
-                        onClick={onPrint}
-                        disabled={disabled}
-                    >
-                        Generează brief printabil
-                    </button>
+
+                    {isAdminOrManager && (
+                        <button
+                            type="button"
+                            className={`${styles.btn} ${styles.btnPrint}`}
+                            onClick={onPrint}
+                            disabled={disabled}
+                        >
+                            Generează brief printabil
+                        </button>
+                    )}
                 </div>
             </div>
         </div>

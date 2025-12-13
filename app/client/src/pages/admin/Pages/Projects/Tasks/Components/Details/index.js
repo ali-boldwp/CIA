@@ -27,7 +27,12 @@ const Details = (
 ) => {
 
     const { user } = useSelector((state) => state.auth);
-    const hasHumint = !!project?.humintId;
+    const humintId = project?.humintId?._id;
+    const hasHumint = !!humintId;
+
+    const humintLink = hasHumint
+        ? `/humint/request/${humintId}`
+        : `/humint/new/${projectId}`;
 
 
 
@@ -204,7 +209,7 @@ const Details = (
                     <div className="humint-wrapper">
                         <span className="approval-badge">necesită aprobare</span>
 
-                        <Link to={`/humint/new/${projectId}`} className="project-btn">
+                        <Link to={humintLink} className="project-btn">
                             {hasHumint ? "S-a solicitat HUMINT" : "Solicita HUMINT"}
                         </Link>
                     </div>
