@@ -29,11 +29,25 @@ const TaskPage = () => {
     });
     const chapterData=chapter?.data || [];
 
+    // console
+
+    useEffect(() => {
+        console.log("projectId:", projectId);
+    }, [projectId]);
+
     // Fetch project info
 
 
     const { data: projectData, isLoading, isError } = useGetCreateProjectByIdQuery(projectId);
     const project = projectData?.data;
+
+
+    const hasHumint = !!project?.humintId;
+
+    const humintStatusText = hasHumint
+        ? "S-a solicitat HUMINT"
+        : "Nu s-a solicitat HUMINT";
+
 
     const [createChapter] = useCreateChapterMutation();
 
@@ -218,13 +232,24 @@ const TaskPage = () => {
 
                     <button className="project-btn save">Salveaza progres</button>
 
-                    <button className="project-btn">Cauta in Notes App</button>
+                    <button className="project-btn">Cauta in Notes </button>
 
                     <div className="humint-wrapper">
-                        <span className="approval-badge">necesită aprobare</span>
+  <span className={`approval-badge ${hasHumint ? "" : "gray"}`}>
+    {humintStatusText}
+  </span>
 
-                        <Link to={`/humintRequest-Page/${projectId}`} className="project-btn">Solicita HUMINT</Link>
+                        {hasHumint ? (
+                            <Link to={`/humintRequest-Page/${projectId}`} className="project-btn">
+                                Vezi HUMINT
+                            </Link>
+                        ) : (
+                            <Link to={`/humint/new/${projectId}`} className="project-btn">
+                                Solicita HUMINT
+                            </Link>
+                        )}
                     </div>
+
 
                     <div className="export-dropdown">
                         <button className="project-btn">Exporta raport ▾</button>

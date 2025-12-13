@@ -1,11 +1,15 @@
 import {useGetAnalystsQuery} from "../../../../services/userApi";
 import {useGetProjectsQuery} from "../../../../services/projectApi";
-import React, {useMemo, useState} from "react";
+import React, {useMemo, useState ,useEffect} from "react";
 import './style.css'
 import {Link} from "react-router-dom";
 import Calender from "../../Components/Calender";
 
 const Dashboard = ({ analyst, projectData }) => {
+    useEffect(() => {
+        console.log("projectData:", projectData);
+        console.log("analyst:", analyst);
+    }, [projectData]);
 
     const analysts = analyst?.data || [];
     const projects = projectData?.data || [];
