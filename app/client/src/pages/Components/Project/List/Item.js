@@ -46,42 +46,36 @@ const Item = ({ data }) => {
         return parts[0][0].toUpperCase() + parts[parts.length - 1][0].toUpperCase();
     };
 
-    const formatDeadline = (deadline) => {
-        if (!deadline)
-            return {
-                className: "deadline-badge none",
-                date: "Fără deadline",
-                status: "",
-            };
 
-        const today = new Date();
-        const due = new Date(deadline);
-        today.setHours(0, 0, 0, 0);
-        due.setHours(0, 0, 0, 0);
-
-        const diff = (due - today) / (1000 * 60 * 60 * 24);
-        const dateText = due.toISOString().split("T")[0];
-
-        if (diff < 0) {
-            return {
-                className: "deadline-badge overdue",
-                date: dateText,
-                status: "depășit",
-            };
-        }
-
-        return {
-            className: "deadline-badge upcoming",
-            date: dateText,
-            status: `${Math.floor(diff)} zile`,
-        };
-    };
 
     // ✅ HUMINT dropdown selection handler (still keeps internal state, but button text hard-coded)
     const handleSelectHumint = (value) => {
         setHumintStatus(value);
         setOpen(false);
     };
+    const formatDeadline = (deadline) => {
+        if (!deadline) {
+            return {
+                className: "deadline-empty",
+                date: "—",
+                status: null,
+            };
+        }
+
+        const d = new Date(deadline);
+
+        const day = String(d.getUTCDate()).padStart(2, "0");
+        const month = String(d.getUTCMonth() + 1).padStart(2, "0");
+        const year = d.getUTCFullYear();
+
+        return {
+            className: "deadline-date-simple",
+            date: `${day}.${month}.${year}`,
+            status: null,
+        };
+    };
+
+
 
     // ✅ check directly from Mongo data (humintId) for Status column
     const hasHumint = !!data?.humintId;

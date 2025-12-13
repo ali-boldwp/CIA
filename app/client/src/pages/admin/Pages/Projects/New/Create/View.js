@@ -40,7 +40,7 @@ const CreateProject = ({ data, main }) => {
     const [category, setCategory] = useState("");
     const [deadline, setDeadline] = useState("");
     const [priority, setPriority] = useState("");
-    const [language, setLanguage] = useState("");
+    const [language, setLanguage] = useState(["Română"]);
     const [projectDescription, setProjectDescription] = useState("");
 
     const [clientName, setClientName] = useState("");
@@ -86,7 +86,14 @@ const CreateProject = ({ data, main }) => {
             setEntityType(request.entityType || "");
             setDeadline(request.deadline?.substring(0, 10) || "");
             setPriority(backendToUi[request.priority] || "");
-            setLanguage(request.deliverableLanguage || "");
+            setLanguage(
+                Array.isArray(request.deliverableLanguage)
+                    ? request.deliverableLanguage
+                    : request.deliverableLanguage
+                        ? [request.deliverableLanguage]
+                        : []
+            );
+
             setProjectDescription(request.projectDescription || "");
 
             setClientName(request.clientName || "");
@@ -147,7 +154,7 @@ const CreateProject = ({ data, main }) => {
             newErrors.deadline = "Termenul limită este obligatoriu";
         if (!priority.trim())
             newErrors.priority = "Prioritatea este obligatorie";
-        if (!language.trim())
+        if (!Array.isArray(language) || language.length === 0)
             newErrors.language = "Limba livrabilului este obligatorie";
         if (!projectDescription.trim())
             newErrors.projectDescription =
@@ -498,12 +505,18 @@ const CreateProject = ({ data, main }) => {
                             <label>Limbă livrabil</label>
                             <input
                                 className="input-box"
-                                placeholder="Română"
-                                value={language}
+                                placeholder="Română, Engleză"
+                                value={language.join(", ")}
                                 onChange={(e) =>
-                                    setLanguage(e.target.value)
+                                    setLanguage(
+                                        e.target.value
+                                            .split(",")
+                                            .map(l => l.trim())
+                                            .filter(Boolean)
+                                    )
                                 }
                             />
+
                             {errors.language && (
                                 <p className={styles.errorText}>
                                     {errors.language}
