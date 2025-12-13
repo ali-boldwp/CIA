@@ -113,9 +113,22 @@ const Index = () => {
     };
 
     // DROPZONE HANDLER
-    const handleFileChange = (e) => {
-        setFiles((prev) => [...prev, ...Array.from(e.target.files)]);
+    // DROPZONE HANDLERS
+    const handleDragOver = (e) => {
+        e.preventDefault();
     };
+
+    const handleDrop = (e) => {
+        e.preventDefault();
+        const droppedFiles = Array.from(e.dataTransfer.files);
+        setFiles((prev) => [...prev, ...droppedFiles]);
+    };
+
+    const handleFileUpload = (e) => {
+        const selectedFiles = Array.from(e.target.files);
+        setFiles((prev) => [...prev, ...selectedFiles]);
+    };
+
 
     // VALIDATION FUNCTION
     const validateForm = () => {
@@ -975,61 +988,41 @@ const Index = () => {
                                 )}
                             </div>
 
-                            {/* FILE UPLOAD */}
-                            <div
-                                className={`${styles.fullWidthBlock} ${styles.fileUploadHalf}`}
-                            >
-                                <label className={styles.label}>
-                                    Atașează fișiere
-                                    <div className={styles.dropZone}>
-                                        <input
-                                            id="fileUpload"
-                                            type="file"
-                                            multiple
-                                            onChange={handleFileChange}
-                                            className={styles.hiddenFileInput}
-                                        />
-                                        <label
-                                            htmlFor="fileUpload"
-                                            className={styles.uploadButton}
-                                        >
-                                        <span className={styles.uploadIcon}>
-                                            <svg
-                                                viewBox="0 0 24 24"
-                                                className={styles.uploadSvg}
-                                                aria-hidden="true"
-                                            >
-                                                <path d="M12 16V5" />
-                                                <path d="M8.5 8.5L12 5L15.5 8.5" />
-                                                <path d="M5 19H19" />
-                                            </svg>
-                                        </span>
-                                            <span>Încarcă fișiere</span>
-                                        </label>
-                                        <span className={styles.dropZoneText}>
-                                        sau trage aici fișierele pentru a le
-                                        încărca
-                                    </span>
-                                    </div>
-                                </label>
-                                {files.map((file, idx) => (
-                                    <div key={idx} className={styles.fileRow}>
-                                        <span className={styles.fileName}>{file.name}</span>
-                                        <span className={styles.fileSize}>
-            {(file.size / 1024).toFixed(1)} KB
-        </span>
 
-                                        <button
-                                            type="button"
+                            {/* FILE UPLOAD – DROPZONE */}
+                            <div className={styles.halfWidthBlock}>
+                                <label className={styles.label}>Atașează fișiere</label>
+
+                                <div
+                                    className={styles.dropzone}
+                                    onDrop={handleDrop}
+                                    onDragOver={handleDragOver}
+                                    onClick={() => document.getElementById("fileInput").click()}
+                                >
+                                    <p style={{color : "gray"}}>Trage aici fișierele sau fă click pentru a încărca</p>
+                                </div>
+
+                                <input
+                                    id="fileInput"
+                                    type="file"
+                                    hidden
+                                    multiple
+                                    onChange={handleFileUpload}
+                                />
+
+                                {files.map((file, i) => (
+                                    <div className={styles.fileRow} key={i}>
+                                        📄 {file.name}
+                                        <span
                                             className={styles.deleteFileBtn}
-                                            onClick={() => removeFile(idx)}
+                                            onClick={() => removeFile(i)}
                                         >
-                                            ✖
-                                        </button>
+                ✖
+            </span>
                                     </div>
                                 ))}
-
                             </div>
+
                         </div>
                     </div>
                 </div>
