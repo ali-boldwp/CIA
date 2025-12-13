@@ -13,6 +13,10 @@ const Dashboard = ({ analyst, projectData , humintData ,analystProgressBar }) =>
         console.log("ANALYST PROGRESS BAR:", analystProgressBar);
     }, [analystProgressBar]);
 
+    useEffect(() => {
+        console.log("PrjectData2:", projectData);
+    }, [projectData]);
+
 
     const statusBackendToUi = {
         approved: "in lucru",
@@ -60,7 +64,7 @@ const Dashboard = ({ analyst, projectData , humintData ,analystProgressBar }) =>
     const analysts = analyst?.data || [];
     const projects = projectData?.data || [];
     const humint = humintData?.data || [];
-
+    // const status = projects.humintId.status
 
     /** === 1. PAGINATION HUMINT === */
     const [humintPage, setHumintPage] = useState(1);
@@ -97,12 +101,77 @@ const Dashboard = ({ analyst, projectData , humintData ,analystProgressBar }) =>
 
 
     /** === STATUS COLORS === */
-    const statusColors = {
-        requested: "orange",
-        approved: "green",
-        in_progress: "blue",
-        completed: "gray"
+    const getHumintButtonUI = (humintId) => {
+        // null / undefined
+        if (!humintId) {
+            return {
+                label: "Nu s-a solicitat HUMINT",
+                style: {
+                    color: "#334155",
+                    backgroundColor: "#F8FAFC",
+                    border: "1px solid #CBD5E1",
+                },
+            };
+        }
+
+        const status = (humintId.status || "").toLowerCase();
+
+        if (status === "approved") {
+            return {
+                label: "Primit HUMINT",
+                style: {
+                    color: "#166534",
+                    backgroundColor: "#ECFDF5",
+                    border: "1px solid #22C55E",
+                },
+            };
+        }
+
+        if (status === "requested") {
+            return {
+                label: "S-a solicitat HUMINT",
+                style: {
+                    color: "#92400E",
+                    backgroundColor: "#FFFBEB",
+                    border: "1px solid #F59E0B",
+                },
+            };
+        }
+
+        if (status === "completed") {
+            return {
+                label: "Predat HUMINT",
+                style: {
+                    color: "#075985",
+                    backgroundColor: "#E0F2FE",
+                    border: "1px solid #0EA5E9",
+                },
+            };
+        }
+
+        // Rejected (theme match: red)
+        if (status === "rejected") {
+            return {
+                label: "HUMINT respins",
+                style: {
+                    color: "#991B1B",
+                    backgroundColor: "#FEF2F2",
+                    border: "1px solid #EF4444",
+                },
+            };
+        }
+
+        // fallback
+        return {
+            label: "Status HUMINT necunoscut",
+            style: {
+                color: "#334155",
+                backgroundColor: "#F8FAFC",
+                border: "1px solid #CBD5E1",
+            },
+        };
     };
+
 
 
     return (
@@ -212,7 +281,20 @@ const Dashboard = ({ analyst, projectData , humintData ,analystProgressBar }) =>
                                     alert("Is project ke liye groupChatId set nahi hai.");
                                 }
                             }} className="pill-analyst green">Mesaj</Link>
-                            <button className="pill-analyst red">HUMINT Primit</button>
+                            {(() => {
+                                const humintUI = getHumintButtonUI(project.humintId);
+
+                                return (
+                                    <button
+                                        className="pill-analyst"
+                                        style={humintUI.style}
+                                        type="button"
+                                    >
+                                        {humintUI.label}
+                                    </button>
+                                );
+                            })()}
+
                         </div>
                     </div>
                 )}
@@ -235,33 +317,38 @@ const Dashboard = ({ analyst, projectData , humintData ,analystProgressBar }) =>
                     </thead>
 
                     <tbody>
-                    {paginatedHumint.map((item) => (
-                        <tr key={item._id}>
-                            <td>{item.projectName}</td>
+                    {paginatedHumint.map((item) => {
+                        console.log("item" , item);
+                        return (
+                            <tr key={item._id}>
+                                <td>{item.projectName}</td>
 
-                            <td>
-                                    <span
-                                        className="status-badge"
-                                        style={{
-                                            backgroundColor: resolveStatusBgColor(item.status),
-                                            color: "white"
-                                        }}
-                                    >
-    {resolveStatusLabel(item.status)}
-</span>
-                            </td>
+                                <td>
+                <span
+                    className="status-badge"
+                    style={{
+                        backgroundColor: resolveStatusBgColor(item.status),
+                        color: "white"
+                    }}
+                >
+                    {resolveStatusLabel(item.status)}
+                </span>
+                                </td>
 
-                            <td>
-                                {item.deadline
-                                    ? new Date(item.deadline).toLocaleDateString("ro-RO")
-                                    : "—"}
-                            </td>
+                                <td>
+                                    {item.deadline
+                                        ? new Date(item.deadline).toLocaleDateString("ro-RO")
+                                        : "—"}
+                                </td>
 
-                            <td>
-                                <Link  to={`/humint/request/${item._id}`} className="pill-analyst blue">Deschide solicitarea</Link>
-                            </td>
-                        </tr>
-                    ))}
+                                <td>
+                                    <Link to={`/humint/request/${item._id}`} className="pill-analyst blue">
+                                        Deschide solicitarea
+                                    </Link>
+                                </td>
+                            </tr>
+                        );
+                    })}
                     </tbody>
                 </table>
 
