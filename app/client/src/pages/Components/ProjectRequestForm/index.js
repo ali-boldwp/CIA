@@ -491,7 +491,7 @@ const Index = () => {
                                             onChange={(e) =>
                                                 setContractNumber(e.target.value)
                                             }
-                                            placeholder="ex: CTR-2025-014"
+                                            placeholder={contractDone? "":"ex: CTR-2025-014"}
                                             disabled={!contractDone}
                                         />
                                     </label>
@@ -522,7 +522,7 @@ const Index = () => {
                                             onChange={(e) =>
                                                 setAnnexNumber(e.target.value)
                                             }
-                                            placeholder="de făcut"
+                                            placeholder={annexDone ? "":"de făcut"}
                                             disabled={!annexDone}
                                         />
                                     </label>
