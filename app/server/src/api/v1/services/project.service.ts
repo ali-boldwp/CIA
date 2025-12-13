@@ -19,8 +19,13 @@ export const getProjectById = async (id: string) => {
 };
 
 export const updateProject = async (id: string, data: any) => {
-    return projectRequest.findByIdAndUpdate(id, data, { new: true });
+    return projectRequest
+        .findByIdAndUpdate(id, data, {
+            new: true,
+            runValidators: true,
+        })
 };
+
 
 export const deleteProject = async (id: string) => {
     return projectRequest.findByIdAndDelete(id);
