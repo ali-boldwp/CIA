@@ -7,6 +7,49 @@ import Calender from "../../Components/Calender";
 
 const Dashboard = ({ analyst, projectData }) => {
 
+    const statusBackendToUi = {
+        approved: "in lucru",
+        requested: "Solicitat",
+        draft: "Draft",
+        completed: "Finalizat",
+        cancelled: "Anulat",
+        revision: "Revizie",
+        observation: "Observație",
+    };
+    const statusColorMap = {
+        Approved: "green",
+        Requested: "blue",
+        Draft: "gray",
+        Completed: "purple",
+        Cancelled: "red",
+        Revision: "orange",
+        Observation: "gray",
+    };
+    const resolveStatusBgColor = (status) => {
+        return statusColorMap[capitalizeStatus(status)] || "gray";
+    };
+
+    const normalizeStatus = (status) => {
+        if (!status) return "";
+        return status.toLowerCase();
+    };
+
+    const capitalizeStatus = (status) => {
+        if (!status) return "";
+        return status.charAt(0).toUpperCase() + status.slice(1).toLowerCase();
+    };
+
+
+    const resolveStatusLabel = (status) => {
+        if (!status) return "—";
+        return statusBackendToUi[normalizeStatus(status)] || status;
+    };
+
+
+    const resolveStatusDotColor = (status) => {
+        return statusColorMap[capitalizeStatus(status)] || "gray";
+    };
+
     const analysts = analyst?.data || [];
     const projects = projectData?.data || [];
 
@@ -101,8 +144,9 @@ const Dashboard = ({ analyst, projectData }) => {
                                 </span>
 
                                 <div className="status-dot-wrapper-analyst">
-                                    <span className={`dot ${statusColors[project.status] || "gray"}`} />
-                                    <span className="status-text-analyst">{project.status}</span>
+                                    <span className={`dot ${resolveStatusDotColor(project.status)}`} />
+                                    <span className="status-sales-text">{resolveStatusLabel(project.status)}</span>
+
                                 </div>
                             </div>
                         </div>
@@ -152,9 +196,15 @@ const Dashboard = ({ analyst, projectData }) => {
                             <td>{item.projectName}</td>
 
                             <td>
-                                    <span className={`status-badge ${statusColors[item.status] || "gray"}`}>
-                                        {item.status}
-                                    </span>
+                                    <span
+                                        className="status-badge"
+                                        style={{
+                                            backgroundColor: resolveStatusBgColor(item.status),
+                                            color: "white"
+                                        }}
+                                    >
+    {resolveStatusLabel(item.status)}
+</span>
                             </td>
 
                             <td>
