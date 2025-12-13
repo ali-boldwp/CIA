@@ -1,7 +1,7 @@
 import Notification from "../Notification";
 import { useState } from 'react'
 import "./Header.css"
-import {Link, useLocation} from "react-router-dom";
+import {Link, useLocation, useNavigate} from "react-router-dom";
 import { useGetUnseenCountQuery } from "../../../../services/notificationApi";
 
 const Header = ({
@@ -9,6 +9,8 @@ const Header = ({
     notifications = true,
     calander = true
 }) => {
+
+    const navigate = useNavigate();
 
     const { data } = useGetUnseenCountQuery();
     const unseen = data?.unseen || 0;
@@ -23,7 +25,7 @@ const Header = ({
     return (
         <>
             {showNotif && <Notification onClose={() => setShowNotif(false)} />}
-            { createProject && <button className="icon-btn new" to="/project/new"> <span className="text">+ Creeeaza proiect nou</span></button> }
+            { createProject && <button className="icon-btn new" onClick={ () => navigate( "/project/new" ) }> <span className="text">+ Creeeaza proiect nou</span></button> }
             { notifications && <button className="icon-btn" onClick={() => setShowNotif(!showNotif)}>
                 <span className="icon">
                     <svg xmlns="http://www.w3.org/2000/svg" width="12px" height="12px" viewBox="0 0 24 24" fill="none">
