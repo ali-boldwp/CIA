@@ -2,48 +2,82 @@ import React from "react";
 import styles from "./style.module.css";
 
 const Billing = ({ billing }) => {
+    if (!billing) return null;
+
+    const currency = billing.currency || "EUR";
+
     return (
-        <div className={styles.billingCard}>
-            <h2 className={styles.sectionTitle}>Rezumat financiar</h2>
+        <div className={styles.billingWrapper}>
+            {/* Header */}
+            <div className={styles.billingHeader}>
+                <h2 className={styles.title}>Rezumat financiar</h2>
 
-            <div className={styles.gridRow}>
-                <div className={`${styles.box} ${styles.priceBox}`}>
-                    <span className={styles.label}>Preț proiect</span>
-                    <span className={styles.value}>{billing.price} EUR</span>
-                </div>
-
-                <div className={styles.box}>
-                    <span className={styles.label}>Cheltuieli fixe</span>
-                    <span className={styles.value}>{billing.fixed} EUR</span>
-                </div>
-
-                <div className={styles.box}>
-                    <span className={styles.label}>Cheltuieli OSINT</span>
-                    <span className={styles.value}>{billing.osint} EUR</span>
-                </div>
-
-                <div className={styles.box}>
-                    <span className={styles.label}>Cheltuieli angajați</span>
-                    <span className={styles.value}>{billing.staff} EUR</span>
-                </div>
-
-                <div className={styles.boxWarning}>
-                    <span className={styles.label}>Cheltuieli HUMINT (cu taxe)</span>
-                    <span className={styles.value}>{billing.humint} EUR</span>
-                </div>
-
-                <div className={styles.box}>
-                    <span className={styles.label}>Total cheltuieli</span>
-                    <span className={styles.value}>{billing.total} EUR</span>
+                <div className={styles.headerRight}>
+                    <span className={styles.currencyBadge}>
+                        Curs {currency} (BNR)
+                    </span>
+                    <span className={styles.refreshText}>actualizat ⟳</span>
                 </div>
             </div>
 
-            <div className={styles.profitBox}>
-                <div className = {styles.marja}>
-                    <span className={styles.label}>Marjă</span>
-                    <span className={styles.value}>{billing.margin} EUR</span>
+            {/* GRID */}
+            <div className={styles.financialGrid}>
+                {/* Row 1 */}
+                <div className={`${styles.card} ${styles.blue}`}>
+                    <span>Cheltuieli angajați</span>
+                    <div className={`${styles.text}`}>{billing.staff} {currency}</div>
                 </div>
-                <span className={styles.percentage}>{billing.percentage}%</span>
+
+                <div className={`${styles.card} ${styles.lightBlue}`}>
+                    <span>Cheltuieli TESA</span>
+                    <div className={`${styles.text}`}>{billing.tesa} {currency}</div>
+                </div>
+
+                <div className={`${styles.card} ${styles.cyan}`}>
+                    <span>Cheltuieli OSINT</span>
+                    <div className={`${styles.text}`}>{billing.osint} {currency}</div>
+                </div>
+
+                <div className={`${styles.card} ${styles.orange}`}>
+                    <span>Cheltuieli Supraveghere / Tehnica</span>
+                    <div className={`${styles.text}`}>{billing.humint} {currency}</div>
+                </div>
+
+                <div className={`${styles.card} ${styles.gray}`}>
+                    <span>Cheltuieli fixe</span>
+                    <div className={`${styles.text}`}>{billing.fixed} {currency}</div>
+                </div>
+
+                <div className={`${styles.card} ${styles.green}`}>
+                    <span>Alte cheltuieli</span>
+                    <div className={`${styles.text}`}>{billing.other} {currency}</div>
+                </div>
+
+                {/* Row 2 */}
+                <div className={`${styles.card} ${styles.purple} ${styles.wide}`}>
+                    <span>Pret proiect</span>
+                    <div className={`${styles.text}`}>{billing.price} {currency}</div>
+                </div>
+
+                <div className={`${styles.card} ${styles.lightGray} ${styles.wide}`}>
+                    <span>Total cheltuieli</span>
+                    <div className={`${styles.text}`}>{billing.total} {currency}</div>
+                </div>
+
+                <div className={`${styles.card} ${styles.profit}`}>
+                    <div className={styles.profitTop}>
+                        <span>Profit</span>
+                        <span className={styles.percent}>
+                            {billing.percentage}%
+                        </span>
+                    </div>
+                    <div className={`${styles.text}`}>{billing.margin} {currency}</div>
+                </div>
+
+                <div className={`${styles.card} ${styles.duration}`}>
+                    <span>Durata proiect (zile lucrătoare)</span>
+                    <div className={`${styles.text}`}>{billing.duration || "—"} zile</div>
+                </div>
             </div>
         </div>
     );

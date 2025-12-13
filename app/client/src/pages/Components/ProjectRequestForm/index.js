@@ -213,10 +213,6 @@ const Index = () => {
             newErrors.projectDescription = "Descrierea proiectului este obligatorie";
         }
 
-        if (!surname.trim()) {
-            newErrors.surname = "Prenumele este obligatoriu";
-        }
-
         // Internal notes validation
         if (!internalNotes.trim()) {
             newErrors.internalNotes = "Notele interne sunt obligatorii";
@@ -875,7 +871,7 @@ const Index = () => {
                                         Preferinta detectiv implicat in proiect
                                         <input
                                             type="text"
-                                            className={`${styles.input} ${errors.surname ? styles.inputError : ''}`}
+                                            className={`${styles.input}`}
                                             value={surname}
                                             onChange={(e) =>
                                                 setSurname(
@@ -885,11 +881,6 @@ const Index = () => {
                                             placeholder=" Nume prenume persoane"
                                         />
                                     </label>
-                                    {errors.surname && (
-                                        <div className={styles.errorMessage}>
-                                            {errors.surname}
-                                        </div>
-                                    )}
                                 </div>
                             </div>
 
