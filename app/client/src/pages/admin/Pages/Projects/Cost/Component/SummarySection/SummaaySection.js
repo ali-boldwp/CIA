@@ -66,6 +66,7 @@ const SummarySection = ({ employeeTotalCost = 0 }) => {
                 <div className={styles.financialGrid}>
                     {/* Row 1 */}
                     <div className={`${styles.summaryBox} ${styles.boxGray}`}>
+                        <span className={styles.sLabel}>Cheltuieli angajati</span>
                         <span className={styles.sValue}>
                             {employeeTotalCost} {currency}
                         </span>
