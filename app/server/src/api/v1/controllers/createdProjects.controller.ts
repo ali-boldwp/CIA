@@ -109,6 +109,10 @@ export const createProject = async (
             groupMembers.add(String(a))
         );
 
+        if (requestData?.fromRequestId) {
+            groupMembers.add(String(requestData.fromRequestId));
+        }
+
         const chatGroup = await Chat.create({
             participants: Array.from(groupMembers).map(id => ({
                 user: id,
