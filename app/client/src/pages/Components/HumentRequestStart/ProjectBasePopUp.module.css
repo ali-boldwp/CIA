@@ -3,7 +3,6 @@
     width: 100%;
     display: flex;
     justify-content: center;
-    margin-top: 20px;
 }
 
 /* white card */
@@ -12,8 +11,8 @@
     max-width: 1500px;
 
     background: #ffffff;
-    padding: 24px 32px 28px 32px;  /* thora extra left/right gap */
-    border-radius: 16px;
+    padding: 24px;  /* thora extra left/right gap */
+    border-radius: 4px;
     box-shadow: 0 8px 20px rgba(15, 23, 42, 0.08);
 }
 
@@ -112,7 +111,7 @@
 
 .searchInput {
     width: 100%;
-    border-radius: 12px;        /* ✅ 12px radius */
+    border-radius: 4px;        /* ✅ 12px radius */
     border: 1px solid #e2e8f0;
     padding: 12px 16px;
     font-size: 13px;
@@ -127,7 +126,7 @@
 
 .filterBtn {
     padding: 9px 16px;
-    border-radius: 12px;        /* ✅ pill se 12px corners */
+    border-radius: 4px;        /* ✅ pill se 12px corners */
     border: 1px solid #e2e8f0;
     background: #f8fafc;
     font-size: 13px;
@@ -137,7 +136,7 @@
 /* table */
 .tableWrapper {
     margin-top: 4px;
-    border-radius: 14px;
+    border-radius: 4px;
     overflow: hidden;
     border: 1px solid #e2e8f0;
     background: #f8fafc;
@@ -209,7 +208,7 @@
     gap: 8px;
     padding: 10px 12px;
     background: #f8fafc;
-    border-radius: 10px;
+    border-radius: 4px;
     font-size: 12px;
 }
 
@@ -231,7 +230,7 @@
 
 .continueBtn {
     padding: 11px 30px;
-    border-radius: 999px;
+    border-radius: 4px;
     border: none;
     background: #6366f1;
     color: #ffffff;

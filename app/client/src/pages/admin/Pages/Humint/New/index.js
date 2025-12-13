@@ -1,11 +1,22 @@
-import HumentRequestStart from "../../../../Components/HumentRequestStart";
+import Layout from "../../../../../layouts"
+import View from "./View";
+import Header from "../../../Components/Header";
 
-const HumentNew = () => {
+const NewHumint = () => {
 
     return (
-        <HumentRequestStart />
+        <Layout
+            loading={ false }
+            header={{
+                back: true,
+                search: false,
+                title: "Solicitare HUMINT",
+                content: <Header />
+            }}
+            content={ <View /> }
+        />
     )
 
 }
 
-export default HumentNew;
+export default NewHumint;

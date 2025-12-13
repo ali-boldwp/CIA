@@ -70,15 +70,6 @@ const ProjectRequestList = () => {
 
     return (
         <div className="RequestList">
-            <div className="top-header-box">
-                <Link to="/" className="back-gradient-btn">
-                    ← Înapoi la Dashboard
-                </Link>
-
-                <h2 className="header-title">
-                    Solicitări proiect — <span>De revizuit</span>
-                </h2>
-            </div>
 
             <div className="filter-header-box">
                 <div className="search-box1">

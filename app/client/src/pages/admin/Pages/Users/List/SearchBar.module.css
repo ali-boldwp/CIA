@@ -9,11 +9,10 @@
 
 /* white search-card */
 .box {
-    width: 96%;           /* 🔄 90% se 96% */
-    max-width: 1500px;    /* 🔄 header ke barabar */
+    width: 100%;           /* 🔄 90% se 96% */
     background: #ffffff;
-    padding: 10px 16px;   /* 🔄 pehle 14px tha -> height kam */
-    border-radius: 16px;
+    padding: 24px;   /* 🔄 pehle 14px tha -> height kam */
+    border-radius: 4px;
     box-shadow: 0 8px 20px rgba(15, 23, 42, 0.04);
 }
 
@@ -37,7 +36,7 @@
     padding-left: 38px;
 
     background: #f9fafb;
-    border-radius: 14px;      /* 🔄 999px se 16px => div ke barabar  */
+    border-radius: 4px;      /* 🔄 999px se 16px => div ke barabar  */
     border: 1px solid #e2e8f0;
 
     font-size: 14px;
