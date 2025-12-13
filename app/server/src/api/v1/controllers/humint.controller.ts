@@ -155,23 +155,65 @@ export const approveHumint = async (req: Request, res: Response, next: NextFunct
         const humint = await humintService.approveHumint(req.params.id, managerId);
 
         const manager = await User.findById(managerId).select("name");
-        const freshHumint = await Humint.findById(humint._id).select("createdBy");
+        const creator = await User.findById(humint.createdBy).select("role name");
 
-        if (freshHumint?.createdBy) {
-            await createNotification({
-                user: freshHumint.createdBy.toString(),
-                title: "HUMINT aprobat",
-                text: `Managerul ${manager?.name || "manager"} a aprobat solicitarea HUMINT`,
-                link: `/humint/view/${humint._id}`,
-                type: "info",
-            });
+
+        if (creator?.role === "analyst") {
+            const adminsAndManagers = await User.find({
+                role: { $in: ["admin", "manager"] }
+            }).select("_id");
+
+            await Promise.all(
+                adminsAndManagers.map((u) =>
+                    createNotification({
+                        user: u._id.toString(),
+                        title: "HUMINT aprobat",
+                        text: `Solicitarea HUMINT a analistului ${creator.name || "analist"} a fost aprobată`,
+                        link: `/humint/request/${humint._id}`,
+                        type: "info",
+                    })
+                )
+            );
         }
 
-        res.json(ok(humint));
+
+        if (
+            (creator?.role === "admin" || creator?.role === "manager") &&
+            humint.projectId
+        ) {
+            const project = await ProjectRequest.findById(humint.projectId)
+                .select("projectName responsibleAnalyst assignedAnalysts");
+
+            const analystsToNotify = new Set<string>();
+
+            if (project?.responsibleAnalyst) {
+                analystsToNotify.add(project.responsibleAnalyst.toString());
+            }
+
+            (project?.assignedAnalysts || []).forEach((a: any) =>
+                analystsToNotify.add(a.toString())
+            );
+
+            await Promise.all(
+                Array.from(analystsToNotify).map((analystId) =>
+                    createNotification({
+                        user: analystId,
+                        title: "HUMINT aprobat",
+                        text: `Managerul ${manager?.name || "manager"} a aprobat activitatea HUMINT pentru proiectul „${project.projectName}”`,
+                        link: `/humint/request/${humint._id}`,
+                        type: "info",
+                    })
+                )
+            );
+        }
+
+        return res.json(ok(humint));
+
     } catch (err) {
         next(err);
     }
 };
+
 
 
 /* -------------------------------------------------------
