@@ -70,29 +70,6 @@ const EmployeeCostTable = ({ onAddCost, projectId, projectData, onTotalCostUpdat
 
     const analysts = Array.from(analystsMap.values());
 
-    // If no analysts from expanses, use assigned analysts from project data
-    if (analysts.length === 0 && projectData?.assignedAnalysts) {
-        console.log("Using assigned analysts from project data");
-        projectData.assignedAnalysts.forEach(analyst => {
-            if (!analystsMap.has(analyst._id)) {
-                analystsMap.set(analyst._id, {
-                    analystId: analyst._id,
-                    analystName: analyst.name,
-                    role: analyst.role,
-                    monthlySalary: 0,
-                    costPerHour: 0,
-                    costPerDay: 0,
-                    hoursPerDay: 8,
-                    bonus: 0,
-                    totalHours: 0,
-                    expansesCount: 0
-                });
-            }
-        });
-        analysts.length = 0;
-        analysts.push(...Array.from(analystsMap.values()));
-    }
-
     const [editingRow, setEditingRow] = useState(null);
     const [editedHours, setEditedHours] = useState({});
 
@@ -224,7 +201,7 @@ const EmployeeCostTable = ({ onAddCost, projectId, projectData, onTotalCostUpdat
                 {analysts.length === 0 ? (
                     <tr>
                         <td colSpan="8" className={styles.noData}>
-                            No analysts assigned to this project
+                            Niciun analist nu a finalizat sarcina pentru acest proiect.
                             {expanses.length > 0 && (
                                 <div className={styles.expansesNote}>
                                     (Found {expanses.length} expanses but no analyst data)

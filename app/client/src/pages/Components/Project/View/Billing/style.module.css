@@ -1,105 +1,161 @@
-.billingCard {
+.billingWrapper {
     width: 100%;
     background: #ffffff;
-    border-radius: 4px;
-    padding: 24px;   /* ⬆ more height */
+    border-radius: 12px;
+    padding: 26px 28px;
     box-shadow: 0 16px 40px rgba(15, 23, 42, 0.06);
 }
 
-.sectionTitle {
-    font-size: 1.3rem;
+.billingHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 18px;
+}
+
+.billingHeader .title {
+    font-size: 18px;
     font-weight: 700;
     color: #0F172A;
-    margin-bottom: 22px; /* ⬆ more spacing */
 }
 
-.gridRow {
+.headerRight {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.currencyBadge {
+    border: 1px solid #c7d2fe;
+    padding: 6px 14px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #3730a3;
+    background: #eef2ff;
+}
+
+.refreshText {
+    font-size: 12px;
+    color: #4f46e5;
+    cursor: pointer;
+}
+
+/* GRID */
+.financialGrid {
     display: grid;
     grid-template-columns: repeat(6, minmax(0, 1fr));
-    gap: 18px;                  /* ⬆ bigger gap between boxes */
+    gap: 14px;
 }
 
-/* All stat boxes */
-.box,
-.priceBox,
-.boxWarning {
-    min-height: 105px;          /* ⬆ box height increased */
-    padding: 18px 20px;         /* ⬆ more inner padding */
+/* COMMON CARD */
+.card {
+    border-radius: 14px;
+    padding: 25px 16px;
     display: flex;
     flex-direction: column;
-    justify-content: center;    /* content centered vertically */
-    gap: 10px;                  /* ⬆ bigger gap between label/value */
-    border-radius: 4px;
+    gap: 6px;
+    font-size: 13px;
 }
 
-.box {
-    background: #f4f7ff;
-    border: 1px solid #e0e7ff;
-}
-
-.priceBox {
-    background: #ede9fe;
-    border: 1px solid #c4b5fd;
-}
-
-.boxWarning {
-    background: #fef7e8;
-    border: 1px solid #fcd34d;
-}
-
-.label {
-    font-size: 14px;       /* ⬆ slightly bigger */
+.card span {
     font-weight: 600;
-    color: #475569;
+    color: #1f2937;
 }
 
-.value {
-    font-size: 20px;       /* ⬆ bigger value */
+.card strong {
+    font-size: 16px;
     font-weight: 700;
-    color: #0f172a;
 }
 
-/* Profit box */
-.profitBox {
-    margin-top: 24px;     /* ⬆ more spacing from above */
-    background: #ecfdf5;
-    border-radius: 4px;
-    padding: 22px 24px;   /* ⬆ bigger height */
-    min-height: 90px;     /* ⬆ bigger fixed height */
-    border: 1px solid #bbf7d0;
+/* COLORS (MATCH SCREENSHOT) */
+.blue {
+    background: #EEF2FF;
+    color: #1E40AF;
+}
 
+.lightBlue {
+    background: #f0f4ff;
+}
+
+.cyan {
+    background: #ecfeff;
+    color: #0f766e;
+}
+
+.orange {
+    background: #fff7ed;
+    color: #c2410c;
+}
+
+.gray {
+    background: #F1F5F9;
+}
+
+.green {
+    background: #ecfdf5;
+    color: #047857;
+}
+
+.purple {
+    background: #F3E8FF;
+    color: #6b21a8;
+}
+
+.lightGray {
+    background: #F8FAFC;
+}
+
+.profit {
+    background: #ECFDF5;
+    color: #047857;
+}
+
+.duration {
+    background: #f8fafc;
+}
+
+/* WIDE CARDS */
+.wide {
+    grid-column: span 2;
+}
+
+/* PROFIT CARD */
+.profitTop {
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
 
-.percentage {
-    font-size: 17px;      /* ⬆ slightly bigger */
+.percent {
+    font-size: 12px;
     font-weight: 700;
-    color: #059669;
-}
-.marja{
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
+    color: #047857;
 }
 
-/* Responsive */
+.text{
+    font-size: 18px;
+    font-weight: bolder ;
+    color: #000000;
+}
+
+/* RESPONSIVE */
 @media (max-width: 1024px) {
-    .gridRow {
+    .financialGrid {
         grid-template-columns: repeat(3, minmax(0, 1fr));
     }
+
+    .wide {
+        grid-column: span 3;
+    }
 }
 
-@media (max-width: 768px) {
-    .gridRow {
-        grid-template-columns: minmax(0, 1fr);
+@media (max-width: 640px) {
+    .financialGrid {
+        grid-template-columns: 1fr;
     }
 
-    .profitBox {
-        flex-direction: column;
-        text-align: center;
-        gap: 12px;
-        min-height: 120px;
+    .wide {
+        grid-column: 1 / -1;
     }
 }

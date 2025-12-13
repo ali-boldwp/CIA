@@ -1,6 +1,9 @@
 import {useParams} from "react-router-dom";
 import ReplaceResponsiblePopup from "../../../admin/Pages/Projects/View/popup/ReplaceResponsiblePopup";
 import AnalystOptionsPopup from "../../../admin/Pages/Projects/View/popup/AnalystOptionsPopup";
+import { useGetProjectFinancialStatesQuery }
+    from "../../../../services/projectApi";
+
 import { BsThreeDots } from "react-icons/bs";
 import {
     useCreateProjectMutation,
@@ -49,7 +52,8 @@ const defaultData = {
 
 const ProjectView = ({ data }) => {
 
-    const { id } = useParams();
+    const { id: projectId } = useParams();
+
 
 
 
@@ -57,6 +61,13 @@ const ProjectView = ({ data }) => {
     const analyst=allData?.data || [];
     const [createProject, { isLoading: isCreating }] = useCreateProjectMutation();
     const [updateProject, { isLoading: isUpdating }] = useUpdateProjectMutation();
+    const {
+        data: financialResponse,
+        isLoading: isBillingLoading,
+        error: billingError
+    } = useGetProjectFinancialStatesQuery(projectId, {
+        skip: !projectId
+    });
 
     const submitting = isCreating || isUpdating;
 
@@ -170,16 +181,27 @@ const ProjectView = ({ data }) => {
         window.history.back();
     };
 
-    const billingData = {
-        price: 3500,
-        fixed: 300,
-        osint: 150,
-        staff: 1050,
-        humint: 554.4,
-        total: 2054.4,
-        margin: 1445.6,
-        percentage: 41.3,
-    };
+    const billingData = financialResponse?.data
+        ? {
+            price: financialResponse.data.pretProject,
+            fixed: financialResponse.data.cheltuieliFixe,
+            osint: financialResponse.data.cheltuieliOSINT,
+            tesa: financialResponse.data.cheltuieliTESA,
+            humint: financialResponse.data.supraveghereTehnica,
+            other: financialResponse.data.alteCheltuieli,
+            staff:
+                (financialResponse.data.cheltuieliTESA || 0) +
+                (financialResponse.data.alteCheltuieli || 0),
+            total: financialResponse.data.totalCheltuieli,
+            margin: financialResponse.data.profit,
+            percentage: financialResponse.data.profitPercentage,
+            currency: financialResponse.data.currency,
+        }
+        : null;
+
+
+
+
 
 
 
@@ -604,7 +626,19 @@ const ProjectView = ({ data }) => {
 
 
                 {/* Billing Component */}
-                <Billing billing={billingData} />
+                {isBillingLoading && (
+                    <div className={styles.card}>Se încarcă datele financiare…</div>
+                )}
+
+                {billingError && (
+                    <div className={styles.card}>
+                        Eroare la încărcarea datelor financiare
+                    </div>
+                )}
+
+                {billingData && !isBillingLoading && (
+                    <Billing billing={billingData} />
+                )}
 
                 {/* Save Button */}
                 <Buttons
