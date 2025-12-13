@@ -102,8 +102,6 @@ const Index = () => {
 
     return (
         <>
-            <Header />
-
             <RequestForm
                 ref={formRef}
                 projects={isIndependent ? null : projects}

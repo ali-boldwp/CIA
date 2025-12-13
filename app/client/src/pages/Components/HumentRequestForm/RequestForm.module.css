@@ -3,8 +3,6 @@
     width: 100%;
     display: flex;
     justify-content: center;
-    margin-top: 16px;
-    margin-bottom: 32px;
 }
 
 /* form width match header box */
@@ -16,17 +14,16 @@
 /* white cards */
 .card {
     background: #ffffff;
-    border-radius: 16px;
-    padding: 20px 22px 24px;
+    border-radius: 4px;
+    padding: 24px;
     box-shadow: 0 8px 20px rgba(15, 23, 42, 0.08);
-    margin-bottom: 16px;
 }
 
 .sectionTitle {
     font-size: 14px;
     font-weight: 600;
     color: #64748b;
-    margin-bottom: 16px;
+    margin-bottom: 12px;
 }
 
 /* top context grid */
@@ -62,7 +59,7 @@
 .input {
     flex: 1;
     padding: 9px 11px;
-    border-radius: 10px;
+    border-radius: 4px;
     border: 1px solid #e2e8f0;
     background: #f8fafc;
     font-size: 13px;
@@ -84,7 +81,7 @@ textarea:focus,
 .textarea {
     min-height: 110px;
     padding: 14px 14px;
-    border-radius: 12px;
+    border-radius: 4px;
     border: 1px solid #e2e8f0;
     background: #f8fafc;
     font-size: 13px;
@@ -129,7 +126,7 @@ textarea:focus,
 
 .submitBtn {
     padding: 10px 24px;
-    border-radius: 999px;
+    border-radius: 4px;
     border: none;
     cursor: pointer;
     font-size: 14px;

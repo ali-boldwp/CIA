@@ -23,15 +23,13 @@
     gap: 12px;
 
     padding: 22px 20px;
-    border-radius: 16px;
+    border-radius: 4px;
 
     background: #ffffff;
     border: 1px solid #e2e8f0;
 
     cursor: pointer;
     transition: border-color 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease;
-
-    min-height: 115px;
 
     /* ✅ bottom soft shadow like header */
     box-shadow: 0 8px 20px rgba(15, 23, 42, 0.08);

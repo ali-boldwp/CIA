@@ -13,8 +13,8 @@
     background: #ffffff;
     width: 1100px;
     max-width: 96vw;
-    padding: 32px;
-    border-radius: 20px;
+    padding: 24px;
+    border-radius: 4px;
     box-shadow: 0 30px 60px rgba(15, 23, 42, 0.14);
     position: relative;
     font-family: Inter, sans-serif;
@@ -155,7 +155,7 @@
     padding: 11px 14px;
     background: #ffffff;
     border: 1px solid #ddd;
-    border-radius: 12px;
+    border-radius: 4px;
     outline: none;
     font-size: 14px;
     color: #111827;
@@ -260,7 +260,7 @@
     background: #334155;
     color: #ffffff;
     padding: 10px 22px;
-    border-radius: 8px;
+    border-radius: 4px;
     border: none;
     cursor: pointer;
     font-size: 14px;

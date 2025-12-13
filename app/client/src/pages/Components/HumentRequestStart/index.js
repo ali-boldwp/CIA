@@ -13,9 +13,6 @@ const HumentRequestForm = () => {
 
     return (
         <>
-            {/* HEADER */}
-            <Header />
-
             {/* CHECKBOX SECTION */}
             <CheckboxSection
                 value={selectedType}
