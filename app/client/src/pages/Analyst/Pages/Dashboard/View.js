@@ -410,7 +410,8 @@ const Dashboard = ({ analyst, projectData, humintData, analystProgressBar }) => 
             )}
 
 
-            <Calender />
+            {projects && projects.length > 0 && <Calender />}
+
         </>
     );
 };
