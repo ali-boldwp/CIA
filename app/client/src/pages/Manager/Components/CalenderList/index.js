@@ -2,12 +2,12 @@ import { useState, useMemo } from "react";
 import { useGetProjectCreateQuery } from "../../../../services/projectApi";
 import "./Calendar.css";
 
-const colors = ["#2ecc71", "#f1c40f", "#e74c3c", "#3498db"];
+
 
 const CalendarList = () => {
     const { data, isLoading } = useGetProjectCreateQuery();
     const projects = data?.data || [];
-
+    console.log(projects,"color")
     const today = new Date();
     const [currentMonth, setCurrentMonth] = useState(today.getMonth());
     const [currentYear, setCurrentYear] = useState(today.getFullYear());
@@ -31,15 +31,22 @@ const CalendarList = () => {
     /** Convert deadlines into a map */
     const eventsMap = useMemo(() => {
         const map = {};
-        projects.forEach((p, index) => {
+
+        projects.forEach((p) => {
             if (p.deadline) {
                 const d = new Date(p.deadline);
                 const key = `${d.getFullYear()}-${d.getMonth()}-${d.getDate()}`;
-                map[key] = { ...p, color: colors[index % colors.length] };
+
+                map[key] = {
+                    ...p,
+                    color: p.responsibleAnalyst?.color || "#999"
+                };
             }
         });
+
         return map;
     }, [projects]);
+
 
     /** Upcoming deadlines (sorted) */
     const upcoming = [...projects]
@@ -107,7 +114,8 @@ const CalendarList = () => {
                 <div className="deadline-list">
                     {upcoming.map((p, i) => {
                         const left = daysLeft(p.deadline);
-                        const color = colors[i % colors.length];
+                        const color = p.responsibleAnalyst?.color || "#999";
+
 
                         return (
                             <div className="deadline-row" key={i}>
