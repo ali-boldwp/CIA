@@ -116,43 +116,46 @@ const Calender = () => {
             </div>
 
             {/* RIGHT SIDE: deadlines list */}
-            <div className="deadline-card">
-                <h3>Următoarele deadline-uri</h3>
+            {upcoming && upcoming.length > 0 && (
+                <div className="deadline-card">
+                    <h3>Următoarele deadline-uri</h3>
 
-                <div className="deadline-list">
-                    {upcoming.map((p, i) => {
-                        const left = daysLeft(p.deadline);
-                        const color = p.responsibleAnalyst?.color || "#999";
+                    <div className="deadline-list">
+                        {upcoming.map((p, i) => {
+                            const left = daysLeft(p.deadline);
+                            const color = p.responsibleAnalyst?.color || "#999";
 
+                            return (
+                                <div className="deadline-row" key={i}>
+                                    <div>
+                                        <div
+                                            className="dotEvent2"
+                                            style={{
+                                                background: color,
+                                                marginRight: "10px",
+                                                width: "10px",
+                                                height: "10px",
+                                            }}
+                                        ></div>
 
-                        return (
-                            <div className="deadline-row" key={i}>
-                                <div>
-                                    <div className="dotEvent2"
-                                         style={{
-                                             background: color,
-                                             marginRight: "10px",
-                                             width:"10px",
-                                             height:"10px"
-                                         }}
-                                    ></div>
-
-                                    <div className="deadline-info">
-                                        <div className="deadline-title">{p.projectName}</div>
-                                        <div className="deadline-date">
-                                            {new Date(p.deadline).toLocaleDateString("ro-RO")}
+                                        <div className="deadline-info">
+                                            <div className="deadline-title">{p.projectName}</div>
+                                            <div className="deadline-date">
+                                                {new Date(p.deadline).toLocaleDateString("ro-RO")}
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                                <div className="deadline-badge">
-                                    {left} zile rămase
-                                </div>
-                            </div>
 
-                        );
-                    })}
+                                    <div className="deadline-badge">
+                                        {left} zile rămase
+                                    </div>
+                                </div>
+                            );
+                        })}
+                    </div>
                 </div>
-            </div>
+            )}
+
         </div>
     );
 };
