@@ -132,116 +132,95 @@ const Dashboard = ({ approve, analystsData, requested  }) => {
                 </Link>
             </div>
 
-            <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
-                <h2 className="sales-section-title">Proiecte solicitate</h2>
+            {requestedProject && requestedProject.length > 0 && (
+                <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+                    <h2 className="sales-section-title">Proiecte solicitate</h2>
 
-                <div className="projects-row">
+                    <div className="projects-row">
+                        {requestedProject.map((p) => (
+                            <div key={p._id} className="project-card">
+                                <div className="project-header">
+                                    <div className="project-name">{p.projectName}</div>
 
-                    {requestedProject.length === 0 && (
-                        <div>No requested projects found.</div>
-                    )}
+                                    <div className="project-deadline-wrapper">
+              <span className="deadline-pill">
+                Deadline: {formatDate(p.deadline)}
+              </span>
 
-                    {requestedProject.map((p) => (
-                        <div key={p._id} className="project-card">
-                            <div className="project-header">
-
-                                <div className="project-name">{p.projectName}</div>
-
-                                <div className="project-deadline-wrapper">
-                        <span className="deadline-pill">
-                            Deadline: {formatDate(p.deadline)}
-                        </span>
-
-                                    <div className="status-dot-wrapper">
-                                        <span className="status-sales-text">{resolveStatusLabel(p.status)}</span>
-                                        <span className={`dot ${resolveStatusDotColor(p.status)}`} />
-
+                                        <div className="status-dot-wrapper">
+                                            <span className="status-sales-text">{resolveStatusLabel(p.status)}</span>
+                                            <span className={`dot ${resolveStatusDotColor(p.status)}`} />
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-
 
                                 <div className="project-info">
-                                    <div>
-                                        Responsabil proiect: {resolveAnalystName(p.responsibleAnalyst)}
-                                    </div>
-
-                                    <div>
-                                        Echipa: {resolveAnalystNames(p.assignedAnalysts)}
-                                    </div>
+                                    <div>Responsabil proiect: {resolveAnalystName(p.responsibleAnalyst)}</div>
+                                    <div>Echipa: {resolveAnalystNames(p.assignedAnalysts)}</div>
                                 </div>
-
-                        </div>
-                    ))}
-
+                            </div>
+                        ))}
+                    </div>
                 </div>
-            </div>
+            )}
+
+
+
 
             {/* PROJECTS */}
 
-            <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
-            <h2 className="sales-section-title">Proiectele</h2>
+            {approvedProject && approvedProject.length > 0 && (
+                <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+                    <h2 className="sales-section-title">Proiectele</h2>
 
-            <div className="projects-row">
+                    <div className="projects-row">
+                        {approvedProject.map((p) => {
+                            const chatId = p.groupChatId;
 
-                {approvedProject.length === 0 && (
-                    <div>No approved projects found.</div>
-                )}
+                            return (
+                                <div key={p._id} className="project-card">
+                                    <div className="project-header">
+                                        <div className="project-name">{p.projectName}</div>
 
-                {approvedProject.map((p) => {
-                    const chatId = p.groupChatId;
+                                        <div className="project-deadline-wrapper">
+                <span className="deadline-pill">
+                  Deadline: {formatDate(p.deadline)}
+                </span>
 
-                    return (
-                        <div key={p._id} className="project-card">
-                            <div className="project-header">
-                                <div className="project-name">{p.projectName}</div>
+                                            <div className="status-dot-wrapper">
+                                                <span className="status-sales-text">{resolveStatusLabel(p.status)}</span>
+                                                <span className={`dot ${resolveStatusDotColor(p.status)}`} />
+                                            </div>
+                                        </div>
+                                    </div>
 
-                                <div className="project-deadline-wrapper">
-                    <span className="deadline-pill">
-                        Deadline: {formatDate(p.deadline)}
-                    </span>
+                                    <div className="project-info">
+                                        <div>Responsabil proiect: {resolveAnalystName(p.responsibleAnalyst)}</div>
+                                        <div>Echipa: {resolveAnalystNames(p.assignedAnalysts)}</div>
+                                    </div>
 
-                                    <div className="status-dot-wrapper">
-                        <span className="status-sales-text">
-                            {resolveStatusLabel(p.status)}
-                        </span>
-                                        <span className={`dot ${resolveStatusDotColor(p.status)}`} />
+                                    <div className="project-actions">
+                                        <Link to={`/project/view/${p._id}`} className="sales-btn pill blue">
+                                            Deschide
+                                        </Link>
+
+                                        <Link
+                                            to={chatId ? `/messenger/${chatId}` : "#"}
+                                            className={`pill-analyst ${chatId ? "green" : "disabled"}`}
+                                        >
+                                            Mesaj
+                                        </Link>
                                     </div>
                                 </div>
-                            </div>
+                            );
+                        })}
+                    </div>
+                </div>
+            )}
 
-                            <div className="project-info">
-                                <div>
-                                    Responsabil proiect: {resolveAnalystName(p.responsibleAnalyst)}
-                                </div>
-                                <div>
-                                    Echipa: {resolveAnalystNames(p.assignedAnalysts)}
-                                </div>
-                            </div>
 
-                            <div className="project-actions">
-                                <Link
-                                    to={`/project/view/${p._id}`}
-                                    className="sales-btn pill blue"
-                                >
-                                    Deschide
-                                </Link>
+            {(approvedProject.length > 0 || requestedProject.length > 0) && <Calender />}
 
-                                <Link
-                                    to={chatId ? `/messenger/${chatId}` : "#"}
-                                    className={`pill-analyst ${chatId ? "green" : "disabled"}`}
-                                >
-                                    Mesaj
-                                </Link>
-                            </div>
-                        </div>
-                    );
-                })}
-
-            </div>
-            </div>
-
-             <Calender/>
 
         </>
     )
