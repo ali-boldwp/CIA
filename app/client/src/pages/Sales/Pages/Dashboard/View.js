@@ -138,7 +138,7 @@ const Dashboard = ({ approve, analystsData, requested  }) => {
                 <div className="projects-row">
 
                     {requestedProject.length === 0 && (
-                        <div>No approved projects found.</div>
+                        <div>No requested projects found.</div>
                     )}
 
                     {requestedProject.map((p) => (
@@ -188,68 +188,55 @@ const Dashboard = ({ approve, analystsData, requested  }) => {
                     <div>No approved projects found.</div>
                 )}
 
-                {approvedProject.map((p) => (
-                    <div key={p._id} className="project-card">
-                        <div className="project-header">
+                {approvedProject.map((p) => {
+                    const chatId = p.groupChatId;
 
-                            <div className="project-name">{p.projectName}</div>
+                    return (
+                        <div key={p._id} className="project-card">
+                            <div className="project-header">
+                                <div className="project-name">{p.projectName}</div>
 
-                            <div className="project-deadline-wrapper">
-                        <span className="deadline-pill">
-                            Deadline: {formatDate(p.deadline)}
+                                <div className="project-deadline-wrapper">
+                    <span className="deadline-pill">
+                        Deadline: {formatDate(p.deadline)}
+                    </span>
+
+                                    <div className="status-dot-wrapper">
+                        <span className="status-sales-text">
+                            {resolveStatusLabel(p.status)}
                         </span>
-
-                                <div className="status-dot-wrapper">
-                                    <span className="status-sales-text">{resolveStatusLabel(p.status)}</span>
-                                    <span className={`dot ${resolveStatusDotColor(p.status)}`} />
-
+                                        <span className={`dot ${resolveStatusDotColor(p.status)}`} />
+                                    </div>
                                 </div>
                             </div>
-                        </div>
 
-                        <div className="project-info">
-                            <div>Responsabil proiect: {resolveAnalystName(p.responsibleAnalyst)}</div>
-
-
-                            <div>
-                                Echipa: {resolveAnalystNames(p.assignedAnalysts)}
-
-                             </div>
-                        </div>
-
-                        <div className="progress-block">
-                            <div className="progress-header">
-                                <span>Progress: {p.progress || 0}%</span>
+                            <div className="project-info">
+                                <div>
+                                    Responsabil proiect: {resolveAnalystName(p.responsibleAnalyst)}
+                                </div>
+                                <div>
+                                    Echipa: {resolveAnalystNames(p.assignedAnalysts)}
+                                </div>
                             </div>
 
-                            <div className="progress-bar">
-                                <div
-                                    className="progress-fill blue"
-                                    style={{ width: `${p.progress || 0}%` }}
-                                />
-                            </div>
+                            <div className="project-actions">
+                                <Link
+                                    to={`/project/view/${p._id}`}
+                                    className="sales-btn pill blue"
+                                >
+                                    Deschide
+                                </Link>
 
-                            <div className="progress-footer">
-                                {p.completedTasks || 0} / {p.totalTasks || 0} taskuri efectuate
+                                <Link
+                                    to={chatId ? `/messenger/${chatId}` : "#"}
+                                    className={`pill-analyst ${chatId ? "green" : "disabled"}`}
+                                >
+                                    Mesaj
+                                </Link>
                             </div>
                         </div>
-
-
-
-                        <div className="project-actions">
-                            <Link
-                                to={`/project/view/${p._id}`}
-                                className="sales-btn pill blue"
-                            >
-                                Deschide
-                            </Link>
-
-                            <button className="sales-btn pill green">Mesaj</button>
-                            {/*<button className="sales-btn pill violet">HUMINT incoming</button>*/}
-                        </div>
-
-                    </div>
-                ))}
+                    );
+                })}
 
             </div>
             </div>
