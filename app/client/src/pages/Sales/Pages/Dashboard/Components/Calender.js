@@ -10,7 +10,7 @@ const Calender = () => {
     const [currentMonth, setCurrentMonth] = useState(today.getMonth());
     const [currentYear, setCurrentYear] = useState(today.getFullYear());
 
-    /** Move to next / prev month */
+     /** Move to next / prev month */
     const nextMonth = () => {
         setCurrentMonth((prev) => (prev === 11 ? 0 : prev + 1));
         if (currentMonth === 11) setCurrentYear((y) => y + 1);
