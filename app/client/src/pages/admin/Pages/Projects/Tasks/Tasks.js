@@ -15,7 +15,7 @@ import {
     useCreateObservationMutation,
     useGetObservationsByProjectQuery,
 } from "../../../../../services/taskApi";
-import { useGetCreateProjectByIdQuery , useGetAnalystsProgressQuery } from "../../../../../services/projectApi";
+import { useGetCreateProjectByIdQuery , useGetAnalystsProjectProgressQuery } from "../../../../../services/projectApi";
 import {toast} from "react-toastify";
 import {FiEdit2, FiTrash2} from "react-icons/fi";
 import ChapterCreation from "../../../../taskPage/components/ChapterCreation";
@@ -59,7 +59,7 @@ const ProjectTasks = ({
 
 
 
-    const { data: analystsProgress , refetch: refetchProgress} = useGetAnalystsProgressQuery(projectId);
+    const { data: analystsProgress , refetch: refetchProgress} = useGetAnalystsProjectProgressQuery(projectId);
 
     const [createTask, { isLoading: isCreatingTask }] = useCreateTaskMutation();
 
