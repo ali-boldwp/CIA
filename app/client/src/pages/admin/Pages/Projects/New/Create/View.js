@@ -291,11 +291,33 @@ const CreateProject = ({ data, main }) => {
             return;
         }
 
-        const payload = buildPayload();
-
         try {
+            const formData = new FormData();
+
+            // 🔹 Normal fields
+            const payload = buildPayload();
+            Object.entries(payload).forEach(([key, value]) => {
+                if (Array.isArray(value)) {
+                    value.forEach(v => {
+                        if (v !== undefined && v !== null) {
+                            formData.append(key, v);
+                        }
+                    });
+                } else if (value !== undefined && value !== null) {
+                    formData.append(key, value);
+                }
+            });
+
+            // 🔹 Files
+            files.forEach(file => {
+                if (file instanceof File) {
+                    formData.append("files", file);
+                }
+            });
+
+            // 🔹 SINGLE API CALL (IMPORTANT)
             const response = await toast.promise(
-                createProject(payload).unwrap(),
+                createProject(formData).unwrap(),
                 {
                     pending: "Se creează proiectul...",
                     success: "Proiect final creat cu succes!",
@@ -309,11 +331,13 @@ const CreateProject = ({ data, main }) => {
             );
 
             navigate(`/project/view/${response.data._id}`);
-        } catch (err) {
-            console.log(err);
 
+        } catch (err) {
+            console.error(err);
+            toast.error("Eroare neașteptată!");
         }
     };
+
 
     const removeFile = (index) => {
         setFiles(files.filter((_, i) => i !== index));
