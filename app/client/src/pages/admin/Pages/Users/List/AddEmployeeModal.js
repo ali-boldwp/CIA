@@ -65,8 +65,6 @@ const AddEmployeeModal = ({ isOpen, sectionKey, editData, onClose }) => {
                 hoursDay: editData.hoursPerDay,
                 bonus: editData.bonus,
                 date: editData.hiringDate?.slice(0, 10),
-                remember: editData.isLogin,
-                rememberUser: editData.email,
                color: editData.color || "#ff0000",
             });
         } else {

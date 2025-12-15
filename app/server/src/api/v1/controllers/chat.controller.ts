@@ -1,4 +1,5 @@
 import { Request, Response, NextFunction } from "express";
+import User from "../models/user.model";
 import Chat from "../models/chat.model";
 import Message from "../models/message.model";
 import { logAudit} from "../../../utils/logAudit";
@@ -321,15 +322,21 @@ export const createGroupChat = async (req: Request, res: Response, next: NextFun
             });
         }
 
-        // ------------------------------------
-        // GROUP CHAT
-        // ------------------------------------
+
+
 
         if (!groupName) {
             return res.status(400).json({ message: "groupName is required for group chat" });
         }
 
         const uniqueUsers = Array.from(new Set([creatorId, ...users]));
+
+
+        const groupUsers = await User.find({
+            _id: { $in: uniqueUsers }
+        }).select("name");
+
+        const userNames = groupUsers.map(u => u.name).join(", ");
 
         const participants = uniqueUsers.map(id => ({
             user: new Types.ObjectId(id),
@@ -343,11 +350,11 @@ export const createGroupChat = async (req: Request, res: Response, next: NextFun
             participants
         });
 
-        // LOGS — for group creation
+
         await logAudit(
             newGroup._id,
             creatorId,
-            `A creat grupul „${groupName}”`
+            `A creat grupul „${groupName}” cu: ${userNames}`
         );
 
         return res.json({
@@ -391,7 +398,15 @@ export const addMembersToGroup = async (req: Request, res: Response, next: NextF
         });
 
         // LOG — Add members
-        await logAudit(chatId, req.user.id, `A adăugat membri: ${newUsers.join(", ")}`);
+        const addedUsers = await User.find({ _id: { $in: newUsers } }).select("name");
+
+        const names = addedUsers.map(u => u.name).join(", ");
+
+        await logAudit(
+            chatId,
+            req.user.id,
+            `A adăugat membri: ${names}`
+        );
 
         await chat.save();
 
@@ -427,7 +442,14 @@ export const removeMemberFromGroup = async (req: Request, res: Response, next: N
         chat.participants = chat.participants.filter(p => p.user.toString() !== userId);
 
         // LOG — Remove member
-        await logAudit(chatId, req.user.id, `A eliminat membrul: ${userId}`);
+        const removedUser = await User.findById(userId).select("name");
+
+        await logAudit(
+            chatId,
+            req.user.id,
+            `A eliminat membrul: ${removedUser?.name || "Utilizator"}`
+        );
+
 
         await chat.save();
 
@@ -461,7 +483,11 @@ export const leaveGroup = async (req: Request, res: Response, next: NextFunction
         );
 
         // LOG — Leave group
-        await logAudit(chatId, userId, `A părăsit grupul`);
+        await logAudit(
+            chatId,
+            userId,
+            `A părăsit grupul`
+        );
 
         await chat.save();
 
@@ -490,15 +516,26 @@ export const deleteGroupChat = async (req: Request, res: Response, next: NextFun
             return res.status(400).json({ message: "Cannot delete a direct chat" });
         }
 
-        // Only creator (first participant) can delete
-        const groupCreator = chat.participants[0].user.toString();
-
-        if (groupCreator !== userId.toString()) {
-            return res.status(403).json({ message: "Only the group creator can delete the group" });
+        // Only creator (first participant)
+        const creatorId = chat.participants[0].user.toString();
+        if (creatorId !== userId.toString()) {
+            return res.status(403).json({
+                message: "Only the group creator can delete the group"
+            });
         }
 
-        // LOG — Delete group
-        await logAudit(chatId, userId, `A șters grupul`);
+        // 🔥 Get creator name
+        const creator = await User.findById(userId).select("name");
+        const creatorName = creator?.name || "Un utilizator";
+
+        const groupName = chat.groupName || "grup";
+
+        // ✅ LOG — delete group
+        await logAudit(
+            chatId,
+            userId,
+            `A șters grupul „${groupName}”`
+        );
 
         await Chat.findByIdAndDelete(chatId);
 
@@ -511,6 +548,7 @@ export const deleteGroupChat = async (req: Request, res: Response, next: NextFun
         next(err);
     }
 };
+
 
 
 export const getAllUnseenCounts = async (req, res) => {

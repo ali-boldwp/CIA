@@ -605,11 +605,11 @@ const Index = () => {
                                                 setEntityType(e.target.value)
                                             }
                                         >
-                                            <option value="">
+                                            <option value="Selectați tipul entității">
                                                 Selectați tipul entității
                                             </option>
-                                            <option value="Societate (include persoane cheie)">
-                                                Societate (include persoane cheie)
+                                            <option value="Societate">
+                                                Societate
                                             </option>
                                             <option value="Persoana">
                                                 Persoana

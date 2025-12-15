@@ -74,9 +74,9 @@ export const createProject = async (
         }
 
 
-        const reportType = project.reportType;
-        if (projectData[reportType]) {
-            for (const chapterObj of projectData[reportType]) {
+        const entityType = project.entityType;
+        if (projectData[entityType]) {
+            for (const chapterObj of projectData[entityType]) {
                 const chapter = await Chapter.create({
                     name: chapterObj.name,
                     projectId: project._id

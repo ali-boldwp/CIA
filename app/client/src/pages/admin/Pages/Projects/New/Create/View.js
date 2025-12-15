@@ -396,6 +396,9 @@ const CreateProject = ({ data, main }) => {
                                 value={reportType}
                                 onChange={(e) => setReportType(e.target.value)}
                             >
+                                <option value="" className="option-bold">
+                                    Selectați Tip raport
+                                </option>
                                 <option value="">
                                     Enhanced Due Diligence
                                 </option>
@@ -438,8 +441,12 @@ const CreateProject = ({ data, main }) => {
                                     setEntityType(e.target.value)
                                 }
                             >
-                                <option value="">
-                                    Societate (include persoane cheie)
+                                <option value="Selectați tipul entității">
+                                    Selectați tipul entității
+                                </option>
+
+                                <option value="Societate">
+                                    Societate
                                 </option>
                                 <option value="Persoana">Persoana</option>
                                 <option value="ONG">ONG</option>
