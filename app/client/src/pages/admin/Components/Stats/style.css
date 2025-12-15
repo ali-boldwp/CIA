@@ -133,7 +133,7 @@ a{
 
 .stats-block-content > a {
     font-size: 14px;
-    background: linear-gradient(90deg, #1ec6cd, #4f46e5);
+    background: linear-gradient(90deg, #2563EB 0%, #4F46E5 100%);
     padding: 8px 12px;
     color: #FFF;
     border-radius: 4px;
