@@ -173,7 +173,7 @@ const Team = () => {
                 </button>
 
                 <button className={`${styles.pillBtn} ${styles.listBtn}`}>
-                    + Adaugă analist
+                    + Adaugă anal
                 </button>
             </div>
         </div>
