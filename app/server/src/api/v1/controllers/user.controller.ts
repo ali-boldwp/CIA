@@ -30,7 +30,7 @@ export const createUser = async (req: Request, res: Response, next: NextFunction
             bonus,
             hiringDate,
             notes,
-            avatarDotColor
+            color
         } = req.body;
 
         // If login enabled → require credentials
@@ -57,7 +57,7 @@ export const createUser = async (req: Request, res: Response, next: NextFunction
             bonus,
             hiringDate,
             notes,
-            avatarDotColor: avatarDotColor || undefined
+            color: color || undefined
         });
 
         await user.save();

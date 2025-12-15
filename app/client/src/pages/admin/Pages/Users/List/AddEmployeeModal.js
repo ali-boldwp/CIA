@@ -50,7 +50,7 @@ const AddEmployeeModal = ({ isOpen, sectionKey, editData, onClose }) => {
             remember: false,
             rememberUser: "",
             rememberPassword: "",
-            avatarDotColor: "#ff0000",
+            color: "#ff0000",
         },
     });
 
@@ -67,7 +67,7 @@ const AddEmployeeModal = ({ isOpen, sectionKey, editData, onClose }) => {
                 date: editData.hiringDate?.slice(0, 10),
                 remember: editData.isLogin,
                 rememberUser: editData.email,
-                avatarDotColor: editData.avatarDotColor || "#ff0000",
+               color: editData.color || "#ff0000",
             });
         } else {
             reset();
@@ -110,9 +110,9 @@ const AddEmployeeModal = ({ isOpen, sectionKey, editData, onClose }) => {
             email: data.remember ? data.rememberUser : undefined,
             password: data.remember ? data.rememberPassword : undefined,
 
-            avatarDotColor:
+            color:
                 sectionKey === "investigatii" && data.remember
-                    ? data.avatarDotColor
+                    ? data.color
                     : undefined,
         };
 
@@ -314,7 +314,7 @@ const AddEmployeeModal = ({ isOpen, sectionKey, editData, onClose }) => {
                                                     <input
                                                         type="color"
                                                         className={styles.colorSmallBox}
-                                                        {...register("avatarDotColor")}
+                                                        {...register("color")}
                                                     />
                                                 </div>
                                             )}

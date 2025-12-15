@@ -26,6 +26,7 @@
     font-style: italic;
 }
 
+
 /* BULK BUTTON */
 .bulkActionBtn {
     padding: 8px 14px;
@@ -122,7 +123,7 @@
 
 /* CHECKBOX (ONLY GROUP MODE) */
 .checkbox {
-    margin-right: 8px;
+    margin-right: 10px !important;
     cursor: pointer;
     vertical-align: middle;
 }
@@ -161,6 +162,61 @@
     box-shadow: 0 5px 16px rgba(79, 70, 229, 0.35);
     opacity: 0.96;
 }
+
+.popupOverlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.45);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 999;
+}
+
+.popup {
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    width: 320px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+}
+
+.popupInput {
+    width: 100%;
+    padding: 10px;
+    margin: 12px 0 16px;
+    border-radius: 6px;
+    border: 1px solid #d1d5db;
+}
+
+.popupActions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+.popupCancel {
+    background: #e5e7eb;
+    border: none;
+    padding: 8px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.popupConfirm {
+    background: #2563eb;
+    color: #fff;
+    border: none;
+    padding: 8px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.popupConfirm:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
 
 /* RESPONSIVE */
 @media (max-width: 768px) {

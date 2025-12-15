@@ -634,3 +634,34 @@ export const updateProjectPrices = async (
         next(err);
     }
 };
+
+
+export const finishProject = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+) => {
+    try {
+        const projectId = req.params.id;
+
+        const project = await ProjectRequest.findById(projectId);
+        if (!project) {
+            return res.status(404).json({ message: "Project not found" });
+        }
+
+        // ❌ already finished
+        if (project.status === "finished") {
+            return res.status(400).json({ message: "Project is already finished" });
+        }
+
+
+        project.status = "finished";
+        project.isEditable = false;
+
+        await project.save();
+
+        return res.json(ok(project));
+    } catch (err) {
+        next(err);
+    }
+};

@@ -10,6 +10,7 @@ import SalesConfig from "../pages/Sales/salesConfig";
 
 import NotFound from "../pages/Components/404";
 import Messenger from "../pages/Messenger/Messenger";
+import NewMessenger from "../pages/NewMessenger/NewMessenger";
 
 // 1) All configs together
 const allRouteConfigs = [
@@ -47,6 +48,10 @@ export const getRoutesForRole = (role) => {
             element: <Messenger />,
         },
         {
+            path: "/messenger/new",
+            element: <NewMessenger />,
+        },
+        {
             path: "*",
             element: <NotFound />,
         },
@@ -69,6 +74,10 @@ const routes = [
     {
         path: "/messenger/:id",
         element: <Messenger />,
+    },
+    {
+        path: "/messenger/new",
+        element: <NewMessenger />,
     },
     {
         path: "*",
