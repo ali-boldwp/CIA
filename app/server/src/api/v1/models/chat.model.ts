@@ -11,6 +11,7 @@ export interface IChat extends Document {
     isGroup: boolean;
     groupName?: string;
     lastMessage?: Types.ObjectId;
+    projectId?: Types.ObjectId;
 }
 
 
@@ -34,7 +35,13 @@ const chatSchema = new Schema<IChat>(
         lastMessage: {
             type: Schema.Types.ObjectId,
             ref: "Message"
-        }
+        },
+
+        projectId: {
+            type: Schema.Types.ObjectId,
+            ref: "ProjectRequest",
+            default: null
+        },
     },
     { timestamps: true }
 );

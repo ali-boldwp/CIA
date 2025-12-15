@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
 import "../MessengerPage.css";
 import socket from "../../../socket";
-import { useGetMessagesQuery, useSendMessageMutation } from "../../../services/messageApi";
+import { useGetMessagesQuery, useSendMessageMutation, useGetAuditLogsQuery } from "../../../services/messageApi";
 import {useGetAllUsersQuery} from "../../../services/userApi";
 import {
     FiDownload,
@@ -55,6 +55,8 @@ const MessengerPage = ({chatID}) => {
 
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedMembers, setSelectedMembers] = useState([]);
+    const [projectFiles, setProjectFiles] = useState([]);
+
 
     const [addMembersToGroup] = useAddMembersToGroupMutation();
 
@@ -81,6 +83,14 @@ const MessengerPage = ({chatID}) => {
     const [markSeen] = useMarkSeenMutation();
     const {data, isLoading} = useGetMessagesQuery(chat, {skip: chat === "open"});
     const {data: chats, isLoading: chatsLoading , refetch: refetchChats} = useGetMyChatsQuery();
+    const {
+        data: auditData,
+        isLoading: auditLoading,
+        isError: auditError
+    } = useGetAuditLogsQuery(chat, {
+        skip: !chat || chat === "open"
+    });
+
 
     const currentChat = chats?.data?.find(c => c._id === chat) || null;
 
@@ -96,7 +106,8 @@ const MessengerPage = ({chatID}) => {
             try {
 
                 console.log("API RESPONSE:", data.data);
-                setOldMessage(data?.data);
+                setOldMessage(data?.data  || []);
+                setProjectFiles(data?.projectFiles || []);
                 console.log("Messages:", oldmessage);
 
             } catch (e) {
@@ -484,16 +495,24 @@ const MessengerPage = ({chatID}) => {
 
                             {/* attachments row */}
                             <div className="chat-attachments">
-                                {["Report_v1.pdf", "Anexa1.xlsx", "Schena.png"].map((file) => (
-                                    <div key={file} className="attachment-card">
+                                {projectFiles.map((file, index) => (
+                                    <div key={index} className="attachment-card">
                                         <div className="attachment-name">
-                                            <FiPaperclip className="attachment-icon"/>
-                                            {file}
+                                            <FiPaperclip className="attachment-icon" />
+                                            {file.split("/").pop()}
                                         </div>
-                                        <div className="attachment-sub">Preview</div>
+
+                                        <a
+                                            href={`${process.env.REACT_APP_API_URL}/${file}`}
+                                            target="_blank"
+                                            className="attachment-sub"
+                                        >
+                                            PreviewF
+                                        </a>
                                     </div>
                                 ))}
                             </div>
+
                             {oldmessage.map((msg, i) => {
                                 const isMe = msg.sender?._id === currentUserId;
                                 const hasSeen = msg.seenBy?.some(uid => uid !== currentUserId);
@@ -655,13 +674,32 @@ const MessengerPage = ({chatID}) => {
 
                         <div className="sidebar-right-section">
                             <div className="section-subtitle">Log audit</div>
+
                             <ul className="audit-list">
-                                <li>12:12 — Manager a creat grupul „DD ABC”</li>
-                                <li>12:21 — Manager a adăugat A. Pop</li>
-                                <li>12:25 — Manager a setat permisiuni</li>
-                                <li>12:35 — Manager a trimis conversația arhivei</li>
+                                {auditLoading && <li>Se încarcă logurile…</li>}
+
+                                {auditError && <li>Eroare la încărcarea logurilor</li>}
+
+                                {!auditLoading &&
+                                    !auditError &&
+                                    (auditData?.data || []).length === 0 && (
+                                        <li>Nicio activitate încă</li>
+                                    )}
+
+                                {(auditData?.data || []).map((log) => (
+                                    <li key={log._id}>
+                                        {new Date(log.timestamp).toLocaleTimeString("ro-RO", {
+                                            hour: "2-digit",
+                                            minute: "2-digit",
+                                        })}
+                                        {" — "}
+                                        <strong>{log.userId?.name || "Utilizator"}</strong>{" "}
+                                        {log.action}
+                                    </li>
+                                ))}
                             </ul>
                         </div>
+
 
                         <div className="sidebar-right-footer">
                             <button
