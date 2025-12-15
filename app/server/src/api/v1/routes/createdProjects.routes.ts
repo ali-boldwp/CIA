@@ -49,6 +49,8 @@ router.delete(
     createdProjectController.deleteProject
 );
 
+router.patch("/:id/finished", auth, createdProjectController.finishProject);
+
 router.put("/:id/editable", auth, createdProjectController.updateEditableStatus);
 
 router.put("/:id/status", auth, createdProjectController.updateProjectStatus);

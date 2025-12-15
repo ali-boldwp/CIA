@@ -9,7 +9,7 @@ export interface IUser extends Document {
 
     email?: string;
     password?: string;
-    avatarDotColor? : string;
+    color? : string;
 
     role: Role;
 
@@ -52,7 +52,7 @@ const userSchema = new Schema<IUser>(
             select: false
         },
 
-        avatarDotColor: {
+        color: {
             type: String,
         },
 

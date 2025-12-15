@@ -9,6 +9,8 @@ import { useNavigate } from "react-router-dom";
 
 const UserTable = ({ mode = "single" }) => {
     const [selectedIds, setSelectedIds] = useState([]);
+    const [showPopup, setShowPopup] = useState(false);
+    const [groupName, setGroupName] = useState("");
 
     const navigate = useNavigate();
 
@@ -47,53 +49,35 @@ const UserTable = ({ mode = "single" }) => {
     const isRowSelected = (id) =>
         mode === "group" && selectedIds.includes(id);
 
-    const handleStartChat = async (id) => {
-        // 🔵 GROUP MODE → top button "Start chat with X users"
-        if (mode === "group" && id === "all") {
-            if (!selectedIds.length) return;
-
-            try {
-                // simple group name – baad me input se le sakte ho
-                const groupName = `Group (${selectedIds.length} users)`;
-
-                const res = await createGroupChat({
-                    userIds: selectedIds,
-                    groupName,
-                }).unwrap();
-
-                const chat = res?.data || res;
-                const chatId = chat?._id;
-
-                if (!chatId) {
-                    console.error("No chatId from group response", res);
-                    return;
-                }
-
-                navigate(`/messenger/${chatId}`);
-            } catch (err) {
-                console.error("Failed to create group chat:", err);
-            }
-
-            return; // yahan se nikal jao, neeche single logic na chale
+    const startSingleChat = async (id) => {
+        try {
+            const res = await createDirectChat(id).unwrap();
+            const chat = res?.data || res;
+            if (chat?._id) navigate(`/messenger/${chat._id}`);
+        } catch (err) {
+            console.error(err);
         }
+    };
 
-        // 🟢 SINGLE MODE → per-row Start Chat
-        if (mode === "single") {
-            try {
-                const res = await createDirectChat(id).unwrap();
+    // 🔵 CONFIRM GROUP CREATE
+    const confirmCreateGroup = async () => {
+        if (!groupName.trim()) return;
 
-                const chat = res?.data || res;
-                const chatId = chat?._id;
+        try {
+            const res = await createGroupChat({
+                userIds: selectedIds,
+                groupName: groupName.trim(),
+            }).unwrap();
 
-                if (!chatId) {
-                    console.error("No chatId from direct response", res);
-                    return;
-                }
-
-                navigate(`/messenger/${chatId}`);
-            } catch (err) {
-                console.error("Failed to create direct chat:", err);
+            const chat = res?.data || res;
+            if (chat?._id) {
+                setShowPopup(false);
+                setGroupName("");
+                setSelectedIds([]);
+                navigate(`/messenger/${chat._id}`);
             }
+        } catch (err) {
+            console.error(err);
         }
     };
 
@@ -106,14 +90,10 @@ const UserTable = ({ mode = "single" }) => {
                 {mode === "group" && selectedIds.length > 0 && (
                     <button
                         className={styles.bulkActionBtn}
-                        onClick={() => handleStartChat("all")}
-                        disabled={isCreatingGroup}
+                        onClick={() => setShowPopup(true)}
                     >
-                        {isCreatingGroup
-                            ? "Creating group..."
-                            : `Start chat with ${selectedIds.length} user${
-                                selectedIds.length > 1 ? "s" : ""
-                            }`}
+                        Start chat with {selectedIds.length} user
+                        {selectedIds.length > 1 ? "s" : ""}
                     </button>
                 )}
             </div>
@@ -155,17 +135,9 @@ const UserTable = ({ mode = "single" }) => {
                                 className={`${styles.tr} ${
                                     selected ? styles.trSelected : ""
                                 }`}
-                                onClick={(e) => {
-                                    const tag =
-                                        e.target.tagName.toLowerCase();
-                                    if (
-                                        tag === "button" ||
-                                        tag === "input"
-                                    )
-                                        return;
-
-                                    if (mode === "group") toggleRow(id);
-                                }}
+                                onClick={() =>
+                                    mode === "group" && toggleRow(id)
+                                }
                             >
                                 <td className={styles.nameCell}>
                                     {mode === "group" && (
@@ -179,36 +151,28 @@ const UserTable = ({ mode = "single" }) => {
                                             }
                                         />
                                     )}
-
-                                    <span>{user.name}</span>
+                                    {user.name}
                                 </td>
 
-                                <td className={styles.emailCell}>
-                                    {user.email}
-                                </td>
-                                <td className={styles.roleCell}>
-                                    {user.role}
-                                </td>
+                                <td>{user.email}</td>
+                                <td>{user.role}</td>
 
-                                {/* Action buttons only in SINGLE mode */}
                                 {mode === "single" && (
-                                    <td className={styles.actionCell}>
+                                    <td>
                                         <button
-                                            className={styles.actionBtn}
                                             disabled={isCreatingDirect}
                                             onClick={() =>
-                                                handleStartChat(id)
+                                                startSingleChat(id)
                                             }
                                         >
-                                            {isCreatingDirect
-                                                ? "Starting..."
-                                                : "Start Chat"}
+                                            Start Chat
                                         </button>
                                     </td>
                                 )}
                             </tr>
                         );
                     })}
+
 
                     {users.length === 0 && (
                         <tr>
@@ -220,6 +184,46 @@ const UserTable = ({ mode = "single" }) => {
                     </tbody>
                 </table>
             )}
+            {showPopup && (
+                <div className={styles.popupOverlay}>
+                    <div className={styles.popup}>
+                        <h4>Create group</h4>
+
+                        <input
+                            type="text"
+                            placeholder="Enter group name"
+                            value={groupName}
+                            onChange={(e) =>
+                                setGroupName(e.target.value)
+                            }
+                            className={styles.popupInput}
+                            autoFocus
+                        />
+
+                        <div className={styles.popupActions}>
+                            <button
+                                onClick={() => setShowPopup(false)}
+                                className={styles.popupCancel}
+                            >
+                                Cancel
+                            </button>
+
+                            <button
+                                onClick={confirmCreateGroup}
+                                disabled={
+                                    !groupName.trim() || isCreatingGroup
+                                }
+                                className={styles.popupConfirm}
+                            >
+                                {isCreatingGroup
+                                    ? "Creating..."
+                                    : "Create"}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
         </div>
     );
 };
