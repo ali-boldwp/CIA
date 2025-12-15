@@ -1,12 +1,12 @@
 const projectData = {
     "Background Check": [
         {
-            name: "Profil general ⚙️",
+            name: "Profil general",
             tasks: [
                 { name: "Informatii generale" },
                 { name: "Studii" },
                 { name: "Experienta profesionala" },
-                { name: "Afaceri si structuri de proprietate ⚙️" },
+                { name: "Afaceri si structuri de proprietate" },
                 { name: "Implicarea in afaceri" },
                 { name: "Bunuri si proprietati" },
                 { name: "Datorii, credite si insolvabilitate personala" },

@@ -6,7 +6,7 @@ const Button = ({ onApprove, onSaveDraft, onGenerateBrief, disabled = false }) =
     return (
         <div className={styles.wrapper}>
             <div className={styles.card}>
-                <p className={styles.label}>Acțiuni</p>
+                {/*<p className={styles.label}>Acțiuni</p>*/}
 
                 <div className={styles.btnRow}>
                     <button

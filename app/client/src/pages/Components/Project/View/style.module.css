@@ -53,7 +53,7 @@
 
 .label {
     font-size: 14px;
-    font-weight: 700;
+    font-weight: 400;
     color: #111827;
     margin-bottom: 5px;
 }
@@ -67,18 +67,18 @@
 /* big rounded name field */
 .nameValueBox {
     width: 100%;
-    min-height: 52px;
     border-radius: 4px;
     background: #f5f7ff;
     border: 1px solid #e0e7ff;
-    padding: 12px 20px;
-    font-size: 15px;
-    font-weight: 600;
+    padding: 14px 16px;
+    font-size: 14px;
+    font-weight: 400;
     color: #0f172a;
     display: flex;
     align-items: center;
     outline: none;
     box-sizing: border-box;
+    margin-top: 5px;
 }
 
 /* status pills block */
@@ -259,6 +259,7 @@
     display: flex;
     flex-direction: column;
     cursor: pointer;
+    padding-right: 6px;
 }
 
 
@@ -307,30 +308,31 @@
 }
 .chipLabel {
     font-size: 14px;
-    font-weight: 700;
-    color: #111827;
+    font-weight: 400;
+    color: #444;
     margin-bottom: 4px;
 }
 
 .chipPrimary {
     color: #4F46E5;
     border-radius: 999px;
-    font-size: 13px;
-    font-weight: 600;
+    font-size: 14px;
+    font-weight: 400;
 }
 
 .chipGhost {
     background: #f3f4ff;
     border-radius: 999px;
     padding: 6px 14px;
-    font-size: 13px;
+    font-size: 14px;
     color: #111827;
-    font-weight: 700;
+    font-weight: 400;
     display: inline-flex;
     justify-content: center;
     align-items: center;
     border: 1px solid #e5e7eb;
     cursor: pointer;
+    padding-right: 6px;
 }
 
 
@@ -346,6 +348,8 @@
     align-items: center;
     border: 1px solid #e5e7eb;
     cursor: pointer;
+    height: 34px;
+    width: 34px;
 }
 /* Large input container wrapper */
 .bigInputWrapper {

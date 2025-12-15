@@ -29,7 +29,7 @@ const Team = () => {
     }, [page, limit, analysts]);
 
     return (
-        <div className="main" style={{ marginBottom: "50px" }}>
+        <div className="main">
             <h3 className={styles.teamTitle}>Echipa de analiști</h3>
 
             <div className={styles.teamWrapper}>
@@ -39,7 +39,7 @@ const Team = () => {
                         <span>Scor</span>
                         <span>Stare</span>
                         <span>Progres</span>
-                        <span>Acțiuni</span>
+                        <span style={{ textAlign: "right" }}>Acțiuni</span>
                     </div>
 
                     <div className={styles.teamBody}>
@@ -93,7 +93,7 @@ const Team = () => {
                                     </span>
                                 </div>
 
-                                <div className={`${styles.col} ${styles.actions}`}>
+                                <div className={`${styles.col} ${styles.actions}`} style={{ textAlign: "right" }}>
                                     <button className={styles.openBtn}>
                                         Deschide
                                     </button>

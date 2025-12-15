@@ -105,9 +105,10 @@ html, body {
 }
 
 .form-field label {
-    font-size: 13px;
+    font-size: 14px;
     font-weight: 600;
     color: #444;
+    font-style: normal;
 }
 
 
@@ -118,7 +119,7 @@ html, body {
     border-radius: 4px;
     background: #f9fafc;
     font-size: 14px;
-    font-weight: 600;
+    font-weight: 400;
     transition: 0.2s;
 }
 
@@ -161,7 +162,7 @@ html, body {
     border: 1px solid #e3e6ef;
     background: #f9fafc;
     font-size: 14px;
-    font-weight: 600;
+    font-weight: 400;
     resize: none;
 }
 

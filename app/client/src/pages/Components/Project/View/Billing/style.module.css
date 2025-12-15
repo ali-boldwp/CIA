@@ -1,8 +1,8 @@
 .billingWrapper {
     width: 100%;
     background: #ffffff;
-    border-radius: 12px;
-    padding: 26px 28px;
+    border-radius: 4px;
+    padding: 24px;
     box-shadow: 0 16px 40px rgba(15, 23, 42, 0.06);
 }
 
@@ -50,8 +50,8 @@
 
 /* COMMON CARD */
 .card {
-    border-radius: 14px;
-    padding: 25px 16px;
+    border-radius: 4px;
+    padding: 24px;
     display: flex;
     flex-direction: column;
     gap: 6px;

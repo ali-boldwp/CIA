@@ -468,7 +468,7 @@ const CreateProject = ({ data, main }) => {
                             <label>Termen limită</label>
                             <input
                                 type="date"
-                                className="input-box bold"
+                                className="input-box"
                                 value={deadline}
                                 onChange={(e) => setDeadline(e.target.value)}
                             />
