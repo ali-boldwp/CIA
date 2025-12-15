@@ -1,11 +1,19 @@
 import React, { useState, useMemo } from "react";
 import styles from "./Team.module.css";
 import { useGetAnalystsProgressQuery } from "../../../../services/projectApi";
+import {useNavigate} from "react-router-dom";
+import PopUp from "../../Pages/Users/List/AddEmployeeModal"
 
 const Team = () => {
+
+
+    const navigate = useNavigate();
     // Fetch analysts progress (backend-calculated)
     const { data: analystsData } = useGetAnalystsProgressQuery();
     const analysts = analystsData?.data || [];
+
+    const [openAddModal, setOpenAddModal] = useState(false);
+
 
     // Function to show initials (unchanged)
     const getInitials = (fullName) => {
@@ -126,15 +134,25 @@ const Team = () => {
             </div>
 
             <div className={styles.teamFooterActions}>
-                <button className={`${styles.pillBtn} ${styles.addBtn}`}>
+                <button className={`${styles.pillBtn} ${styles.addBtn}`}
+                onClick={()=> navigate("/users")}>
                     <span className={styles.addIcon}>＋</span>
                     <span>Vezi lista angajați</span>
                 </button>
 
-                <button className={`${styles.pillBtn} ${styles.listBtn}`}>
+                <button className={`${styles.pillBtn} ${styles.listBtn}`}
+                        onClick={() => setOpenAddModal(true)}>
                     + Adaugă analist
                 </button>
             </div>
+
+            {openAddModal && (
+                <PopUp
+                    isOpen={openAddModal}
+                    sectionKey="investigatii"
+                    onClose={() => setOpenAddModal(false)}
+                />
+            )}
         </div>
     );
 };
