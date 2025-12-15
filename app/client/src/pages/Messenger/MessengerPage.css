@@ -290,6 +290,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+    position: relative;
 }
 .conversation-name span {
     flex: 1;
@@ -373,6 +374,7 @@
 .tag-pin {
     background: #E0ECFF;
     color: #1D4ED8;
+
 }
 
 .tag-mute {
@@ -687,6 +689,8 @@
     margin-left: 6px;
     font-size: 14px;
     color: gray;
+    position: absolute;
+    right:-40px;
     transform: rotate(35deg);
 }
 
