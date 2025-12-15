@@ -9,12 +9,12 @@ export interface IUser extends Document {
 
     email?: string;
     password?: string;
-    color? : string;
+    avatarDotColor? : string;
 
     role: Role;
 
     // Analyst-only fields
-    analystRole: "Head of Investigations" | "Intelligence Analyst" | "HUMINT Detective";
+    functionName: string;
     monthlySalary?: number;
     hoursPerMonth?: number;
     hoursPerDay?: number;
@@ -52,9 +52,10 @@ const userSchema = new Schema<IUser>(
             select: false
         },
 
-        color : {
+        avatarDotColor: {
             type: String,
         },
+
 
         role: {
             type: String,
@@ -63,18 +64,11 @@ const userSchema = new Schema<IUser>(
         },
 
 
-        analystRole: {
+        functionName: {
             type: String,
-            enum: [
-                "Head of Investigations",
-                "Intelligence Analyst",
-                "HUMINT Detective"
-            ],
-            required: function () {
-                return this.role === Role.ANALYST;
-            },
-            default: undefined
+            required: true,
         },
+
 
 
         monthlySalary: Number,
