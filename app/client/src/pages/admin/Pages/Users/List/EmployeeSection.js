@@ -9,12 +9,12 @@ const EmployeeSection = ({ type, rows = [], onAddClick, onEdit, onDelete }) => {
             taxLabel: "Nivel taxe cash (%)",
             columns: [
                 { key: "name", label: "Nume" },
-                { key: "role", label: "Funcție" },
+                { key: "functionName", label: "Funcție" },
                 { key: "hiringDate", label: "Data angajării" },
                 { key: "seniority", label: "Vechime" },
                 { key: "monthlySalary", label: "Salariu brut/lună" },
                 { key: "bonus", label: "Bonus lunar" },
-                { key: "bonusWithTax", label: "Bonus lunar incl. taxe" },
+                { key: "bonusWithTax", label: "Bonus incl. taxe" },
                 { key: "totalCost", label: "Cost total angajat" },
                 { key: "costPerDay", label: "Cost/zi" },
                 { key: "costPerHour", label: "Cost/oră" },
@@ -23,20 +23,19 @@ const EmployeeSection = ({ type, rows = [], onAddClick, onEdit, onDelete }) => {
         },
 
         investigatii: {
-            title: "Analiza si Investigatii",
+            title: "Analiză și Investigații",
             taxLabel: "Nivel taxe (%)",
             columns: [
                 { key: "name", label: "Nume" },
-                { key: "analystRole", label: "Funcție" },
+                { key: "functionName", label: "Funcție" },
                 { key: "hiringDate", label: "Data angajării" },
                 { key: "seniority", label: "Vechime" },
                 { key: "monthlySalary", label: "Salariu brut/lună" },
                 { key: "bonus", label: "Bonus lunar" },
-                { key: "projectBonus", label: "Bonus proiect" },
                 { key: "bonusWithTax", label: "Bonus incl. taxe" },
                 { key: "totalCost", label: "Cost total" },
                 { key: "costPerDay", label: "Cost/zi" },
-                { key: "costPerHour", label: "Cost/ora" },
+                { key: "costPerHour", label: "Cost/oră" },
                 { key: "actions", label: "Acțiuni" },
             ],
         },
@@ -46,24 +45,25 @@ const EmployeeSection = ({ type, rows = [], onAddClick, onEdit, onDelete }) => {
             taxLabel: "Nivel taxe (%)",
             columns: [
                 { key: "name", label: "Nume" },
-                { key: "role", label: "Funcție" },
+                { key: "functionName", label: "Funcție" },
                 { key: "hiringDate", label: "Data angajării" },
                 { key: "seniority", label: "Vechime" },
                 { key: "monthlySalary", label: "Salariu brut/lună" },
                 { key: "bonus", label: "Bonus lunar" },
-                { key: "bonusWithTax", label: "Bonus lunar incl. taxe" },
+                { key: "bonusWithTax", label: "Bonus incl. taxe" },
                 { key: "totalCost", label: "Cost total angajat" },
                 { key: "costPerDay", label: "Cost/zi" },
-                { key: "hoursPerMonth", label: "Cost/oră" },
+                { key: "costPerHour", label: "Cost/oră" },
                 { key: "actions", label: "Acțiuni" },
             ],
         },
+
         vanzari: {
             title: "Vânzări",
             taxLabel: "Nivel taxe (%)",
             columns: [
                 { key: "name", label: "Nume" },
-                { key: "role", label: "Funcție" },
+                { key: "functionName", label: "Funcție" },
                 { key: "hiringDate", label: "Data angajării" },
                 { key: "seniority", label: "Vechime" },
                 { key: "monthlySalary", label: "Salariu brut/lună" },
@@ -81,7 +81,7 @@ const EmployeeSection = ({ type, rows = [], onAddClick, onEdit, onDelete }) => {
             taxLabel: "Nivel taxe (%)",
             columns: [
                 { key: "name", label: "Nume" },
-                { key: "role", label: "Funcție" },
+                { key: "functionName", label: "Funcție" },
                 { key: "hiringDate", label: "Data angajării" },
                 { key: "seniority", label: "Vechime" },
                 { key: "monthlySalary", label: "Salariu brut/lună" },
@@ -99,7 +99,7 @@ const EmployeeSection = ({ type, rows = [], onAddClick, onEdit, onDelete }) => {
             taxLabel: "Nivel taxe (%)",
             columns: [
                 { key: "name", label: "Nume" },
-                { key: "role", label: "Funcție" },
+                { key: "functionName", label: "Funcție" },
                 { key: "hiringDate", label: "Data angajării" },
                 { key: "seniority", label: "Vechime" },
                 { key: "monthlySalary", label: "Salariu brut/lună" },
@@ -114,53 +114,29 @@ const EmployeeSection = ({ type, rows = [], onAddClick, onEdit, onDelete }) => {
     };
 
     const current = config[type];
+    if (!current) return null;
+
     const { title, taxLabel, columns } = current;
 
-    // Helper function to format date to YYYY-MM-DD
-    const formatDate = (dateString) => {
-        if (!dateString) return "—";
-
-        try {
-            const date = new Date(dateString);
-            // Check if date is valid
-            if (isNaN(date.getTime())) return "—";
-
-            const year = date.getFullYear();
-            const month = String(date.getMonth() + 1).padStart(2, '0');
-            const day = String(date.getDate()).padStart(2, '0');
-
-            return `${year}-${month}-${day}`;
-        } catch (error) {
-            return "—";
-        }
+    // Helpers
+    const formatDate = (date) => {
+        if (!date) return "—";
+        const d = new Date(date);
+        return isNaN(d) ? "—" : d.toISOString().slice(0, 10);
     };
 
-    // Helper function to format numbers with 1 decimal place
-    const formatNumberToOneDecimal = (number) => {
-        if (number === undefined || number === null || number === "—") return "—";
-        const num = Number(number);
-        if (isNaN(num)) return "—";
-        return num.toFixed(1);
-    };
+    const formatOneDecimal = (v) =>
+        v === undefined || v === null || isNaN(v) ? "—" : Number(v).toFixed(1);
 
-    // Helper function to truncate name to 2 words with ellipsis
     const truncateName = (name) => {
         if (!name) return "—";
-
-        const words = name.trim().split(/\s+/); // Split by any whitespace
-
-        if (words.length <= 2) {
-            return name;
-        }
-
-        // Take first two words and add ellipsis
-        return `${words[0]} ${words[1]}...`;
+        const parts = name.trim().split(/\s+/);
+        return parts.length <= 2 ? name : `${parts[0]} ${parts[1]}…`;
     };
 
     return (
         <div className={styles.wrapper}>
             <div className={styles.card}>
-
                 {/* HEADER */}
                 <div className={styles.sectionHeader}>
                     <h3 className={styles.sectionTitle}>{title}</h3>
@@ -168,11 +144,9 @@ const EmployeeSection = ({ type, rows = [], onAddClick, onEdit, onDelete }) => {
                     <div className={styles.taxBox}>
                         <span className={styles.taxLabel}>{taxLabel}</span>
                         <select className={styles.taxSelect} defaultValue="32">
-                            <option value="30">30</option>
-                            <option value="31">31</option>
-                            <option value="32">32</option>
-                            <option value="33">33</option>
-                            <option value="34">34</option>
+                            {[30, 31, 32, 33, 34].map(v => (
+                                <option key={v} value={v}>{v}</option>
+                            ))}
                         </select>
                     </div>
                 </div>
@@ -180,66 +154,44 @@ const EmployeeSection = ({ type, rows = [], onAddClick, onEdit, onDelete }) => {
                 {/* TABLE */}
                 <div className={styles.table}>
                     <div className={styles.headerRow}>
-                        {columns.map((col) => (
+                        {columns.map(col => (
                             <span key={col.key} className={styles.headerCell}>
                                 {col.label}
                             </span>
                         ))}
                     </div>
 
-                    {/* ROWS */}
-                    {rows.map((row) => {
-
-                        // Seniority
+                    {rows.map(row => {
                         const hiringYear = row.hiringDate
                             ? new Date(row.hiringDate).getFullYear()
                             : null;
-                        const currentYear = new Date().getFullYear();
+
                         const seniority = hiringYear
-                            ? `${currentYear - hiringYear} ani`
+                            ? `${new Date().getFullYear() - hiringYear} ani`
                             : "—";
 
-                        // Bonus With Tax (32%)
-                        const taxMultiplier = 1.32;
                         const bonusWithTax = row.bonus
-                            ? (row.bonus * taxMultiplier).toFixed(0)
+                            ? (row.bonus * 1.32).toFixed(0)
                             : "—";
 
-                        // Total Cost
                         const totalCost =
-                            row.monthlySalary && row.bonus
-                                ? Number(row.monthlySalary) + Number(bonusWithTax)
+                            row.monthlySalary
+                                ? Number(row.monthlySalary) + Number(bonusWithTax || 0)
                                 : "—";
 
                         return (
                             <div className={styles.dataRow} key={row._id}>
-                                {columns.map((col) => {
+                                {columns.map(col => {
                                     let value = row[col.key] ?? "—";
 
-                                    // Name truncation
-                                    if (col.key === "name") {
-                                        value = truncateName(row.name);
-                                    }
-
-                                    // Date formatting for hiringDate
-                                    if (col.key === "hiringDate") {
-                                        value = formatDate(row.hiringDate);
-                                    }
-
-                                    // Dynamic values
+                                    if (col.key === "name") value = truncateName(row.name);
+                                    if (col.key === "hiringDate") value = formatDate(row.hiringDate);
                                     if (col.key === "seniority") value = seniority;
                                     if (col.key === "bonusWithTax") value = bonusWithTax;
                                     if (col.key === "totalCost") value = totalCost;
+                                    if (["costPerDay", "costPerHour"].includes(col.key))
+                                        value = formatOneDecimal(row[col.key]);
 
-                                    // Format costPerDay and costPerHour to 1 decimal place
-                                    if (col.key === "costPerDay" || col.key === "costPerHour") {
-                                        value = formatNumberToOneDecimal(row[col.key]);
-                                    }
-                                    if (col.key === "hoursPerMonth" || col.key === "hoursPerMonth") {
-                                        value = formatNumberToOneDecimal(row[col.key]);
-                                    }
-
-                                    // ACTIONS column
                                     if (col.key === "actions") {
                                         return (
                                             <div key="actions" className={styles.actionCell}>
@@ -249,16 +201,9 @@ const EmployeeSection = ({ type, rows = [], onAddClick, onEdit, onDelete }) => {
                                         );
                                     }
 
-                                    // Name cell
                                     if (col.key === "name") {
                                         return (
                                             <div key={col.key} className={styles.dataCellName}>
-                                                {row.avatarDotColor && (
-                                                    <span
-                                                        className={styles.dot}
-                                                        style={{ backgroundColor: row.avatarDotColor }}
-                                                    />
-                                                )}
                                                 <span title={row.name}>{value}</span>
                                             </div>
                                         );
@@ -290,7 +235,6 @@ const EmployeeSection = ({ type, rows = [], onAddClick, onEdit, onDelete }) => {
                 >
                     + Adaugă angajat
                 </button>
-
             </div>
         </div>
     );

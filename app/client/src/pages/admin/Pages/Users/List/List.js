@@ -36,17 +36,36 @@ const List = ({ isLoading, usersData, deleteUser }) => {
     }, [searchTerm, users]);
 
     // ---- ROLE GROUPS (sirf layout ke liye) ----
-    const managementUsers = filteredUsers.filter(u =>
-        ["admin", "manager"].includes(u.role)
-    );
+    const ROLE_TO_SECTION = {
+        admin: "management",
+        manager: "management",
+        analyst: "investigatii",
+        sales: "vanzari",
+        logistica: "logistica",
+        tehnica: "tehnica",
+    };
 
-    const investigationsUsers = filteredUsers.filter(u =>
-        u.role === "analyst"
-    );
 
-    const auxiliaryUsers = filteredUsers.filter(u =>
-        ["sales", "user"].includes(u.role)
-    );
+
+    const TAX_MULTIPLIER = 1.32;
+
+    const totalMonthlyCost = useMemo(() => {
+        return filteredUsers.reduce((sum, user) => {
+            const salary = Number(user.monthlySalary) || 0;
+            const bonus = Number(user.bonus) || 0;
+
+            const bonusWithTax = bonus * TAX_MULTIPLIER;
+
+            return sum + salary + bonusWithTax;
+        }, 0);
+    }, [filteredUsers]);
+
+
+    const formatRON = (value) => {
+        return new Intl.NumberFormat("ro-RO").format(Math.round(value)) + " RON";
+    };
+
+
 
 
     const openModal = (sectionKey) => {
@@ -58,7 +77,7 @@ const List = ({ isLoading, usersData, deleteUser }) => {
     // OPEN EDIT MODAL
     const handleEdit = (user) => {
         setEditUser(user);
-        setActiveSection(user.role);
+        setActiveSection(ROLE_TO_SECTION[user.role] || null);
         setShowModal(true);
     };
 
@@ -72,9 +91,10 @@ const List = ({ isLoading, usersData, deleteUser }) => {
     const handleDelete = async (id) => {
         try {
             await deleteUser(id).unwrap();
-            toast("User deleted successfully");
+            toast("Utilizatorul a fost șters cu succes");
         } catch (err) {
-            toast("Failed to delete user");
+            toast("Ștergerea utilizatorului a eșuat");
+
         }
     };
 
@@ -99,7 +119,7 @@ const List = ({ isLoading, usersData, deleteUser }) => {
                 type="management"
                 title="Management"
                 onAddClick={openModal}
-                rows={managementUsers}
+                rows={filteredUsers.filter(u => u.role === "manager" || u.role === "admin" )}
                 onEdit={handleEdit}
                 onDelete={handleDelete}
             />
@@ -108,7 +128,7 @@ const List = ({ isLoading, usersData, deleteUser }) => {
                 type="investigatii"
                 title="Investigații"
                 onAddClick={openModal}
-                rows={investigationsUsers}
+                rows={filteredUsers.filter(u => u.role === "analyst" )}
                 onEdit={handleEdit}
                 onDelete={handleDelete}
             />
@@ -117,7 +137,9 @@ const List = ({ isLoading, usersData, deleteUser }) => {
                 type="auxiliar"
                 title="Auxiliar"
                 onAddClick={openModal}
-                rows={auxiliaryUsers}
+                rows={filteredUsers.filter(
+                    u => u.role === "user" || u.role === "auxiliar"
+                )}
                 onEdit={handleEdit}
                 onDelete={handleDelete}
             />
@@ -152,8 +174,9 @@ const List = ({ isLoading, usersData, deleteUser }) => {
             {/* ========= REZUMAT ========= */}
             <SummarySection
                 totalEmployees={filteredUsers.length}
-                totalMonthlyCost="115 806 RON" // abhi hardcoded
+                totalMonthlyCost={formatRON(totalMonthlyCost)}
             />
+
 
             {/* ========= POPUP COMPONENT ========= */}
             <AddEmployeeModal
