@@ -77,6 +77,7 @@ const MessengerPage = ({chatID}) => {
     const [searchTerm, setSearchTerm] = useState("");
     const [messages, setMessages] = useState([]);
     const [oldmessage, setOldMessage] = useState([]);
+    const [messageSearch, setMessageSearch] = useState(""); // ✅ ADD THIS
 
     const [text, setText] = useState("");
     const [sendMessage] = useSendMessageMutation();
@@ -306,6 +307,30 @@ const MessengerPage = ({chatID}) => {
     };
 
 
+    const filteredChats = (chats?.data || []).filter((c) => {
+        if (!searchTerm.trim()) return true;
+
+        const search = searchTerm.toLowerCase();
+
+        // Group chat → group name
+        if (c.isGroup) {
+            return c.groupName?.toLowerCase().includes(search);
+        }
+
+        // DM → dusre user ka naam
+        const otherUser = c.participants.find(p => p._id !== user?._id);
+        return otherUser?.name?.toLowerCase().includes(search);
+    });
+
+    const filterMessages = (msgs) => {
+        if (!messageSearch.trim()) return msgs;
+
+        const search = messageSearch.toLowerCase();
+
+        return msgs.filter(m =>
+            m.text?.toLowerCase().includes(search)
+        );
+    };
 
 
     return (
@@ -321,6 +346,8 @@ const MessengerPage = ({chatID}) => {
                             <input
                                 className="input search-input"
                                 placeholder="Caută în mesaje..."
+                                value={searchTerm}
+                                onChange={(e) => setSearchTerm(e.target.value)}
                             />
                         </div>
                     </div>
@@ -336,10 +363,18 @@ const MessengerPage = ({chatID}) => {
                                 <FiHash className="pill-icon"/>
                                 Serie butoane
                             </button>
-                            <Link to={"/messenger/new"} className="pill">
+                            <Link to="/messenger/new" className="pill">
                                 <FiPlus className="pill-icon" />
                                 Creează grup
                             </Link>
+                            <button className="pill">
+                                <FiUserMinus className="pill-icon"/>
+                                Elimină din grup
+                            </button>
+                            <button className="pill pill-danger">
+                                {/*<FiTrash2 className="pill-icon" />*/}
+                                🗑️ Șterge grup
+                            </button>
                         </div>
                     </div>
 
@@ -384,7 +419,7 @@ const MessengerPage = ({chatID}) => {
                                 </div>
                             </div>
                             {
-                                (chats?.data || []).map((c) => (
+                                filteredChats.map((c) => (
                                     <div
                                         className={
                                             "conversation-item" +
@@ -397,22 +432,13 @@ const MessengerPage = ({chatID}) => {
 
                                         <div className="conversation-main">
                                             <div className="conversation-name">
-                                                <span>
-                                                {c.isGroup
-                                                    ? (c.groupName.length > 10 ? c.groupName.slice(0, 20) + "..." : c.groupName)
-                                                    : (
-                                                        c.participants.find(p => p._id !== user._id)?.name.length > 20
-                                                            ? c.participants.find(p => p._id !== user._id)?.name.slice(0, 20) + "..."
-                                                            : c.participants.find(p => p._id !== user._id)?.name
-                                                    )
-                                                }
-
+                                                {c.isGroup ? c.groupName : c.participants.map(p => p.name).join(", ")}
 
                                                 { !c.isGroup ? <>
                                                 {c.participants[0]._id !== user._id ? c.participants[0].name : "" }
                                                 {c.participants[1]._id !== user._id ? c.participants[0].name : "" }
                                                 </> : "" }
-                                                    </span>
+
                                                 {/* 🔥 PIN ICON HERE */}
                                                 {c.isPinned && (
                                                     <FaThumbtack className="sidebar-pin-icon" />
@@ -420,7 +446,7 @@ const MessengerPage = ({chatID}) => {
                                             </div>
 
                                             <div className="conversation-sub">
-                                                {c.lastMessage ? c.lastMessage.text.length > 20 ? c.lastMessage.text.slice(0,20)+ "..." :c.lastMessage.text : "No messages yet"}
+                                                {c.lastMessage ? c.lastMessage.text : "No messages yet"}
                                             </div>
                                         </div>
                                         <div className="conversation-meta">
@@ -432,7 +458,11 @@ const MessengerPage = ({chatID}) => {
                                 ))
                             }
 
-
+                            {filteredChats.length === 0 && (
+                                <div className="label-small" style={{ padding: "10px" }}>
+                                    Nicio conversație găsită
+                                </div>
+                            )}
 
                         </div>
                     </aside>
@@ -484,8 +514,11 @@ const MessengerPage = ({chatID}) => {
                                 <input
                                     className="input chat-search"
                                     placeholder="Caută în conversație..."
+                                    value={messageSearch}
+                                    onChange={(e) => setMessageSearch(e.target.value)}
                                 />
                             </div>
+
                         </div>
 
 
@@ -512,8 +545,7 @@ const MessengerPage = ({chatID}) => {
                                     </div>
                                 ))}
                             </div>
-
-                            {oldmessage.map((msg, i) => {
+                            {filterMessages(oldmessage).map((msg, i) => {
                                 const isMe = msg.sender?._id === currentUserId;
                                 const hasSeen = msg.seenBy?.some(uid => uid !== currentUserId);
 
@@ -546,7 +578,7 @@ const MessengerPage = ({chatID}) => {
 
 
 
-                            {messages.map((msg, i) => {
+                            {filterMessages(messages).map((msg, i) => {
                                 const isMe = msg.sender === currentUserId;
                                 const hasSeen = msg.seenBy?.some(uid => uid !== currentUserId);
 
@@ -606,7 +638,7 @@ const MessengerPage = ({chatID}) => {
                             <div className="rightCreateGroup">
                             <div>
                             <div className="section-title">Detalii conversație</div>
-                            <div className="section-subtitle">Membri ({chats?.data?.find(c => c._id === chat)?.participants?.length-1 || 0})</div>
+                            <div className="section-subtitle">Membri ({chats?.data?.find(c => c._id === chat)?.participants?.length || 0})</div>
                             </div>
                                 <button
                                     className="pill"
