@@ -80,6 +80,12 @@ export const projectApi = createApi({
                 body: status,
             }),
         }),
+        finalizeProject: builder.mutation({
+            query: ({ id }) => ({
+                url: `/project/${id}/finished`,
+                method: "PATCH",
+            }),
+        }),
         getAnalystsProgress: builder.query({
             query: () => "/project/analysts/progress",
         }),
@@ -107,6 +113,7 @@ export const {
     useCreateChapterMutation,
     useGetTasksByChapterIdQuery,
     useCreateTaskMutation,
+    useFinalizeProjectMutation,
     useGetAnalystsProgressQuery,
     useGetAnalystsProjectProgressQuery,
     useGetProjectFinancialStatesQuery

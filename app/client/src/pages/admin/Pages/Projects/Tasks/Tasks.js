@@ -62,6 +62,9 @@ const ProjectTasks = ({
     const { data: analystsProgress , refetch: refetchProgress} = useGetAnalystsProjectProgressQuery(projectId);
 
     const [createTask, { isLoading: isCreatingTask }] = useCreateTaskMutation();
+    const {data:pro}=useGetCreateProjectByIdQuery(projectId,{
+        ship:!projectId
+    })
 
     const {data:chapter, refetch: refetchChapters}=useGetChapterByIdQuery(projectId, {
         skip: !projectId,
@@ -350,6 +353,7 @@ const ProjectTasks = ({
                 legendColors={ legendColors }
                 projectId={ projectId }
                 project={project}
+                status={pro}
             />
 
             <div className="task-container" style={{ padding: "16px 24px", marginTop: '12px' }}>
