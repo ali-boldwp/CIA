@@ -28,10 +28,18 @@ export const messageApi = createApi({
             providesTags: ["Messages"],
         }),
 
+        getAuditLogs: builder.query({
+            query: (chatId) => `/audit-logs/${chatId}`,
+            providesTags: (result, error, chatId) => [
+                { type: "Audit", id: chatId }
+            ],
+        }),
+
     }),
 });
 
 export const {
+    useGetAuditLogsQuery,
     useSendMessageMutation,
     useGetMessagesQuery
 } = messageApi;
