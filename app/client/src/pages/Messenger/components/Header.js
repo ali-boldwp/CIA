@@ -394,13 +394,22 @@ const MessengerPage = ({chatID}) => {
 
                                         <div className="conversation-main">
                                             <div className="conversation-name">
-                                                {c.isGroup ? c.groupName : c.participants.map(p => p.name).join(", ")}
+                                                <span>
+                                                {c.isGroup
+                                                    ? (c.groupName.length > 10 ? c.groupName.slice(0, 20) + "..." : c.groupName)
+                                                    : (
+                                                        c.participants.find(p => p._id !== user._id)?.name.length > 20
+                                                            ? c.participants.find(p => p._id !== user._id)?.name.slice(0, 20) + "..."
+                                                            : c.participants.find(p => p._id !== user._id)?.name
+                                                    )
+                                                }
+
 
                                                 { !c.isGroup ? <>
                                                 {c.participants[0]._id !== user._id ? c.participants[0].name : "" }
                                                 {c.participants[1]._id !== user._id ? c.participants[0].name : "" }
                                                 </> : "" }
-
+                                                    </span>
                                                 {/* 🔥 PIN ICON HERE */}
                                                 {c.isPinned && (
                                                     <FaThumbtack className="sidebar-pin-icon" />
@@ -408,7 +417,7 @@ const MessengerPage = ({chatID}) => {
                                             </div>
 
                                             <div className="conversation-sub">
-                                                {c.lastMessage ? c.lastMessage.text : "No messages yet"}
+                                                {c.lastMessage ? c.lastMessage.text.length > 20 ? c.lastMessage.text.slice(0,20)+ "..." :c.lastMessage.text : "No messages yet"}
                                             </div>
                                         </div>
                                         <div className="conversation-meta">
@@ -586,7 +595,7 @@ const MessengerPage = ({chatID}) => {
                             <div className="rightCreateGroup">
                             <div>
                             <div className="section-title">Detalii conversație</div>
-                            <div className="section-subtitle">Membri ({chats?.data?.find(c => c._id === chat)?.participants?.length || 0})</div>
+                            <div className="section-subtitle">Membri ({chats?.data?.find(c => c._id === chat)?.participants?.length-1 || 0})</div>
                             </div>
                                 <button
                                     className="pill"

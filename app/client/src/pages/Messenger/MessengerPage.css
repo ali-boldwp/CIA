@@ -1,6 +1,6 @@
 /* background */
 .app-bg {
-
+    overflow:hidden;
     box-sizing: border-box;
     font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
@@ -211,9 +211,9 @@
     grid-template-columns: 260px minmax(0, 1.4fr) 280px;
     gap: 14px;
     align-items: stretch;
-    height:83vh;
+    height:85vh;
+    overflow-y: hidden !important;
 }
-
 .card {
     background: #f9fafb;
     border-radius: 18px;
@@ -221,6 +221,7 @@
     padding-top: 0;
     box-sizing: border-box;
     border: 1px solid #e5e7eb;
+    height:85vh;
 }
 
 /* left sidebar */
@@ -229,6 +230,7 @@
     justify-content: space-between;
     align-items: baseline;
     margin-bottom: 8px;
+
 }
 
 .label-muted {
@@ -246,8 +248,10 @@
     display: flex;
     flex-direction: column;
     gap: 8px;
-    max-height: 620px;
+    height:88vh;
+    padding:10px 0px;
     overflow-y: auto;
+
 }
 
 .conversation-item {
@@ -286,6 +290,14 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+}
+.conversation-name span {
+    flex: 1;
+    min-width: 0;
+}
+.conversation-name span {
+    flex: 1;
+    min-width: 0;
 }
 
 .conversation-sub {
@@ -427,7 +439,7 @@
     display: flex;
     flex-direction: column;
     overflow: auto;
-    height: 85vh;
+    height: 10vh !important;
 }
 
 .message {
@@ -488,6 +500,8 @@
     display: flex;
     flex-direction: column;
     gap: 6px;
+    height:40vh;
+    overflow-y:auto ;
 }
 
 .member-row {
@@ -639,11 +653,14 @@
 .audit-list li + li {
     margin-top: 3px;
 }
-
+.sidebar-right{
+    position:relative;
+}
 .sidebar-right-footer {
-    margin-top: 6px;
     display: flex;
     gap: 6px;
+    position: absolute;
+    bottom:15px;
 }
 
 .floating-user-tag {
