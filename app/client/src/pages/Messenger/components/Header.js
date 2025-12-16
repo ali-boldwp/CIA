@@ -435,8 +435,8 @@ const MessengerPage = ({chatID}) => {
                                         <div className="conversation-main">
                                             <div className="conversation-name">
                                                 {c.isGroup
-                                                    ? c.groupName?.length > 22
-                                                        ? c.groupName.slice(0, 22) + "..."
+                                                    ? c.groupName?.length > 17
+                                                        ? c.groupName.slice(0, 17) + "..."
                                                         : c.groupName
                                                     : otherUser?.name
                                                         ? otherUser.name.length > 15
