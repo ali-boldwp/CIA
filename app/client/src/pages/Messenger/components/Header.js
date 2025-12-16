@@ -442,7 +442,7 @@ const MessengerPage = ({chatID}) => {
                                                         ? otherUser.name.length > 15
                                                             ? otherUser.name.slice(0, 15) + "..."
                                                             : otherUser.name
-                                                        : "Unknown User"
+                                                        : ","
                                                 }
 
                                                 {c.isPinned && (
