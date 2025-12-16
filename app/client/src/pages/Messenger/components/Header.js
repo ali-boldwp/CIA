@@ -56,6 +56,7 @@ const MessengerPage = ({chatID}) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedMembers, setSelectedMembers] = useState([]);
     const [projectFiles, setProjectFiles] = useState([]);
+    const [chatFilter, setChatFilter] = useState("all");
 
 
     const [addMembersToGroup] = useAddMembersToGroupMutation();
@@ -304,20 +305,25 @@ const MessengerPage = ({chatID}) => {
     };
 
 
-    const filteredChats = (chats?.data || []).filter((c) => {
-        if (!searchTerm.trim()) return true;
+    const filteredChats = (chats?.data || [])
+        .filter((c) => {
+            if (chatFilter === "groups") return c.isGroup === true;
+            if (chatFilter === "dm") return c.isGroup === false;
+            return true; // all
+        })
+        .filter((c) => {
+            if (!searchTerm.trim()) return true;
 
-        const search = searchTerm.toLowerCase();
+            const search = searchTerm.toLowerCase();
 
-        // Group chat → group name
-        if (c.isGroup) {
-            return c.groupName?.toLowerCase().includes(search);
-        }
+            if (c.isGroup) {
+                return c.groupName?.toLowerCase().includes(search);
+            }
 
-        // DM → dusre user ka naam
-        const otherUser = c.participants.find(p => p._id !== user?._id);
-        return otherUser?.name?.toLowerCase().includes(search);
-    });
+            const otherUser = c.participants.find(p => p._id !== user?._id);
+            return otherUser?.name?.toLowerCase().includes(search);
+        });
+
 
     const filterMessages = (msgs) => {
         if (!messageSearch.trim()) return msgs;
@@ -351,11 +357,24 @@ const MessengerPage = ({chatID}) => {
 
                     <div className="toolbar-center">
                         <div className="toolbar-pill-group">
-                            <button className="pill pill-active pill-unique">
+                            <button
+                                className={`pill pill-unique ${chatFilter === "all" ? "pill-active" : ""}`}
+                                onClick={() => setChatFilter("all")}
+                            >
                                 Toți
                             </button>
-                            <button className="pill pill-unique">Grupuri</button>
-                            <button className="pill pill-unique">DM</button>
+                            <button
+                                className={`pill pill-unique ${chatFilter === "groups" ? "pill-active" : ""}`}
+                                onClick={() => setChatFilter("groups")}
+                            >
+                                Grupuri
+                            </button>
+                            <button
+                                className={`pill pill-unique ${chatFilter === "dm" ? "pill-active" : ""}`}
+                                onClick={() => setChatFilter("dm")}
+                            >
+                                DM
+                            </button>
                             {/*<button className="pill">*/}
                             {/*    <FiHash className="pill-icon"/>*/}
                             {/*    Serie butoane*/}
@@ -395,26 +414,29 @@ const MessengerPage = ({chatID}) => {
                         </div>
 
                         <div className="conversation-list">
-                            <div
-                                className={
-                                    "conversation-item" +
-                                    (chat === 'open' ? " conversation-item-active" : "")
-                                }
-                                onClick={() => setChat('open')}
-                            >
-                                <div className="conversation-avatar"/>
-                                <div className="conversation-main">
-                                    <div className="conversation-name">{'General'}</div>
-                                    <div className="conversation-sub">
-                                        Toate conversațiile
+                            {chatFilter === "all" && (
+                                <div
+                                    className={
+                                        "conversation-item" +
+                                        (chat === 'open' ? " conversation-item-active" : "")
+                                    }
+                                    onClick={() => setChat('open')}
+                                >
+                                    <div className="conversation-avatar"/>
+                                    <div className="conversation-main">
+                                        <div className="conversation-name">General</div>
+                                        <div className="conversation-sub">
+                                            Toate conversațiile
+                                        </div>
+                                    </div>
+                                    <div className="conversation-meta">
+                                        <span className="dot green"/>
+                                        <span className="dot orange"/>
+                                        <span className="dot red"/>
                                     </div>
                                 </div>
-                                <div className="conversation-meta">
-                                    <span className="dot green"/>
-                                    <span className="dot orange"/>
-                                    <span className="dot red"/>
-                                </div>
-                            </div>
+                            )}
+
                             {
                                 filteredChats.map((c) => {
                                     const otherUser = c.participants?.find(
