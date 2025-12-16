@@ -416,7 +416,12 @@ const MessengerPage = ({chatID}) => {
                                 </div>
                             </div>
                             {
-                                filteredChats.map((c) => (
+                                filteredChats.map((c) => {
+                                    const otherUser = c.participants?.find(
+                                        p => p?._id !== user?._id
+                                    );
+                                    return(
+
                                     <div
                                         className={
                                             "conversation-item" +
@@ -429,22 +434,32 @@ const MessengerPage = ({chatID}) => {
 
                                         <div className="conversation-main">
                                             <div className="conversation-name">
-                                                {c.isGroup ? c.groupName : c.participants.map(p => p.name).join(", ")}
+                                                {c.isGroup
+                                                    ? c.groupName?.length > 22
+                                                        ? c.groupName.slice(0, 22) + "..."
+                                                        : c.groupName
+                                                    : otherUser?.name
+                                                        ? otherUser.name.length > 15
+                                                            ? otherUser.name.slice(0, 15) + "..."
+                                                            : otherUser.name
+                                                        : "Unknown User"
+                                                }
 
-                                                { !c.isGroup ? <>
-                                                {c.participants[0]._id !== user._id ? c.participants[0].name : "" }
-                                                {c.participants[1]._id !== user._id ? c.participants[0].name : "" }
-                                                </> : "" }
-
-                                                {/* 🔥 PIN ICON HERE */}
                                                 {c.isPinned && (
                                                     <FaThumbtack className="sidebar-pin-icon" />
                                                 )}
                                             </div>
 
+
+
                                             <div className="conversation-sub">
-                                                {c.lastMessage ? c.lastMessage.text : "No messages yet"}
+                                                {c.lastMessage?.text
+                                                    ? c.lastMessage.text.length > 15
+                                                        ? c.lastMessage.text.slice(0, 15) + "..."
+                                                        : c.lastMessage.text
+                                                    : "No messages yet"}
                                             </div>
+
                                         </div>
                                         <div className="conversation-meta">
                                             {c.unreadCount > 0 && (
@@ -452,7 +467,7 @@ const MessengerPage = ({chatID}) => {
                                             )}
                                         </div>
                                     </div>
-                                ))
+                                )})
                             }
 
                             {filteredChats.length === 0 && (
