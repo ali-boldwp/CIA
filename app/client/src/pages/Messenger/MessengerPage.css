@@ -253,6 +253,18 @@
     overflow-y: auto;
 
 }
+.conversation-list::-webkit-scrollbar {
+    width: 5px;
+}
+
+.conversation-list::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.conversation-list::-webkit-scrollbar-thumb {
+    background: rgba(161, 161, 161, 0.3);
+    border-radius: 20px;
+}
 
 .conversation-item {
     display: flex;
@@ -443,6 +455,18 @@
     overflow: auto;
     height: 10vh !important;
 }
+.chat-messages::-webkit-scrollbar {
+    width: 5px;
+}
+
+.chat-messages::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.chat-messages::-webkit-scrollbar-thumb {
+    background: rgba(161, 161, 161, 0.3);
+    border-radius: 20px;
+}
 
 .message {
     max-width: 70%;
@@ -504,6 +528,20 @@
     gap: 6px;
     height:35vh;
     overflow-y:auto ;
+}
+
+
+.member-list::-webkit-scrollbar {
+    width: 5px;
+}
+
+.member-list::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.member-list::-webkit-scrollbar-thumb {
+    background: rgba(161, 161, 161, 0.3);
+    border-radius: 20px;
 }
 
 .member-row {
@@ -652,6 +690,19 @@
     height:23vh;
     overflow-y:auto;
     font-weight: 600;
+}
+
+.audit-list::-webkit-scrollbar {
+    width: 5px;
+}
+
+.audit-list::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.audit-list::-webkit-scrollbar-thumb {
+    background: rgba(161, 161, 161, 0.3);
+    border-radius: 20px;
 }
 
 .audit-list li + li {
