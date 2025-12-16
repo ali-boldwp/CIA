@@ -9,6 +9,7 @@ import styles from "../../../../ProjectDetail/ProjectDetail.module.css";
 import ProjectDetailHeader from "../../../../ProjectDetail/ProjectDetailHeader";
 import ProjectBilling from "../../../../ProjectDetail/ProjectBilling";
 import ProjectDetailButton from "../../../../ProjectDetail/ProjectDetailButton";
+import { toast } from "react-toastify";
 
 const defaultData = {
     name: "",
@@ -110,14 +111,15 @@ const ProjectView = () => {
         try {
             if (id) {
                 await updateProject({ id, data: project }).unwrap();
-                alert("Project updated!");
+                toast("Proiect actualizat!");
             } else {
                 await createProject(project).unwrap();
-                alert("Project created!");
+
+                toast("Proiect creat!");
             }
         } catch (error) {
             console.error(error);
-            alert("Something went wrong!");
+            toast.error("Ceva nu a mers bine!");
         }
     };
 

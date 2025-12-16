@@ -171,13 +171,13 @@ const EmployeeSection = ({ type, rows = [], onAddClick, onEdit, onDelete }) => {
                             : "—";
 
                         const bonusWithTax = row.bonus
-                            ? (row.bonus * 1.32).toFixed(0)
+                            ? row.bonus * 1.32
+                            : 0;
+
+                        const totalCost = row.monthlySalary
+                            ? Number(row.monthlySalary) + bonusWithTax
                             : "—";
 
-                        const totalCost =
-                            row.monthlySalary
-                                ? Number(row.monthlySalary) + Number(bonusWithTax || 0)
-                                : "—";
 
                         return (
                             <div className={styles.dataRow} key={row._id}>
@@ -187,8 +187,12 @@ const EmployeeSection = ({ type, rows = [], onAddClick, onEdit, onDelete }) => {
                                     if (col.key === "name") value = truncateName(row.name);
                                     if (col.key === "hiringDate") value = formatDate(row.hiringDate);
                                     if (col.key === "seniority") value = seniority;
-                                    if (col.key === "bonusWithTax") value = bonusWithTax;
-                                    if (col.key === "totalCost") value = totalCost;
+                                    if (col.key === "bonusWithTax")
+                                        value = bonusWithTax ? bonusWithTax.toFixed(0) : "—";
+
+                                    if (col.key === "totalCost")
+                                        value = totalCost !== "—" ? totalCost.toFixed(0) : "—";
+
                                     if (["costPerDay", "costPerHour"].includes(col.key))
                                         value = formatOneDecimal(row[col.key]);
 

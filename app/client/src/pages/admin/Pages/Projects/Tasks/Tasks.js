@@ -217,9 +217,9 @@ const ProjectTasks = ({
                 isEditable: newValue
             }).unwrap();
 
-            toast.success(`Edit mode ${newValue ? "ON" : "OFF"}`);
+            toast.success(`Modul de editare ${newValue ? "ACTIVAT" : "DEZACTIVAT"}`);
         } catch (err) {
-            toast.error("Failed to update edit mode");
+            toast.error("Actualizarea modului de editare a eșuat");
             // setEditMode(!newValue); // revert if failed
         }
     };

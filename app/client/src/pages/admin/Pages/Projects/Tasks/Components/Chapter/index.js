@@ -96,9 +96,10 @@ const Chapter = ({
                 )
             }));
 
-            toast.success("Task started!");
+
+            toast("Sarcina a fost pornită!");
         } catch (error) {
-            toast.error("Failed to start task");
+            toast.error("Pornirea sarcinii a eșuat");
         }
     };
 
@@ -116,9 +117,9 @@ const Chapter = ({
                 )
             }));
 
-            toast("Task paused");
+            toast("Sarcina a fost pusă pe pauză");
         } catch (e) {
-            toast.error("Pause failed");
+            toast.error("Pauza a eșuat");
         }
     };
 
@@ -135,9 +136,9 @@ const Chapter = ({
                 )
             }));
 
-            toast("Task resumed");
+            toast("Sarcina a fost reluată");
         } catch (e) {
-            toast.error("Resume failed");
+            toast.error("Reluarea a eșuat");
         }
     };
 
@@ -154,9 +155,9 @@ const Chapter = ({
                 )
             }));
 
-            toast.success("Task completed!");
+            toast("Sarcina a fost finalizată!");
         } catch (e) {
-            toast.error("Complete failed");
+            toast.error("Finalizarea a eșuat");
         }
     };
 
