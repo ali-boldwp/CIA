@@ -1,5 +1,8 @@
 import React, { useState } from "react";
 import styles from "./ReviewPopUp.module.css";
+import { useFinalizeProjectMutation } from "../../../../../../../services/projectApi";
+import {useParams} from "react-router-dom";
+import {toast} from "react-toastify";
 
 const ReviewPopUp = ({
                          onClose,
@@ -9,7 +12,6 @@ const ReviewPopUp = ({
                          round = "#1",
                          observationsText = "",
                          onReturnWithNotes,
-                         onApprove,
                          onAddObservation,
                          isLoading = false,
                      }) => {
@@ -17,8 +19,9 @@ const ReviewPopUp = ({
         observationsText ||
         ""
     );
-
-
+    const {id:proId}=useParams();
+    const id=proId;
+    const [finalizeProject]=useFinalizeProjectMutation();
     const [showObservations, setShowObservations] = useState(false);
 
     const handleOverlayClick = (e) => {
@@ -38,10 +41,13 @@ const ReviewPopUp = ({
         // yahan onClose NAHI, popup khula rahega
     };
 
-    const handleApproveClick = () => {
-        if (onApprove) {
-            onApprove(notes);
-        } else if (onClose) {
+    const handleApproveClick = async(id) => {
+        try{
+           await finalizeProject({id}).unwrap();
+           toast.success("Proiectul a fost aprobat cu succes")
+            onClose();
+        }catch{
+            toast.error("Eroare la finalizarea proiectului")
             onClose();
         }
     };
@@ -110,7 +116,7 @@ const ReviewPopUp = ({
                         <button
                             type="button"
                             className={`${styles.actionBtn} ${styles.approveBtn}`}
-                            onClick={handleApproveClick}
+                            onClick={()=>handleApproveClick(id)}
                             disabled={isLoading}
                         >
                             Aprobă &amp; finalizează

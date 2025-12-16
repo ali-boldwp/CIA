@@ -23,7 +23,7 @@ export const createUser = async (req: Request, res: Response, next: NextFunction
             email,
             password,
             role,
-            analystRole,
+            functionName,
             monthlySalary,
             hoursPerMonth,
             hoursPerDay,
@@ -43,15 +43,6 @@ export const createUser = async (req: Request, res: Response, next: NextFunction
             if (exists) return res.status(400).json({ message: "Email already exists" });
         }
 
-        // Analyst role rule
-        if (role === Role.ANALYST) {
-            if (!analystRole) {
-                return res.status(400).json({ message: "analystRole is required for ANALYST role" });
-            }
-        } else {
-            analystRole = undefined; // remove analyst-only field
-        }
-
         // Create user
         const user = new User({
             name,
@@ -59,7 +50,7 @@ export const createUser = async (req: Request, res: Response, next: NextFunction
             email,
             password,
             role,
-            analystRole,
+            functionName,
             monthlySalary,
             hoursPerMonth,
             hoursPerDay,
@@ -166,13 +157,6 @@ export const updateUser = async (req: Request, res: Response, next: NextFunction
             if (exists) return res.status(400).json({ message: "Email already exists" });
         }
 
-        // ANALYST RULE
-        if (data.role === Role.ANALYST) {
-            if (!data.analystRole)
-                return res.status(400).json({ message: "analystRole required for ANALYST role" });
-        } else {
-            data.analystRole = undefined; // remove analyst-only field
-        }
 
         // Merge + save → triggers pre-save for salary cost calculation
         Object.keys(data).forEach((key) => {

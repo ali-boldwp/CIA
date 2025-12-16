@@ -116,7 +116,7 @@ const Stats = ({ stats }) => {
                             </svg>
                         }
                         title={ "Analiști implicați" }
-                        value={ `${stats?.analyst?.free }/${ stats?.analyst?.total}` }
+                        value={ `${stats?.analyst?.busy }/${ stats?.analyst?.total}` }
                         link={ "/users" }
                         linkTitle={ "Vezi utilizatorii" }
                     />

@@ -22,7 +22,8 @@ const Details = (
         formatTime,
         totalWorkedSeconds,
         analystTimes,
-        project
+        project,
+        status,
     }
 ) => {
 
@@ -50,6 +51,7 @@ const Details = (
                         <p className="status-text">
                             Status proiect: <strong>În derulare</strong>
                         </p>
+                        {status.status === "finished" &&   (
                         <div className="buttons-row">
                             {(user?.role === "admin" || user?.role === "manager" || user?.role === "analyst") && (
                                 <>
@@ -88,7 +90,8 @@ const Details = (
                                     )}
                                 </>
                             )}
-                        </div>
+                        </div>)
+                        }
                     </div>
 
                     {/* OVERVIEW */}

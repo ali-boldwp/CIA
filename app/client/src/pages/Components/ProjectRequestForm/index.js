@@ -355,6 +355,87 @@ const Index = () => {
             // toast.promise already handled error toast
         }
     };
+
+    const handleSaveDraft = async () => {
+        if (!user?._id) {
+            toast.error("Utilizatorul nu este autentificat");
+            return;
+        }
+
+        const formData = new FormData();
+
+        // ⚠️ Doar câmpurile care există (fără validation strict)
+        if (name) formData.append("projectName", name);
+        if (projectSubject) formData.append("projectSubject", projectSubject);
+        if (category) formData.append("reportType", category);
+        if (entityType) formData.append("entityType", entityType);
+        if (priority) formData.append("priority", priority);
+
+        languages.forEach((lng) => {
+            formData.append(
+                "deliverableLanguage",
+                lng === "Română" ? "Romanian" : "English"
+            );
+        });
+
+        if (projectDescription) formData.append("projectDescription", projectDescription);
+
+        // CLIENT
+        if (name) formData.append("clientName", name);
+        if (contactPerson) formData.append("clientContactPerson", contactPerson);
+        if (email) formData.append("clientEmail", email);
+        if (phone) formData.append("clientPhone", phone);
+        if (position) formData.append("clientPosition", position);
+
+        if (projectPrice) {
+            formData.append("projectPrice", Number(projectPrice));
+            formData.append("currency", "EUR");
+        }
+
+        if (deadline) formData.append("deadline", deadline);
+
+        if (contractNumber) formData.append("contractNumber", contractNumber);
+        if (annexNumber) formData.append("annexNumber", annexNumber);
+        if (additionalInfo) formData.append("contractInfo", additionalInfo);
+        if (referenceRequest) formData.append("referenceRequest", referenceRequest);
+        if (internalNotes) formData.append("internalNotes", internalNotes);
+        if (surname) formData.append("surname", surname);
+
+        services.forEach((srv) => {
+            formData.append("servicesRequested", srv);
+        });
+
+        if (preferredAnalyst) {
+            formData.append("responsibleAnalyst", preferredAnalyst);
+        }
+
+        assignedAnalysts.forEach((id) => {
+            formData.append("assignedAnalysts", id);
+        });
+
+        files.forEach((file) => {
+            formData.append("files", file);
+        });
+
+        // ✅ IMPORTANT
+        formData.append("status", "draft");
+
+        try {
+            await toast.promise(
+                requestProject(formData).unwrap(),
+                {
+                    pending: "Se salvează draft...",
+                    success: "Draft salvat cu succes",
+                    error: "Eroare la salvarea draftului",
+                }
+            );
+        } catch (err) {
+            console.error(err);
+        }
+    };
+
+
+
     const removeFile = (index) => {
         setFiles((prev) => prev.filter((_, i) => i !== index));
     };
@@ -605,11 +686,11 @@ const Index = () => {
                                                 setEntityType(e.target.value)
                                             }
                                         >
-                                            <option value="">
+                                            <option value="Selectați tipul entității">
                                                 Selectați tipul entității
                                             </option>
-                                            <option value="Societate (include persoane cheie)">
-                                                Societate (include persoane cheie)
+                                            <option value="Societate">
+                                                Societate
                                             </option>
                                             <option value="Persoana">
                                                 Persoana
@@ -1035,10 +1116,13 @@ const Index = () => {
                         </button>
 
                         <button
+                            type="button"
+                            onClick={handleSaveDraft}
                             className={`${styles.actionBtn} ${styles.actionDraft}`}
                         >
                             Salvează draft
                         </button>
+
                         <Link to={`/`}
                             className={`${styles.actionBtn} ${styles.actionCancel}`}
                         >

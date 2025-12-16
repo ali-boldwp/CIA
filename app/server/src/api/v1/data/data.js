@@ -1,5 +1,5 @@
 const projectData = {
-    "Background Check": [
+    "Persoana": [
         {
             name: "Profil general",
             tasks: [
@@ -26,14 +26,91 @@ const projectData = {
                 { name: "Beneficiari sau actionari din zone sensibile" },
                 { name: "Factori de vulnerabilitate " }
             ]
-        }
+        },
+        {
+            name : "Harta relationala",
+            tasks : [
+                { name :"Harta relationala" },
+            ],
+        },
+        {
+            name : "Executive Summary",
+            tasks : [
+                { name :"Executive Summary" },
+            ],
+        },
     ],
-    "Enhanced Due Diligence (Societate / Grup)": [],
-    "Preliminary Background Check": [],
-    "Fraud Investigation" : [],
-    "Audit reputational" : [],
-    "Raport de informare" : [],
-    "Altele (Custom)" : []
+    "Societate": [
+        {
+            name :"Informatii despre societate",
+            tasks : [
+                { name : "Informatii generale"},
+                { name : "Istoric societate"},
+                { name : "Date financiare"},
+                { name : "Parteneri contractuali"},
+                { name : "Datorii si inscrieri mobiliare"},
+                { name : "Achizitii SEAP"},
+                { name : "Proprietate intelectuala / Marci OSIM"},
+                { name : "Litigii societate"},
+                { name : "Participatii in alte societati"},
+                { name : "Controverse si aspecte de interes public"},
+                { name : "Informatii din HUMINT (analiza, procesare si introducere in raport)"},
+
+            ]
+
+        },
+        {
+            name : "Persoane cheie (asociati / administratori / persoane afiliate)",
+            tasks : [
+
+                { name : "Profil general"},
+                { name : "Relatii de familie"},
+                { name : "Afaceri si structuri de proprietate"},
+                { name : "Verificare juridica si litigii"},
+                { name : "Proprietate intelectuala / Marci OSIM"},
+                { name : "Afilieri cu alte persoane / entitati de interes "},
+                { name : "Controverse si aspecte de interes public "},
+                { name : "Profil reputational si mediatizare "},
+                { name : "Legaturi politice, donatii sau influenta in administratie "},
+                { name : "Beneficiari sau actionari din zone sensibile"},
+                { name : "Factori de vulnerabilitate" },
+            ]
+        },
+        {
+            name : "Persoane cheie (asociati / administratori / persoane afiliate)",
+            tasks : [
+                { name : "Profil general"},
+                { name : "Relatii de familie"},
+                { name : "Afaceri si structuri de proprietate"},
+                { name : "Verificare juridica si litigii"},
+                { name : "Proprietate intelectuala / Marci OSIM"},
+                { name : "Afilieri cu alte persoane / entitati de interes "},
+                { name : "Controverse si aspecte de interes public "},
+                { name : "Profil reputational si mediatizare "},
+                { name : "Legaturi politice, donatii sau influenta in administratie "},
+                { name : "Beneficiari sau actionari din zone sensibile"},
+                { name : "Factori de vulnerabilitate" },
+            ]
+        },
+        {
+            name : "Harta relationala",
+            tasks : [
+                { name :"Harta relationala" },
+            ],
+        },
+        {
+            name : "Executive Summary",
+            tasks : [
+                { name :"Executive Summary" },
+            ],
+        },
+
+    ],
+    "ONG": [],
+    "Investigatie frauda" : [],
+    "Analiza de piata" : [],
+    "TCSM" : [],
+    "Protectie supraveghere clandestina" : []
 
 }
 

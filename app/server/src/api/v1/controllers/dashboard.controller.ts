@@ -23,11 +23,16 @@ export const getStats = async (req: Request, res: Response, next: NextFunction) 
         // -------- ANALYSTS --------
         const totalAnalysts = await User.countDocuments({ role: "analyst" });
 
-        const busyAnalysts = await ProjectRequest.distinct("responsibleAnalyst")
-            .then(ids => ids.map(id => id.toString()));
+
+        const busyAnalystIds = await ProjectRequest.distinct("responsibleAnalyst");
 
 
-        const freeAnalysts = Math.max(totalAnalysts - busyAnalysts.length, 0);
+        const busyAnalysts = await User.find({
+            _id: { $in: busyAnalystIds },
+            role: "analyst",
+        }).select("name functionName avatarDotColor email");
+
+        const busyAnalystsCount = busyAnalysts.length;
 
 
         // -------- MESSAGES --------
@@ -42,7 +47,7 @@ export const getStats = async (req: Request, res: Response, next: NextFunction) 
             hument: totalHumints,
             analyst: {
                 total: totalAnalysts,
-                free: freeAnalysts
+                busy: busyAnalystsCount,
             },
             completed: completedProjects + completedHumints,
             requested: {

@@ -1,6 +1,6 @@
 /* background */
 .app-bg {
-
+    overflow:hidden;
     box-sizing: border-box;
     font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
@@ -205,15 +205,27 @@
     background: #EEF2FF;
 }
 
+.pill-active {
+    background: #2563eb;          /* blue */
+    color: #ffffff;               /* white text */
+    border-color: #2563eb;
+    box-shadow: 0 2px 6px rgba(37, 99, 235, 0.35);
+    font-weight: 600;
+}
+.pill:hover {
+    background: #e0e7ff;
+    color: #1e3a8a;
+}
+
 /* layout body */
 .body {
     display: grid;
     grid-template-columns: 260px minmax(0, 1.4fr) 280px;
     gap: 14px;
     align-items: stretch;
-    height:83vh;
+    height:85vh;
+    overflow-y: hidden !important;
 }
-
 .card {
     background: #f9fafb;
     border-radius: 18px;
@@ -221,6 +233,7 @@
     padding-top: 0;
     box-sizing: border-box;
     border: 1px solid #e5e7eb;
+    height:85vh;
 }
 
 /* left sidebar */
@@ -229,6 +242,7 @@
     justify-content: space-between;
     align-items: baseline;
     margin-bottom: 8px;
+
 }
 
 .label-muted {
@@ -246,8 +260,22 @@
     display: flex;
     flex-direction: column;
     gap: 8px;
-    max-height: 620px;
+    height:80vh;
+    padding:10px 0px;
     overflow-y: auto;
+
+}
+.conversation-list::-webkit-scrollbar {
+    width: 5px;
+}
+
+.conversation-list::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.conversation-list::-webkit-scrollbar-thumb {
+    background: rgba(161, 161, 161, 0.3);
+    border-radius: 20px;
 }
 
 .conversation-item {
@@ -286,6 +314,15 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+    position: relative;
+}
+.conversation-name span {
+    flex: 1;
+    min-width: 0;
+}
+.conversation-name span {
+    flex: 1;
+    min-width: 0;
 }
 
 .conversation-sub {
@@ -361,6 +398,7 @@
 .tag-pin {
     background: #E0ECFF;
     color: #1D4ED8;
+
 }
 
 .tag-mute {
@@ -427,7 +465,19 @@
     display: flex;
     flex-direction: column;
     overflow: auto;
-    height: 85vh;
+    height: 10vh !important;
+}
+.chat-messages::-webkit-scrollbar {
+    width: 5px;
+}
+
+.chat-messages::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.chat-messages::-webkit-scrollbar-thumb {
+    background: rgba(161, 161, 161, 0.3);
+    border-radius: 20px;
 }
 
 .message {
@@ -488,6 +538,22 @@
     display: flex;
     flex-direction: column;
     gap: 6px;
+    height:32vh;
+    overflow-y:auto ;
+}
+
+
+.member-list::-webkit-scrollbar {
+    width: 5px;
+}
+
+.member-list::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.member-list::-webkit-scrollbar-thumb {
+    background: rgba(161, 161, 161, 0.3);
+    border-radius: 20px;
 }
 
 .member-row {
@@ -633,17 +699,35 @@
     padding-left: 0;
     margin: 0;
     font-size: 11px;
+    height:23vh;
+    overflow-y:auto;
     font-weight: 600;
+}
+
+.audit-list::-webkit-scrollbar {
+    width: 5px;
+}
+
+.audit-list::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.audit-list::-webkit-scrollbar-thumb {
+    background: rgba(161, 161, 161, 0.3);
+    border-radius: 20px;
 }
 
 .audit-list li + li {
     margin-top: 3px;
 }
-
+.sidebar-right{
+    position:relative;
+}
 .sidebar-right-footer {
-    margin-top: 6px;
     display: flex;
     gap: 6px;
+    position: absolute;
+    bottom:15px;
 }
 
 .floating-user-tag {
@@ -670,6 +754,8 @@
     margin-left: 6px;
     font-size: 14px;
     color: gray;
+    position: absolute;
+    right:-40px;
     transform: rotate(35deg);
 }
 

@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import Message from "../models/message.model";
 import Chat from "../models/chat.model";
+import ProjectRequest from "../models/projectRequest.model";
 import { getIO } from "../../../socket";
 
 export const sendMessage = async (req, res, next) => {
@@ -39,6 +40,9 @@ export const sendMessage = async (req, res, next) => {
                 lastMessage: savedMessage._id
             });
         }
+        const project = await ProjectRequest.findOne({
+            groupChatId: chatId
+        }).select("files");
 
         // 5️⃣ Return final DB message
         res.json({ success: true, data: savedMessage });
@@ -72,10 +76,14 @@ export const getMessages = async (req: Request, res: Response, next: NextFunctio
             .sort({ createdAt: -1 }) // newest first
             .limit(limit);
 
+        const project = await ProjectRequest.findOne({
+            groupChatId: chatId
+        }).select("files");
         // Return in normal order (old → new)
         res.json({
             success: true,
-            data: messages.reverse()
+            data: messages.reverse(),
+            projectFiles: project?.files || []
         });
 
     } catch (err) {

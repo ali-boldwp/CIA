@@ -37,9 +37,7 @@ const TypeSelection = () => {
 
                     <div className={styles.textBlock}>
                         <h3 className={styles.title}>Single user selector</h3>
-                        <p className={styles.subtitle}>
-                            Is mode mein sirf ek user select kar sakte ho.
-                        </p>
+
                     </div>
                 </div>
 
@@ -66,10 +64,6 @@ const TypeSelection = () => {
 
                     <div className={styles.textBlock}>
                         <h3 className={styles.title}>Group by multiple users</h3>
-                        <p className={styles.subtitle}>
-                            Is mode mein multiple users ek sath select ho
-                            sakte hain.
-                        </p>
                     </div>
                 </div>
             </div>

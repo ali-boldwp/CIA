@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
 import "../MessengerPage.css";
 import socket from "../../../socket";
-import { useGetMessagesQuery, useSendMessageMutation } from "../../../services/messageApi";
+import { useGetMessagesQuery, useSendMessageMutation, useGetAuditLogsQuery } from "../../../services/messageApi";
 import {useGetAllUsersQuery} from "../../../services/userApi";
 import {
     FiDownload,
@@ -55,6 +55,9 @@ const MessengerPage = ({chatID}) => {
 
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedMembers, setSelectedMembers] = useState([]);
+    const [projectFiles, setProjectFiles] = useState([]);
+    const [chatFilter, setChatFilter] = useState("all");
+
 
     const [addMembersToGroup] = useAddMembersToGroupMutation();
 
@@ -75,12 +78,21 @@ const MessengerPage = ({chatID}) => {
     const [searchTerm, setSearchTerm] = useState("");
     const [messages, setMessages] = useState([]);
     const [oldmessage, setOldMessage] = useState([]);
+    const [messageSearch, setMessageSearch] = useState(""); // ✅ ADD THIS
 
     const [text, setText] = useState("");
     const [sendMessage] = useSendMessageMutation();
     const [markSeen] = useMarkSeenMutation();
     const {data, isLoading} = useGetMessagesQuery(chat, {skip: chat === "open"});
     const {data: chats, isLoading: chatsLoading , refetch: refetchChats} = useGetMyChatsQuery();
+    const {
+        data: auditData,
+        isLoading: auditLoading,
+        isError: auditError
+    } = useGetAuditLogsQuery(chat, {
+        skip: !chat || chat === "open"
+    });
+
 
     const currentChat = chats?.data?.find(c => c._id === chat) || null;
 
@@ -96,7 +108,8 @@ const MessengerPage = ({chatID}) => {
             try {
 
                 console.log("API RESPONSE:", data.data);
-                setOldMessage(data?.data);
+                setOldMessage(data?.data  || []);
+                setProjectFiles(data?.projectFiles || []);
                 console.log("Messages:", oldmessage);
 
             } catch (e) {
@@ -215,9 +228,6 @@ const MessengerPage = ({chatID}) => {
 
 
     const handleDeleteGroup = async () => {
-        const confirmDelete = window.confirm("Sigur dorești să ștergi acest grup? Această acțiune este permanentă.");
-
-
         try {
             await deleteGroup(chat).unwrap();
 
@@ -295,6 +305,35 @@ const MessengerPage = ({chatID}) => {
     };
 
 
+    const filteredChats = (chats?.data || [])
+        .filter((c) => {
+            if (chatFilter === "groups") return c.isGroup === true;
+            if (chatFilter === "dm") return c.isGroup === false;
+            return true; // all
+        })
+        .filter((c) => {
+            if (!searchTerm.trim()) return true;
+
+            const search = searchTerm.toLowerCase();
+
+            if (c.isGroup) {
+                return c.groupName?.toLowerCase().includes(search);
+            }
+
+            const otherUser = c.participants.find(p => p._id !== user?._id);
+            return otherUser?.name?.toLowerCase().includes(search);
+        });
+
+
+    const filterMessages = (msgs) => {
+        if (!messageSearch.trim()) return msgs;
+
+        const search = messageSearch.toLowerCase();
+
+        return msgs.filter(m =>
+            m.text?.toLowerCase().includes(search)
+        );
+    };
 
 
     return (
@@ -310,30 +349,45 @@ const MessengerPage = ({chatID}) => {
                             <input
                                 className="input search-input"
                                 placeholder="Caută în mesaje..."
+                                value={searchTerm}
+                                onChange={(e) => setSearchTerm(e.target.value)}
                             />
                         </div>
                     </div>
 
                     <div className="toolbar-center">
                         <div className="toolbar-pill-group">
-                            <button className="pill pill-active pill-unique">
+                            <button
+                                className={`pill pill-unique ${chatFilter === "all" ? "pill-active" : ""}`}
+                                onClick={() => setChatFilter("all")}
+                            >
                                 Toți
                             </button>
-                            <button className="pill pill-unique">Grupuri</button>
-                            <button className="pill pill-unique">DM</button>
-                            <button className="pill">
-                                <FiHash className="pill-icon"/>
-                                Serie butoane
+                            <button
+                                className={`pill pill-unique ${chatFilter === "groups" ? "pill-active" : ""}`}
+                                onClick={() => setChatFilter("groups")}
+                            >
+                                Grupuri
                             </button>
+                            <button
+                                className={`pill pill-unique ${chatFilter === "dm" ? "pill-active" : ""}`}
+                                onClick={() => setChatFilter("dm")}
+                            >
+                                DM
+                            </button>
+                            {/*<button className="pill">*/}
+                            {/*    <FiHash className="pill-icon"/>*/}
+                            {/*    Serie butoane*/}
+                            {/*</button>*/}
                             <Link to="/messenger/new" className="pill">
                                 <FiPlus className="pill-icon" />
                                 Creează grup
                             </Link>
-                            <button className="pill">
-                                <FiUserMinus className="pill-icon"/>
-                                Elimină din grup
-                            </button>
-                            <button className="pill pill-danger">
+                            {/*<button className="pill">*/}
+                            {/*    <FiUserMinus className="pill-icon"/>*/}
+                            {/*    Elimină din grup*/}
+                            {/*</button>*/}
+                            <button onClick={handleDeleteGroup} className="pill pill-danger">
                                 {/*<FiTrash2 className="pill-icon" />*/}
                                 🗑️ Șterge grup
                             </button>
@@ -360,28 +414,36 @@ const MessengerPage = ({chatID}) => {
                         </div>
 
                         <div className="conversation-list">
-                            <div
-                                className={
-                                    "conversation-item" +
-                                    (chat === 'open' ? " conversation-item-active" : "")
-                                }
-                                onClick={() => setChat('open')}
-                            >
-                                <div className="conversation-avatar"/>
-                                <div className="conversation-main">
-                                    <div className="conversation-name">{'General'}</div>
-                                    <div className="conversation-sub">
-                                        Toate conversațiile
+                            {chatFilter === "all" && (
+                                <div
+                                    className={
+                                        "conversation-item" +
+                                        (chat === 'open' ? " conversation-item-active" : "")
+                                    }
+                                    onClick={() => setChat('open')}
+                                >
+                                    <div className="conversation-avatar"/>
+                                    <div className="conversation-main">
+                                        <div className="conversation-name">General</div>
+                                        <div className="conversation-sub">
+                                            Toate conversațiile
+                                        </div>
+                                    </div>
+                                    <div className="conversation-meta">
+                                        <span className="dot green"/>
+                                        <span className="dot orange"/>
+                                        <span className="dot red"/>
                                     </div>
                                 </div>
-                                <div className="conversation-meta">
-                                    <span className="dot green"/>
-                                    <span className="dot orange"/>
-                                    <span className="dot red"/>
-                                </div>
-                            </div>
+                            )}
+
                             {
-                                (chats?.data || []).map((c) => (
+                                filteredChats.map((c) => {
+                                    const otherUser = c.participants?.find(
+                                        p => p?._id !== user?._id
+                                    );
+                                    return(
+
                                     <div
                                         className={
                                             "conversation-item" +
@@ -394,22 +456,32 @@ const MessengerPage = ({chatID}) => {
 
                                         <div className="conversation-main">
                                             <div className="conversation-name">
-                                                {c.isGroup ? c.groupName : c.participants.map(p => p.name).join(", ")}
+                                                {c.isGroup
+                                                    ? c.groupName?.length > 17
+                                                        ? c.groupName.slice(0, 17) + "..."
+                                                        : c.groupName
+                                                    : otherUser?.name
+                                                        ? otherUser.name.length > 15
+                                                            ? otherUser.name.slice(0, 15) + "..."
+                                                            : otherUser.name
+                                                        : ","
+                                                }
 
-                                                { !c.isGroup ? <>
-                                                {c.participants[0]._id !== user._id ? c.participants[0].name : "" }
-                                                {c.participants[1]._id !== user._id ? c.participants[0].name : "" }
-                                                </> : "" }
-
-                                                {/* 🔥 PIN ICON HERE */}
                                                 {c.isPinned && (
                                                     <FaThumbtack className="sidebar-pin-icon" />
                                                 )}
                                             </div>
 
+
+
                                             <div className="conversation-sub">
-                                                {c.lastMessage ? c.lastMessage.text : "No messages yet"}
+                                                {c.lastMessage?.text
+                                                    ? c.lastMessage.text.length > 15
+                                                        ? c.lastMessage.text.slice(0, 15) + "..."
+                                                        : c.lastMessage.text
+                                                    : "No messages yet"}
                                             </div>
+
                                         </div>
                                         <div className="conversation-meta">
                                             {c.unreadCount > 0 && (
@@ -417,10 +489,14 @@ const MessengerPage = ({chatID}) => {
                                             )}
                                         </div>
                                     </div>
-                                ))
+                                )})
                             }
 
-
+                            {filteredChats.length === 0 && (
+                                <div className="label-small" style={{ padding: "10px" }}>
+                                    Nicio conversație găsită
+                                </div>
+                            )}
 
                         </div>
                     </aside>
@@ -472,8 +548,11 @@ const MessengerPage = ({chatID}) => {
                                 <input
                                     className="input chat-search"
                                     placeholder="Caută în conversație..."
+                                    value={messageSearch}
+                                    onChange={(e) => setMessageSearch(e.target.value)}
                                 />
                             </div>
+
                         </div>
 
 
@@ -483,17 +562,24 @@ const MessengerPage = ({chatID}) => {
 
                             {/* attachments row */}
                             <div className="chat-attachments">
-                                {["Report_v1.pdf", "Anexa1.xlsx", "Schena.png"].map((file) => (
-                                    <div key={file} className="attachment-card">
+                                {projectFiles.map((file, index) => (
+                                    <div key={index} className="attachment-card">
                                         <div className="attachment-name">
-                                            <FiPaperclip className="attachment-icon"/>
-                                            {file}
+                                            <FiPaperclip className="attachment-icon" />
+                                            {file.split("/").pop()}
                                         </div>
-                                        <div className="attachment-sub">Preview</div>
+
+                                        <a
+                                            href={`${process.env.REACT_APP_API_URL}/${file}`}
+                                            target="_blank"
+                                            className="attachment-sub"
+                                        >
+                                            PreviewF
+                                        </a>
                                     </div>
                                 ))}
                             </div>
-                            {oldmessage.map((msg, i) => {
+                            {filterMessages(oldmessage).map((msg, i) => {
                                 const isMe = msg.sender?._id === currentUserId;
                                 const hasSeen = msg.seenBy?.some(uid => uid !== currentUserId);
 
@@ -526,7 +612,7 @@ const MessengerPage = ({chatID}) => {
 
 
 
-                            {messages.map((msg, i) => {
+                            {filterMessages(messages).map((msg, i) => {
                                 const isMe = msg.sender === currentUserId;
                                 const hasSeen = msg.seenBy?.some(uid => uid !== currentUserId);
 
@@ -654,13 +740,32 @@ const MessengerPage = ({chatID}) => {
 
                         <div className="sidebar-right-section">
                             <div className="section-subtitle">Log audit</div>
+
                             <ul className="audit-list">
-                                <li>12:12 — Manager a creat grupul „DD ABC”</li>
-                                <li>12:21 — Manager a adăugat A. Pop</li>
-                                <li>12:25 — Manager a setat permisiuni</li>
-                                <li>12:35 — Manager a trimis conversația arhivei</li>
+                                {auditLoading && <li>Se încarcă logurile…</li>}
+
+                                {auditError && <li>Eroare la încărcarea logurilor</li>}
+
+                                {!auditLoading &&
+                                    !auditError &&
+                                    (auditData?.data || []).length === 0 && (
+                                        <li>Nicio activitate încă</li>
+                                    )}
+
+                                {(auditData?.data || []).map((log) => (
+                                    <li key={log._id}>
+                                        {new Date(log.timestamp).toLocaleTimeString("ro-RO", {
+                                            hour: "2-digit",
+                                            minute: "2-digit",
+                                        })}
+                                        {" — "}
+                                        <strong>{log.userId?.name || "Utilizator"}</strong>{" "}
+                                        {log.action}
+                                    </li>
+                                ))}
                             </ul>
                         </div>
+
 
                         <div className="sidebar-right-footer">
                             <button
