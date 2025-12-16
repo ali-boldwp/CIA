@@ -10,9 +10,23 @@ export const createHumint = async (req: Request, res: Response, next: NextFuncti
     try {
         const userId = (req as any).user.id;
 
-        const { projectId, briefObjective, ...rest } = req.body;
+        // ✅ multipart/form-data: JSON string in req.body.data
+        const body = req.body?.data ? JSON.parse(req.body.data) : req.body;
 
-        // 🔹 Load analyst name (JWT me name nahi hota)
+        const { projectId, briefObjective, ...rest } = body;
+
+        // ✅ files (multer)
+        const files = (req as any).files as Express.Multer.File[] | undefined;
+
+        const attachments = (files || []).map((f) => ({
+            originalName: f.originalname,
+            fileName: f.filename,
+            mimeType: f.mimetype,
+            size: f.size,
+            path: `/uploads/humint/${f.filename}`,
+        }));
+
+        // 🔹 Load analyst name
         const analyst = await User.findById(userId).select("name");
 
         // 1️⃣ If projectId provided → check if already linked
@@ -27,7 +41,7 @@ export const createHumint = async (req: Request, res: Response, next: NextFuncti
 
             if (project.humintId) {
                 return res.status(400).json({
-                    message: "This project already has a HUMINT assigned."
+                    message: "This project already has a HUMINT assigned.",
                 });
             }
         }
@@ -36,9 +50,10 @@ export const createHumint = async (req: Request, res: Response, next: NextFuncti
         const humint = await humintService.createHumint({
             ...rest,
             briefObjective,
+            attachments,
             createdBy: userId,
             projectId: projectId || undefined,
-            isLinkedToProject: !!projectId
+            isLinkedToProject: !!projectId,
         });
 
         // 3️⃣ Save HUMINT ID to Project
@@ -63,20 +78,19 @@ export const createHumint = async (req: Request, res: Response, next: NextFuncti
                     text: project
                         ? `Analistul ${analyst?.name || "analist"} a solicitat o solicitări HUMINT pentru proiectul „${project.projectName}”`
                         : `Analistul ${analyst?.name || "analist"} a solicitat o solicitări HUMINT`,
-                    link: project
-                        ? `/humint`
-                        : `/humint`,
+                    link: `/humint`,
                     type: "info",
                 })
             )
         );
 
         return res.json(ok(humint));
-
     } catch (err) {
         next(err);
     }
 };
+
+
 
 
 

@@ -22,6 +22,15 @@ export interface IHumint extends Document {
     managerFeedback?: string;
     managerId?: string;
 
+    attachments?: {
+        originalName: string;
+        fileName: string;
+        mimeType: string;
+        size: number;
+        path: string;
+    }[];
+
+
     createdBy: Schema.Types.ObjectId;
 
     status:
@@ -94,6 +103,17 @@ const humintSchema = new Schema<IHumint>(
             ref:'User'
 
         },
+
+        attachments: [
+            {
+                originalName: String,
+                fileName: String,
+                mimeType: String,
+                size: Number,
+                path: String,
+            },
+        ],
+
 
         status: {
             type: String,

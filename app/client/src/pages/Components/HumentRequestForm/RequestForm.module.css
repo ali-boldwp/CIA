@@ -120,6 +120,65 @@ textarea:focus,
     margin-top: 16px;
 }
 
+/* attachments */
+.attachWrapper {
+    margin-top: 8px;
+}
+
+.attachBtn {
+    width: 250px;
+    height: 46px;
+    background-color: #10B981;
+    color: #ffffff;
+    font-size: 15px;
+    font-weight: 700;
+    font-style: italic;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.attachBtn:hover {
+    opacity: 0.9;
+}
+
+.hiddenFileInput {
+    display: none;
+}
+
+/* file list */
+.fileList {
+    margin-top: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.fileItem {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    padding: 8px 12px;
+    border-radius: 6px;
+}
+
+.fileName {
+    font-size: 13px;
+    color: #0f172a;
+}
+
+.removeBtn {
+    background: transparent;
+    border: none;
+    color: #ef4444;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+
 /* actions (agar baad mein button component use karo) */
 .actions {
     display: flex;

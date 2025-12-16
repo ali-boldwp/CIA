@@ -1,3 +1,4 @@
+// Button.js
 import React from "react";
 import { useSelector } from "react-redux";
 import styles from "./Button.module.css";
@@ -9,7 +10,6 @@ const RequestButton = ({ status, onApprove, onReject, onClarify, disabled = fals
 
     return (
         <>
-
             {canApproveReject && isRequested && (
                 <>
                     <button
@@ -31,7 +31,6 @@ const RequestButton = ({ status, onApprove, onReject, onClarify, disabled = fals
                     </button>
                 </>
             )}
-
 
             {(isRequested || isClarification) && (
                 <button
@@ -62,7 +61,6 @@ const ActionButtons = ({ data, onApprove, onReject, onClarify, onPrint, disabled
                 <h3 className={styles.title}>Acțiuni</h3>
 
                 <div className={styles.actionsRow}>
-
                     {(isAdminOrManager || isAnalyst) && (
                         <RequestButton
                             status={status}
@@ -73,7 +71,6 @@ const ActionButtons = ({ data, onApprove, onReject, onClarify, onPrint, disabled
                             canApproveReject={isAdminOrManager}
                         />
                     )}
-
 
                     {isAdminOrManager && (
                         <button

@@ -1,5 +1,4 @@
 import React, { useRef, useState } from "react";
-
 import Header from "./Header";
 import RequestForm from "./RequestForm";
 import { useGetCreateProjectByIdQuery } from "../../../services/projectApi";
@@ -10,7 +9,6 @@ import { toast } from "react-toastify";
 import { useGetAnalystsQuery } from "../../../services/userApi";
 
 const Index = () => {
-
     const { id } = useParams();
     const location = useLocation();
     const state = location.state || {};
@@ -26,13 +24,27 @@ const Index = () => {
     const { data: analystData } = useGetAnalystsQuery();
     const analysts = analystData?.data || [];
 
-
     // PROJECT-BASED FETCH
     const { data: projectData } = useGetCreateProjectByIdQuery(id, {
         skip: isIndependent || !id,
     });
 
     const projects = projectData?.data || {};
+
+    // helper: build FormData with payload + files
+    const buildFormData = (payload, files = []) => {
+        const formData = new FormData();
+
+        // send JSON payload as string
+        formData.append("data", JSON.stringify(payload));
+
+        // send files
+        files.forEach((file) => {
+            formData.append("attachments", file); // key name: attachments
+        });
+
+        return formData;
+    };
 
     // ========================================================================
     // HANDLE APPROVE
@@ -44,6 +56,7 @@ const Index = () => {
         if (!ok) return;
 
         const formValues = formRef.current.getValues();
+        const files = formRef.current.getFiles?.() || [];
         const userId = localStorage.getItem("userId");
 
         let payload = {};
@@ -69,7 +82,8 @@ const Index = () => {
 
         setSubmitting(true);
 
-        const actionPromise = createHumint(payload).unwrap();
+        const formData = buildFormData(payload, files);
+        const actionPromise = createHumint(formData).unwrap();
 
         try {
             await toast.promise(
@@ -85,6 +99,9 @@ const Index = () => {
                 },
                 { autoClose: 3000 }
             );
+
+            // ✅ CLEAR FORM AFTER SUCCESSFUL SUBMISSION
+            formRef.current?.clearForm();
         } catch (e) {
             console.error(e);
         } finally {
@@ -102,6 +119,7 @@ const Index = () => {
         if (!ok) return;
 
         const values = formRef.current.getValues();
+        const files = formRef.current.getFiles?.() || [];
         const userId = localStorage.getItem("userId");
 
         const payload = {
@@ -114,7 +132,8 @@ const Index = () => {
 
         setSubmitting(true);
 
-        const actionPromise = createHumint(payload).unwrap();
+        const formData = buildFormData(payload, files);
+        const actionPromise = createHumint(formData).unwrap();
 
         try {
             await toast.promise(
@@ -130,13 +149,15 @@ const Index = () => {
                 },
                 { autoClose: 3000 }
             );
+
+            // ✅ CLEAR FORM AFTER SUCCESSFUL DRAFT SAVE (optional)
+            // formRef.current?.clearForm(); // Uncomment if you want to clear after draft save too
         } catch (e) {
             console.error(e);
         } finally {
             setSubmitting(false);
         }
     };
-
 
     return (
         <>
@@ -155,7 +176,6 @@ const Index = () => {
                 onGenerateBrief={() => console.log("Generate brief")}
                 disabled={submitting}
             />
-
         </>
     );
 };

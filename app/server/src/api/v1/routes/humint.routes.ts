@@ -2,6 +2,7 @@ import { Router } from "express";
 import * as clarificationController from "../controllers/clarification.controller";
 import { auth } from "../../../middlewares/auth.middleware";
 import * as humintController from "../controllers/humint.controller";
+import {upload} from "../../../middlewares/upload.middleware";
 // import { authorizeRoles } from "../../../middlewares/role.middleware";
 // import { Role } from "../../../constants/roles";
 
@@ -10,7 +11,13 @@ const router = Router();
 // ----------------------
 // CRUD ROUTES
 // ----------------------
-router.post("/", auth, humintController.createHumint);
+router.post(
+    "/",
+    auth,
+    upload.array("attachments", 10),
+    humintController.createHumint
+);
+
 
 router.get("/", auth, humintController.getAllHumints);
 
