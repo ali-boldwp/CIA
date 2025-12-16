@@ -1,3 +1,5 @@
+// RequestForm.js
+
 import React, {
     useState,
     forwardRef,
@@ -8,7 +10,86 @@ import styles from "./RequestForm.module.css";
 
 const RequestForm = forwardRef((props, ref) => {
     const { projects, independent, independentData, analysts, disabled = false } = props;
+    const [attachments, setAttachments] = useState([]);
+    const fileInputRef = React.useRef(null);
 
+    const [isDragging, setIsDragging] = useState(false);
+
+    const addFiles = (fileList) => {
+        const incoming = Array.from(fileList || []);
+        const MAX_SIZE_MB = 20;
+        const allowed = ["pdf","doc","docx","xlsx","csv","jpg","jpeg","png","txt"];
+
+        const valid = [];
+        let rejected = 0;
+
+        incoming.forEach((f) => {
+            const ext = (f.name.split(".").pop() || "").toLowerCase();
+            const okExt = allowed.includes(ext);
+            const okSize = f.size <= MAX_SIZE_MB * 1024 * 1024;
+
+            if (okExt && okSize) valid.push(f);
+            else rejected++;
+        });
+
+        if (valid.length === 0) {
+            // show why it didn't add
+            setErrors((prev) => ({
+                ...prev,
+                attachments: rejected
+                    ? `Fișier invalid (tip permis: ${allowed.join(", ")}) sau > ${MAX_SIZE_MB}MB`
+                    : "Câmp obligatoriu",
+            }));
+            return;
+        }
+
+        // clear attachment error if any
+        setErrors((prev) => ({ ...prev, attachments: "" }));
+
+        // prevent duplicates (same name+size)
+        setAttachments((prev) => {
+            const map = new Map(prev.map((f) => [`${f.name}_${f.size}`, f]));
+            valid.forEach((f) => map.set(`${f.name}_${f.size}`, f));
+            return Array.from(map.values());
+        });
+
+        if (fileInputRef.current) fileInputRef.current.value = "";
+    };
+
+    const handleFileChange = (e) => {
+        addFiles(e.target.files);
+    };
+
+    const handleDragEnter = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        if (disabled) return;
+        setIsDragging(true);
+    };
+
+    const handleDragLeave = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        setIsDragging(false);
+    };
+
+    const handleDragOver = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        if (disabled) return;
+    };
+
+    const handleDrop = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        if (disabled) return;
+        setIsDragging(false);
+        addFiles(e.dataTransfer.files);
+    };
+
+    const removeFile = (index) => {
+        setAttachments(prev => prev.filter((_, i) => i !== index));
+    };
 
     const [values, setValues] = useState({
         projectName: "",
@@ -22,7 +103,6 @@ const RequestForm = forwardRef((props, ref) => {
         locations: "",
         restrictions: "",
     });
-
 
     useEffect(() => {
         if (independent && independentData) {
@@ -70,10 +150,7 @@ const RequestForm = forwardRef((props, ref) => {
                 priority: backendToUi[projects.priority] || "",
             }));
         }
-
     }, [independent, independentData, projects, analysts]);
-
-
 
     const [errors, setErrors] = useState({});
 
@@ -100,6 +177,10 @@ const RequestForm = forwardRef((props, ref) => {
             }
         });
 
+        if (!attachments || attachments.length === 0) {
+            newErrors.attachments = "Câmp obligatoriu";
+        }
+
         setErrors(newErrors);
         return Object.keys(newErrors).length === 0;
     };
@@ -110,7 +191,6 @@ const RequestForm = forwardRef((props, ref) => {
         if (!isValid) return false;
 
         console.log("Form OK:", values);
-        // yahan API call / submit logic aa sakta hai
         return true;
     };
 
@@ -120,10 +200,49 @@ const RequestForm = forwardRef((props, ref) => {
         submitForm();
     };
 
-    // parent ko methods expose
+    const clearAttachments = () => {
+        setAttachments([]);
+        if (fileInputRef.current) fileInputRef.current.value = "";
+        setErrors((prev) => ({ ...prev, attachments: "" }));
+    };
+
+    // ✅ FORM CLEAR FUNCTION - BOHOT IMPORTANT!
+    const clearForm = () => {
+        // Sab form values reset karo
+        setValues({
+            // projectName: "",
+            // deadline: "",
+            // reportType: "",
+            // projectOwner: "",
+            // priority: "",
+            briefObjective: "",
+            keyQuestions: "",
+            targets: "",
+            locations: "",
+            restrictions: "",
+        });
+
+        // Files bhi clear karo
+        setAttachments([]);
+
+        // Errors bhi clear karo
+        setErrors({});
+
+        // File input bhi reset karo
+        if (fileInputRef.current) {
+            fileInputRef.current.value = "";
+        }
+
+        console.log("✅ Form completely cleared!");
+    };
+
+    // ✅ Parent ko methods expose karo
     useImperativeHandle(ref, () => ({
         submitForm,
         getValues: () => values,
+        getFiles: () => attachments,
+        clearAttachments,
+        clearForm, // ✅ YEH WALA FUNCTION ADD KARO
     }));
 
     return (
@@ -172,7 +291,6 @@ const RequestForm = forwardRef((props, ref) => {
                             )}
                         </div>
 
-
                         {/* Responsabil proiect */}
                         <div className={styles.field}>
                             <label className={styles.label}>Responsabil proiect</label>
@@ -190,7 +308,6 @@ const RequestForm = forwardRef((props, ref) => {
                                 <p className={styles.errorText}>{errors.projectOwner}</p>
                             )}
                         </div>
-
 
                         {/* Deadline */}
                         <div className={styles.field}>
@@ -247,7 +364,7 @@ const RequestForm = forwardRef((props, ref) => {
                                 value={values.briefObjective}
                                 onChange={handleChange}
                                 className={`${styles.textarea} ${
-                                    errors.scopeObjectives ? styles.inputError : ""
+                                    errors.briefObjective ? styles.inputError : ""
                                 }`}
                                 placeholder="ex.: verificare discretă reputație locală, confirmare asocieri, risc comportamental..."
                             />
@@ -326,6 +443,59 @@ const RequestForm = forwardRef((props, ref) => {
                             )}
                         </div>
                     </div>
+                </div>
+
+                <div className={styles.card}>
+                    <h3 className={styles.sectionTitle}>Atașamente</h3>
+
+                    <div
+                        className={`${styles.attachWrapper} ${isDragging ? styles.dragActive : ""}`}
+                        onDragEnter={handleDragEnter}
+                        onDragLeave={handleDragLeave}
+                        onDragOver={handleDragOver}
+                        onDrop={handleDrop}
+                    >
+                        <button
+                            type="button"
+                            className={styles.attachBtn}
+                            onClick={() => fileInputRef.current?.click()}
+                            disabled={disabled}
+                        >
+                            Atașează brief pentru HUMINT
+                        </button>
+
+                        <input
+                            ref={fileInputRef}
+                            type="file"
+                            multiple
+                            onChange={handleFileChange}
+                            className={styles.hiddenFileInput}
+                            disabled={disabled}
+                        />
+
+                        {/* error should be below button */}
+                        {errors.attachments && (
+                            <p className={styles.errorText}>{errors.attachments}</p>
+                        )}
+                    </div>
+
+                    {attachments.length > 0 && (
+                        <div className={styles.fileList}>
+                            {attachments.map((file, index) => (
+                                <div key={`${file.name}_${file.size}_${index}`} className={styles.fileItem}>
+                                    <span className={styles.fileName}>{file.name}</span>
+                                    <button
+                                        type="button"
+                                        className={styles.removeBtn}
+                                        onClick={() => removeFile(index)}
+                                        disabled={disabled}
+                                    >
+                                        Șterge
+                                    </button>
+                                </div>
+                            ))}
+                        </div>
+                    )}
                 </div>
             </form>
         </div>
