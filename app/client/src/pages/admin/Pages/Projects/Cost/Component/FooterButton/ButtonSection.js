@@ -1,5 +1,6 @@
 import React from 'react';
 import styles from './ButtonSection.module.css';
+import {useNavigate} from "react-router-dom";
 
 const ButtonSection = ({
                            onSave = () => {},
@@ -8,14 +9,21 @@ const ButtonSection = ({
                            backButtonText = "Înapoi la Pagina Proiect",
                            saveButtonColor = "#10B981",
                            showSaveButton = true,
-                           showBackButton = true
+                           showBackButton = true,
+                           projectId
                        }) => {
+
+    const navigate = useNavigate();
+
     const handleSave = () => {
         console.log("Save button clicked");
         onSave();
     };
 
     const handleBack = () => {
+
+        navigate( `/project/view/${projectId}` )
+
         console.log("Back button clicked");
         onBack();
     };

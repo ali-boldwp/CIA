@@ -96,6 +96,7 @@ const ProjectCost = ({ data }) => {
                 <ButtonSection
                     onSave={handleSaveAll}
                     onBack={handleBackToProject}
+                    projectId={ projectId }
                     saveButtonText="Salvează modificări"
                     backButtonText="Înapoi la Pagina Proiect"
                     saveButtonColor="#10B981"
