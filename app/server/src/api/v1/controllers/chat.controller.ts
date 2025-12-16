@@ -507,26 +507,24 @@ export const leaveGroup = async (req: Request, res: Response, next: NextFunction
 export const deleteGroupChat = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const chatId = req.params.chatId;
-        const userId = (req as any).user.id;
+        const user = (req as any).user; // contains id + role
+        const userId = user.id;
+
+        // ✅ ROLE CHECK
+        if (!["admin", "manager"].includes(user.role)) {
+            return res.status(403).json({
+                message: "Only Admin or Manager can delete the group"
+            });
+        }
 
         const chat = await Chat.findById(chatId);
-        if (!chat) return res.status(404).json({ message: "Chat not found" });
+        if (!chat) {
+            return res.status(404).json({ message: "Chat not found" });
+        }
 
         if (!chat.isGroup) {
             return res.status(400).json({ message: "Cannot delete a direct chat" });
         }
-
-        // Only creator (first participant)
-        const creatorId = chat.participants[0].user.toString();
-        if (creatorId !== userId.toString()) {
-            return res.status(403).json({
-                message: "Only the group creator can delete the group"
-            });
-        }
-
-        // 🔥 Get creator name
-        const creator = await User.findById(userId).select("name");
-        const creatorName = creator?.name || "Un utilizator";
 
         const groupName = chat.groupName || "grup";
 
@@ -548,6 +546,7 @@ export const deleteGroupChat = async (req: Request, res: Response, next: NextFun
         next(err);
     }
 };
+
 
 
 
