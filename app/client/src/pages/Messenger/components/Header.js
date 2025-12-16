@@ -227,9 +227,6 @@ const MessengerPage = ({chatID}) => {
 
 
     const handleDeleteGroup = async () => {
-        const confirmDelete = window.confirm("Sigur dorești să ștergi acest grup? Această acțiune este permanentă.");
-
-
         try {
             await deleteGroup(chat).unwrap();
 
@@ -359,19 +356,19 @@ const MessengerPage = ({chatID}) => {
                             </button>
                             <button className="pill pill-unique">Grupuri</button>
                             <button className="pill pill-unique">DM</button>
-                            <button className="pill">
-                                <FiHash className="pill-icon"/>
-                                Serie butoane
-                            </button>
+                            {/*<button className="pill">*/}
+                            {/*    <FiHash className="pill-icon"/>*/}
+                            {/*    Serie butoane*/}
+                            {/*</button>*/}
                             <Link to="/messenger/new" className="pill">
                                 <FiPlus className="pill-icon" />
                                 Creează grup
                             </Link>
-                            <button className="pill">
-                                <FiUserMinus className="pill-icon"/>
-                                Elimină din grup
-                            </button>
-                            <button className="pill pill-danger">
+                            {/*<button className="pill">*/}
+                            {/*    <FiUserMinus className="pill-icon"/>*/}
+                            {/*    Elimină din grup*/}
+                            {/*</button>*/}
+                            <button onClick={handleDeleteGroup} className="pill pill-danger">
                                 {/*<FiTrash2 className="pill-icon" />*/}
                                 🗑️ Șterge grup
                             </button>
