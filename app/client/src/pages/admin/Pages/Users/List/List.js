@@ -27,13 +27,22 @@ const List = ({ isLoading, usersData, deleteUser }) => {
                 : [];
 
     // Global search
+    const currentUser = JSON.parse(localStorage.getItem("user"));
+    const currentUserId = currentUser?._id;
+
+// current user ko list se hata do
+    const usersWithoutMe = users.filter(u => u._id !== currentUserId);
+
+
+
+    // Global search
     const filteredUsers = useMemo(() => {
-        if (!searchTerm.trim()) return users;
+        if (!searchTerm.trim()) return usersWithoutMe;
         const q = searchTerm.toLowerCase();
-        return users.filter((u) =>
+        return usersWithoutMe.filter((u) =>
             `${u.name} ${u.email} ${u.role}`.toLowerCase().includes(q)
         );
-    }, [searchTerm, users]);
+    }, [searchTerm, usersWithoutMe]);
 
     // ---- ROLE GROUPS (sirf layout ke liye) ----
     const ROLE_TO_SECTION = {
