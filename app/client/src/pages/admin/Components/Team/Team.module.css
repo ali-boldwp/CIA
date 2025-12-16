@@ -89,13 +89,15 @@
 }
 
 .work {
-    background: #d6fbe6;
-    color: #1a9a4e;
+
+    background: #FFFBEB;
+    color: #92400E;
+    border: 1px solid #F59E0B;
 }
 
 .free {
-    background: #e6e6ee;
-    color: #666666;
+    background: #d6fbe6;
+    color: #1a9a4e;
 }
 
 /* Progress */
