@@ -229,7 +229,7 @@ const ProjectView = ({ data }) => {
             <div className={styles.contentWrapper}>
                 <div className={styles.card}>
                     <h2 className={styles.sectionTitle}>
-                        Detalii proiect (preluate automat din solicitare)
+                        Detalii proiect
                     </h2>
 
                     {/* ================= ROW 1 ================= */}

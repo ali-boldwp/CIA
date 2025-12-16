@@ -3,6 +3,8 @@ import "./style.css";
 import { Link } from "react-router-dom";
 import Calender from "../../Components/Calender";
 
+import Stats from "../../Components/Stats";
+
 const Dashboard = ({ analyst, projectData, humintData, analystProgressBar }) => {
     useEffect(() => {
         console.log("projectData:", projectData);
@@ -176,54 +178,8 @@ const Dashboard = ({ analyst, projectData, humintData, analystProgressBar }) => 
     return (
         <>
             {/* TOP SUMMARY CARDS (dynamic counts) */}
-            <div className="top-summary">
-                <div className="summary-card">
-                    <div className="summary-title">
-                        <span className="summary-icon">📄</span>
-                        <span>Proiecte asignate</span>
-                    </div>
-                    <div className="summary-value">{projects?.length}</div>
-                </div>
 
-                <div className="summary-card">
-                    <div className="summary-title">🕵️ HUMINT in lucru</div>
-                    <div className="summary-value">
-                        {" "}
-                        {projects?.filter((p) => p.status === "in_progress").length}{" "}
-                    </div>
-                    <Link to="/humint" className="gradient-btn">
-                        HUMINT-ul tău
-                    </Link>
-                </div>
-
-                <div className="summary-card">
-                    <div className="summary-title">
-                        <Link to="/humint/new">🕵️‍♀️ Adauga solicitare noua de HUMINT ➕</Link>
-                    </div>
-                </div>
-
-                <div className="summary-card">
-                    <div className="summary-title">
-                        <span>⏳ HUMINT in asteptare aprobare</span>
-                    </div>
-                    <div className="summary-sub">
-                        {" "}
-                        {projects?.filter((p) => p.status === "requested").length} solicitari{" "}
-                    </div>
-                </div>
-
-                <Link to="#">
-                    <div className="message-card">
-                        <div className="message-label"> 💬 Mesaje necitite </div>
-                        <div className="message-footer">
-                            <div className="message-count">5</div>
-                            <Link to={"/messenger"} className="message-button">
-                                Deschide messenger
-                            </Link>
-                        </div>
-                    </div>
-                </Link>
-            </div>
+            <Stats data={ projects } />
 
             {/* PROJECT CARDS */}
             {projects && projects.length > 0 && (
