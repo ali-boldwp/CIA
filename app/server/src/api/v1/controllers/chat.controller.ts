@@ -423,10 +423,22 @@ export const addMembersToGroup = async (req: Request, res: Response, next: NextF
 
 // ---------------- REMOVE MEMBER ------------------
 
-export const removeMemberFromGroup = async (req: Request, res: Response, next: NextFunction) => {
+export const removeMemberFromGroup = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+) => {
     try {
         const { chatId } = req.params;
         const { userId } = req.body;
+        const currentUser = req.user;
+
+
+        if (!["admin", "manager"].includes(currentUser.role)) {
+            return res.status(403).json({
+                message: "Only Admin or Manager can remove members from the group"
+            });
+        }
 
         if (!userId) {
             return res.status(400).json({ message: "userId is required" });
@@ -436,20 +448,23 @@ export const removeMemberFromGroup = async (req: Request, res: Response, next: N
         if (!chat) return res.status(404).json({ message: "Chat not found" });
 
         if (!chat.isGroup) {
-            return res.status(400).json({ message: "Cannot remove user from direct chat" });
+            return res.status(400).json({
+                message: "Cannot remove user from direct chat"
+            });
         }
 
-        chat.participants = chat.participants.filter(p => p.user.toString() !== userId);
+        chat.participants = chat.participants.filter(
+            (p) => p.user.toString() !== userId
+        );
 
         // LOG — Remove member
         const removedUser = await User.findById(userId).select("name");
 
         await logAudit(
             chatId,
-            req.user.id,
+            currentUser.id,
             `A eliminat membrul: ${removedUser?.name || "Utilizator"}`
         );
-
 
         await chat.save();
 
@@ -463,6 +478,7 @@ export const removeMemberFromGroup = async (req: Request, res: Response, next: N
         next(err);
     }
 };
+
 
 // ---------------- LEAVE GROUP ------------------
 

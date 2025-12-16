@@ -14,6 +14,8 @@ export const requestProject = async (req: Request, res: Response, next: NextFunc
     try {
         const user = (req as any).user;
         const body = req.body;
+        const status = body.status === "draft" ? "draft" : "requested";
+
 
         const files = Array.isArray(req.files)
             ? (req.files as Express.Multer.File[]).map(f => f.filename)
@@ -59,33 +61,34 @@ export const requestProject = async (req: Request, res: Response, next: NextFunc
             files: files,
             fromRequestId: user.id,
 
-            status: "requested",
+            status,
         };
 
         console.log( user );
 
         const projectRequest = await Requested.create(payload);
 
-        const adminsAndManagers = await User.find({
-            role: { $in: ["admin", "manager"] }
-        }).select("_id");
+        if (status === "requested") {
+            const adminsAndManagers = await User.find({
+                role: {$in: ["admin", "manager"]}
+            }).select("_id");
 
-        // ✅ Send notifications
-        await Promise.all(
-            adminsAndManagers.map((admin) => {
-                const socketRoom = `notification_${user._id}`;
+            // ✅ Send notifications
+            await Promise.all(
+                adminsAndManagers.map((admin) => {
+                    const socketRoom = `notification_${user._id}`;
 
-                return createNotification({
-                    user: admin._id.toString(),
-                    title: "Cerere nouă de proiect",
-                    text: `A fost trimisă o cerere pentru proiectul ${projectRequest.projectName}`,
-                    link: `/project/new/${projectRequest._id}`,
-                    type: "info",
-                    socket: socketRoom,
-                });
-            })
-        );
-
+                    return createNotification({
+                        user: admin._id.toString(),
+                        title: "Cerere nouă de proiect",
+                        text: `A fost trimisă o cerere pentru proiectul ${projectRequest.projectName}`,
+                        link: `/project/new/${projectRequest._id}`,
+                        type: "info",
+                        socket: socketRoom,
+                    });
+                })
+            );
+        }
         return res.json(ok(projectRequest));
 
     } catch (err) {
