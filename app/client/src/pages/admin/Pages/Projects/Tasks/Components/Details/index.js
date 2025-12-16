@@ -51,7 +51,7 @@ const Details = (
                         <p className="status-text">
                             Status proiect: <strong>În derulare</strong>
                         </p>
-                        {status.status === "finished" &&   (
+                        {status.status !== "finished" &&   (
                         <div className="buttons-row">
                             {(user?.role === "admin" || user?.role === "manager" || user?.role === "analyst") && (
                                 <>
