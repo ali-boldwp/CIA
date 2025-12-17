@@ -101,17 +101,18 @@ const EmployeeCostTable = ({ onAddCost, projectId, projectData, onTotalCostUpdat
         return hours / 8;
     };
 
-    const EUR_RATE = 4.97; // example, should come from backend
-
-    const convertToEUR = (amount) => {
-        return amount / EUR_RATE;
-    };
-
     const calculateTotal = (analyst, hours) => {
-        const actualHours = hours || analyst.totalHours || analyst.hoursPerDay || 8;
-        const costPerHourEUR = convertToEUR(analyst.costPerHour || 0);
-        return actualHours * costPerHourEUR;
+        const actualHours =
+            hours ??
+            analyst.totalHours ??
+            analyst.hoursPerDay ??
+            8;
+
+        // costPerHour already in EUR
+        return actualHours * (analyst.costPerHour || 0);
     };
+
+
 
     const calculateCostPerDay = (analyst) => {
         const costPerHour = analyst.costPerHour || 0;

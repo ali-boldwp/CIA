@@ -47,6 +47,8 @@ router.patch("/:id/approve", auth, humintController.approveHumint);
 // Manager: Reject
 router.patch("/:id/reject", auth, humintController.rejectHumint);
 
+router.patch("/:id/sent", auth, humintController.sentHumint);
+
 // Manager: Ask for clarification
 router.patch("/:id/clarification", auth, humintController.clarificationHumint );
 
