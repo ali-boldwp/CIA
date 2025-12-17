@@ -415,11 +415,21 @@ const ProjectTasks = ({
 
 
                 {showReviewPopup && (
-                    <ReviewPopUp onClose={() => setShowReviewPopup(false)} onAddObservation={handleAddObservation} observation={ Observation?.data } />
+                    <ReviewPopUp
+                        onClose={() => setShowReviewPopup(false)}
+                        onAddObservation={handleAddObservation}
+                        observation={Observation?.data}
+                    />
+
                 )}
 
                 {showEditingPopup && (
-                    <EditingPopUp final={()=>handleFinalize("revision")} data={Observation?.data || []} onClose={() => setShowEditingPopup(false)} />
+                    <ReviewPopUp
+                        onClose={() => setShowReviewPopup(false)}
+                        onAddObservation={handleAddObservation}
+                        observation={Observation?.data || []}
+                    />
+
                 )}
 
                 {showPleaseWait  && (

@@ -136,9 +136,9 @@
 }
 
 .textarea:focus {
-    background: #ffffff;
     border-color: #6366f1;
     box-shadow: 0 0 0 1px rgba(99, 102, 241, 0.25);
+    background-color: #f8fafc !important;
 }
 
 /* BOTTOM BUTTON ROW */

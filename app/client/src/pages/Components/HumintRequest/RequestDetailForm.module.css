@@ -43,7 +43,7 @@
 }
 
 .label {
-    font-size: 14px;
+    font-size: 15px;
     font-weight: 400;
     color: #444;
     margin-bottom: 6px;
@@ -62,7 +62,7 @@
     border-radius: 4px;
     border: 1px solid #e2e8f0;
     background: #f8fafc;
-    font-size: 13px;
+    font-size: 14px;
     outline: none;
 }
 
@@ -73,7 +73,7 @@ textarea:focus,
 .textarea:focus {
     border-color: #6366f1 !important;
     box-shadow: 0 0 0 1px rgba(99, 102, 241, 0.3) !important;
-    background: #ffffff !important;
+    background: #f8fafc  !important;
     outline: none !important;
 }
 

@@ -125,7 +125,7 @@
 .label {
     display: flex;
     flex-direction: column;
-    font-size: 14px;
+    font-size: 15px;
     color: #444;
     gap: 0.4rem;
     font-weight: 400;
