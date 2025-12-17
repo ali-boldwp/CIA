@@ -2,8 +2,9 @@ import {useMemo, useState} from "react";
 import {Link} from "react-router-dom";
 import Calender from "./Components/Calender";
 import "./style.css";
+import Stats from "../../Components/Stats";
 
-const Dashboard = ({ approve, analystsData, requested  }) => {
+const Dashboard = ({approve, analystsData, requested}) => {
 
     const statusBackendToUi = {
         approved: "in lucru",
@@ -44,10 +45,9 @@ const Dashboard = ({ approve, analystsData, requested  }) => {
         return statusColorMap[capitalizeStatus(status)] || "gray";
     };
 
-    const approvedProject=approve?.data || [];
+    const approvedProject = approve?.data || [];
     const analysts = analystsData?.data || [];
-    const requestedProject=requested?.data||[];
-
+    const requestedProject = requested?.data || [];
 
 
     const resolveAnalystName = (value) => {
@@ -91,49 +91,19 @@ const Dashboard = ({ approve, analystsData, requested  }) => {
     }, [page, approvedProject]);
 
 
-
-
-
-
-
     return (
         <>
-            {/* TOP SUMMARY CARDS */}
-            <div className="top-summary">
-                <div className="summary-card">
-                    <div className="summary-title">
-                        <span className="summary-icon">📄</span>
-                        <span>Proiecte in lucru</span>
-                    </div>
-                    <div className="summary-value">{approvedProject.length}</div>
-                </div>
-                <Link to="/project">
-                    <div className="summary-card">
-                        <div className="summary-title">
-                            🕵️‍♀️ solicitare noua de proiect
-                        </div>
-                        <div className="requestedCount">
-                            <div>{requestedProject.length}</div>
-                        <button className="add-button">Adauga</button>
-                        </div>
-                    </div>
-                </Link>
-                <Link to="/messenger">
-                    <div className="message-card">
-                        <div className="message-label">
-                            💬 Mesaje necitite
-                        </div>
 
-                        <div className="message-footer">
-                            <div className="message-count">5</div>
-                            <button className="message-button">Deschide messenger</button>
-                        </div>
-                    </div>
-                </Link>
-            </div>
+            <Stats
+                data={{
+                    approved: approvedProject.length,
+                    requested: requestedProject.length,
+                    messages: 0
+                }}
+            />
 
             {requestedProject && requestedProject.length > 0 && (
-                <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+                <div style={{display: "flex", flexDirection: "column", gap: "12px"}}>
                     <h2 className="sales-section-title">Proiecte solicitate</h2>
 
                     <div className="projects-row">
@@ -143,13 +113,13 @@ const Dashboard = ({ approve, analystsData, requested  }) => {
                                     <div className="project-name">{p.projectName}</div>
 
                                     <div className="project-deadline-wrapper">
-              <span className="deadline-pill">
-                Deadline: {formatDate(p.deadline)}
-              </span>
+                                          <span className="deadline-pill">
+                                            Deadline: {formatDate(p.deadline)}
+                                          </span>
 
                                         <div className="status-dot-wrapper">
                                             <span className="status-sales-text">{resolveStatusLabel(p.status)}</span>
-                                            <span className={`dot ${resolveStatusDotColor(p.status)}`} />
+                                            <span className={`dot ${resolveStatusDotColor(p.status)}`}/>
                                         </div>
                                     </div>
                                 </div>
@@ -165,12 +135,10 @@ const Dashboard = ({ approve, analystsData, requested  }) => {
             )}
 
 
-
-
             {/* PROJECTS */}
 
             {approvedProject && approvedProject.length > 0 && (
-                <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+                <div style={{display: "flex", flexDirection: "column", gap: "12px"}}>
                     <h2 className="sales-section-title">Proiectele</h2>
 
                     <div className="projects-row">
@@ -188,8 +156,9 @@ const Dashboard = ({ approve, analystsData, requested  }) => {
                 </span>
 
                                             <div className="status-dot-wrapper">
-                                                <span className="status-sales-text">{resolveStatusLabel(p.status)}</span>
-                                                <span className={`dot ${resolveStatusDotColor(p.status)}`} />
+                                                <span
+                                                    className="status-sales-text">{resolveStatusLabel(p.status)}</span>
+                                                <span className={`dot ${resolveStatusDotColor(p.status)}`}/>
                                             </div>
                                         </div>
                                     </div>
@@ -219,7 +188,7 @@ const Dashboard = ({ approve, analystsData, requested  }) => {
             )}
 
 
-            {(approvedProject.length > 0 || requestedProject.length > 0) && <Calender />}
+            {(approvedProject.length > 0 || requestedProject.length > 0) && <Calender/>}
 
 
         </>

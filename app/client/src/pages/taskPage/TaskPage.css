@@ -820,6 +820,7 @@
     height: 10px;
     border-radius: 50%;
     display: inline-block;
+    background: #f8fafc;
 }
 
 .blue { background: #2563eb; }

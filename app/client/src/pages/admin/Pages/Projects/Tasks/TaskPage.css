@@ -726,7 +726,7 @@
 .analyst-dot {
     width: 10px;
     height: 10px;
-    background: #26c281; /* green example */
+    background: #e8e3ff; /* green example */
     border-radius: 50%;
 }
 
@@ -985,6 +985,7 @@
     height: 10px;
     border-radius: 50%;
     display: inline-block;
+    background: #e8e3ff;
 }
 
 .blue { background: #2563eb; }

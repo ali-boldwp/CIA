@@ -173,7 +173,7 @@ const Details = (
                         <div className="firstButton">
                             {responsible && (
                                 <div className="legend-item">
-                                    <span className="doted blue"></span>
+                                    <span className="doted" style={{ background: responsible.color }}></span>
                                     <span className="legend-text">
                         {getInitials(responsible.name)} - {responsible.name}
                                         (Responsabil)
@@ -187,7 +187,7 @@ const Details = (
                         {assigned.length > 0 ? (
                             assigned.map((a, i) => (
                                 <div className="legend-item" key={a._id}>
-                                    <span className={`doted ${legendColors[i + 1] || "green"}`}></span>
+                                    <span className={`doted`} style={{ background: a.color }}></span>
 
                                     <span className="legend-text">
                             {getInitials(a.name)} - {a.name}

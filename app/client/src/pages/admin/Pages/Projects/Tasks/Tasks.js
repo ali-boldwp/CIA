@@ -415,7 +415,7 @@ const ProjectTasks = ({
 
 
                 {showReviewPopup && (
-                    <ReviewPopUp onClose={() => setShowReviewPopup(false)} onAddObservation={handleAddObservation} />
+                    <ReviewPopUp onClose={() => setShowReviewPopup(false)} onAddObservation={handleAddObservation} observation={ Observation?.data } />
                 )}
 
                 {showEditingPopup && (
