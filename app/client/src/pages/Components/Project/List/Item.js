@@ -59,33 +59,46 @@ const Item = ({ data }) => {
                 className: "deadline-empty",
                 date: "—",
                 daysText: null,
-                daysClass: "",
+                isExpired: false,
             };
         }
 
+        // 🔒 Always work in UTC
         const today = new Date();
-        today.setHours(0, 0, 0, 0);
+        const todayUTC = new Date(
+            Date.UTC(
+                today.getUTCFullYear(),
+                today.getUTCMonth(),
+                today.getUTCDate()
+            )
+        );
 
         const d = new Date(deadline);
-        d.setHours(0, 0, 0, 0);
+        const deadlineUTC = new Date(
+            Date.UTC(
+                d.getUTCFullYear(),
+                d.getUTCMonth(),
+                d.getUTCDate()
+            )
+        );
 
-        const diffTime = d - today;
+        // 🔢 Difference in days (UTC safe)
+        const diffTime = deadlineUTC - todayUTC;
         const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
-        const day = String(d.getDate()).padStart(2, "0");
-        const month = String(d.getMonth() + 1).padStart(2, "0");
-        const year = d.getFullYear();
-
-        let daysClass = "deadline-blue";
-        if (diffDays < 0) daysClass = "deadline-red";
+        // 📅 Format date (UTC)
+        const day = String(d.getUTCDate()).padStart(2, "0");
+        const month = String(d.getUTCMonth() + 1).padStart(2, "0");
+        const year = d.getUTCFullYear();
 
         return {
             className: "deadline-date-simple",
             date: `${day}-${month}-${year}`,
-            daysText: `${diffDays} zile`,
-            daysClass,
+            daysText: diffDays < 0 ? null : `${diffDays} zile`,
+            isExpired: diffDays < 0,
         };
     };
+
 
 
 
@@ -119,17 +132,17 @@ const Item = ({ data }) => {
             {/* Deadline */}
             <div className="col deadline">
                 {(() => {
-                    const { className, date, daysText, daysClass } =
+                    const { className, date, daysText, isExpired } =
                         formatDeadline(data.deadline);
-
+                        const zile=isExpired ?"depășit":daysText;
                     return (
                         <div className={className}>
-                            <span className="deadline-date">{date}.{daysText}</span>
-
+                            <span className={isExpired ? `expired` : `deadline-date`}>{date}.{zile}</span>
                         </div>
                     );
                 })()}
             </div>
+
 
 
             {/* Progress */}
