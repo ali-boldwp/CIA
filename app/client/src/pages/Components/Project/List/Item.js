@@ -10,7 +10,7 @@ import {
 const HUMINT_OPTIONS = [
     { value: "Requested", label: "S-a solicitat HUMINT" },
     { value: "Approved", label: "Primit HUMINT" },
-    { value: "Clarification", label: "Predat HUMINT" },
+    { value: "Sent", label: "Predat HUMINT" },
 ];
 
 // ✅ HUMINT status UI mapping
@@ -26,7 +26,7 @@ const HUMINT_STATUS_UI = {
             fontSize: "12px",
         },
     },
-    Clarification: {
+    Sent: {
         text: "Predat HUMINT",
         style: {
             color: "#075985",
@@ -68,8 +68,9 @@ const Item = ({ data, refetchProjects }) => {
 
     // 👉 default status based on humintId
     const [humintStatus, setHumintStatus] = useState(
-        data?.humintId ? "requested" : "none"
+        data?.humintId?.status || "none"
     );
+
 
     const dropdownRef = useRef(null);
     // Mongo se humint status
@@ -129,7 +130,10 @@ const Item = ({ data, refetchProjects }) => {
         setHumintStatus(value);
         setOpen(false);
 
+
+
         let apiPromise;
+
 
         if (value === "Requested") {
             apiPromise = submitHumint(humintId).unwrap();
@@ -137,9 +141,15 @@ const Item = ({ data, refetchProjects }) => {
         else if (value === "Approved") {
             apiPromise = approveHumint(humintId).unwrap();
         }
-        else if (value === "Clarification") {
+        else if (value === "Sent") {
             apiPromise = sentHumint(humintId).unwrap();
         }
+
+        if (!apiPromise) {
+            toast.error("Invalid status selected");
+            return;
+        }
+
 
         toast.promise(apiPromise, {
             pending: "Updating HUMINT status...",
