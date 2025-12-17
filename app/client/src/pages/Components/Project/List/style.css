@@ -39,10 +39,10 @@
     color:#0C4A6E;
     border-radius: 30px;
     background: #BFE2FF;
-    font-weight: bold;
+    font-weight: 800;
     padding: 6px 10px;
     border:1px solid #E9F5FF;
-    font-size: 10pt;
+    font-size: 10pt !important;
 }
 .expired {
     color:#0C4A6E;
