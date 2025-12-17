@@ -14,7 +14,7 @@ const ReviewPopUp = ({
                          onReturnWithNotes,
                          onAddObservation,
                          isLoading = false,
-                         observation
+                         observation = []
                      }) => {
 
     console.log( observation )
