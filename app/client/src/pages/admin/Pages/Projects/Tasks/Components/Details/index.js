@@ -53,20 +53,29 @@ const Details = (
                         </p>
                         {status.status !== "finished" &&   (
                         <div className="buttons-row">
+
                             {(user?.role === "admin" || user?.role === "manager" || user?.role === "analyst") && (
                                 <>
-                                    {user?.role === "admin" || user?.role === "manager" ? (
-                                        // ADMIN & MANAGER BUTTON
-                                        <button
-                                            className="btn finalize"
-                                            onClick={
-                                                isFinalizedLocal
-                                                    ? () => setShowReviewPopup(true)
-                                                    : () => handleFinalize("revision")
+                                    { ( user?.role === "admin" || user?.role === "manager" ) ? (
+
+                                        <>
+                                            {
+                                                project.status !== "finished" ?
+                                                    <button
+                                                        className="btn finalize"
+                                                        onClick={
+                                                            isFinalizedLocal
+                                                                ? () => setShowReviewPopup(true)
+                                                                : () => handleFinalize("revision")
+                                                        }
+                                                    >
+                                                        {isFinalizedLocal ? "Revision" : "✔ Finalizează"}
+                                                    </button> : <></>
                                             }
-                                        >
-                                            {isFinalizedLocal ? "Revision" : "✔ Finalizează"}
-                                        </button>
+                                        </>
+
+                                        // ADMIN & MANAGER BUTTON
+
                                     ) : (
                                         // ANALYST BUTTON
                                         <>
