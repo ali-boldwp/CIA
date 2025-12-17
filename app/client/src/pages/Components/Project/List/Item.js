@@ -58,22 +58,35 @@ const Item = ({ data }) => {
             return {
                 className: "deadline-empty",
                 date: "—",
-                status: null,
+                daysText: null,
+                daysClass: "",
             };
         }
 
-        const d = new Date(deadline);
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
 
-        const day = String(d.getUTCDate()).padStart(2, "0");
-        const month = String(d.getUTCMonth() + 1).padStart(2, "0");
-        const year = d.getUTCFullYear();
+        const d = new Date(deadline);
+        d.setHours(0, 0, 0, 0);
+
+        const diffTime = d - today;
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+        const day = String(d.getDate()).padStart(2, "0");
+        const month = String(d.getMonth() + 1).padStart(2, "0");
+        const year = d.getFullYear();
+
+        let daysClass = "deadline-blue";
+        if (diffDays < 0) daysClass = "deadline-red";
 
         return {
             className: "deadline-date-simple",
-            date: `${day}.${month}.${year}`,
-            status: null,
+            date: `${day}-${month}-${year}`,
+            daysText: `${diffDays} zile`,
+            daysClass,
         };
     };
+
 
 
 
@@ -106,15 +119,18 @@ const Item = ({ data }) => {
             {/* Deadline */}
             <div className="col deadline">
                 {(() => {
-                    const { className, date, status } = formatDeadline(data.deadline);
+                    const { className, date, daysText, daysClass } =
+                        formatDeadline(data.deadline);
+
                     return (
-                        <span className={className}>
-                            <span className="deadline-date">{date}</span>
-                            {status && <span className="deadline-status">• {status}</span>}
-                        </span>
+                        <div className={className}>
+                            <span className="deadline-date">{date}.{daysText}</span>
+
+                        </div>
                     );
                 })()}
             </div>
+
 
             {/* Progress */}
             <div className="colProgress progress" style={{ gap: "10px" }}>
