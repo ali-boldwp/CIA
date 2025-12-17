@@ -7,6 +7,56 @@ const HUMINT_OPTIONS = [
     { value: "delivered", label: "Predat HUMINT" },
 ];
 
+// ✅ HUMINT status UI mapping
+const HUMINT_STATUS_UI = {
+    Requested: {
+        text: "S-a solicitat HUMINT",
+        style: {
+            color: "#92400E",
+            backgroundColor: "#FFFBEB",
+            border: "1px solid #F59E0B",
+            fontStyle: "italic",
+            fontWeight: 700,
+            fontSize: "12px",
+        },
+    },
+    Clarification: {
+        text: "Predat HUMINT",
+        style: {
+            color: "#075985",
+            backgroundColor: "#E0F2FE",
+            border: "1px solid #0EA5E9",
+            fontStyle: "italic",
+            fontWeight: 700,
+            fontSize: "12px",
+        },
+    },
+    Approved: {
+        text: "Primit HUMINT",
+        style: {
+            color: "#166534",
+            backgroundColor: "#ECFDF5",
+            border: "1px solid #22C55E",
+            fontStyle: "italic",
+            fontWeight: 700,
+            fontSize: "12px",
+        },
+    },
+};
+
+const HUMINT_DEFAULT_UI = {
+    text: "Nu s-a solicitat HUMINT",
+    style: {
+        color: "#334155",
+        backgroundColor: "#F8FAFC",
+        border: "1px solid #CBD5E1",
+        fontStyle: "italic",
+        fontWeight: 700,
+        fontSize: "12px",
+    },
+};
+
+
 const Item = ({ data }) => {
     const [open, setOpen] = useState(false);
 
@@ -16,6 +66,14 @@ const Item = ({ data }) => {
     );
 
     const dropdownRef = useRef(null);
+    // Mongo se humint status
+    const mongoHumintStatus = data?.humintId?.status;
+
+// UI select
+    const humintUI = mongoHumintStatus
+        ? (HUMINT_STATUS_UI[mongoHumintStatus] || HUMINT_DEFAULT_UI)
+        : HUMINT_DEFAULT_UI;
+
     const chatId = data.groupChatId;
 
     // Sync if data changes
@@ -160,15 +218,21 @@ const Item = ({ data }) => {
             </div>
 
             {/* ✅ Status HUMINT column (based on humintId) */}
+            {/* ✅ Status HUMINT (dynamic from Mongo) */}
             <div className="col status">
-    <span
-        className={`status-badge-approved ${
-            hasHumint ? "orange" : "gray"
-        }`}
-    >
-        {hasHumint ? "S-a solicitat HUMINT" : "Nu s-a solicitat HUMINT"}
-    </span>
+  <span
+      className="status-badge-approved"
+      style={{
+          ...humintUI.style,
+          padding: "4px 10px",
+          borderRadius: "999px",
+          display: "inline-block",
+      }}
+  >
+    {humintUI.text}
+  </span>
             </div>
+
 
             {/* ACTIONS + HUMINT DROPDOWN */}
             <div
