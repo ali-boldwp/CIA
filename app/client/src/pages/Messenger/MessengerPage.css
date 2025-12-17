@@ -231,7 +231,7 @@
     overflow-y: hidden !important;
 }
 .card {
-    background: #f9fafb;
+    background: #FFF;
     border-radius: 4px;
     padding: 0;
     box-sizing: border-box;
@@ -362,8 +362,8 @@
 .chat {
     display: flex;
     flex-direction: column;
-    gap: 10px;
-    height: 85vh;
+    gap: 12px;
+    height: 100%;
 }
 
 /* NEW: header row like screenshot */
@@ -371,10 +371,12 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
+    background: #F8FAFF;
+    padding: 12px;
+    border-bottom: 1px solid #e5e7eb;
 }
 
 .chat-header-left {
-    padding:10px;
     display: flex;
     align-items: center;
     gap: 10px;
@@ -651,7 +653,7 @@
     max-width: 70%;
     padding: 10px 14px;
     margin: 8px;
-    border-radius: 10px;
+    border-radius: 4px;
     position: relative;
     display: flex;
     flex-direction: column;
