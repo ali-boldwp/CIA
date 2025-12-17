@@ -86,6 +86,14 @@ export const approveHumint = async (id: string, managerId: string) => {
     );
 };
 
+export const sentHumint = async (id: string, managerId: string) => {
+    return await Humint.findByIdAndUpdate(
+        id,
+        { status: "Sent", managerId },
+        { new: true }
+    );
+};
+
 export const rejectHumint = async (id: string, feedback: string, managerId: string) => {
     return await Humint.findByIdAndUpdate(
         id,
