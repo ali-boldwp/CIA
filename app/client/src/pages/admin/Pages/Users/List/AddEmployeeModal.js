@@ -338,7 +338,7 @@ const AddEmployeeModal = ({ isOpen, sectionKey, editData, onClose }) => {
                                 ? "Se salvează..."
                                 : editData
                                     ? "Actualizează"
-                                    : "Salvează"}
+                                    : "Salveaza angajat"}
                         </button>
                     </div>
                 </form>
