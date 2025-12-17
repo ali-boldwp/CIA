@@ -208,12 +208,16 @@ const CreateProject = ({ data, main }) => {
     // DROPDOWN HANDLERS
     // ============================
     const toggleAnalyst = (id) => {
+
+        if (id === responsible) return;
+
         if (selectedAnalysts.includes(id)) {
             setSelectedAnalysts(selectedAnalysts.filter((a) => a !== id));
         } else {
             setSelectedAnalysts([...selectedAnalysts, id]);
         }
     };
+
 
     // ============================
     // FILE HANDLERS
@@ -690,18 +694,19 @@ const CreateProject = ({ data, main }) => {
                                 <div className="dropdown-list">
                                     {analystOptions.map((a) => (
                                         <label
-                                            className="checkbox-item"
+                                            className={`checkbox-item ${
+                                                a.id === responsible ? "disabled" : ""
+                                            }`}
                                             key={a.id}
                                         >
-                                            <input
+
+                                        <input
                                                 type="checkbox"
-                                                checked={selectedAnalysts.includes(
-                                                    a.id
-                                                )}
-                                                onChange={() =>
-                                                    toggleAnalyst(a.id)
-                                                }
+                                                checked={selectedAnalysts.includes(a.id)}
+                                                disabled={a.id === responsible}
+                                                onChange={() => toggleAnalyst(a.id)}
                                             />
+
                                             {a.name}
                                         </label>
                                     ))}
@@ -962,11 +967,6 @@ const CreateProject = ({ data, main }) => {
 
                     {/* SAVE BUTTON */}
                     <div className="button-row">
-                        <button className="draftProject" onClick={handleDraft} disabled={isCreating}>
-                            Salvează draft
-                        </button>
-
-
 
                         <button
                             className="createProject"
@@ -975,6 +975,14 @@ const CreateProject = ({ data, main }) => {
                         >
                             {isCreating ? "Se creează..." : (id ? "Creează proiect nou" : "Creează proiect nou")}
                         </button>
+
+                        <button className="draftProject" onClick={handleDraft} disabled={isCreating}>
+                            Salvează draft
+                        </button>
+
+
+
+
 
                     </div>
 
