@@ -3,7 +3,7 @@ import {Link} from "react-router-dom";
 
 import "./style.css";
 
-const ProjectList = ({ data, header = false }) => {
+const ProjectList = ({ data, header = false, refetchProjects }) => {
 
     console.log( data )
 
@@ -28,9 +28,14 @@ const ProjectList = ({ data, header = false }) => {
                         <span style={{ textAlign: "right !important" }}>Acțiuni</span>
                     </div>
                     <div className="projects-list">
-                        { data.map((project, index) => (
-                            <Item data={ project } key={ index }/>
+                        {data.map((project) => (
+                            <Item
+                                key={project._id}
+                                data={project}
+                                refetchProjects={refetchProjects}
+                            />
                         ))}
+
                     </div>
                 </div>
             </div>
