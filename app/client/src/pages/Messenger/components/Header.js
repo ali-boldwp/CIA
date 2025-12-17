@@ -1,29 +1,19 @@
 import React, {useEffect, useState} from "react";
 import "../MessengerPage.css";
 import socket from "../../../socket";
-import { useGetMessagesQuery, useSendMessageMutation, useGetAuditLogsQuery } from "../../../services/messageApi";
+import { useSendMessageMutation } from "../../../services/messageApi";
 import {useGetAllUsersQuery} from "../../../services/userApi";
 import {
-    FiDownload,
-    FiSettings,
     FiSearch,
-    FiHash,
-    FiUsers,
-    FiMessageCircle,
-    FiPlus,
     FiUserPlus,
-    FiUserMinus,
     FiTrash2,
-    FiAlertTriangle,
     FiVolumeX,
     FiArchive,
     FiPaperclip,
     FiSend,
-    FiShield,
     FiLogOut,
 } from "react-icons/fi";
 import {
-    useGetMyChatsQuery,
     useRemoveMemberMutation,
     useLeaveGroupMutation,
     useDeleteGroupMutation,
@@ -34,23 +24,22 @@ import {
 }
     from "../../../services/chatApi";
 import {FaThumbtack} from "react-icons/fa6";
-import {Link, useNavigate,useParams} from "react-router-dom";
+import {Link, useNavigate, useParams} from "react-router-dom";
 import styles from "../../Manager/Components/Team/Team.module.css";
 import './popup.css'
 import {toast} from "react-toastify";
 import {useSelector} from "react-redux";
+import Sidebar from "./Sidebar";
 
-function Header() {
-    return (
-        <div className="Mheader">
-            <h2 className="header-title">💬 Messenger — Toți / Grupuri / DM</h2>
-        </div>
-    );
-}
 
-const MessengerPage = ({chatID}) => {
+const MessengerPage = ({
+    chatID,
+    data,
+    chats,
+    refetchChats
+}) => {
 
-    const {id:ChatID}=useParams();
+    const {id: ChatID} = useParams();
     const { user, loading } = useSelector((state) => state.auth);
 
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -71,7 +60,6 @@ const MessengerPage = ({chatID}) => {
     const [pinChat] = usePinChatMutation();
 
 
-
     const [chat, setChat] = useState(ChatID);
 
 
@@ -83,15 +71,7 @@ const MessengerPage = ({chatID}) => {
     const [text, setText] = useState("");
     const [sendMessage] = useSendMessageMutation();
     const [markSeen] = useMarkSeenMutation();
-    const {data, isLoading} = useGetMessagesQuery(chat, {skip: chat === "open"});
-    const {data: chats, isLoading: chatsLoading , refetch: refetchChats} = useGetMyChatsQuery();
-    const {
-        data: auditData,
-        isLoading: auditLoading,
-        isError: auditError
-    } = useGetAuditLogsQuery(chat, {
-        skip: !chat || chat === "open"
-    });
+
 
 
     const currentChat = chats?.data?.find(c => c._id === chat) || null;
@@ -108,7 +88,7 @@ const MessengerPage = ({chatID}) => {
             try {
 
                 console.log("API RESPONSE:", data.data);
-                setOldMessage(data?.data  || []);
+                setOldMessage(data?.data || []);
                 setProjectFiles(data?.projectFiles || []);
                 console.log("Messages:", oldmessage);
 
@@ -135,7 +115,8 @@ const MessengerPage = ({chatID}) => {
                     // update UI after marking seen
                     msg.seenBy = [...(msg.seenBy || []), currentUserId];
 
-                } catch (e) {}
+                } catch (e) {
+                }
             }
         });
 
@@ -162,8 +143,6 @@ const MessengerPage = ({chatID}) => {
 
         navigate(`/messenger/${ID}`);
     };
-
-
 
 
     const currentUser = JSON.parse(localStorage.getItem("user"));
@@ -253,7 +232,7 @@ const MessengerPage = ({chatID}) => {
         const newValue = !participant?.muted;
 
         try {
-            await muteChat({ chatId: chat, mute: newValue }).unwrap();
+            await muteChat({chatId: chat, mute: newValue}).unwrap();
             await refetchChats();
 
             if (newValue) toast("Conversația a fost mutată!");
@@ -270,7 +249,7 @@ const MessengerPage = ({chatID}) => {
         const newValue = !currentChat?.isPinned;
 
         try {
-            await pinChat({ chatId: chat, pin: newValue }).unwrap();
+            await pinChat({chatId: chat, pin: newValue}).unwrap();
 
             if (newValue) toast("Chat fixat în partea de sus!");
             else toast("Chatul a fost desfăcut din pin!");
@@ -339,167 +318,22 @@ const MessengerPage = ({chatID}) => {
     return (
         <div className="app-bg">
             <div className="app-shell">
-                <Header/>
-
-                {/* top toolbar */}
-                <div className="toolbar">
-                    <div className="toolbar-left">
-                        <div className="input-with-icon">
-                            <FiSearch className="input-search-icon"/>
-                            <input
-                                className="input search-input"
-                                placeholder="Caută în mesaje..."
-                                value={searchTerm}
-                                onChange={(e) => setSearchTerm(e.target.value)}
-                            />
-                        </div>
-                    </div>
-
-                    <div className="toolbar-center">
-                        <div className="toolbar-pill-group">
-                            <button
-                                className={`pill pill-unique ${chatFilter === "all" ? "pill-active" : ""}`}
-                                onClick={() => setChatFilter("all")}
-                            >
-                                Toți
-                            </button>
-                            <button
-                                className={`pill pill-unique ${chatFilter === "groups" ? "pill-active" : ""}`}
-                                onClick={() => setChatFilter("groups")}
-                            >
-                                Grupuri
-                            </button>
-                            <button
-                                className={`pill pill-unique ${chatFilter === "dm" ? "pill-active" : ""}`}
-                                onClick={() => setChatFilter("dm")}
-                            >
-                                DM
-                            </button>
-                            {/*<button className="pill">*/}
-                            {/*    <FiHash className="pill-icon"/>*/}
-                            {/*    Serie butoane*/}
-                            {/*</button>*/}
-                            <Link to="/messenger/new" className="pill">
-                                <FiPlus className="pill-icon" />
-                                Creează grup
-                            </Link>
-                            {/*<button className="pill">*/}
-                            {/*    <FiUserMinus className="pill-icon"/>*/}
-                            {/*    Elimină din grup*/}
-                            {/*</button>*/}
-                            <button onClick={handleDeleteGroup} className="pill pill-danger">
-                                {/*<FiTrash2 className="pill-icon" />*/}
-                                🗑️ Șterge grup
-                            </button>
-                        </div>
-                    </div>
-
-                    <div className="toolbar-right">
-                        <button className="pill pill-warning">
-                            {/*<FiShield className="pill-icon" />*/}
-                            Permisiuni doar Manager
-                        </button>
-                    </div>
-                </div>
 
                 {/* 3-column body */}
                 <div className="body">
-                    {/* LEFT: conversations */}
-                    <aside className="sidebar-left card">
-                        <div className="sidebar-left-header">
-                            <div>
-                                <div className="label-muted">Conversații</div>
-                                <div className="label-small">Pinned</div>
-                            </div>
-                        </div>
 
-                        <div className="conversation-list">
-                            {chatFilter === "all" && (
-                                <div
-                                    className={
-                                        "conversation-item" +
-                                        (chat === 'open' ? " conversation-item-active" : "")
-                                    }
-                                    onClick={() => setChat('open')}
-                                >
-                                    <div className="conversation-avatar"/>
-                                    <div className="conversation-main">
-                                        <div className="conversation-name">General</div>
-                                        <div className="conversation-sub">
-                                            Toate conversațiile
-                                        </div>
-                                    </div>
-                                    <div className="conversation-meta">
-                                        <span className="dot green"/>
-                                        <span className="dot orange"/>
-                                        <span className="dot red"/>
-                                    </div>
-                                </div>
-                            )}
+                    <Sidebar
+                        chatFilter={chatFilter}
+                        chat={chat}
+                        setChat={setChat}
+                        filteredChats={filteredChats}
+                        user={user}
+                        openChat={openChat}
+                        setChatFilter={setChatFilter}
+                        searchTerm={searchTerm}
+                        setSearchTerm={setSearchTerm}
+                    />
 
-                            {
-                                filteredChats.map((c) => {
-                                    const otherUser = c.participants?.find(
-                                        p => p?._id !== user?._id
-                                    );
-                                    return(
-
-                                    <div
-                                        className={
-                                            "conversation-item" +
-                                            (c._id === chat ? " conversation-item-active" : "")
-                                        }
-                                        key={c._id}
-                                        onClick={() => openChat(c._id)}
-                                    >
-                                        <div className="conversation-avatar" />
-
-                                        <div className="conversation-main">
-                                            <div className="conversation-name">
-                                                {c.isGroup
-                                                    ? c.groupName?.length > 17
-                                                        ? c.groupName.slice(0, 17) + "..."
-                                                        : c.groupName
-                                                    : otherUser?.name
-                                                        ? otherUser.name.length > 15
-                                                            ? otherUser.name.slice(0, 15) + "..."
-                                                            : otherUser.name
-                                                        : ","
-                                                }
-
-                                                {c.isPinned && (
-                                                    <FaThumbtack className="sidebar-pin-icon" />
-                                                )}
-                                            </div>
-
-
-
-                                            <div className="conversation-sub">
-                                                {c.lastMessage?.text
-                                                    ? c.lastMessage.text.length > 15
-                                                        ? c.lastMessage.text.slice(0, 15) + "..."
-                                                        : c.lastMessage.text
-                                                    : "No messages yet"}
-                                            </div>
-
-                                        </div>
-                                        <div className="conversation-meta">
-                                            {c.unreadCount > 0 && (
-                                                <span className="unread-badge">{c.unreadCount}</span>
-                                            )}
-                                        </div>
-                                    </div>
-                                )})
-                            }
-
-                            {filteredChats.length === 0 && (
-                                <div className="label-small" style={{ padding: "10px" }}>
-                                    Nicio conversație găsită
-                                </div>
-                            )}
-
-                        </div>
-                    </aside>
 
                     {/* CENTER: chat */}
                     <main className="chat card">
@@ -510,34 +344,33 @@ const MessengerPage = ({chatID}) => {
                                 <div className="chat-tags">
 
                                     {/* PIN BUTTON */}
-                                    <span className="tag tag-pin" onClick={handlePin} style={{ cursor: "pointer" }}>
-    <span className="tag-icon">
-        <FaThumbtack style={{ color: currentChat?.isPinned ? "red" : "gray" }} />
-    </span>
+                                    <span className="tag tag-pin" onClick={handlePin} style={{cursor: "pointer"}}>
+                                        <span className="tag-icon">
+                                            <FaThumbtack style={{color: currentChat?.isPinned ? "red" : "gray"}}/>
+                                        </span>
                                         {currentChat?.isPinned ? "Pinned" : "Pin"}
-</span>
+                                    </span>
 
 
                                     {/* MUTE BUTTON */}
                                     <span
                                         className="tag tag-mute"
                                         onClick={handleMute}
-                                        style={{ cursor: "pointer" }}
+                                        style={{cursor: "pointer"}}
                                     >
-    <FiVolumeX
-        className="tag-icon"
-        style={{ color: currentChat?.isMuted ? "orange" : "gray" }}
-    />
+                                        <FiVolumeX
+                                            className="tag-icon"
+                                            style={{color: currentChat?.isMuted ? "orange" : "gray"}}
+                                        />
                                         {currentChat?.isMuted ? "Muted" : "Mute"}
-</span>
-
+                                    </span>
 
 
                                     {/* Archive — (if needed later) */}
                                     <span className="tag tag-archive">
-        <FiArchive className="tag-icon" />
-        Archive
-    </span>
+                                        <FiArchive className="tag-icon"/>
+                                        Archive
+                                    </span>
                                 </div>
 
                             </div>
@@ -565,7 +398,7 @@ const MessengerPage = ({chatID}) => {
                                 {projectFiles.map((file, index) => (
                                     <div key={index} className="attachment-card">
                                         <div className="attachment-name">
-                                            <FiPaperclip className="attachment-icon" />
+                                            <FiPaperclip className="attachment-icon"/>
                                             {file.split("/").pop()}
                                         </div>
 
@@ -609,7 +442,6 @@ const MessengerPage = ({chatID}) => {
                                     </div>
                                 );
                             })}
-
 
 
                             {filterMessages(messages).map((msg, i) => {
@@ -670,15 +502,17 @@ const MessengerPage = ({chatID}) => {
                     <aside className="sidebar-right card">
                         <div className="sidebar-right-section">
                             <div className="rightCreateGroup">
-                            <div>
-                            <div className="section-title">Detalii conversație</div>
-                            <div className="section-subtitle">Membri ({chats?.data?.find(c => c._id === chat)?.participants?.length || 0})</div>
-                            </div>
+                                <div>
+                                    <div className="section-title">Detalii conversație</div>
+                                    <div className="section-subtitle">Membri
+                                        ({chats?.data?.find(c => c._id === chat)?.participants?.length || 0})
+                                    </div>
+                                </div>
                                 <button
                                     className="pill"
                                     onClick={() => setIsModalOpen(true)}
                                 >
-                                    <FiUserPlus className="pill-icon" />
+                                    <FiUserPlus className="pill-icon"/>
                                     Adaugă în grup
                                 </button>
 
@@ -738,7 +572,7 @@ const MessengerPage = ({chatID}) => {
 
                         </div>
 
-                        <div className="sidebar-right-section">
+                        {/*<div className="sidebar-right-section">
                             <div className="section-subtitle">Log audit</div>
 
                             <ul className="audit-list">
@@ -764,7 +598,7 @@ const MessengerPage = ({chatID}) => {
                                     </li>
                                 ))}
                             </ul>
-                        </div>
+                        </div>*/}
 
 
                         <div className="sidebar-right-footer">
