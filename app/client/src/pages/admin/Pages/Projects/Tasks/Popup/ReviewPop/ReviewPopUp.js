@@ -14,7 +14,11 @@ const ReviewPopUp = ({
                          onReturnWithNotes,
                          onAddObservation,
                          isLoading = false,
+                         observation
                      }) => {
+
+    console.log( observation )
+
     const [notes, setNotes] = useState(
         observationsText ||
         ""
@@ -98,6 +102,21 @@ const ReviewPopUp = ({
                 <p className={styles.infoText}>
                     Analistul nu mai poate edita sau retrage lucrarea în această etapă.
                 </p>
+
+                <ul style={{
+                    margin: '0 auto',
+                    paddingLeft: '20px',
+                    fontSize: '14px',
+                    fontWeight: 600,
+                    color: '#6b7280',
+                    marginBottom: '10px'
+                }}>
+                    {
+                        observation.map( observationItem => (
+                            <li> { observationItem.text } </li>
+                        ))
+                    }
+                </ul>
 
                 {/* Manager actions */}
                 <div className={styles.section}>

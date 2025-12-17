@@ -223,7 +223,7 @@ const Chapter = ({
                                     {/* Analyst + Time */}
                                     <div className="col col-analyst">
                                         <div className="col-analyst2">
-                                            <span className="analyst-dot" />
+                                            <span className="analyst-dot" style={{ background: task.analyst?.color }} />
 
                                             <span className="analyst-label">
                                                 {getInitials(task.analyst?.name)} • {formatTime(task.totalSeconds)}
