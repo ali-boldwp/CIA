@@ -63,6 +63,14 @@ export const humintApi = createApi({
             }),
         }),
 
+        // update by dropdown
+        sentHumint: builder.mutation({
+            query: (id) => ({
+                url: `/humint/${id}/sent`,
+                method: "PATCH",
+            }),
+        }),
+
         // ---------------------------------
         // MANAGER: REJECT
         // ---------------------------------
@@ -134,6 +142,7 @@ export const {
     useUpdateHumintMutation,
     useSubmitHumintMutation,
     useApproveHumintMutation,
+    useSentHumintMutation,
     useRejectHumintMutation,
     useClarificationHumintMutation,
     useCompleteHumintMutation,

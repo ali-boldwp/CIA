@@ -1,10 +1,16 @@
 import { Link } from "react-router-dom";
 import { useRef, useState, useEffect } from "react";
+import { toast } from "react-toastify";
+import {
+    useSubmitHumintMutation,
+    useApproveHumintMutation,
+    useSentHumintMutation,
+} from "../../../../services/humintApi";
 
 const HUMINT_OPTIONS = [
-    { value: "requested", label: "S-a solicitat HUMINT" },
-    { value: "received",  label: "Primit HUMINT" },
-    { value: "delivered", label: "Predat HUMINT" },
+    { value: "Requested", label: "S-a solicitat HUMINT" },
+    { value: "Approved", label: "Primit HUMINT" },
+    { value: "Clarification", label: "Predat HUMINT" },
 ];
 
 // ✅ HUMINT status UI mapping
@@ -57,7 +63,7 @@ const HUMINT_DEFAULT_UI = {
 };
 
 
-const Item = ({ data }) => {
+const Item = ({ data, refetchProjects }) => {
     const [open, setOpen] = useState(false);
 
     // 👉 default status based on humintId
@@ -69,6 +75,11 @@ const Item = ({ data }) => {
     // Mongo se humint status
     const mongoHumintStatus = data?.humintId?.status;
 
+    const [submitHumint] = useSubmitHumintMutation();
+    const [approveHumint] = useApproveHumintMutation();
+    const [sentHumint] = useSentHumintMutation();
+
+
 // UI select
     const humintUI = mongoHumintStatus
         ? (HUMINT_STATUS_UI[mongoHumintStatus] || HUMINT_DEFAULT_UI)
@@ -78,12 +89,9 @@ const Item = ({ data }) => {
 
     // Sync if data changes
     useEffect(() => {
-        if (data?.humintId) {
-            setHumintStatus("requested");
-        } else {
-            setHumintStatus("none");
-        }
-    }, [data?.humintId]);
+        setHumintStatus(data?.humintId?.status || "none");
+    }, [data?.humintId?.status]);
+
 
     // Click outside closes dropdown
     useEffect(() => {
@@ -108,9 +116,49 @@ const Item = ({ data }) => {
 
     // ✅ HUMINT dropdown selection handler (still keeps internal state, but button text hard-coded)
     const handleSelectHumint = (value) => {
+        const humintId =
+            typeof data?.humintId === "string"
+                ? data.humintId
+                : data?.humintId?._id;
+
+        if (!humintId) {
+            toast.error("HUMINT ID missing");
+            return;
+        }
+
         setHumintStatus(value);
         setOpen(false);
+
+        let apiPromise;
+
+        if (value === "Requested") {
+            apiPromise = submitHumint(humintId).unwrap();
+        }
+        else if (value === "Approved") {
+            apiPromise = approveHumint(humintId).unwrap();
+        }
+        else if (value === "Clarification") {
+            apiPromise = sentHumint(humintId).unwrap();
+        }
+
+        toast.promise(apiPromise, {
+            pending: "Updating HUMINT status...",
+            success: "HUMINT status updated ",
+            error: "Failed to update status ",
+        });
+
+        // ✅ YAHI PAR TABLE REFRESH
+        apiPromise.then(() => {
+            refetchProjects?.();
+        });
+
+        // ❌ error case me rollback
+        apiPromise.catch(() => {
+            setHumintStatus(data?.humintId?.status || "none");
+        });
     };
+
+
     const formatDeadline = (deadline) => {
         if (!deadline) {
             return {
