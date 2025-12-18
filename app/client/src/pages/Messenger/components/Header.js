@@ -383,7 +383,13 @@ const MessengerPage = ({
                                     placeholder="Caută în conversație..."
                                     value={messageSearch}
                                     onChange={(e) => setMessageSearch(e.target.value)}
+                                    style={{ paddingLeft: '30px' }}
                                 />
+                                <div className={ 'option-dots' }>
+                                    <div></div>
+                                    <div></div>
+                                    <div></div>
+                                </div>
                             </div>
 
                         </div>
@@ -499,7 +505,7 @@ const MessengerPage = ({
                     </main>
 
                     {/* RIGHT: details */}
-                    <aside className="sidebar-right card">
+                    <aside className="sidebar-right card"  style={{ maxWidth: '350px' }}>
                         <div className="sidebar-right-section">
                             <div className="rightCreateGroup">
                                 <div>
@@ -518,27 +524,23 @@ const MessengerPage = ({
 
                             </div>
                             <div className="member-list">
-                                <div className="member-list">
-                                    {getParticipants().map((member, i) => (
-                                        <div className="member-row" key={i}>
+                                {getParticipants().map((member, i) => (
+                                    <div className="member-row" key={i}>
 
-                                            <div className={"member-avatar member-avatar-" + (i % 10)}/>
+                                        <div className={"member-avatar member-avatar-" + (i % 10)}/>
 
-                                            <div className="member-name">{member.name}</div>
+                                        <div className="member-name">{member.name}</div>
 
-                                            <div className="member-controls">
-                                                <button
-                                                    className={styles.deleteBtn}
-                                                    onClick={() => handleRemoveMember(member.id)}
-                                                >
-                                                    🗑 Șterge
-                                                </button>
-                                            </div>
+                                        <div className="member-controls">
+                                            <button
+                                                className={styles.deleteBtn}
+                                                onClick={() => handleRemoveMember(member.id)}
+                                            >
+                                                🗑 Șterge
+                                            </button>
                                         </div>
-                                    ))}
-                                </div>
-
-
+                                    </div>
+                                ))}
                             </div>
                         </div>
 
@@ -611,7 +613,7 @@ const MessengerPage = ({
                             </button>
 
                             <button
-                                className="btn-outline full-width"
+                                className="btn-outline full-width remove"
                                 onClick={handleDeleteGroup}
                             >
                                 <FiTrash2 className="btn-icon"/>

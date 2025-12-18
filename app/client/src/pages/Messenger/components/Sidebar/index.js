@@ -17,7 +17,7 @@ const Sidebar = ({
     return (
         <>
             {/* LEFT: conversations */}
-            <aside className="sidebar-left card">
+            <aside className="sidebar-left card" style={{ width: '320px' }}>
 
                 <div className="toolbar">
 
@@ -29,6 +29,7 @@ const Sidebar = ({
                                 placeholder="Caută în mesaje..."
                                 value={searchTerm}
                                 onChange={(e) => setSearchTerm(e.target.value)}
+                                style={{ paddingLeft: '30px' }}
                             />
                         </div>
                     </div>

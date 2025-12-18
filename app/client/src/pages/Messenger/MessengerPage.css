@@ -1,13 +1,20 @@
 /* background */
 .app-bg {
-    overflow:hidden;
+    overflow:auto;
     box-sizing: border-box;
     font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    max-height: 100%;
+    display: flex;
+    flex-grow: 1;
+    width: 100%;
+    flex-direction: column;
+    height: 100%;
 }
 
 /* main white card */
 .app-shell {
     width: 100%;
+    flex: 1;
 }
 
 /* header */
@@ -35,7 +42,7 @@
 /* basic buttons / inputs */
 .btn-primary,
 .btn-outline {
-    border-radius: 10px;
+    border-radius: 4px;
     padding: 2px 18px;
     font-size: 12px;
     font-weight: bold;
@@ -48,9 +55,9 @@
 
 .btn-primary {
     border: none;
-    padding: 8px 18px;
+    padding: 12px 24px;
     /* top: #6D28D9, bottom: #14B8A6 */
-    background: linear-gradient(to bottom, #6D28D9, #14B8A6);
+    background: #2563eb;
     color: #ffffff;
 }
 
@@ -73,10 +80,10 @@
 
 
 .input {
-    border-radius: 999px;
+    border-radius: 4px;
     border: 1px solid #e5e7eb;
-    padding: 7px 25px;
-    font-size: 13px;
+    padding: 12px 14px;
+    font-size: 12px;
     outline: none;
     background: #f9fafb;
 }
@@ -106,6 +113,9 @@
 .input-with-icon {
     position: relative;
     width: 100%;
+    border-radius: 4px;
+    gap: 20px;
+    align-items: center;
 }
 
 .input-with-icon .input {
@@ -115,7 +125,7 @@
 
 .input-search-icon {
     position: absolute;
-    left: 0;
+    left: 10px;
     top: 50%;
     transform: translateY(-50%);
     font-size: 14px;
@@ -128,15 +138,11 @@
     align-items: center;
     justify-content: space-between;
     gap: 12px;
-    padding-block: 12px;
-    /*margin-bottom: 8px;*/
     background: #F8FAFF;
-    padding-inline: 12px 24px;
-    height: 45px;
     border-bottom: 1px solid #e5e7eb;
     border-top-left-radius: 4px;
     border-top-right-radius: 4px;
-    height: 45px;
+    padding: 12px;
 }
 
 .toolbar-left {
@@ -176,6 +182,11 @@
     justify-content: center;
     gap: 2px;
     border-radius: 16px;
+}
+
+.rightCreateGroup button.pill {
+    background: #2563eb;
+    color: #FFF;
 }
 
 .pill-active {
@@ -223,12 +234,15 @@
 
 /* layout body */
 .body {
-    display: grid;
-    grid-template-columns: 260px minmax(0, 1.4fr) 280px;
-    gap: 14px;
+    gap: 12px;
     align-items: stretch;
-    height:85vh;
+    height:100%;
     overflow-y: hidden !important;
+    max-height: 100%;
+    display: flex;
+    flex-grow: 1;
+    width: 100%;
+    flex-direction: row;
 }
 .card {
     background: #FFF;
@@ -236,7 +250,7 @@
     padding: 0;
     box-sizing: border-box;
     border: 1px solid #e5e7eb;
-    height: 100%;
+    /*height: 100%;*/
     display: flex;
     flex-direction: column;
     gap: 12px;
@@ -362,8 +376,9 @@
 .chat {
     display: flex;
     flex-direction: column;
-    gap: 12px;
-    height: 100%;
+    gap: 0;
+    /*height: 100%;*/
+    flex-grow: 1;
 }
 
 /* NEW: header row like screenshot */
@@ -426,6 +441,7 @@
 
 .chat-search-wrapper {
     max-width: 230px;
+    display: flex;
 }
 
 .chat-search {
@@ -442,7 +458,7 @@
 
 .attachment-card {
     background: #ffffff;
-    border-radius: 12px;
+    border-radius: 4px;
     padding: 8px 10px;
     min-width: 120px;
     border: 1px solid #e5e7eb;
@@ -468,13 +484,10 @@
 .chat-messages {
     flex: 1;
     background: #ffffff;
-    border-radius: 16px;
-    padding: 16px;
-    border: 1px solid #e5e7eb;
+    padding: 24px;
     display: flex;
     flex-direction: column;
     overflow: auto;
-    height: 10vh !important;
 }
 .chat-messages::-webkit-scrollbar {
     width: 5px;
@@ -506,8 +519,9 @@
 .chat-composer {
     display: flex;
     align-items: center;
-    gap: 10px;
-    margin-top: 6px;
+    gap: 12px;
+    padding: 12px;
+    border-top: 1px solid #e5e7eb;
 }
 
 .chat-composer-left {
@@ -527,6 +541,7 @@
 /* right sidebar */
 .sidebar-right-section + .sidebar-right-section {
     margin-top: 8px;
+    padding: 12px;
 }
 
 .section-title {
@@ -537,7 +552,7 @@
 }
 
 .section-subtitle {
-    font-size: 12px;
+    font-size: 10px;
     font-weight: 600;
     margin-bottom: 6px;
     color: gray;
@@ -549,6 +564,7 @@
     gap: 6px;
     height:32vh;
     overflow-y:auto ;
+    padding: 12px;
 }
 
 
@@ -647,8 +663,16 @@
     justify-content: space-between;
     width:100%;
     align-items: center;
-    padding:10px 2px;
+    padding: 12px;
+    background: #F8FAFF;
+    border-bottom: 1px solid #e5e7eb;
 }
+
+.sidebar-right-section {
+    display: flex;
+    flex-direction: column;
+}
+
 .chat-bubble {
     max-width: 70%;
     padding: 10px 14px;
@@ -734,9 +758,28 @@
 }
 .sidebar-right-footer {
     display: flex;
-    gap: 6px;
     position: absolute;
     bottom:15px;
+    padding: 12px;
+    gap: 12px;
+    width: 100%;
+    padding-bottom: 0;
+}
+
+.sidebar-right-footer > button {
+    width: 100%;
+    background: #64748B;
+    color: #FFF;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 400;
+    padding: 12px 14px;
+}
+
+.sidebar-right-footer > button.remove {
+    background: linear-gradient(135deg, #ef4444, #f87171);
 }
 
 .floating-user-tag {
@@ -830,4 +873,34 @@
     .sidebar-left {
         order: -1;
     }
+}
+/* height chain must allow children to shrink */
+.app-bg,
+.app-shell,
+.body,
+.chat,
+.sidebar-left,
+.sidebar-right{
+    min-height: 0;
+}
+
+/* in a flex-row, allow columns to shrink horizontally too */
+.chat,
+.sidebar-left,
+.sidebar-right{
+    min-width: 0;
+}
+
+.option-dots {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    cursor: pointer;
+}
+
+.option-dots > div {
+    height: 6px;
+    width: 6px;
+    background: rgba(55, 62, 85, 0.71);
+    border-radius: 50px;
 }
