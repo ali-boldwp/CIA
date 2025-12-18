@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
 import "../MessengerPage.css";
 import socket from "../../../socket";
-import { useSendMessageMutation } from "../../../services/messageApi";
+import { useSendMessageMutation ,useDownloadFileMutation } from "../../../services/messageApi";
 import {useGetAllUsersQuery} from "../../../services/userApi";
 import {
     FiSearch,
@@ -58,6 +58,7 @@ const MessengerPage = ({
     const [deleteGroup] = useDeleteGroupMutation();
     const [muteChat] = useMuteChatMutation();
     const [pinChat] = usePinChatMutation();
+    const [downloadFile] = useDownloadFileMutation();
 
 
     const [chat, setChat] = useState(ChatID);
@@ -314,6 +315,27 @@ const MessengerPage = ({
         );
     };
 
+    const handleDownload = async (file) => {
+        try {
+            const blob = await downloadFile(file).unwrap();
+
+            // 🔥 AUTO DOWNLOAD
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement("a");
+
+            a.href = url;
+            a.download = file; // filename
+            document.body.appendChild(a);
+            a.click();
+
+            a.remove();
+            window.URL.revokeObjectURL(url);
+
+        } catch (error) {
+            console.error("Download failed", error);
+        }
+    };
+
 
     return (
         <div className="app-bg">
@@ -402,22 +424,28 @@ const MessengerPage = ({
                             {/* attachments row */}
                             <div className="chat-attachments">
                                 {projectFiles.map((file, index) => (
-                                    <div key={index} className="attachment-card">
+                                    <div
+                                        style={{cursor:"pointer"}}
+                                        key={index}
+                                        className="attachment-card attachment-clickable"
+                                        onClick={() => handleDownload(file)}
+                                    >
                                         <div className="attachment-name">
-                                            <FiPaperclip className="attachment-icon"/>
-                                            {file.split("/").pop()}
+                                            <FiPaperclip className="attachment-icon" />
+                                            {file}
                                         </div>
 
-                                        <a
-                                            href={`${process.env.REACT_APP_API_URL}/${file}`}
-                                            target="_blank"
-                                            className="attachment-sub"
-                                        >
-                                            PreviewF
-                                        </a>
+                                        <div className="attachment-sub">
+                                            Download
+                                        </div>
                                     </div>
                                 ))}
                             </div>
+
+
+
+
+
                             {filterMessages(oldmessage).map((msg, i) => {
                                 const isMe = msg.sender?._id === currentUserId;
                                 const hasSeen = msg.seenBy?.some(uid => uid !== currentUserId);

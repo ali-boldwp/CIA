@@ -35,11 +35,20 @@ export const messageApi = createApi({
             ],
         }),
 
+        downloadFile: builder.mutation({
+            query: (filename) => ({
+                url: `/download/${filename}`,
+                method: "GET",
+                responseHandler: (response) => response.blob(),
+            }),
+        }),
+
     }),
 });
 
 export const {
     useGetAuditLogsQuery,
     useSendMessageMutation,
-    useGetMessagesQuery
+    useGetMessagesQuery,
+    useDownloadFileMutation,
 } = messageApi;
