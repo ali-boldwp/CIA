@@ -581,10 +581,16 @@ const Index = () => {
                                             type="checkbox"
                                             className={styles.checkboxSquare}
                                             checked={contractDone}
-                                            onChange={() =>
-                                                setContractDone(!contractDone)
-                                            }
+                                            onChange={(e) => {
+                                                const checked = e.target.checked;
+                                                setContractDone(checked);
+
+                                                if (!checked) {
+                                                    setContractNumber("");
+                                                }
+                                            }}
                                         />
+
                                     </span>
                                         <input
                                             className={`${styles.input} ${errors.contractNumber ? styles.inputError : ''}`}
@@ -612,10 +618,17 @@ const Index = () => {
                                             type="checkbox"
                                             className={styles.checkboxSquare}
                                             checked={annexDone}
-                                            onChange={() =>
-                                                setAnnexDone(!annexDone)
-                                            }
+                                            onChange={(e) => {
+                                                const checked = e.target.checked;
+                                                setAnnexDone(checked);
+
+
+                                                if (!checked) {
+                                                    setAnnexNumber("");
+                                                }
+                                            }}
                                         />
+
                                     </span>
                                         <input
                                             className={`${styles.input} ${errors.annexNumber ? styles.inputError : ''}`}
