@@ -96,9 +96,13 @@ const Sidebar = ({
 
                     {
                         filteredChats.map((c) => {
-                            const otherUser = c.participants?.find(
-                                p => p?._id !== user?._id
-                            );
+                            const dmNames = JSON.parse(localStorage.getItem("dmNames") || "{}");
+
+                            const otherUser = c.participants?.find(p => p?._id !== user?._id);
+
+
+                            const dmName = otherUser?.name || dmNames[c._id] || "DM";
+
                             return(
 
                                 <div
@@ -114,20 +118,13 @@ const Sidebar = ({
                                     <div className="conversation-main">
                                         <div className="conversation-name">
                                             {c.isGroup
-                                                ? c.groupName?.length > 17
-                                                    ? c.groupName.slice(0, 17) + "..."
-                                                    : c.groupName
-                                                : otherUser?.name
-                                                    ? otherUser.name.length > 15
-                                                        ? otherUser.name.slice(0, 15) + "..."
-                                                        : otherUser.name
-                                                    : ","
+                                                ? (c.groupName?.length > 17 ? c.groupName.slice(0, 17) + "..." : c.groupName)
+                                                : (dmName.length > 15 ? dmName.slice(0, 15) + "..." : dmName)
                                             }
 
-                                            {c.isPinned && (
-                                                <FaThumbtack className="sidebar-pin-icon" />
-                                            )}
+                                            {c.isPinned && <FaThumbtack className="sidebar-pin-icon" />}
                                         </div>
+
 
 
 
