@@ -49,15 +49,25 @@ const UserTable = ({ mode = "single" }) => {
     const isRowSelected = (id) =>
         mode === "group" && selectedIds.includes(id);
 
-    const startSingleChat = async (id) => {
+    const startSingleChat = async (id, name) => {
         try {
             const res = await createDirectChat(id).unwrap();
             const chat = res?.data || res;
-            if (chat?._id) navigate(`/messenger/${chat._id}`);
+
+            if (chat?._id) {
+                // ✅ save chatId -> name mapping
+                const prev = JSON.parse(localStorage.getItem("dmNames") || "{}");
+                prev[chat._id] = name;
+                localStorage.setItem("dmNames", JSON.stringify(prev));
+
+                navigate(`/messenger/${chat._id}`);
+            }
         } catch (err) {
             console.error(err);
         }
     };
+
+
 
     // 🔵 CONFIRM GROUP CREATE
     const confirmCreateGroup = async () => {
@@ -161,12 +171,12 @@ const UserTable = ({ mode = "single" }) => {
                                     <td>
                                         <button
                                             disabled={isCreatingDirect}
-                                            onClick={() =>
-                                                startSingleChat(id)
-                                            }
+                                            onClick={() => startSingleChat(id, user.name)}
                                         >
                                             Start Chat
                                         </button>
+
+
                                     </td>
                                 )}
                             </tr>
