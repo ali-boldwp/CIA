@@ -811,6 +811,13 @@
     transform: rotate(35deg);
 }
 
+.chat-loading {
+    text-align: center;
+    padding: 8px;
+    font-size: 13px;
+    color: #888;
+}
+
 
 /* Shimmer animation */
 @keyframes skeleton-loading {

@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useState ,useRef} from "react";
 import "../MessengerPage.css";
 import socket from "../../../socket";
 import { useSendMessageMutation ,useDownloadFileMutation } from "../../../services/messageApi";
@@ -50,6 +50,8 @@ const MessengerPage = ({
 
     const [addMembersToGroup] = useAddMembersToGroupMutation();
 
+    const messagesRef = useRef(null);
+    const messagesEndRef = useRef(null);
 
     const navigate = useNavigate();
     const {data: allUsers} = useGetAllUsersQuery();
@@ -67,6 +69,10 @@ const MessengerPage = ({
     const [searchTerm, setSearchTerm] = useState("");
     const [messages, setMessages] = useState([]);
     const [oldmessage, setOldMessage] = useState([]);
+    const [loadingOlder, setLoadingOlder] = useState(false);
+    const [hasMore, setHasMore] = useState(true);
+
+
     const [messageSearch, setMessageSearch] = useState(""); // ✅ ADD THIS
 
     const [text, setText] = useState("");
@@ -90,6 +96,7 @@ const MessengerPage = ({
 
                 console.log("API RESPONSE:", data.data);
                 setOldMessage(data?.data || []);
+                setHasMore(true);
                 setProjectFiles(data?.projectFiles || []);
                 console.log("Messages:", oldmessage);
 
@@ -144,6 +151,56 @@ const MessengerPage = ({
 
         navigate(`/messenger/${ID}`);
     };
+
+    const loadOlderMessages = async () => {
+        if (!oldmessage.length || loadingOlder || !hasMore) return;
+
+        setLoadingOlder(true);
+
+        try {
+            const oldestId = oldmessage[0]._id;
+
+            const res = await fetch(
+                `http://localhost:4000/api/v1/chats/${ChatID}/messages?before=${oldestId}&limit=100`,
+                {
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem("token")}`,
+                    },
+                }
+            );
+
+            const result = await res.json();
+
+            if (result.data.length > 0) {
+                setOldMessage(prev => [...result.data, ...prev]);
+            } else {
+                setHasMore(false);
+            }
+        } catch (e) {
+            console.error(e);
+        } finally {
+            setLoadingOlder(false);
+        }
+    };
+
+
+
+    useEffect(() => {
+        if (oldmessage.length > 0) {
+            messagesEndRef.current?.scrollIntoView({ behavior: "auto" });
+        }
+    }, [oldmessage]);
+
+
+    useEffect(() => {
+        if (messages.length > 0) {
+            messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+        }
+    }, [messages]);
+
+
+
+
 
 
     const currentUser = JSON.parse(localStorage.getItem("user"));
@@ -418,14 +475,29 @@ const MessengerPage = ({
 
 
                         {/* messages area */}
-                        <div className="chat-messages">
+                        <div
+                            className="chat-messages"
+                            ref={messagesRef}
+                            onScroll={() => {
+                                if (!messagesRef.current) return;
 
+                                // ✅ top reached → load older
+                                if (messagesRef.current.scrollTop === 0) {
+                                    loadOlderMessages();
+                                }
+                            }}
+                        >
+                            {loadingOlder && (
+                                <div className="chat-loading">
+                                    Older messages loading...
+                                </div>
+                            )}
 
                             {/* attachments row */}
                             <div className="chat-attachments">
                                 {projectFiles.map((file, index) => (
                                     <div
-                                        style={{cursor:"pointer"}}
+                                        style={{ cursor: "pointer" }}
                                         key={index}
                                         className="attachment-card attachment-clickable"
                                         onClick={() => handleDownload(file)}
@@ -434,83 +506,75 @@ const MessengerPage = ({
                                             <FiPaperclip className="attachment-icon" />
                                             {file}
                                         </div>
-
-                                        <div className="attachment-sub">
-                                            Download
-                                        </div>
+                                        <div className="attachment-sub">Download</div>
                                     </div>
                                 ))}
                             </div>
-
-
-
-
 
                             {filterMessages(oldmessage).map((msg, i) => {
                                 const isMe = msg.sender?._id === currentUserId;
                                 const hasSeen = msg.seenBy?.some(uid => uid !== currentUserId);
 
-
                                 return (
-                                    <div key={i} className={`chat-bubble ${isMe ? "me" : "other"}`}>
+                                    <div key={msg._id || i} className={`chat-bubble ${isMe ? "me" : "other"}`}>
                                         <div className="bubble-text">{msg.text}</div>
 
                                         <div className="bubble-footer">
-                <span className="bubble-name">
-                    {isMe ? "Me" : msg.sender?.name}
-                </span>
+                    <span className="bubble-name">
+                        {isMe ? "Me" : msg.sender?.name}
+                    </span>
 
                                             <span className="bubble-time">
-                    {new Date(msg.createdAt).toLocaleTimeString([], {
-                        hour: "2-digit",
-                        minute: "2-digit"
-                    })}
-                </span>
+                        {new Date(msg.createdAt).toLocaleTimeString([], {
+                            hour: "2-digit",
+                            minute: "2-digit"
+                        })}
+                    </span>
 
                                             {isMe && (
                                                 <span className="bubble-seen">
-                        {hasSeen ? "Seen" : "Sent"}
-                    </span>
+                            {hasSeen ? "Seen" : "Sent"}
+                        </span>
                                             )}
                                         </div>
                                     </div>
                                 );
                             })}
-
 
                             {filterMessages(messages).map((msg, i) => {
                                 const isMe = msg.sender === currentUserId;
                                 const hasSeen = msg.seenBy?.some(uid => uid !== currentUserId);
 
-
                                 return (
-                                    <div key={i} className={`chat-bubble ${isMe ? "me" : "other"}`}>
+                                    <div key={msg._id || `live-${i}`} className={`chat-bubble ${isMe ? "me" : "other"}`}>
                                         <div className="bubble-text">{msg.text}</div>
 
                                         <div className="bubble-footer">
-                <span className="bubble-name">
-                    {isMe ? "Me" : msg.senderName}
-                </span>
+                    <span className="bubble-name">
+                        {isMe ? "Me" : msg.senderName}
+                    </span>
 
                                             <span className="bubble-time">
-                    {new Date(msg.createdAt).toLocaleTimeString([], {
-                        hour: "2-digit",
-                        minute: "2-digit"
-                    })}
-                </span>
+                        {new Date(msg.createdAt).toLocaleTimeString([], {
+                            hour: "2-digit",
+                            minute: "2-digit"
+                        })}
+                    </span>
 
                                             {isMe && (
                                                 <span className="bubble-seen">
-                        {hasSeen ? "Seen" : "Sent"}
-                    </span>
+                            {hasSeen ? "Seen" : "Sent"}
+                        </span>
                                             )}
                                         </div>
                                     </div>
                                 );
                             })}
 
-
+                            {/* ✅ bottom anchor */}
+                            <div ref={messagesEndRef} />
                         </div>
+
 
                         {/* composer */}
                         <div className="chat-composer">

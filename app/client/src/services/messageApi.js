@@ -21,12 +21,16 @@ export const messageApi = createApi({
 
 
         getMessages: builder.query({
-            query: (chatId) => ({
+            query: ({ chatId, limit = 100, before }) => ({
                 url: `/chats/${chatId}/messages`,
                 method: "GET",
+                params: {
+                    limit,
+                    ...(before && { before }),
+                },
             }),
-            providesTags: ["Messages"],
         }),
+
 
         getAuditLogs: builder.query({
             query: (chatId) => `/audit-logs/${chatId}`,
