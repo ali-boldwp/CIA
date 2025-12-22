@@ -1,7 +1,7 @@
-import React, {useEffect, useState ,useRef} from "react";
+import React, {useEffect, useState, useRef} from "react";
 import "../MessengerPage.css";
 import socket from "../../../socket";
-import { useSendMessageMutation ,useDownloadFileMutation } from "../../../services/messageApi";
+import {useSendMessageMutation, useDownloadFileMutation} from "../../../services/messageApi";
 import {useGetAllUsersQuery} from "../../../services/userApi";
 import {
     FiSearch,
@@ -33,14 +33,14 @@ import Sidebar from "./Sidebar";
 
 
 const MessengerPage = ({
-    chatID,
-    data,
-    chats,
-    refetchChats
-}) => {
+                           chatID,
+                           data,
+                           chats,
+                           refetchChats
+                       }) => {
 
     const {id: ChatID} = useParams();
-    const { user, loading } = useSelector((state) => state.auth);
+    const {user, loading} = useSelector((state) => state.auth);
 
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedMembers, setSelectedMembers] = useState([]);
@@ -73,12 +73,11 @@ const MessengerPage = ({
     const [hasMore, setHasMore] = useState(true);
 
 
-    const [messageSearch, setMessageSearch] = useState(""); // ✅ ADD THIS
+    const [messageSearch, setMessageSearch] = useState("");
 
     const [text, setText] = useState("");
     const [sendMessage] = useSendMessageMutation();
     const [markSeen] = useMarkSeenMutation();
-
 
 
     const currentChat = chats?.data?.find(c => c._id === chat) || null;
@@ -161,7 +160,7 @@ const MessengerPage = ({
             const oldestId = oldmessage[0]._id;
 
             const res = await fetch(
-                `http://localhost:4000/api/v1/chats/${ChatID}/messages?before=${oldestId}&limit=100`,
+                `${process.env.REACT_APP_API_BASE_URL}/chats/${ChatID}/messages?before=${oldestId}&limit=100`,
                 {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -184,23 +183,18 @@ const MessengerPage = ({
     };
 
 
-
     useEffect(() => {
         if (oldmessage.length > 0) {
-            messagesEndRef.current?.scrollIntoView({ behavior: "auto" });
+            messagesEndRef.current?.scrollIntoView({behavior: "auto"});
         }
     }, [oldmessage]);
 
 
     useEffect(() => {
         if (messages.length > 0) {
-            messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+            messagesEndRef.current?.scrollIntoView({behavior: "smooth"});
         }
     }, [messages]);
-
-
-
-
 
 
     const currentUser = JSON.parse(localStorage.getItem("user"));
@@ -233,6 +227,8 @@ const MessengerPage = ({
             return user ? {id: user._id, name: user.name} : null;
         }).filter(Boolean);
     };
+
+
     const handleRemoveMember = async (userId) => {
         try {
             await removeMember({
@@ -316,6 +312,9 @@ const MessengerPage = ({
             toast.error("Eroare: nu s-a putut modifica pin-ul.");
         }
     };
+
+
+
     const handleAddMembers = async () => {
         if (selectedMembers.length === 0) {
             toast.error("Select at least one member!");
@@ -462,9 +461,9 @@ const MessengerPage = ({
                                     placeholder="Caută în conversație..."
                                     value={messageSearch}
                                     onChange={(e) => setMessageSearch(e.target.value)}
-                                    style={{ paddingLeft: '30px' }}
+                                    style={{paddingLeft: '30px'}}
                                 />
-                                <div className={ 'option-dots' }>
+                                <div className={'option-dots'}>
                                     <div></div>
                                     <div></div>
                                     <div></div>
@@ -480,30 +479,30 @@ const MessengerPage = ({
                             ref={messagesRef}
                             onScroll={() => {
                                 if (!messagesRef.current) return;
-
-                                // ✅ top reached → load older
+                                
                                 if (messagesRef.current.scrollTop === 0) {
                                     loadOlderMessages();
                                 }
                             }}
                         >
                             {loadingOlder && (
-                                <div className="chat-loading">
-                                    Older messages loading...
+                                <div className="chat-loading-messages">
+                                    <div className="spinner"></div>
                                 </div>
                             )}
+
 
                             {/* attachments row */}
                             <div className="chat-attachments">
                                 {projectFiles.map((file, index) => (
                                     <div
-                                        style={{ cursor: "pointer" }}
+                                        style={{cursor: "pointer"}}
                                         key={index}
                                         className="attachment-card attachment-clickable"
                                         onClick={() => handleDownload(file)}
                                     >
                                         <div className="attachment-name">
-                                            <FiPaperclip className="attachment-icon" />
+                                            <FiPaperclip className="attachment-icon"/>
                                             {file}
                                         </div>
                                         <div className="attachment-sub">Download</div>
@@ -546,7 +545,8 @@ const MessengerPage = ({
                                 const hasSeen = msg.seenBy?.some(uid => uid !== currentUserId);
 
                                 return (
-                                    <div key={msg._id || `live-${i}`} className={`chat-bubble ${isMe ? "me" : "other"}`}>
+                                    <div key={msg._id || `live-${i}`}
+                                         className={`chat-bubble ${isMe ? "me" : "other"}`}>
                                         <div className="bubble-text">{msg.text}</div>
 
                                         <div className="bubble-footer">
@@ -572,7 +572,7 @@ const MessengerPage = ({
                             })}
 
                             {/* ✅ bottom anchor */}
-                            <div ref={messagesEndRef} />
+                            <div ref={messagesEndRef}/>
                         </div>
 
 
@@ -597,7 +597,7 @@ const MessengerPage = ({
                     </main>
 
                     {/* RIGHT: details */}
-                    <aside className="sidebar-right card"  style={{ maxWidth: '350px' }}>
+                    <aside className="sidebar-right card" style={{maxWidth: '350px'}}>
                         <div className="sidebar-right-section">
                             <div className="rightCreateGroup">
                                 <div>
