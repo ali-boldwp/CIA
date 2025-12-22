@@ -17,6 +17,7 @@ import analystExpanseRoutes from "./analystExpanse.routes";
 import humintExpanseRoutes from "./humintExpanse.routes";
 import auditLogRoutes from "./auditLog.routes";
 import fileRoute from "./file.route";
+import categoryRoutes from "./category.routes";
 
 const router = Router();
 
@@ -37,6 +38,7 @@ router.use("/observation" , observationRoutes);
 router.use("/analyst" , analystExpanseRoutes);
 router.use("/humint-expanse", humintExpanseRoutes);
 router.use("/audit-logs" , auditLogRoutes);
-router.use("/download", fileRoute)
+router.use("/download", fileRoute);
+router.use("/category" , categoryRoutes)
 
 export default router;
