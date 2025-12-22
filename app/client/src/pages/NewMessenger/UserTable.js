@@ -172,6 +172,7 @@ const UserTable = ({ mode = "single" }) => {
                                         <button
                                             disabled={isCreatingDirect}
                                             onClick={() => startSingleChat(id, user.name)}
+                                            className={styles.bulkActionBtn}
                                         >
                                             Start Chat
                                         </button>
@@ -197,11 +198,11 @@ const UserTable = ({ mode = "single" }) => {
             {showPopup && (
                 <div className={styles.popupOverlay}>
                     <div className={styles.popup}>
-                        <h4>Create group</h4>
+                        <h4>Creează un grup</h4>
 
                         <input
                             type="text"
-                            placeholder="Enter group name"
+                            placeholder="Introdu numele grupului"
                             value={groupName}
                             onChange={(e) =>
                                 setGroupName(e.target.value)
@@ -215,7 +216,7 @@ const UserTable = ({ mode = "single" }) => {
                                 onClick={() => setShowPopup(false)}
                                 className={styles.popupCancel}
                             >
-                                Cancel
+                                Anulează
                             </button>
 
                             <button
@@ -223,11 +224,9 @@ const UserTable = ({ mode = "single" }) => {
                                 disabled={
                                     !groupName.trim() || isCreatingGroup
                                 }
-                                className={styles.popupConfirm}
+                                className={styles.bulkActionBtn}
                             >
-                                {isCreatingGroup
-                                    ? "Creating..."
-                                    : "Create"}
+                                {isCreatingGroup ? "Se creează..." : "Creează"}
                             </button>
                         </div>
                     </div>
