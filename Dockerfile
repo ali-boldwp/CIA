@@ -36,40 +36,30 @@
 # Base image
 FROM node:20-alpine
 
-# Create and set working directory
+# Create app directory
 WORKDIR /app
 
-# Copy project files
+# Copy entire project
 COPY ./ ./
 
-# -----------------------------
-# Install server dependencies
-# -----------------------------
+# ===== Install server deps =====
 WORKDIR /app/server
 RUN npm ci
 
-# -----------------------------
-# Install client dependencies
-# -----------------------------
+# ===== Install client deps =====
 WORKDIR /app/client
 RUN npm ci
 
-# -----------------------------
-# Build client
-# -----------------------------
-# Create .env for React build
+# ===== Build React frontend =====
+# Set env for build
 RUN printf "REACT_APP_AUTH_API=https://cia.devregion.com/api/v1/auth\nREACT_APP_API_BASE_URL=https://cia.devregion.com/api/v1\n" > .env
 
 RUN npm run build
 
-# -----------------------------
-# Move built frontend into server
-# -----------------------------
+# ===== Move frontend build into server =====
 RUN cp -r /app/client/build /app/server/public
 
-# -----------------------------
-# Final server config
-# -----------------------------
+# ===== Final setup =====
 WORKDIR /app/server
 
 EXPOSE 4000
