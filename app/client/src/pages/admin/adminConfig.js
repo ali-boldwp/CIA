@@ -18,6 +18,7 @@ import HumentRequestView from "./Pages/Humint/View";
 import RequestProject from "./Pages/Projects/Request/New";
 import Users from "./Pages/Users";
 import UsersList from "./Pages/Users/List";
+import Categories from "./Pages/Categories";
 import Profile from "./Pages/Profile";
 
 const AdminConfig = {
@@ -129,7 +130,15 @@ const AdminConfig = {
                             element: <UsersList />
                         }
                     ]
-                }
+                },
+                {
+                    path: 'categories',
+                    element: <Categories />,
+                    children: [
+                        {
+                       element: <Categories />,
+                  } ]
+                },
             ]
         }
     ]
