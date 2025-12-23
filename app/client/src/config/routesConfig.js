@@ -11,6 +11,7 @@ import SalesConfig from "../pages/Sales/salesConfig";
 import NotFound from "../pages/Components/404";
 import Messenger from "../pages/Messenger/Messenger";
 import NewMessenger from "../pages/NewMessenger/NewMessenger";
+import Profile from "../pages/Profile";
 
 // 1) All configs together
 const allRouteConfigs = [

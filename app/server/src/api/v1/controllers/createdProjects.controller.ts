@@ -197,6 +197,8 @@ export const getAllProjects = async (req: Request, res: Response, next: NextFunc
     // pagination
     let page  = parseInt(req.query.page as string, 10) || 1;
     let limit = parseInt(req.query.limit as string, 10) || 10;
+    let statusParam = req.query.status as string | undefined;
+
     if (page < 1) page = 1;
     if (limit < 1) limit = 1;
 
@@ -206,23 +208,54 @@ export const getAllProjects = async (req: Request, res: Response, next: NextFunc
     const onlyWithoutHumint = req.query.onlyWithoutHumint === "true";
 
     // -------- ROLE FILTER ----------
-    let roleFilter: any;
+    let roleFilter: any = {};
+
+// -------- ROLE BASE ----------
     if (user.role === "sales") {
+
+        // default statuses for sales
+        let allowedStatuses = ["approved", "revision", "observation", "finished"];
+
+        // 👉 status query handling
+        if (statusParam && statusParam !== "all") {
+            allowedStatuses = [statusParam];
+        }
+
         roleFilter = {
             fromRequestId: user.id,
-            status: { $in: ["approved", "revision", "observation", "finished"] }
+            status: { $in: allowedStatuses }
         };
 
-    } else if (user.role === "analyst") {
+    }
+    else if (user.role === "analyst") {
+
         roleFilter = {
             responsibleAnalyst: user.id
         };
+
+        // analyst ke liye bhi status filter optional
+        if (statusParam && statusParam !== "all") {
+            roleFilter.status = statusParam;
+        }
+
     }
     else if (user.role === "admin" || user.role === "manager") {
-        roleFilter = {};      // no restriction
-    } else {
-        return res.status(403).json({ status: "error", message: "Forbidden" });
+
+        roleFilter = {};
+
+        // admin / manager → status filter optional
+        if (statusParam && statusParam !== "all") {
+            roleFilter.status = statusParam;
+        }
+
     }
+    else {
+        return res.status(403).json({
+            status: "error",
+            message: "Forbidden"
+        });
+    }
+
 
     // -------- SEARCH FILTER ----------
     let baseFilter: any = roleFilter;
