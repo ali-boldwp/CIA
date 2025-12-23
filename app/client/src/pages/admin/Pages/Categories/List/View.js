@@ -1,7 +1,7 @@
 import React, { useMemo, useState } from "react";
 import styles from "./Style.module.css";
 import Popup from "./Popup";
-import { useCreateCategoryMutation } from "../../../../services/categoryApi";
+import { useCreateCategoryMutation } from "../../../../../services/categoryApi";
 
 function View({ data, isError }) {
     const categories = data || [];
