@@ -44,7 +44,7 @@ COPY ./ ./
 
 # ===== Install server deps =====
 WORKDIR /app/server
-RUN npm ci
+RUN npm i
 
 # ===== Install client deps =====
 WORKDIR /app/client
