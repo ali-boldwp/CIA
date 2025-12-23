@@ -340,7 +340,7 @@ const MessengerPage = ({
                         <div className="chat-header">
                             {/* LEFT SIDE: title + tags on the same row */}
                             <div className="chat-header-left">
-                                <div className="chat-title">Grup: DD ABC</div>
+                                <div className="chat-title">{ currentChat?.groupName}</div>
                                 <div className="chat-tags">
 
                                     {/* PIN BUTTON */}
@@ -450,7 +450,7 @@ const MessengerPage = ({
                             })}
 
 
-                            {filterMessages(messages).map((msg, i) => {
+                            {/*{filterMessages(messages).map((msg, i) => {
                                 const isMe = msg.sender === currentUserId;
                                 const hasSeen = msg.seenBy?.some(uid => uid !== currentUserId);
 
@@ -479,7 +479,7 @@ const MessengerPage = ({
                                         </div>
                                     </div>
                                 );
-                            })}
+                            })}*/}
 
 
                         </div>

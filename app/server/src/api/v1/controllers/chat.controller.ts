@@ -49,7 +49,6 @@ export const getMyChats = async (req: Request, res: Response, next: NextFunction
         const userId = new Types.ObjectId((req as any).user.id);
 
         const chats = await Chat.aggregate([
-
             // Match only chats where user is a participant
             { $match: { "participants.user": userId } },
 
@@ -65,29 +64,89 @@ export const getMyChats = async (req: Request, res: Response, next: NextFunction
                     }
                 }
             },
-
             {
                 $addFields: {
-                    isPinned: {
-                        $arrayElemAt: ["$currentUserInfo.pinned", 0]
-                    }
+                    isPinned: { $arrayElemAt: ["$currentUserInfo.pinned", 0] }
                 }
             },
 
             // ------------------------------
-            // 🔥 UNREAD MESSAGE LOOKUP HERE
+            // ✅ POPULATE PARTICIPANTS (name, avatar, etc.)
+            // participants.user is string in your output, users._id is ObjectId
+            // ------------------------------
+            {
+                $addFields: {
+                    participantObjectIds: {
+                        $map: {
+                            input: "$participants",
+                            as: "p",
+                            in: { $toObjectId: "$$p.user" }
+                        }
+                    }
+                }
+            },
+            {
+                $lookup: {
+                    from: "users",
+                    let: { ids: "$participantObjectIds" },
+                    pipeline: [
+                        { $match: { $expr: { $in: ["$_id", "$$ids"] } } },
+                        { $project: { _id: 1, name: 1, avatar: 1 } }
+                    ],
+                    as: "participantUsers"
+                }
+            },
+            {
+                $addFields: {
+                    participants: {
+                        $map: {
+                            input: "$participants",
+                            as: "p",
+                            in: {
+                                $mergeObjects: [
+                                    "$$p",
+                                    {
+                                        user: {
+                                            $arrayElemAt: [
+                                                {
+                                                    $filter: {
+                                                        input: "$participantUsers",
+                                                        as: "u",
+                                                        cond: {
+                                                            $eq: ["$$u._id", { $toObjectId: "$$p.user" }]
+                                                        }
+                                                    }
+                                                },
+                                                0
+                                            ]
+                                        }
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                }
+            },
+            { $project: { participantUsers: 0, participantObjectIds: 0 } },
+
+            // ------------------------------
+            // 🔥 UNREAD MESSAGE LOOKUP
             // ------------------------------
             {
                 $lookup: {
                     from: "messages",
-                    let: { chatId: "$_id", userId: userId },
+                    let: { chatId: "$_id", userId: { $toObjectId: userId } },
                     pipeline: [
                         {
                             $match: {
                                 $expr: {
                                     $and: [
                                         { $eq: ["$chatId", "$$chatId"] },
+
+                                        // sender could be ObjectId; compare as ObjectId
                                         { $ne: ["$sender", "$$userId"] },
+
+                                        // seenBy is likely ObjectId[]
                                         { $not: { $in: ["$$userId", "$seenBy"] } }
                                     ]
                                 }
@@ -98,7 +157,6 @@ export const getMyChats = async (req: Request, res: Response, next: NextFunction
                     as: "unreadMessages"
                 }
             },
-
             {
                 $addFields: {
                     unreadCount: {
@@ -116,7 +174,6 @@ export const getMyChats = async (req: Request, res: Response, next: NextFunction
                     as: "lastMessage"
                 }
             },
-
             { $unwind: { path: "$lastMessage", preserveNullAndEmptyArrays: true } },
 
             // Sort: pinned → latest message
@@ -128,6 +185,7 @@ export const getMyChats = async (req: Request, res: Response, next: NextFunction
                 }
             }
         ]);
+
 
         return res.json({ success: true, data: chats });
 

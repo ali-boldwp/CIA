@@ -96,9 +96,11 @@ const Sidebar = ({
 
                     {
                         filteredChats.map((c) => {
+                            console.log( "c", c )
                             const otherUser = c.participants?.find(
                                 p => p?._id !== user?._id
                             );
+                            console.log( "otherUser", otherUser )
                             return(
 
                                 <div
@@ -121,7 +123,7 @@ const Sidebar = ({
                                                     ? otherUser.name.length > 15
                                                         ? otherUser.name.slice(0, 15) + "..."
                                                         : otherUser.name
-                                                    : ","
+                                                    : "....,"
                                             }
 
                                             {c.isPinned && (
