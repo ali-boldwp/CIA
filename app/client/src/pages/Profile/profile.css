@@ -64,3 +64,17 @@
     color: #16a34a;
     font-weight: 600;
 }
+.profile-avatar {
+    display: flex;
+    justify-content: start;
+    margin-bottom: 25px;
+}
+
+.profile-avatar img {
+    width: 150px;
+    height: 150px;
+    padding:10px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #e5e7eb;
+}
