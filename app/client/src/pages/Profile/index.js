@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import "./profile.css";
+import avator from '../../assets/avator-user.png'
 import {
     useGetMeQuery,
     useUpdateMyProfileMutation,
@@ -63,6 +64,14 @@ const Profile = ({data}) => {
             </div>
 
             <div className="settings-wrapper">
+                <div className="profile-avatar">
+                    <img
+                        src={
+                           avator
+                        }
+                        alt="User Avatar"
+                    />
+                </div>
                 <form className="settings-form" onSubmit={handleSubmit}>
                     <div className="form-row">
                         <label>Numele tău</label>
