@@ -45,18 +45,19 @@ function View({ data, isError }) {
                 <h3 className={styles.cardTitle}>
                     <span>Nume categorii</span>
                     <span className={styles.countText}>
-    {totalCategories} {totalCategories === 1 ? "categorie" : "categorii"}
+
+                        {totalCategories} {totalCategories === 1 ? "categorie" : "categorii"}
   </span>
                 </h3>
 
 
-                <button
-                    className={`${styles.pillBtn} ${styles.addBtn}`}
+                <span
+                    className={styles.addCategoryText}
                     onClick={() => setOpenAddModal(true)}
                 >
-                    <span className={styles.addIcon}>＋</span>
-                    <span>Adaugă categorie</span>
-                </button>
+  + Adaugă categorie
+</span>
+
             </div>
 
             {/* Errors */}
