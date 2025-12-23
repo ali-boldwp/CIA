@@ -43,12 +43,12 @@ function View({ data, isError }) {
             {/* Card 1 */}
             <div className={styles.topCard}>
                 <h3 className={styles.cardTitle}>
-                    Nume categorii{" "}
+                    <span>Nume categorii</span>
                     <span className={styles.countText}>
-            {totalCategories}{" "}
-                        {totalCategories === 1 ? "categorie" : "categorii"}
-          </span>
+    {totalCategories} {totalCategories === 1 ? "categorie" : "categorii"}
+  </span>
                 </h3>
+
 
                 <button
                     className={`${styles.pillBtn} ${styles.addBtn}`}
