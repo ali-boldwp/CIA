@@ -1,6 +1,7 @@
 import ProjectList from "../../../../Components/Project/List";
 import {useEffect, useState} from "react";
 import {useGetProjectsQuery} from "../../../../../services/projectApi";
+import { useGetMeQuery } from "../../../../../services/userApi";
 
 import Layout from "../../../../../layouts";
 import Header from "../../../Components/Header";
@@ -8,7 +9,7 @@ import Header from "../../../Components/Header";
 const ProjectsList = () => {
 
     const [ projects, setProjects ] = useState([]);
-
+    const { isLoading } = useGetMeQuery();
     const { data: projectsData, isLoading: projectsLoading } = useGetProjectsQuery({ });
 
     useEffect( () => {
@@ -35,7 +36,7 @@ const ProjectsList = () => {
                         content: <Header createProject={ true } />
                     }
                 }
-                loading={ projectsLoading }
+                loading={ isLoading }
                 content={ <ProjectList data={ projects } /> }
             />
 
