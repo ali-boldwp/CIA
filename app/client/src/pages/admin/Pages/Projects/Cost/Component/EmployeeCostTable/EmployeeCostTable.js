@@ -58,7 +58,7 @@ const EmployeeCostTable = ({ onAddCost, projectId, projectData, onTotalCostUpdat
                 analystName: analyst.name,
                 role: analyst.analystRole || analyst.role,
                 monthlySalary: analyst.monthlySalary || 0,
-                costPerHour: analyst.costPerHour || 0,
+                costPerHour: analyst.costPerHourEuro || 0,
                 costPerDay: analyst.costPerDay || 0,
                 hoursPerDay: analyst.hoursPerDay || 8,
                 bonus: analyst.bonus || 0,

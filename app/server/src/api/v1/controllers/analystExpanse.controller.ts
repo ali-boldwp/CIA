@@ -71,10 +71,28 @@ export const getProjectAnalystExpanse = async (req, res) => {
 
         const expanses = await analystExpanseService.getAnalystExpansesByProject(projectId);
 
+        const RON_TO_EUR = 0.20;
+
+        const updatedExpanses = expanses.map((exp) => {
+            const analyst = exp.analystId;
+
+            const costPerHourLei = analyst?.costPerHour || 0;
+            const costPerHourEuro = Number((costPerHourLei * RON_TO_EUR).toFixed(2));
+
+            return {
+                ...exp.toObject(),
+                analystId: {
+                    ...analyst.toObject(),
+                    costPerHourLei,
+                    costPerHourEuro
+                }
+            };
+        });
+
         res.json({
             success: true,
-            totalAnalysts: expanses.length,
-            expanses
+            totalAnalysts: updatedExpanses.length,
+            expanses: updatedExpanses
         });
 
     } catch (err) {
@@ -84,3 +102,4 @@ export const getProjectAnalystExpanse = async (req, res) => {
         });
     }
 };
+
