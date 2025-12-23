@@ -60,7 +60,7 @@ const Header = ({ children, search, logo, title, back = false }) => {
             </div>
             <div className="secSec">
                 {children}
-                <button className="icon-btn">
+                <Link to="/profile" className="icon-btn">
                     <span className="icon">
                         <svg xmlns="http://www.w3.org/2000/svg" width="12px" height="12px" viewBox="0 0 16 16"
                              fill="none">
@@ -72,7 +72,8 @@ const Header = ({ children, search, logo, title, back = false }) => {
                         </svg>
                     </span>
                     <span className="text">Utilizator</span>
-                </button>
+                </Link>
+
 
             </div>
 
