@@ -51,6 +51,16 @@ export const userApi = createApi({
             }),
             invalidatesTags: ["Users", "Analysts"],
         }),
+        getMe: builder.query({
+            query: () => "/users/me",
+        }),
+        updateMyProfile: builder.mutation({
+            query: (data) => ({
+                url: "/users/profile",
+                method: "PUT",
+                body: data,
+            }),
+        }),
     }),
 });
 
@@ -59,5 +69,7 @@ export const {
     useGetAnalystsQuery,
     useCreateUserMutation,
     useUpdateUserMutation,
-    useDeleteUserMutation
+    useDeleteUserMutation,
+    useUpdateMyProfileMutation,
+    useGetMeQuery,
 } = userApi;
