@@ -80,7 +80,7 @@ const Profile = () => {
                             type="password"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
-                            placeholder="Lasă necompletat dacă nu dorești să o schimbi"
+                            placeholder="Parolă"
                         />
                     </div>
 
@@ -90,6 +90,7 @@ const Profile = () => {
                             type="password"
                             value={confirmPassword}
                             onChange={(e) => setConfirmPassword(e.target.value)}
+                            placeholder="Confirmă parola"
                         />
                     </div>
 
