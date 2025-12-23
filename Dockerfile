@@ -1,33 +1,33 @@
-# FROM node:20-alpine
+FROM node:20-alpine
 
-# WORKDIR /app
+WORKDIR /app
 
-# # Copy entire app directory
-# COPY ./ /
+# Copy entire app directory
+COPY ./ /
 
-# RUN ls
+RUN ls
 
-# # Install dependencies (recommended: npm ci)
-# RUN npm run install:all
+# Install dependencies (recommended: npm ci)
+RUN npm run install:all
 
-# WORKDIR /app/client
+WORKDIR /app/client
 
-# RUN printf "REACT_APP_AUTH_API=https://cia.devregion.com/api/v1/auth\nREACT_APP_API_BASE_URL=https://cia.devregion.com/api/v1\n" > .env
+RUN printf "REACT_APP_AUTH_API=https://cia.devregion.com/api/v1/auth\nREACT_APP_API_BASE_URL=https://cia.devregion.com/api/v1\n" > .env
 
-# RUN ls
+RUN ls
 
-# # Build frontend if your workspace has a build script
-# RUN npm run build
+# Build frontend if your workspace has a build script
+RUN npm run build
 
-# RUN ls
+RUN ls
 
-# # Move frontend build into server folder (adjust target as you need)
-# # RUN cp -r build ../server/build
+# Move frontend build into server folder (adjust target as you need)
+# RUN cp -r build ../server/build
 
-# EXPOSE 4000
+EXPOSE 4000
 
-# WORKDIR /app/server
+WORKDIR /app/server
 
-# RUN ls
+RUN ls
 
-# CMD ["npm", "start"]
+CMD ["npm", "start"]
