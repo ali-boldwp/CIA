@@ -184,20 +184,25 @@ const ProjectView = ({ data }) => {
     const billingData = financialResponse?.data
         ? {
             price: financialResponse.data.pretProject,
+
             fixed: financialResponse.data.cheltuieliFixe,
             osint: financialResponse.data.cheltuieliOSINT,
             tesa: financialResponse.data.cheltuieliTESA,
             humint: financialResponse.data.supraveghereTehnica,
             other: financialResponse.data.alteCheltuieli,
-            staff:
-                (financialResponse.data.cheltuieliTESA || 0) +
-                (financialResponse.data.alteCheltuieli || 0),
+
+            // ✅ STAFF = Angajați
+            staff: financialResponse.data.cheltuieliAngajati,
+
+            // ✅ TOTALS
             total: financialResponse.data.totalCheltuieli,
             margin: financialResponse.data.profit,
             percentage: financialResponse.data.profitPercentage,
+
             currency: financialResponse.data.currency,
         }
         : null;
+
 
 
 
