@@ -45,10 +45,6 @@ export const getRoutesForRole = (role) => {
             element: <Messenger />,
         },
         {
-          path:"/profile",
-          element: <Profile/>
-        },
-        {
             path: "/messenger/:id",
             element: <Messenger />,
         },
