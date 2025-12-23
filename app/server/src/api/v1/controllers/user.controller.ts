@@ -175,6 +175,89 @@ export const updateUser = async (req: Request, res: Response, next: NextFunction
 };
 
 
+export const updateMyProfile = async (req, res) => {
+    try {
+        const userId = req.user.id; // auth middleware se aa raha hai
+
+        const {
+            name,
+            email,
+            password,
+            confirmPassword
+        } = req.body;
+
+        const user = await User.findById(userId).select("+password");
+
+        if (!user) {
+            return res.status(404).json({
+                success: false,
+                message: "User not found"
+            });
+        }
+
+        // -------------------------
+        // EMAIL UPDATE (unique check)
+        // -------------------------
+        if (email && email !== user.email) {
+            const emailExists = await User.findOne({ email });
+            if (emailExists) {
+                return res.status(400).json({
+                    success: false,
+                    message: "Email already in use"
+                });
+            }
+            user.email = email;
+        }
+
+        // -------------------------
+        // NAME UPDATE
+        // -------------------------
+        if (name) {
+            user.name = name;
+        }
+
+        // -------------------------
+        // PASSWORD UPDATE
+        // -------------------------
+        if (password || confirmPassword) {
+
+            if (!password || !confirmPassword) {
+                return res.status(400).json({ success: false, message: "Password and confirm password are required" });
+            }
+
+            if (password !== confirmPassword) {
+                return res.status(400).json({ success: false, message: "Passwords do not match" });
+            }
+
+            if (password.length < 6) {
+                return res.status(400).json({ success: false, message: "Password must be at least 6 characters" });
+            }
+
+            user.password = password;
+            user.isLogin = true;
+        }
+
+        await user.save();
+
+        res.status(200).json({
+            success: true,
+            message: "Profile updated successfully",
+            data: {
+                id: user._id,
+                name: user.name,
+                email: user.email
+            }
+        });
+
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: error.message
+        });
+    }
+};
+
+
 
 // ----------------------
 // DELETE USER
