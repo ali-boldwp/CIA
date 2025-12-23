@@ -1,11 +1,17 @@
 import React, { useMemo, useState } from "react";
 import styles from "./Style.module.css";
+import Popup from "./Popup";
+import { useCreateCategoryMutation } from "../../../../services/categoryApi";
 
-function Index({ data }) {
-    // Dummy data (baad mein API se replace kar sakte ho)
-    const [categories] = useState( data );
-
+function View({ data, isError }) {
+    const categories = data || [];
     const totalCategories = categories.length;
+
+    const [openAddModal, setOpenAddModal] = useState(false);
+
+    // ✅ Create mutation
+    const [createCategory, { isLoading: isCreating, error: createError }] =
+        useCreateCategoryMutation();
 
     /* Pagination */
     const [page, setPage] = useState(1);
@@ -17,9 +23,24 @@ function Index({ data }) {
         return categories.slice((page - 1) * limit, page * limit);
     }, [page, limit, categories]);
 
+    const onSubmitAddCategory = async (payload) => {
+        // payload: { name, status } where status is "active" | "suspended"
+        await createCategory(payload).unwrap();
+        setOpenAddModal(false);
+    };
+
+    const renderStatusText = (status) => {
+        if (status === "active") return "activ";
+        if (status === "suspended") return "suspendat";
+        return status || "-";
+    };
+
+    const statusClass = (status) =>
+        status === "active" ? styles.active : styles.inactive;
+
     return (
         <div className={styles.main}>
-            {/* ================= Card 1: Header ================= */}
+            {/* Card 1 */}
             <div className={styles.topCard}>
                 <h3 className={styles.cardTitle}>
                     Nume categorii{" "}
@@ -29,13 +50,23 @@ function Index({ data }) {
           </span>
                 </h3>
 
-                <button className={`${styles.pillBtn} ${styles.addBtn}`}>
+                <button
+                    className={`${styles.pillBtn} ${styles.addBtn}`}
+                    onClick={() => setOpenAddModal(true)}
+                >
                     <span className={styles.addIcon}>＋</span>
                     <span>Adaugă categorie</span>
                 </button>
             </div>
 
-            {/* ================= Card 2: Table ================= */}
+            {/* Errors */}
+            {isError && (
+                <div style={{ padding: 12, background: "#fff", borderRadius: 4 }}>
+                    Nu s-au putut încărca categoriile.
+                </div>
+            )}
+
+            {/* Card 2 */}
             <div className={styles.tableCard}>
                 <div className={styles.table}>
                     <div className={styles.tableHeader}>
@@ -48,20 +79,21 @@ function Index({ data }) {
 
                     <div className={styles.tableBody}>
                         {paginated.map((c) => (
-                            <div className={styles.tableRow} key={c.id}>
+                            <div className={styles.tableRow} key={c._id || c.id}>
                                 <div className={styles.col}>{c.name}</div>
-                                <div className={styles.col}>{c.chapters}</div>
-                                <div className={styles.col}>{c.tasks}</div>
+
+                                {/* Backend me nahi hain abhi -> safe fallback */}
+                                <div className={styles.col}>
+                                    {c.chapters !== undefined && c.chapters !== null ? c.chapters : "—"}
+                                </div>
 
                                 <div className={styles.col}>
-                  <span
-                      className={`${styles.stateBadge} ${
-                          c.status === "activ"
-                              ? styles.active
-                              : styles.inactive
-                      }`}
-                  >
-                    {c.status}
+                                    {c.tasks !== undefined && c.tasks !== null ? c.tasks : "—"}
+                                </div>
+
+                                <div className={styles.col}>
+                  <span className={`${styles.stateBadge} ${statusClass(c.status)}`}>
+                    {renderStatusText(c.status)}
                   </span>
                                 </div>
 
@@ -74,15 +106,14 @@ function Index({ data }) {
                     </div>
                 </div>
 
-                {/* ================= Pagination ================= */}
+                {/* Pagination */}
                 <div className={styles.pagination}>
                     <button disabled={page === 1} onClick={() => setPage(page - 1)}>
                         ← Precedent
                     </button>
 
                     <span>
-            Pagina <strong>{page}</strong> din{" "}
-                        <strong>{totalPages}</strong>
+            Pagina <strong>{page}</strong> din <strong>{totalPages}</strong>
           </span>
 
                     <button
@@ -93,8 +124,19 @@ function Index({ data }) {
                     </button>
                 </div>
             </div>
+
+            {/* Popup */}
+            {openAddModal && (
+                <Popup
+                    isOpen={openAddModal}
+                    onClose={() => setOpenAddModal(false)}
+                    onSubmit={onSubmitAddCategory}
+                    loading={isCreating}
+                    apiError={createError}
+                />
+            )}
         </div>
     );
 }
 
-export default Index;
+export default View;
