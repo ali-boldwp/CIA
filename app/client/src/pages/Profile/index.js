@@ -6,8 +6,8 @@ import {
 } from "../../services/userApi";
 import {toast} from "react-toastify";
 
-const Profile = () => {
-    const { data, isLoading: isFetching } = useGetMeQuery();
+const Profile = ({data}) => {
+
     const [updateProfile, { isLoading }] = useUpdateMyProfileMutation();
 
     const [name, setName] = useState("");
