@@ -100,16 +100,21 @@
 .actions {
     display: flex;
     justify-content: flex-end;
+    align-items: center !important;
 }
 
 .openBtn,
 .deleteBtn {
-    padding: 12px;
-    border-radius: 4px;
-    border: 1px solid #dddddd;
-    background: #ffffff;
-    font-size: 13px;
+    min-width: 90px !important;
+    height: 32px !important;
+    padding: 6px 10px !important;
+    font-size: 12px !important;
+    border-radius: 8px !important;
+    border: 1px solid #ddd !important;
+    background: white !important;
+    white-space: nowrap !important;
     cursor: pointer;
+    color: black;
 }
 
 .deleteBtn {
@@ -138,34 +143,20 @@
     cursor: not-allowed;
 }
 
-/* ================= Buttons ================= */
-.pillBtn {
-    width: 230px;
-    height: 40px;
-    border-radius: 4px;
+.addCategoryText {
     font-size: 14px;
     font-weight: 600;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 3px 5px rgba(0, 0, 0, 0.15);
-    font-family: inherit;
-    outline: none;
-}
-
-.addBtn {
     color: #2563eb;
-    background: #fff;
-    border: 1px solid #2563eb;
-    gap: 6px;
-}
-
-.addBtn:hover {
-    filter: brightness(1.06);
-    transform: translateY(-1px);
+    cursor: pointer;
+    user-select: none;
     transition: all 0.2s ease;
 }
+
+.addCategoryText:hover {
+    text-decoration: underline;
+    filter: brightness(1.1);
+}
+
 
 .addIcon {
     font-size: 16px;

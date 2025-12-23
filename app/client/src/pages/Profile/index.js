@@ -51,7 +51,7 @@ const Profile = ({data}) => {
 
 
     return (
-        <>
+        <div className="profile-container">
             <div
                 className="projects-header"
                 style={{
@@ -64,14 +64,7 @@ const Profile = ({data}) => {
             </div>
 
             <div className="settings-wrapper">
-                <div className="profile-avatar">
-                    <img
-                        src={
-                           avator
-                        }
-                        alt="User Avatar"
-                    />
-                </div>
+
                 <form className="settings-form" onSubmit={handleSubmit}>
                     <div className="form-row">
                         <label>Numele tău</label>
@@ -80,7 +73,7 @@ const Profile = ({data}) => {
 
                     <div className="form-row">
                         <label>Adresa ta de email</label>
-                        <input value={email} onChange={(e) => setEmail(e.target.value)} />
+                        <input value={email} onChange={(e) => setEmail(e.target.value)} disabled="true" />
                     </div>
 
                     <div className="form-row">
@@ -109,7 +102,7 @@ const Profile = ({data}) => {
 
                 </form>
             </div>
-        </>
+        </div>
     );
 };
 
