@@ -84,7 +84,7 @@ const Header = ({ children, search, logo, title, back = false }) => {
                     aria-label="Settings"
                 >
         <span className="icon">
-            <svg xmlns="http://www.w3.org/2000/svg" width="25px" height="25px" viewBox="0 0 24 24" fill="none">
+            <svg xmlns="http://www.w3.org/2000/svg" width="35px" height="45px" viewBox="0 0 24 24" fill="none">
 <path d="M6 15.8L7.14286 17L10 14" stroke="#FFF" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
 <path d="M6 8.8L7.14286 10L10 7" stroke="#FFF" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
 <path d="M13 9L18 9" stroke="#FFF" stroke-width="1.5" stroke-linecap="round"/>
