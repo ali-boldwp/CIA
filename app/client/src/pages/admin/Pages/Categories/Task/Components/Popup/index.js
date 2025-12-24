@@ -42,8 +42,9 @@ const Popup = ({ isOpen, onClose, onSubmit, loading, apiError }) => {
 
     // 🔹 Auto-generate slug from name (optional but recommended)
     const handleNameChange = (value) => {
+
         setName(value);
-        
+
     };
 
     const handleSlugChange = (value) => {
