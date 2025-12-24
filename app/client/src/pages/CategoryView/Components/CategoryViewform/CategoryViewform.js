@@ -1,9 +1,6 @@
 import React, { useRef, useMemo } from "react";
 import JoditEditor from "jodit-react";
-import {
-    useCreateChapterTemplateMutation,
-
-} from "../../../../services/categoryApi";
+import { useCreateChapterTemplateMutation } from "../../../../services/categoryApi";
 import { toast } from "react-toastify";
 import { IoMdSettings } from "react-icons/io";
 import { useNavigate } from "react-router-dom";
@@ -13,7 +10,6 @@ const CategoryViewform = ({ chapter, categoryId, onUpdate, onCreated }) => {
     const navigate = useNavigate();
 
     const [createChapterTemplate] = useCreateChapterTemplateMutation();
-
 
     const config = useMemo(
         () => ({
@@ -27,7 +23,7 @@ const CategoryViewform = ({ chapter, categoryId, onUpdate, onCreated }) => {
         []
     );
 
-    // 🔹 CREATE OR UPDATE ON BLUR
+    // 🔹 CREATE ON BLUR
     const handleTitleBlur = async () => {
         if (!chapter.name.trim() || chapter.isCreated) return;
 
@@ -38,13 +34,22 @@ const CategoryViewform = ({ chapter, categoryId, onUpdate, onCreated }) => {
                 category: categoryId
             }).unwrap();
 
-            onCreated(chapter.uid, res._id);
-            toast.success("Capitol creat cu succes ✅");
+            const realId = res?.data?._id;
+
+            // 🔑 UPDATE PARENT (SOURCE OF TRUTH)
+            onCreated(chapter.uid, realId);
+
+            toast.success("Capitol creat cu succes ");
         } catch {
-            toast.error("Operația a eșuat ❌");
+            toast.error("Operația a eșuat ");
         }
     };
 
+    // 🔹 SETTINGS CLICK (ALWAYS WORKS)
+    const handleSettingsClick = () => {
+        if (!chapter.isCreated) return;
+        navigate(`/categories/chapter/${chapter.uid}`);
+    };
 
     return (
         <div className="form-box">
@@ -61,11 +66,12 @@ const CategoryViewform = ({ chapter, categoryId, onUpdate, onCreated }) => {
                 />
 
                 <IoMdSettings
+                    onClick={handleSettingsClick}
                     style={{
                         position: "absolute",
                         top: "10px",
                         fontSize: "13pt",
-                        cursor: "pointer",
+                        cursor: chapter.isCreated ? "pointer" : "not-allowed",
                         right: "7px",
                     }}
                 />
