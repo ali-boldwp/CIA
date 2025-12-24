@@ -1,17 +1,17 @@
-import React, { useState, useRef, useMemo } from "react";
+import React, { useRef, useMemo } from "react";
 import JoditEditor from "jodit-react";
-import { useCreateChapterTemplateMutation } from "../../../../services/categoryApi";
+import {
+    useCreateChapterTemplateMutation,
+
+} from "../../../../services/categoryApi";
 import { toast } from "react-toastify";
 import { IoMdSettings } from "react-icons/io";
 
-const CategoryViewform = () => {
+const CategoryViewform = ({ chapter, categoryId, onUpdate, onCreated }) => {
     const editor = useRef(null);
 
-    const [name, setName] = useState("");
-    const [content, setContent] = useState("");
-    const [isCreated, setIsCreated] = useState(false);
-
     const [createChapterTemplate] = useCreateChapterTemplateMutation();
+
 
     const config = useMemo(
         () => ({
@@ -25,43 +25,58 @@ const CategoryViewform = () => {
         []
     );
 
-    // ===== CREATE ON NAME BLUR ONLY =====
+    // 🔹 CREATE OR UPDATE ON BLUR
     const handleTitleBlur = async () => {
-        if (!name.trim() || isCreated) return;
+        if (!chapter.name.trim() || chapter.isCreated) return;
 
         try {
-            await createChapterTemplate({
-                name,
-                content: content || "", // empty allowed
+            const res = await createChapterTemplate({
+                name: chapter.name,
+                content: chapter.content || "",
+                category: categoryId
             }).unwrap();
 
-            setIsCreated(true);
+            onCreated(chapter.uid, res._id);
             toast.success("Capitol creat cu succes ✅");
-        } catch (error) {
-            toast.error("Crearea a eșuat ❌");
+        } catch {
+            toast.error("Operația a eșuat ❌");
         }
     };
 
+
     return (
         <div className="form-box">
-            <div style={{position:"relative"}}>
-            <input
-                type="text"
-                placeholder="Numele capitolului"
-                className="input"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                onBlur={handleTitleBlur}
-            />
-                <IoMdSettings style={{position:"absolute",top:"10px",fontSize:"13pt",cursor:"pointer",right:"7px"}} />
+            <div style={{ position: "relative" }}>
+                <input
+                    type="text"
+                    placeholder="Numele capitolului"
+                    className="input"
+                    value={chapter.name}
+                    onChange={(e) =>
+                        onUpdate(chapter.uid, { name: e.target.value })
+                    }
+                    onBlur={handleTitleBlur}
+                />
+
+                <IoMdSettings
+                    style={{
+                        position: "absolute",
+                        top: "10px",
+                        fontSize: "13pt",
+                        cursor: "pointer",
+                        right: "7px",
+                    }}
+                />
             </div>
-            {/* Editor OPTIONAL */}
+
             <JoditEditor
                 ref={editor}
-                value={content}
+                value={chapter.content}
                 config={config}
                 tabIndex={1}
-                onBlur={(newContent) => setContent(newContent)}
+                onBlur={(newContent) =>
+                    onUpdate(chapter.uid, { content: newContent })
+                }
             />
         </div>
     );
