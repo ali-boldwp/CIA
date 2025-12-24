@@ -5,11 +5,11 @@ import User from "../models/user.model";
 import Chat from "../models/chat.model";
 import Chapter from "../models/chapter.model";
 import Task from "../models/task.model";
-import projectData from "../data/data.js"
 import Requested from "../models/requested.model"
 import Humint from "../models/humint.model";
 import { createNotification } from "../services/notification.service";
 import { ok } from "../../../utils/ApiResponse";
+
 
 
 export const createProject = async (
@@ -74,25 +74,13 @@ export const createProject = async (
         }
 
 
-        const entityType = project.entityType;
-        if (projectData[entityType]) {
-            for (const chapterObj of projectData[entityType]) {
-                const chapter = await Chapter.create({
-                    name: chapterObj.name,
-                    projectId: project._id
-                });
-
-                if (chapterObj.tasks?.length) {
-                    for (const t of chapterObj.tasks) {
-                        await Task.create({
-                            name: t.name,
-                            chapterId: chapter._id,
-                            completed: false
-                        });
-                    }
-                }
-            }
+        if (project.entityType) {
+            await createdProjectService.cloneTemplatesToProject(
+                project.entityType.toString(),
+                project._id.toString()
+            );
         }
+
 
 
         const admins = await User.find({ role: "admin" }).select("_id");
