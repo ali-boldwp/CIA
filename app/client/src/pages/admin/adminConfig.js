@@ -144,6 +144,10 @@ const AdminConfig = {
                         {
                             path: 'view/:id',
                             element: <CategoryView/>,
+                        },
+                        {
+                            path: 'view/:id',
+                            element: <CategoryView/>,
                         }
                     ]
                 },

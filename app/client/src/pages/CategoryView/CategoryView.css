@@ -1,0 +1,44 @@
+.CategoryView{
+    background-color: #f3f6f9;
+    height:100vh;
+}
+.page {
+    background-color: #f3f6f9;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Add New Chapter box */
+.chapter-box {
+    width: 520px;
+    height: 160px;
+    background: white;
+    border: 2px dashed #4da3ff;
+    border-radius: 6px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    color: #7a7a7a;
+}
+
+/* Form */
+.form-box {
+    padding: 16px;
+    margin-top: 200px;
+    border-radius: 6px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.form-box input,
+.form-box .textarea {
+    width: 100%;
+    padding: 10px;
+    font-size: 13px;
+    border: none;
+    border-radius: 4px;
+    outline: none;
+}
