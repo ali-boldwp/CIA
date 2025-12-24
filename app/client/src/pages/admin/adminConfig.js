@@ -22,6 +22,7 @@ import Categories from "./Pages/Categories";
 import CategoriesList from "./Pages/Categories/List";
 import CategoryView from "./Pages/Categories/View";
 import Profile from "./Pages/Profile";
+import NewChapter from "./Pages/Categories/Chapter";
 
 const AdminConfig = {
     settings: {
@@ -148,6 +149,10 @@ const AdminConfig = {
                         {
                             path: 'view/:id',
                             element: <CategoryView/>,
+                        },
+                        {
+                            path: 'chapter',
+                            element: <NewChapter/>,
                         }
                     ]
                 },
