@@ -1,6 +1,48 @@
-import { Editor } from "@tinymce/tinymce-react";
-
+import React, { useState, useRef, useMemo, useCallback } from 'react';
+import JoditEditor from 'jodit-react';
 const CategoryViewform = () => {
+    const editor = useRef(null);
+    const [content, setContent] = useState('<p>Initial content</p>');
+
+    const config = useMemo(
+        () => ({
+            readonly: false,
+            placeholder: 'Start typing...',
+            buttons: [
+                'bold',
+                'italic',
+                'underline',
+                '|',
+                'ul',
+                'ol',
+                '|',
+                'font',
+                'fontsize',
+                'brush',
+                '|',
+                'image',
+                'link',
+                '|',
+                'align',
+                'undo',
+                'redo'
+            ],
+            height: 400,
+            uploader: {
+                insertImageAsBase64URI: true
+            }
+        }),
+        []
+    );
+
+    const handleBlur = useCallback((newContent) => {
+        setContent(newContent);
+    }, []);
+
+    const handleChange = useCallback((newContent) => {
+        // You can handle onChange here if needed
+    }, []);
+
     return (
         <div className="form-box">
             <input
@@ -9,20 +51,18 @@ const CategoryViewform = () => {
                 className="input"
             />
 
-            <Editor
-                apiKey="idfbzmeludrmt79pqerds1gj69t4x39q3f50auakfya63lwe"
-                init={{
-                    height: 220,
-                    menubar: false,
-                    plugins: "lists link image table code wordcount",
-                    toolbar:
-                        "undo redo | bold italic underline | " +
-                        "fontfamily fontsize | forecolor backcolor | " +
-                        "alignleft aligncenter alignright alignjustify | " +
-                        "bullist numlist | link image table | code",
-                }}
-                placeholder="What is Lorem Ipsum?"
-            />
+
+
+                <JoditEditor
+                    ref={editor}
+                    value={content}
+                    config={config}
+                    tabIndex={1}
+                    onBlur={handleBlur}
+                    onChange={handleChange}
+                />
+
+            
         </div>
     );
 };
