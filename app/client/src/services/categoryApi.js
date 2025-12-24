@@ -55,6 +55,14 @@ export const categoryApi = createApi({
                 { type: "Category", id: "LIST" },
             ],
         }),
+        createChapterTemplate: builder.mutation({
+            query: (body) => ({
+                url: "/chapter-template",
+                method: "POST",
+                body,
+            }),
+            invalidatesTags: [{ type: "ChapterTemplate", id: "LIST" }],
+        }),
     }),
 });
 
@@ -63,4 +71,5 @@ export const {
     useCreateCategoryMutation,
     useGetCategoryByIdQuery,
     useUpdateCategoryMutation,
+    useCreateChapterTemplateMutation,
 } = categoryApi;
