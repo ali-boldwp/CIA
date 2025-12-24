@@ -154,9 +154,12 @@ const AdminConfig = {
                         {
                             path: 'chapter/task',
                             element: <FoamFields/>,
-                            path: 'chapter',
+
+                        },
+                        {
+                            path: 'chapter/:id',
                             element: <NewChapter/>,
-                        }
+                        },
                     ]
                 },
             ]

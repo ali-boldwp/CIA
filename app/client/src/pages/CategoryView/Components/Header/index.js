@@ -1,10 +1,11 @@
 import React from "react";
 import styles from "./Header.module.css";
 import { FaEye } from "react-icons/fa";
-import {Link} from "react-router-dom";
-
+import { Link, useLocation } from "react-router-dom";
 
 const Header = ({ category }) => {
+    const location = useLocation();
+    const isViewPage = location.pathname.startsWith("/view/");
     return (
         <div className={styles.header}>
             <Link to="/categories" className={styles.headerLeft}>
@@ -12,7 +13,7 @@ const Header = ({ category }) => {
                 <span>Go back</span>
             </Link>
 
-            <div className={styles.headerCenter}>{category.name}</div>
+            <div className={styles.headerCenter}>{isViewPage && category?.name ? category.name : "Hello"} </div>
 
             <div className={styles.headerRight}>
                 <FaEye />
