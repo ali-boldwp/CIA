@@ -1,36 +1,18 @@
 import React, { useState, useRef, useMemo, useCallback } from 'react';
 import JoditEditor from 'jodit-react';
+
 const TaskViewfoam = () => {
     const editor = useRef(null);
-    const [content, setContent] = useState('<p>Initial content</p>');
+    const [content, setContent] = useState('<p>Conținut inițial</p>');
 
     const config = useMemo(
         () => ({
             readonly: false,
-            placeholder: 'Start typing...',
-            buttons: [
-                'bold',
-                'italic',
-                'underline',
-                '|',
-                'ul',
-                'ol',
-                '|',
-                'font',
-                'fontsize',
-                'brush',
-                '|',
-                'image',
-                'link',
-                '|',
-                'align',
-                'undo',
-                'redo'
-            ],
-            height: 400,
+            placeholder: "Conținut inițial",
+            height: 300,
             uploader: {
-                insertImageAsBase64URI: true
-            }
+                insertImageAsBase64URI: true,
+            },
         }),
         []
     );
@@ -47,7 +29,7 @@ const TaskViewfoam = () => {
         <div className="form-box">
             <input
                 type="text"
-                placeholder="Chapter name"
+                placeholder="Numele sarcinii"
                 className="input"
             />
 

@@ -6,9 +6,11 @@ import {
 } from "../../../../services/categoryApi";
 import { toast } from "react-toastify";
 import { IoMdSettings } from "react-icons/io";
+import { useNavigate } from "react-router-dom";
 
 const CategoryViewform = ({ chapter, categoryId, onUpdate, onCreated }) => {
     const editor = useRef(null);
+    const navigate = useNavigate();
 
     const [createChapterTemplate] = useCreateChapterTemplateMutation();
 
@@ -16,7 +18,7 @@ const CategoryViewform = ({ chapter, categoryId, onUpdate, onCreated }) => {
     const config = useMemo(
         () => ({
             readonly: false,
-            placeholder: "Start typing...",
+            placeholder: "Conținut inițial",
             height: 300,
             uploader: {
                 insertImageAsBase64URI: true,
