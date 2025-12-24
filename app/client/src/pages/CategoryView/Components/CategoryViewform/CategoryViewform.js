@@ -1,7 +1,8 @@
-import React, { useState, useRef, useMemo, useCallback } from "react";
+import React, { useState, useRef, useMemo } from "react";
 import JoditEditor from "jodit-react";
 import { useCreateChapterTemplateMutation } from "../../../../services/categoryApi";
-import {toast} from "react-toastify";
+import { toast } from "react-toastify";
+import { IoMdSettings } from "react-icons/io";
 
 const CategoryViewform = () => {
     const editor = useRef(null);
@@ -12,30 +13,10 @@ const CategoryViewform = () => {
 
     const [createChapterTemplate] = useCreateChapterTemplateMutation();
 
-    // ===== JODIT CONFIG =====
     const config = useMemo(
         () => ({
             readonly: false,
             placeholder: "Start typing...",
-            buttons: [
-                "bold",
-                "italic",
-                "underline",
-                "|",
-                "ul",
-                "ol",
-                "|",
-                "font",
-                "fontsize",
-                "brush",
-                "|",
-                "image",
-                "link",
-                "|",
-                "align",
-                "undo",
-                "redo",
-            ],
             height: 300,
             uploader: {
                 insertImageAsBase64URI: true,
@@ -44,35 +25,26 @@ const CategoryViewform = () => {
         []
     );
 
-    // ===== CREATE ON BLUR =====
-    const tryCreateChapter = async () => {
-        if (!name.trim() || !content.trim() || isCreated) return;
+    // ===== CREATE ON NAME BLUR ONLY =====
+    const handleTitleBlur = async () => {
+        if (!name.trim() || isCreated) return;
 
         try {
             await createChapterTemplate({
                 name,
-                content,
+                content: content || "", // empty allowed
             }).unwrap();
 
-            setIsCreated(true); // prevent duplicate calls
+            setIsCreated(true);
             toast.success("Capitol creat cu succes ✅");
         } catch (error) {
-            toast.error("Crearea a eșuat ❌", error);
+            toast.error("Crearea a eșuat ❌");
         }
-    };
-
-    // ===== HANDLERS =====
-    const handleTitleBlur = () => {
-        tryCreateChapter();
-    };
-
-    const handleEditorBlur = (newContent) => {
-        setContent(newContent);
-        tryCreateChapter();
     };
 
     return (
         <div className="form-box">
+            <div style={{position:"relative"}}>
             <input
                 type="text"
                 placeholder="Numele capitolului"
@@ -81,13 +53,15 @@ const CategoryViewform = () => {
                 onChange={(e) => setName(e.target.value)}
                 onBlur={handleTitleBlur}
             />
-
+                <IoMdSettings style={{position:"absolute",top:"10px",fontSize:"13pt",cursor:"pointer",right:"7px"}} />
+            </div>
+            {/* Editor OPTIONAL */}
             <JoditEditor
                 ref={editor}
                 value={content}
                 config={config}
                 tabIndex={1}
-                onBlur={handleEditorBlur}
+                onBlur={(newContent) => setContent(newContent)}
             />
         </div>
     );
