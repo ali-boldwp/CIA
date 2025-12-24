@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import styles from "./style.module.css";
+import { toast } from "react-toastify";
 
 const Popup = ({ isOpen, onClose, onSubmit, loading, apiError }) => {
     const [name, setName] = useState("");
@@ -14,8 +15,27 @@ const Popup = ({ isOpen, onClose, onSubmit, loading, apiError }) => {
 
     const handleAdd = async () => {
         if (!name.trim()) return;
-        await onSubmit({ name: name.trim(), status });
-        handleReset();
+
+        const payload = {
+            name: name.trim(),
+            status,
+        };
+
+        try {
+            await toast.promise(
+                onSubmit(payload),
+                {
+                    pending: "Se adaugă...",
+                    success: "Categoria a fost adăugată!",
+                    error: "A apărut o eroare. Încercați din nou.",
+                }
+            );
+
+            handleReset();
+            onClose();
+        } catch (e) {
+
+        }
     };
 
     return (
