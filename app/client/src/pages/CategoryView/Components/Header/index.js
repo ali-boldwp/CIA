@@ -6,7 +6,7 @@ import { useGetCategoryByIdQuery } from "../../../../services/categoryApi";
 
 const Header = () => {
     const location = useLocation();
-    const { categoryId } = useParams();
+    const { id:categoryId } = useParams();
 
     // ===== CATEGORY PAGE =====
     const isCategoryPage =
