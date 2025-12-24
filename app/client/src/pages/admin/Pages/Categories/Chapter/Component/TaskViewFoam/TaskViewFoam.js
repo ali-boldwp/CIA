@@ -10,6 +10,9 @@ const TaskViewFoam = ({ task, chapterId, onUpdate, onCreated }) => {
     const navigate = useNavigate();
 
     const [createTaskTemplate] = useCreateTaskTemplateMutation();
+    const isCreatingRef = useRef(false);
+
+
 
     const config = useMemo(
         () => ({
@@ -27,6 +30,15 @@ const TaskViewFoam = ({ task, chapterId, onUpdate, onCreated }) => {
     const handleTitleBlur = async () => {
         if (!task.name.trim() || task.isCreated) return;
 
+        if (isCreatingRef.current) return;
+        isCreatingRef.current = true;
+
+        if (!chapterId) {
+            toast.error("Capitolul nu este valid");
+            isCreatingRef.current = false;
+            return;
+        }
+
         try {
             const res = await createTaskTemplate({
                 name: task.name,
@@ -34,16 +46,27 @@ const TaskViewFoam = ({ task, chapterId, onUpdate, onCreated }) => {
                 chapter: chapterId
             }).unwrap();
 
+            // ✅ FIX IS HERE
             const realId = res?.data?._id;
 
-            // 🔑 UPDATE PARENT (SOURCE OF TRUTH)
+            if (!realId) {
+                console.error("Invalid response:", res);
+                throw new Error("ID lipsă");
+            }
+
             onCreated(task.uid, realId);
 
-            toast.success("Capitol creat cu succes ");
-        } catch {
+            toast.success("Task creat cu succes ");
+        } catch (err) {
+            console.error("Create task error:", err);
             toast.error("Operația a eșuat ");
+        } finally {
+            isCreatingRef.current = false;
         }
     };
+
+
+
 
     // 🔹 SETTINGS CLICK (ALWAYS WORKS)
     const handleSettingsClick = () => {

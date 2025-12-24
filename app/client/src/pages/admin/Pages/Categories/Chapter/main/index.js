@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 import Header from "../../../../../CategoryView/Components/Header";
 import AddButton from "../Component/AddButton/AddButton";
-import CategoryViewform from "../Component/TaskViewFoam/TaskViewFoam";
+import TaskViewFoam from "../Component/TaskViewFoam/TaskViewFoam";
 import { useParams } from "react-router-dom";
 import {useGetTaskTemplatesByChapterQuery} from "../../../../../../services/categoryApi";
 
@@ -56,21 +56,22 @@ const CategoryView = () => {
 
     /* 🔁 REPLACE TEMP WITH REAL ID */
     const replaceChapterId = (tempUid, realId) => {
-        taskData(prev =>
-            prev.map(ch =>
-                ch.uid === tempUid
-                    ? { ...ch, uid: realId, isCreated: true }
-                    : ch
+        setTasks(prev =>
+            prev.map(task =>
+                task.uid === tempUid
+                    ? { ...task, uid: realId, isCreated: true }
+                    : task
             )
         );
     };
+
 
     return (
         <div className="CategoryView">
             <Header />
 
             {tasks.map(task => (
-                <CategoryViewform
+                <TaskViewFoam
                     key={task.uid}
                     task={task}
                     chapterId={chapterId}
