@@ -6,6 +6,7 @@ export interface ICategory extends Document {
         | "active"
         | "suspended";
 
+    chapters:Types.ObjectId[];
 }
 
 const categorySchema = new Schema<ICategory>(
@@ -14,6 +15,11 @@ const categorySchema = new Schema<ICategory>(
             type: String,
             required: true,
             trim: true
+        },
+        chapters: {
+            type : [Schema.Types.ObjectId],
+            ref : "ChapterTemplate",
+            default: [],
         },
         status : {
             type : String,

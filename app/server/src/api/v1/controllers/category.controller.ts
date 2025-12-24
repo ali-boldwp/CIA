@@ -31,3 +31,26 @@ export const updateCategory = async (req: Request, res: Response, next: NextFunc
         next(err);
     }
 };
+
+export const getCategoryById = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+) => {
+    try {
+        const categoryId = req.params.id;
+
+        const category = await categoryService.getCategoryById(categoryId);
+
+        if (!category) {
+            return res.status(404).json({
+                success: false,
+                message: "Category not found"
+            });
+        }
+
+        res.json(ok(category));
+    } catch (err) {
+        next(err);
+    }
+};

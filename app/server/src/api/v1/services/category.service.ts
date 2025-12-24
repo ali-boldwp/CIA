@@ -13,4 +13,18 @@ export const updateCategory = async (id: string, data: Partial<ICategory>) => {
     return await Category.findByIdAndUpdate(id, data, { new: true });
 };
 
+export const getCategoryById = async (id: string) => {
+    return Category.findById(id)
+        .populate({
+            path: "chapters",
+            populate: {
+                path: "tasks",
+                populate: {
+                    path: "foamFields",
+                    model: "FoamFields"
+                }
+            }
+        })
+        .lean();
+};
 

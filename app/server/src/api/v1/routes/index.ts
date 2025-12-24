@@ -18,6 +18,9 @@ import humintExpanseRoutes from "./humintExpanse.routes";
 import auditLogRoutes from "./auditLog.routes";
 import fileRoute from "./file.route";
 import categoryRoutes from "./category.routes";
+import chapterTemplateRoutes from "./chapterTemplate.routes";
+import taskTemplateRoutes from "./taskTemplate.routes";
+import foamFieldsRoutes from "./foamFields.routes";
 
 const router = Router();
 
@@ -39,6 +42,10 @@ router.use("/analyst" , analystExpanseRoutes);
 router.use("/humint-expanse", humintExpanseRoutes);
 router.use("/audit-logs" , auditLogRoutes);
 router.use("/download", fileRoute);
-router.use("/category" , categoryRoutes)
+router.use("/category" , categoryRoutes);
+router.use("/chapter-template" , chapterTemplateRoutes);
+router.use("/task-template" , taskTemplateRoutes);
+router.use("/foam-fields", foamFieldsRoutes);
+
 
 export default router;
