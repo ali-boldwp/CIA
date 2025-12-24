@@ -1,32 +1,6 @@
-import {
-    RichTextEditorComponent,
-    HtmlEditor,
-    Toolbar,
-    FormatPainter,
-    QuickToolbar,
-    Link,
-    Image,
-    Table,
-    Audio,
-    Video,
-    Inject,
-    PasteCleanup
-} from "@syncfusion/ej2-react-richtexteditor";
+import { Editor } from "@tinymce/tinymce-react";
 
 const CategoryViewform = () => {
-
-    const toolbarSettings = {
-        items: [
-            'FormatPainter',
-            'Bold', 'Italic', 'Underline', 'StrikeThrough',
-            'FontName', 'FontSize', 'FontColor', 'BackgroundColor',
-            'Alignments',
-            'OrderedList', 'UnorderedList',
-            'CreateLink', 'Image', 'Video', 'CreateTable',
-            'SourceCode', 'Undo', 'Redo'
-        ]
-    };
-
     return (
         <div className="form-box">
             <input
@@ -35,28 +9,20 @@ const CategoryViewform = () => {
                 className="input"
             />
 
-            <RichTextEditorComponent
-                className="textarea"
-                height={220}
-                toolbarSettings={toolbarSettings}
+            <Editor
+                apiKey="idfbzmeludrmt79pqerds1gj69t4x39q3f50auakfya63lwe"
+                init={{
+                    height: 220,
+                    menubar: false,
+                    plugins: "lists link image table code wordcount",
+                    toolbar:
+                        "undo redo | bold italic underline | " +
+                        "fontfamily fontsize | forecolor backcolor | " +
+                        "alignleft aligncenter alignright alignjustify | " +
+                        "bullist numlist | link image table | code",
+                }}
                 placeholder="What is Lorem Ipsum?"
-
-            >
-                <Inject
-                    services={[
-                        HtmlEditor,
-                        Toolbar,
-                        FormatPainter,
-                        QuickToolbar,
-                        Image,
-                        Link,
-                        Table,
-                        Audio,
-                        Video,
-                        PasteCleanup
-                    ]}
-                />
-            </RichTextEditorComponent>
+            />
         </div>
     );
 };
