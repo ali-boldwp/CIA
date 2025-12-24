@@ -11,5 +11,8 @@ router.get("/", auth, categoryController.getAllCategory);
 
 router.put("/:id", auth, categoryController.updateCategory);
 
+router.get("/:id", auth, categoryController.getCategoryById);
+
+
 
 export default router;
