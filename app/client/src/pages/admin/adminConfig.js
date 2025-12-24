@@ -152,7 +152,7 @@ const AdminConfig = {
                             element: <CategoryView/>,
                         },
                         {
-                            path: 'chapter/task',
+                            path: 'chapter/task/:id',
                             element: <FoamFields/>,
 
                         },
