@@ -10,6 +10,8 @@ import {
 
     useUpdateProjectMutation
 } from "../../../../services/projectApi";
+import { useGetCategoriesQuery } from "../../../../services/categoryApi";
+
 import { useGetAnalystsQuery } from "../../../../services/userApi";
 import React, {useEffect, useState} from "react";
 import styles from "./style.module.css";
@@ -77,6 +79,18 @@ const ProjectView = ({ data }) => {
     const [selectedMember, setSelectedMember] = useState(null);
     const [showMemberPopup, setShowMemberPopup] = useState(false);
     const [showAddAnalystPopup, setShowAddAnalystPopup] = useState(false);
+
+
+    // Categories
+
+    const { data: catRes, isLoading: catsLoading, isError: catsError } = useGetCategoriesQuery();
+    const categories = Array.isArray(catRes?.data) ? catRes.data : [];
+
+    const categoryOptions = categories.map((c) => ({
+        id: String(c._id),
+        name: c.name,
+    }));
+
 
 
 
@@ -278,13 +292,40 @@ const ProjectView = ({ data }) => {
 
                         <div className={styles.metaField}>
                             <span className={styles.label}>Tip entitate</span>
-                            <input
-                                type="text"
+
+                            <select
                                 className={styles.metaValueBox}
-                                value={project.entityType}
-                                onChange={handleFieldChange("entityType")}
-                            />
+                                value={project.entityType || ""}
+                                onChange={(e) => {
+                                    const selectedId = e.target.value;
+
+                                    setProject((prev) => ({
+                                        ...prev,
+                                        entityType: selectedId,
+                                    }));
+
+                                    console.log("Selected category Mongo ID:", selectedId);
+                                }}
+                                disabled={catsLoading}
+                            >
+                                <option value="">
+                                    {catsLoading ? "Se încarcă..." : "Selectați tipul entității"}
+                                </option>
+
+                                {categoryOptions.map((c) => (
+                                    <option key={c.id} value={c.id}>
+                                        {c.name}
+                                    </option>
+                                ))}
+                            </select>
+
+                            {catsError && (
+                                <div style={{ fontSize: 12, marginTop: 6 }}>
+                                    Nu s-au putut încărca categoriile.
+                                </div>
+                            )}
                         </div>
+
 
                         <div className={styles.metaField}>
                             <span className={styles.label}>Deadline</span>
