@@ -67,6 +67,18 @@ export const categoryApi = createApi({
             query: (categoryId) =>
                 `/chapter-template/by-category/${categoryId}`,
         }),
+        createTaskTemplate: builder.mutation({
+            query: (body) => ({
+                url: "/task-template",
+                method: "POST",
+                body,
+            }),
+            invalidatesTags: [{ type: "TaskTemplate", id: "LIST" }],
+        }),
+        getTaskTemplatesByChapter: builder.query({
+            query: (chapterId) =>
+                `/task-template/by-chapter/${chapterId}`,
+        }),
 
     }),
 });
@@ -78,4 +90,6 @@ export const {
     useUpdateCategoryMutation,
     useGetChapterTemplatesByCategoryQuery,
     useCreateChapterTemplateMutation,
+    useGetTaskTemplatesByChapterQuery,
+    useCreateTaskTemplateMutation,
 } = categoryApi;
