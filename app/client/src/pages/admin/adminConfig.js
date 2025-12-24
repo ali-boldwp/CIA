@@ -22,6 +22,7 @@ import Categories from "./Pages/Categories";
 import CategoriesList from "./Pages/Categories/List";
 import CategoryView from "./Pages/Categories/View";
 import Profile from "./Pages/Profile";
+import FoamFields from "./Pages/Categories/Task/Components";
 import NewChapter from "./Pages/Categories/Chapter";
 
 const AdminConfig = {
@@ -151,6 +152,8 @@ const AdminConfig = {
                             element: <CategoryView/>,
                         },
                         {
+                            path: 'chapter/task',
+                            element: <FoamFields/>,
                             path: 'chapter',
                             element: <NewChapter/>,
                         }
