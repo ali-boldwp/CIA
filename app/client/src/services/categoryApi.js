@@ -34,6 +34,15 @@ export const categoryApi = createApi({
             invalidatesTags: [{ type: "Category", id: "LIST" }],
         }),
 
+        getCategoryById: builder.query({
+            query: (id) => ({
+                url: `/category/${id}`,
+                method: "GET",
+            }),
+            providesTags: (result, error, id) => [
+                { type: "Category", id },
+            ],
+        }),
         // ================= UPDATE CATEGORY =================
         updateCategory: builder.mutation({
             query: ({ id, ...body }) => ({
@@ -52,5 +61,6 @@ export const categoryApi = createApi({
 export const {
     useGetCategoriesQuery,
     useCreateCategoryMutation,
+    useGetCategoryByIdQuery,
     useUpdateCategoryMutation,
 } = categoryApi;

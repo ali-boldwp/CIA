@@ -4,7 +4,7 @@ import { FaEye } from "react-icons/fa";
 import {Link} from "react-router-dom";
 
 
-const Header = () => {
+const Header = ({ category }) => {
     return (
         <div className={styles.header}>
             <Link to="/categories" className={styles.headerLeft}>
@@ -12,7 +12,7 @@ const Header = () => {
                 <span>Go back</span>
             </Link>
 
-            <div className={styles.headerCenter}>Person</div>
+            <div className={styles.headerCenter}>{category.name}</div>
 
             <div className={styles.headerRight}>
                 <FaEye />
