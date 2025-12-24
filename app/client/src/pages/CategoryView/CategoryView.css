@@ -1,6 +1,7 @@
 .CategoryView{
     background-color: #f3f6f9;
     height:100vh;
+    position:relative;
 }
 .page {
     background-color: #f3f6f9;
@@ -21,12 +22,12 @@
     align-items: center;
     cursor: pointer;
     color: #7a7a7a;
+    margin-top:200px;
 }
 
 /* Form */
 .form-box {
     padding: 16px;
-    margin-top: 200px;
     border-radius: 6px;
     display: flex;
     flex-direction: column;
@@ -37,6 +38,7 @@
 .form-box .textarea {
     width: 100%;
     padding: 10px;
+    background: #fff;
     font-size: 13px;
     border: none;
     border-radius: 4px;

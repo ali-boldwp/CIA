@@ -2,6 +2,7 @@ import React, { useMemo, useState } from "react";
 import styles from "./Style.module.css";
 import Popup from "./Popup";
 import { useCreateCategoryMutation } from "../../../../../services/categoryApi";
+import {Link} from "react-router-dom";
 
 function View({ data, isError }) {
     const categories = data || [];
@@ -99,7 +100,7 @@ function View({ data, isError }) {
                                 </div>
 
                                 <div className={styles.actions}>
-                                    <button className={styles.openBtn}>Deschide</button>
+                                    <Link to={`/categories/view/${c._id}`} className={styles.openBtn}>Deschide</Link>
                                     <button className={styles.deleteBtn}>🗑 Șterge</button>
                                 </div>
                             </div>
