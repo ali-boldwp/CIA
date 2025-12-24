@@ -1,8 +1,62 @@
 import projectRequest from "../models/projectRequest.model";
 import AnalystExpanse from "../models/analystExpanse.model";
+import Category from "../models/category.model";
+import Chapter from "../models/chapter.model";
+import Task from "../models/task.model";
+import FoamFields from "../models/foamFields.model";
+
 
 export const createProject = async (data: any) => {
     return await projectRequest.create(data);
+};
+
+
+export const cloneTemplatesToProject = async (
+    categoryId: string,
+    projectId: string
+) => {
+    const category = await Category.findById(categoryId)
+        .populate({
+            path: "chapters",
+            populate: {
+                path: "tasks",
+                populate: { path: "foamFields" }
+            }
+        })
+        .lean();
+
+    if (!category?.chapters?.length) return;
+
+    for (const chapterTemplate of category.chapters) {
+
+        const projectChapter = await Chapter.create({
+            name: chapterTemplate.name,
+            projectId
+        });
+
+        if (!chapterTemplate.tasks?.length) continue;
+
+        for (const taskTemplate of chapterTemplate.tasks) {
+
+            const projectTask = await Task.create({
+                name: taskTemplate.name,
+                content: taskTemplate.content,
+                chapterId: projectChapter._id,
+                completed: false
+            });
+
+            if (!taskTemplate.foamFields?.length) continue;
+
+            const fields = taskTemplate.foamFields.map((f: any) => ({
+                name: f.name,
+                type: f.type,
+                slug: f.slug,
+                task: projectTask._id
+            }));
+
+            await FoamFields.insertMany(fields);
+        }
+    }
 };
 
 export const getAllProjects = async (query = {}, options = {}) => {
