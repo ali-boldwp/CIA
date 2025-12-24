@@ -63,6 +63,11 @@ export const categoryApi = createApi({
             }),
             invalidatesTags: [{ type: "ChapterTemplate", id: "LIST" }],
         }),
+        getChapterTemplatesByCategory: builder.query({
+            query: (categoryId) =>
+                `/chapter-template/by-category/${categoryId}`,
+        }),
+
     }),
 });
 
@@ -71,5 +76,6 @@ export const {
     useCreateCategoryMutation,
     useGetCategoryByIdQuery,
     useUpdateCategoryMutation,
+    useGetChapterTemplatesByCategoryQuery,
     useCreateChapterTemplateMutation,
 } = categoryApi;

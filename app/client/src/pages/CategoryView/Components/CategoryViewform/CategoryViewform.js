@@ -1,20 +1,19 @@
-import React, { useState, useRef, useMemo } from "react";
+import React, { useRef, useMemo } from "react";
 import JoditEditor from "jodit-react";
-import { useCreateChapterTemplateMutation } from "../../../../services/categoryApi";
+import {
+    useCreateChapterTemplateMutation,
+
+} from "../../../../services/categoryApi";
 import { toast } from "react-toastify";
 import { IoMdSettings } from "react-icons/io";
 import { useNavigate } from "react-router-dom";
 
-const CategoryViewform = () => {
+const CategoryViewform = ({ chapter, categoryId, onUpdate, onCreated }) => {
     const editor = useRef(null);
     const navigate = useNavigate();
 
-    const [name, setName] = useState("");
-    const [content, setContent] = useState("");
-    const [isCreated, setIsCreated] = useState(false);
-    const [chapterId, setChapterId] = useState(null);
-
     const [createChapterTemplate] = useCreateChapterTemplateMutation();
+
 
     const config = useMemo(
         () => ({
@@ -28,31 +27,24 @@ const CategoryViewform = () => {
         []
     );
 
-    // ===== CREATE CHAPTER ON BLUR =====
+    // 🔹 CREATE OR UPDATE ON BLUR
     const handleTitleBlur = async () => {
-        if (!name.trim() || isCreated) return;
+        if (!chapter.name.trim() || chapter.isCreated) return;
 
         try {
             const res = await createChapterTemplate({
-                name,
-                content: content || "",
+                name: chapter.name,
+                content: chapter.content || "",
+                category: categoryId
             }).unwrap();
 
-            const id = res?.data?._id; // 👈 backend id
-            setChapterId(id);
-            setIsCreated(true);
-
+            onCreated(chapter.uid, res._id);
             toast.success("Capitol creat cu succes ✅");
-        } catch (error) {
-            toast.error("Crearea a eșuat ❌");
+        } catch {
+            toast.error("Operația a eșuat ❌");
         }
     };
 
-    // ===== SETTINGS CLICK =====
-    const handleSettingsClick = () => {
-        if (!chapterId) return;
-        navigate(`/categories/chapter/${chapterId}`);
-    };
 
     return (
         <div className="form-box">
@@ -61,31 +53,32 @@ const CategoryViewform = () => {
                     type="text"
                     placeholder="Numele capitolului"
                     className="input"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
+                    value={chapter.name}
+                    onChange={(e) =>
+                        onUpdate(chapter.uid, { name: e.target.value })
+                    }
                     onBlur={handleTitleBlur}
                 />
 
                 <IoMdSettings
-                    onClick={handleSettingsClick}
                     style={{
                         position: "absolute",
                         top: "10px",
-                        right: "7px",
                         fontSize: "13pt",
-                        cursor: chapterId ? "pointer" : "not-allowed",
-                        opacity: chapterId ? 1 : 0.4,
+                        cursor: "pointer",
+                        right: "7px",
                     }}
                 />
             </div>
 
-            {/* OPTIONAL EDITOR */}
             <JoditEditor
                 ref={editor}
-                value={content}
+                value={chapter.content}
                 config={config}
                 tabIndex={1}
-                onBlur={(newContent) => setContent(newContent)}
+                onBlur={(newContent) =>
+                    onUpdate(chapter.uid, { content: newContent })
+                }
             />
         </div>
     );
