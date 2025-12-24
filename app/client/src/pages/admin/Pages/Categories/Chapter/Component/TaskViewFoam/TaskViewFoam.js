@@ -1,5 +1,6 @@
 import React, { useState, useRef, useMemo, useCallback } from 'react';
 import JoditEditor from 'jodit-react';
+
 const TaskViewfoam = () => {
     const editor = useRef(null);
     const [content, setContent] = useState('<p>Conținut inițial</p>');
