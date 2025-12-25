@@ -2,7 +2,7 @@ import React from "react";
 import {toast} from "react-toastify";
 import { useGetCreateProjectByIdQuery } from "../../../../../../../services/projectApi";
 import {
-    useGetTaskByIdQuery,
+    useGetTaskQuery,
     useGetChapterByIdQuery, useStartTaskMutation, usePauseTaskMutation, useResumeTaskMutation, useCompleteTaskMutation
 } from "../../../../../../../services/taskApi";
 import "./Detail.css";
@@ -12,24 +12,21 @@ const Details = ({ projectId, taskId }) => {
         skip: !projectId
     });
 
-    const { data: taskData } = useGetTaskByIdQuery(taskId, {
+    const { data: taskData } = useGetTaskQuery(taskId, {
         skip: !taskId
     });
 
     const task = taskData?.data;
     console.log(task)
-    const chapterId = task?.chapterId;
 
-    const { data: chapterData } = useGetChapterByIdQuery(chapterId, {
-        skip: !chapterId
-    });
+    const chapterName = task?.chapterId?.name;
+
     const [startTask] = useStartTaskMutation();
     const [pauseTask] = usePauseTaskMutation();
     const [resumeTask] = useResumeTaskMutation();
     const [completeTask] = useCompleteTaskMutation();
 
     const project = projectData?.data;
-    const chapter = chapterData?.data;
 
     const formatTime = (seconds) => {
         if (!seconds || seconds <= 0) return "0h00m";
@@ -96,7 +93,7 @@ const Details = ({ projectId, taskId }) => {
                         <strong>Proiect:</strong> {project?.projectName || "-"}
                     </p>
                     <p>
-                        <strong>Capitol:</strong> {chapter?.name || "-"}
+                        <strong>Capitol:</strong> {task?.chapterId?.name || "-"}
                     </p>
                     <p>
                         <strong>Task:</strong> {task?.name || "-"}

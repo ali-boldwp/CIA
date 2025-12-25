@@ -31,7 +31,12 @@ export const taskApi = createApi({
             query: (chapterId) => `/task/${chapterId}`,
         }),
 
-
+        getTask: builder.query({
+            query: (taskId) => `/task/${taskId}/view`,
+            providesTags: (result, error, taskId) => [
+                { type: "Task", id: taskId }
+            ],
+        }),
 
         // ✅ New: Create Task
         createTask: builder.mutation({
@@ -120,6 +125,7 @@ export const {
     useGetTaskByIdQuery,
     useGetChapterByIdQuery,
     useCreateChapterMutation,
+    useGetTaskQuery,
     useGetTasksByChapterIdQuery,
     useCreateTaskMutation, // ✅ export hook
     useStartTaskMutation,

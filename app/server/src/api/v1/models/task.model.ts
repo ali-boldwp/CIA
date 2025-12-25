@@ -21,7 +21,7 @@ const taskSchema = new Schema<ITask>(
 
         chapterId: {
             type: Schema.Types.ObjectId,
-            ref: "chapter",
+            ref: "Chapter",
 
         },
         completed:{
