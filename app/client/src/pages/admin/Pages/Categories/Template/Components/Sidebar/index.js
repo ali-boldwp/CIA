@@ -1,12 +1,15 @@
 import styles from "./style.module.css";
 import {DragDropContext, Draggable, Droppable,} from "@hello-pangea/dnd";
 import {useState} from "react";
+import {useUpdateChapterTemplateIndexMutation} from "../../../../../../../services/categoryApi";
 
 const Sidebar = ({ data: _data, openChapterNew }) => {
 
     const [ data, setData ] = useState( _data );
 
-    const onDragEnd = (result) => {
+    const [ update ] = useUpdateChapterTemplateIndexMutation();
+
+    const onDragEnd = async (result) => {
 
         if (!result.destination) return;
 
@@ -19,7 +22,7 @@ const Sidebar = ({ data: _data, openChapterNew }) => {
             const [moved] = arr.splice(source.index, 1);
             arr.splice(destination.index, 0, moved);
             newData.chapters = arr;
-            return setData(newData);
+            // return setData(newData);
         }
 
         if (type.startsWith("TASK")) {
@@ -28,7 +31,7 @@ const Sidebar = ({ data: _data, openChapterNew }) => {
             const [moved] = arr.splice(source.index, 1);
             arr.splice(destination.index, 0, moved);
             newData.chapters[chapIdx].tasks = arr;
-            return setData(newData);
+            // return setData(newData);
         }
 
         if (type.startsWith("FIELD")) {
@@ -37,8 +40,18 @@ const Sidebar = ({ data: _data, openChapterNew }) => {
             const [moved] = arr.splice(source.index, 1);
             arr.splice(destination.index, 0, moved);
             newData.chapters[chapIdx].tasks[taskIdx].foamFields = arr;
-            return setData(newData);
+            // return setData(newData);
         }
+
+        console.log( newData )
+
+        setData( newData );
+
+        console.log( data )
+
+        await update({ id: data._id,  data: newData });
+
+        return data;
 
     };
 
@@ -154,7 +167,8 @@ const Sidebar = ({ data: _data, openChapterNew }) => {
                     </li>
                 </ul>
             </DragDropContext>
-        </div>);
+        </div>
+    );
 };
 
 export default Sidebar;

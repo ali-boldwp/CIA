@@ -10,10 +10,9 @@ export const getAllTasks = async () => {
     return await Task.find();
 };
 
-export const getTaskById = async (taskId: string) => {
-    return await Task.findById(taskId).populate("chapterId");
+export const getTaskById = async (chapterId: string) => {
+    return await Task.find({ chapterId }).populate("analyst");
 };
-
 
 export const getProjectIdByTaskId = async (taskId: string) => {
     // Step 1: Find Task
