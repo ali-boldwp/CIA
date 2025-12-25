@@ -397,7 +397,15 @@
     font-weight: 600;
     cursor: pointer;
 }
-
+.btn.view{
+    background: #2563eb;
+    color: white;
+    border: none;
+    padding: 6px 14px;
+    border-radius: 6px;
+    font-size: 13px;
+    cursor: pointer;
+}
 .task-btn.italic {
     font-style: italic;
 }
