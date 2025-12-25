@@ -69,6 +69,15 @@ export const getTaskById = async (req: Request, res: Response, next: NextFunctio
     }
 };
 
+export const getTask = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const task = await taskService.getTask(req.params.id);
+        res.json(ok(task));
+    } catch (err) {
+        next(err);
+    }
+};
+
 export const startTask = async (req, res) => {
     let task = await Task.findById(req.params.id);
     if (!task) return res.status(404).json({ message: "Task not found" });
