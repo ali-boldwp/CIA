@@ -10,7 +10,8 @@ import {
 
 import { toast } from "react-toastify";
 
-const Chapter = ({ open, onClose, categoryId, chapter }) => {
+const Chapter = ({ open, onClose, categoryId, chapter, onCreated }) => {
+
     const editor = useRef(null);
 
 
@@ -42,7 +43,7 @@ const Chapter = ({ open, onClose, categoryId, chapter }) => {
     const handleSubmit = async () => {
         if (!name.trim()) return;
 
-
+        // ✅ guard
         if (!categoryId) {
             console.error("❌ categoryId missing!", { categoryId });
             toast.error("Category ID missing");
@@ -54,8 +55,6 @@ const Chapter = ({ open, onClose, categoryId, chapter }) => {
             content: content || "",
             category: categoryId,
         };
-
-
 
         setLoading(true);
 
@@ -73,7 +72,14 @@ const Chapter = ({ open, onClose, categoryId, chapter }) => {
                 }
             );
 
+            // ✅ tell parent to refetch category / chapters (if provided)
+            if (typeof onCreated === "function") onCreated();
+
+            // ✅ close popup
             onClose(false);
+        } catch (e) {
+            // toast.promise already shows error, but keep console for debugging
+            console.error("Chapter submit error:", e);
         } finally {
             setLoading(false);
         }

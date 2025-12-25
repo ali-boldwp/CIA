@@ -7,7 +7,8 @@ import ChapterPopup from "./Popup/Chapter"
 import styles from "./style.module.css";
 import {useState} from "react";
 
-const View = ({ data, categoryId  }) => {
+const View = ({ data, categoryId, onChapterCreated }) => {
+
 
     const [ newChapterPopup, setNewChapterPopup ] = useState( false );
 
@@ -34,7 +35,9 @@ const View = ({ data, categoryId  }) => {
                     open={newChapterPopup}
                     onClose={setNewChapterPopup}
                     categoryId={categoryId}
+                    onCreated={onChapterCreated}
                 />
+
             )}
         </>
     )
