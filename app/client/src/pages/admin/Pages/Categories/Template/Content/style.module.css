@@ -12,3 +12,9 @@
 .container h2 {
     font-size: 20px;
 }
+
+.chapters {
+    display: flex;
+    flex-direction: column;
+    gap: 36px
+}
