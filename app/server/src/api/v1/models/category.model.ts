@@ -9,6 +9,7 @@ export interface ICategory extends Document {
     chapters:Types.ObjectId[];
     title: string;
     content: string;
+    index:number;
 }
 
 const categorySchema = new Schema<ICategory>(
@@ -22,6 +23,10 @@ const categorySchema = new Schema<ICategory>(
             type : [Schema.Types.ObjectId],
             ref : "ChapterTemplate",
             default: [],
+        },
+        index: {
+            type: Number,
+            default: 0
         },
         title : {
             type:String,

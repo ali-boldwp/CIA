@@ -17,14 +17,19 @@ export const getCategoryById = async (id: string) => {
     return Category.findById(id)
         .populate({
             path: "chapters",
+            options: { sort: { index: 1 } },
             populate: {
                 path: "tasks",
+                options: { sort: { index: 1 } },
                 populate: {
                     path: "foamFields",
-                    model: "FoamFields"
-                }
-            }
+                    options: { sort: { index: 1 } },
+                    model: "FoamFields",
+                },
+            },
         })
         .lean();
 };
+
+
 

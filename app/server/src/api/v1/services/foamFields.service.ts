@@ -3,7 +3,16 @@ import TaskTemplate from "../models/taskTemplate.model";
 
 // CREATE
 export const createFoamField = async (data: Partial<IFoamFields>) => {
-    const field = await FoamFields.create(data);
+    const task = await TaskTemplate
+        .findById(data.task)
+        .select("foamFields");
+
+    const nextIndex = task?.foamFields?.length || 0;
+
+    const field = await FoamFields.create({
+        ...data,
+        index: nextIndex,
+    });
 
     await TaskTemplate.findByIdAndUpdate(
         data.task,
@@ -12,6 +21,8 @@ export const createFoamField = async (data: Partial<IFoamFields>) => {
 
     return field;
 };
+
+
 
 // UPDATE
 export const updateFoamField = async (id: string, data: Partial<IFoamFields>) => {
