@@ -4,6 +4,7 @@ export interface IFoamFields extends Document {
     name : string;
     type : string;
     slug : string;
+    index:number;
     task : Types.ObjectId;
 }
 
@@ -21,6 +22,10 @@ const foamFieldsSchema = new Schema<IFoamFields>(
         slug : {
             type: String,
             required: false,
+        },
+        index: {
+            type: Number,
+            default: 0
         },
 
         task: {

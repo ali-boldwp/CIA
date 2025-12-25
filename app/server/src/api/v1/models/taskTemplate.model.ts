@@ -3,6 +3,7 @@ import {Schema, model, Document, Types} from "mongoose";
 export interface ITaskTemplate extends Document {
     name: string;
     content:string;
+    index:number;
     chapter:Types.ObjectId;
     foamFields: Types.ObjectId[];
 }
@@ -16,6 +17,11 @@ const taskTemplateSchema = new Schema<ITaskTemplate>(
         },
         content: {
             type : String,
+        },
+
+        index: {
+            type: Number,
+            default: 0
         },
 
         chapter: {

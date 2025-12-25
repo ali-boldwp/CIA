@@ -4,7 +4,10 @@ import baseQuery from "./apiSlice";
 export const categoryApi = createApi({
     reducerPath: "categoryApi",
     baseQuery,
-    tagTypes: ["Category"],
+    tagTypes: ["Category",
+        "ChapterTemplate",
+        "TaskTemplate",
+        "FoamFields",],
     endpoints: (builder) => ({
         // ================= GET ALL CATEGORIES =================
         getCategories: builder.query({
@@ -83,6 +86,20 @@ export const categoryApi = createApi({
             }),
             invalidatesTags: [{ type: "FoamFields", id: "LIST" }],
         }),
+        getFoamFieldsByTask: builder.query({
+            query: (taskId) => `/foam-fields/by-task/${taskId}`,
+            providesTags: (result) =>
+                result?.data
+                    ? [
+                        ...result.data.map((field) => ({
+                            type: "FoamFields",
+                            id: field._id,
+                        })),
+                        { type: "FoamFields", id: "LIST" },
+                    ]
+                    : [{ type: "FoamFields", id: "LIST" }],
+        }),
+
         getTaskTemplatesByChapter: builder.query({
             query: (chapterId) =>
                 `/task-template/by-chapter/${chapterId}`,
@@ -96,6 +113,7 @@ export const {
     useCreateCategoryMutation,
     useGetCategoryByIdQuery,
     useUpdateCategoryMutation,
+    useGetFoamFieldsByTaskQuery,
     useCreateFormFieldsMutation,
     useGetChapterTemplatesByCategoryQuery,
     useCreateChapterTemplateMutation,
