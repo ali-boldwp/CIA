@@ -125,6 +125,15 @@ export const categoryApi = createApi({
                 body: data
             }),
             invalidatesTags: ["Category"]
+        }),
+
+        updateChapterTemplateIndex: builder.mutation({
+            query: ({ id, data }) => ({
+                url: `/category/${id}/update-index`,
+                method: "PUT",
+                body: data
+            }),
+            invalidatesTags: ["Category"]
         })
 
 
@@ -145,4 +154,5 @@ export const {
     useCreateTaskTemplateMutation,
     useUpdateTaskTemplateMutation,
     useUpdateChapterTemplateMutation,
+    useUpdateChapterTemplateIndexMutation,
 } = categoryApi;
