@@ -29,11 +29,15 @@ const Details = ({ projectId, taskId }) => {
     const project = projectData?.data;
 
     const formatTime = (seconds) => {
-        if (!seconds || seconds <= 0) return "0h00m";
+        if (!seconds || seconds <= 0) return "0h 0m";
+
         const h = Math.floor(seconds / 3600);
         const m = Math.floor((seconds % 3600) / 60);
-        return `${h}h ${m.toString().padStart(2, "0")}m`;
+
+        return `${h}h ${m}m`;
     };
+
+
 
     const handleStart = async () => {
         try {
@@ -73,10 +77,11 @@ const Details = ({ projectId, taskId }) => {
 
     const isCompleted = task?.completed;
     const isPaused = task?.isPaused;
-    const isRunning = task?.analyst && !task?.isPaused;
+    const isStarted = !!task?.analyst; // analyst assign ho gaya = started
+
     console.log(isCompleted)
     console.log(isPaused)
-    console.log(isRunning)
+    console.log(isStarted)
 
     return (
         <div className="details-wrapper">
@@ -105,43 +110,54 @@ const Details = ({ projectId, taskId }) => {
             <div>
                 <div className="task-actions2">
 
-                    {!isCompleted && !isRunning && !isPaused && (
+                    {/* 1️⃣ ONLY START (never started before) */}
+                    {!isCompleted && !isStarted && (
                         <button className="btn start" onClick={handleStart}>
                             Start
                         </button>
                     )}
 
-                    {isRunning && (
-                        <button className="btn stop" onClick={handlePause}>
-                            Pause
-                        </button>
+                    {/* 2️⃣ STARTED + RUNNING */}
+                    {!isCompleted && isStarted && !isPaused && (
+                        <>
+                            <button className="btn stop" onClick={handlePause}>
+                                Pause
+                            </button>
+
+                            <button className="btn done" onClick={handleDone}>
+                                Done
+                            </button>
+                        </>
                     )}
 
-                    {isPaused && (
-                        <button className="btn start" onClick={handleResume}>
-                            Resume
-                        </button>
+                    {/* 3️⃣ STARTED + PAUSED */}
+                    {!isCompleted && isStarted && isPaused && (
+                        <>
+                            <button className="btn start" onClick={handleResume}>
+                                Resume
+                            </button>
+
+                            <button className="btn done" onClick={handleDone}>
+                                Done
+                            </button>
+                        </>
                     )}
 
-                    {!isCompleted && (
-                        <button className="btn done" onClick={handleDone}>
-                            Done
-                        </button>
-                    )}
                 </div>
-            <div className="details-right">
+
+                <div className="details-right">
 
                 <p className="time-title">REZUMAT TIMP LUCRU</p>
 
-                <p className="time-info">
-                    Timp total lucrat:
-                    <strong> {formatTime(task?.totalSeconds)} </strong> ·
-                    Estimare rămas:
-                    <strong> 00h 00m</strong>
-                </p>
+                    <p className="time-info">
+                        Timp total lucrat:
+                        <strong> {formatTime(task?.totalSeconds)} </strong> ·
+                        Estimare rămas:
+                        <strong> 00h 00m</strong>
+                    </p>
 
-                <p className="analyst-times">-</p>
-            </div>
+
+                </div>
             </div>
         </div>
     );
