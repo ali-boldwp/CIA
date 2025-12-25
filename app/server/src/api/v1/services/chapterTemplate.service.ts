@@ -1,10 +1,18 @@
 import ChapterTemplate, { IChapterTemplate } from "../models/chapterTemplate.model";
 import Category from "../models/category.model";
-import mongoose from "mongoose";
+
 
 
 export const createChapterTemplate = async (data) => {
-    const chapter = await ChapterTemplate.create(data);
+    // 🔹 count existing chapters in category
+    const category = await Category.findById(data.category).select("chapters");
+
+    const nextIndex = (category?.chapters?.length || 0) + 1;
+
+    const chapter = await ChapterTemplate.create({
+        ...data,
+        index: nextIndex,
+    });
 
     await Category.findByIdAndUpdate(
         data.category,
@@ -13,6 +21,7 @@ export const createChapterTemplate = async (data) => {
 
     return chapter;
 };
+
 
 
 

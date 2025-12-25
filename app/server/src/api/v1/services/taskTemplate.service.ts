@@ -3,7 +3,16 @@ import ChapterTemplate from "../models/chapterTemplate.model";
 
 // CREATE TASK TEMPLATE
 export const createTaskTemplate = async (data: Partial<ITaskTemplate>) => {
-    const task = await TaskTemplate.create(data);
+    const chapter = await ChapterTemplate
+        .findById(data.chapter)
+        .select("tasks");
+
+    const nextIndex = chapter?.tasks?.length || 0;
+
+    const task = await TaskTemplate.create({
+        ...data,
+        index: nextIndex,
+    });
 
     await ChapterTemplate.findByIdAndUpdate(
         data.chapter,
@@ -12,6 +21,8 @@ export const createTaskTemplate = async (data: Partial<ITaskTemplate>) => {
 
     return task;
 };
+
+
 
 // UPDATE TASK TEMPLATE
 export const updateTaskTemplate = async (
