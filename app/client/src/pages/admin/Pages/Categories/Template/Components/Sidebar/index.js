@@ -2,7 +2,7 @@ import styles from "./style.module.css";
 import {DragDropContext, Draggable, Droppable,} from "@hello-pangea/dnd";
 import {useState} from "react";
 
-const Sidebar = ({ data: _data }) => {
+const Sidebar = ({ data: _data, openChapterNew }) => {
 
     const [ data, setData ] = useState( _data );
 
@@ -139,7 +139,7 @@ const Sidebar = ({ data: _data }) => {
                                                 </li>)}
                                         </Draggable>))}
                                     {prov.placeholder}
-                                    <li> Add New Chapter </li>
+                                    <li onClick={ () => openChapterNew( true ) }> Add New Chapter </li>
                                 </ul>)}
                         </Droppable>
 
