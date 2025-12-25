@@ -1,38 +1,126 @@
+import React, { useMemo, useRef, useState } from "react";
 import Popup from "../../../../../../Components/Popup";
+import styles from "./style.module.css";
 
-const Chapter = ({ open, onClose }) => {
+import JoditEditor from "jodit-react";
+import {
+    useCreateChapterTemplateMutation,
+    useUpdateChapterTemplateMutation
+} from "../../../../../../../services/categoryApi";
 
-    const content = () => {
+import { toast } from "react-toastify";
 
-        return (
-            <>
-                Form here....
-            </>
-        )
+const Chapter = ({ open, onClose, categoryId, chapter }) => {
+    const editor = useRef(null);
 
-    }
 
-    const footer = () => {
+    const [name, setName] = useState(chapter?.name || "");
+    const [content, setContent] = useState(chapter?.content || "");
 
-        return (
-            <>
-                Form here....
-            </>
-        )
 
-    }
+    const isEdit = Boolean(chapter?.uid);
+    const [loading, setLoading] = useState(false);
+
+    const [createChapterTemplate] = useCreateChapterTemplateMutation();
+    const [updateChapterTemplate] = useUpdateChapterTemplateMutation();
+
+    const config = useMemo(
+        () => ({
+            readonly: false,
+            placeholder: "Conținut inițial",
+            height: 300,
+            uploader: {
+                insertImageAsBase64URI: true
+            }
+        }),
+        []
+    );
+
+    const handleSubmit = async () => {
+        if (!name.trim()) return;
+
+        setLoading(true);
+        try {
+            if (isEdit) {
+                await updateChapterTemplate({
+                    id: chapter.uid,
+                    data: {
+                        name,
+                        content,
+                        category: categoryId
+                    }
+                }).unwrap();
+
+                toast.success("Capitol actualizat cu succes");
+            } else {
+                await createChapterTemplate({
+                    name,
+                    content: content || "",
+                    category: categoryId
+                }).unwrap();
+
+                toast.success("Capitol creat cu succes");
+            }
+
+
+            onClose(false);
+        } catch (e) {
+            toast.error(isEdit ? "Actualizarea a eșuat" : "Operația a eșuat");
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const contentUI = (
+        <div className="form-box">
+            <div style={{ position: "relative" }}>
+                <input
+                    type="text"
+                    placeholder="Numele capitolului"
+                    className={`input ${styles.titleInput}`}
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                />
+
+                <div className={styles.editorWrap}>
+                    <JoditEditor
+                        ref={editor}
+                        value={content}
+                        config={config}
+                        tabIndex={1}
+                        onBlur={(newContent) => setContent(newContent)}
+                    />
+                </div>
+
+            </div>
+        </div>
+    );
+
+    const footerUI = (
+        <div className={styles.footerRow}>
+            <button
+                className={styles.addBtn}
+                onClick={handleSubmit}
+                disabled={loading || !name.trim()}
+            >
+                {loading ? (isEdit ? "Se salvează..." : "Se adaugă...") : (isEdit ? "Salvează" : "Adaugă")}
+            </button>
+
+            <button className={styles.cancelBtn} onClick={() => onClose(false)}>
+                Anulează
+            </button>
+        </div>
+    );
 
     return (
-        <>
-            <Popup
-                content={ content() }
-                header={ "New Chapter" }
-                footer={ footer() }
-                onClose={ onClose }
-            />
-        </>
-    )
-
-}
+        <Popup
+            open={open}
+            header={isEdit ? "Update Chapter" : "New Chapter"}
+            content={contentUI}
+            footer={footerUI}
+            onClose={onClose}
+        />
+    );
+};
 
 export default Chapter;
