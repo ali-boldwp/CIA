@@ -86,12 +86,22 @@ function View({ data, isError }) {
 
                                 {/* Backend me nahi hain abhi -> safe fallback */}
                                 <div className={styles.col}>
-                                    {c.chapters !== undefined && c.chapters !== null ? c.chapters : "—"}
+                                    {Array.isArray(c.chapters)
+                                        ? c.chapters.length
+                                        : c.chapters ?? 0}
                                 </div>
 
                                 <div className={styles.col}>
-                                    {c.tasks !== undefined && c.tasks !== null ? c.tasks : "—"}
+                                    {Array.isArray(c.chapters)
+                                        ? c.chapters.reduce(
+                                            (total, chapter) =>
+                                                total + (Array.isArray(chapter.tasks) ? chapter.tasks.length : 0),
+                                            0
+                                        )
+                                        : 0}
                                 </div>
+
+
 
                                 <div className={styles.col}>
                   <span className={`${styles.stateBadge} ${statusClass(c.status)}`}>
