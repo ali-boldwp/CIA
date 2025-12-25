@@ -1,38 +1,35 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./TaskFieldForm.css";
-import styles from "../../../../Categories/List/Popup/style.module.css";
+import {useGetFoamFieldsByTaskIdQuery} from "../../../../../../../services/formFieldsApi";
 
-const TaskFieldForm = ({ onSubmit }) => {
+
+const TaskFieldForm = ({ taskId }) => {
+    const { data, isLoading } = useGetFoamFieldsByTaskIdQuery(taskId, {
+        skip: !taskId,
+    });
+
     const [name, setName] = useState("");
     const [slug, setSlug] = useState("");
     const [type, setType] = useState("text");
 
-    const handleReset = () => {
-        setName("");
-        setSlug("");
-        setType("text");
-    };
+    // 🔥 AUTO FILL FORM
+    useEffect(() => {
+        if (data?.data?.length) {
+            const field = data.data[0]; // example: first field
+            setName(field.name || "");
+            setSlug(field.slug || "");
+            setType(field.type || "text");
+        }
+    }, [data]);
 
-    const handleSubmit = () => {
-        if (!name.trim() || !slug.trim()) return;
-
-        onSubmit?.({
-            name: name.trim(),
-            slug: slug.trim(),
-            type
-        });
-
-        handleReset();
-    };
+    if (isLoading) return <p>Loading...</p>;
 
     return (
         <div className="task-field-form">
-
             <div className="form-field">
                 <label>Nume câmp</label>
                 <input
                     type="text"
-                    placeholder="Ex: Adresă IP"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                 />
@@ -42,7 +39,6 @@ const TaskFieldForm = ({ onSubmit }) => {
                 <label>Slug</label>
                 <input
                     type="text"
-                    placeholder="ex: adresa_ip"
                     value={slug}
                     onChange={(e) => setSlug(e.target.value)}
                 />
@@ -60,7 +56,6 @@ const TaskFieldForm = ({ onSubmit }) => {
                     <option value="textarea">textarea</option>
                 </select>
             </div>
-
         </div>
     );
 };
