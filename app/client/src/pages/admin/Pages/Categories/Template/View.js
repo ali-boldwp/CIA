@@ -4,6 +4,8 @@ import Content from "./Content"
 
 import ChapterPopup from "./Popup/Chapter";
 import TaskPopup from "./Popup/Task";
+import FieldPopup from "./Popup/Field";
+
 
 
 import styles from "./style.module.css";
@@ -19,6 +21,11 @@ const View = ({ data, categoryId, onChapterCreated }) => {
     // Task popup State
     const [newTaskPopup, setNewTaskPopup] = useState(false);
     const [selectedTask, setSelectedTask] = useState(null);
+
+    // Field popup state
+    const [newFieldPopup, setNewFieldPopup] = useState(false);
+    const [selectedField, setSelectedField] = useState(null);
+
 
 
 
@@ -40,7 +47,7 @@ const View = ({ data, categoryId, onChapterCreated }) => {
                             setNewChapterPopup(true);
                         }}
 
-                        // ✅ ADD THESE
+                        // ✅ TASK POPUP
                         openTaskNew={(chapter) => {
                             setSelectedTask({ chapterId: chapter._id }); // new task for this chapter
                             setNewTaskPopup(true);
@@ -51,10 +58,32 @@ const View = ({ data, categoryId, onChapterCreated }) => {
                                 name: task.name,
                                 content: task.content || "",
                                 chapterId: chapter._id,
+                                taskId: task._id, // (optional) if you want it too
                             });
                             setNewTaskPopup(true);
                         }}
+
+                        // ✅ FIELD POPUP
+                        openFieldNew={(task, chapter) => {
+                            setSelectedField({
+                                chapterId: chapter._id,
+                                taskId: task._id,
+                            });
+                            setNewFieldPopup(true);
+                        }}
+                        onEditField={(field, task, chapter) => {
+                            setSelectedField({
+                                uid: field._id,
+                                name: field.name,
+                                slug: field.slug,
+                                type: field.type,
+                                chapterId: chapter._id,
+                                taskId: task._id,
+                            });
+                            setNewFieldPopup(true);
+                        }}
                     />
+
 
 
                     <div className={ styles.contentTemplate }>
@@ -79,11 +108,23 @@ const View = ({ data, categoryId, onChapterCreated }) => {
                     <TaskPopup
                         open={newTaskPopup}
                         onClose={setNewTaskPopup}
-                        chapterId={selectedTask?.chapterId}  // ✅ yahi sahi hai
+                        chapterId={selectedTask?.chapterId}
                         task={selectedTask}
-                        onCreated={onChapterCreated}         // ✅ same refetch function
+                        onCreated={onChapterCreated}
                     />
                 )}
+
+            {newFieldPopup && (
+                <FieldPopup
+                    open={newFieldPopup}
+                    onClose={setNewFieldPopup}
+                    chapterId={selectedField?.chapterId}
+                    taskId={selectedField?.taskId}
+                    field={selectedField}
+                    onCreated={onChapterCreated} // refetch
+                />
+            )}
+
 
 
 
