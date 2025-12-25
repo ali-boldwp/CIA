@@ -14,6 +14,8 @@ import ChapterPopup from "../admin/Pages/Categories/Template/Popup/Chapter"
 const CategoryView = () => {
     const { id: categoryId } = useParams();
 
+
+
     const { data: categoryData } = useGetCategoryByIdQuery(categoryId, {
         skip: !categoryId
     });
@@ -25,6 +27,8 @@ const CategoryView = () => {
 
     const category = categoryData?.data || {};
     const [chapters, setChapters] = useState([]);
+    const [openChapterPopup, setOpenChapterPopup] = useState(false);
+
 
     /* ✅ LOAD CHAPTERS FROM BACKEND */
     useEffect(() => {
@@ -91,8 +95,11 @@ const CategoryView = () => {
                 <AddButton onAdd={addNewChapter} />
             </div>
             <ChapterPopup
-                onClose={ () => {} }
+                open={openChapterPopup}
+                onClose={setOpenChapterPopup}
+                categoryId={categoryId}
             />
+
         </>
     );
 };
