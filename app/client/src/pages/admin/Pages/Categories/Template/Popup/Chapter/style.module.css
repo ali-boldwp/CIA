@@ -1,0 +1,54 @@
+
+.titleInput{
+    margin-bottom: 12px;
+}
+
+
+.editorWrap :global(.jodit-container){
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+
+
+
+.footerRow{
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    align-items: center;
+}
+
+
+.cancelBtn {
+    height: 40px;
+    padding: 0 14px;
+    border-radius: 6px;
+    border: 1px solid #d1d5db;
+    background: #fff;
+    cursor: pointer;
+    font-weight: 700;
+}
+
+.addBtn {
+    height: 40px;
+    padding: 0 14px;
+    border-radius: 6px;
+    border: none;
+    background: #2563eb;
+    color: #fff;
+    cursor: pointer;
+    font-weight: 700;
+}
+
+.cancelBtn:disabled,
+.addBtn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+
+.editorWrap :global(.jodit-toolbar__box){
+    border-top-left-radius: 6px;
+    border-top-right-radius: 6px;
+}
