@@ -75,6 +75,16 @@ export const categoryApi = createApi({
             }),
             invalidatesTags: [{ type: "TaskTemplate", id: "LIST" }],
         }),
+
+        updateTaskTemplate: builder.mutation({
+            query: ({ id, data }) => ({
+                url: `/task-template/${id}`,
+                method: "PUT",
+                body: data
+            }),
+            invalidatesTags: ["Task"]
+        }),
+
         createFormFields: builder.mutation({
             query: (body) => ({
                 url: "/foam-fields",
@@ -87,6 +97,17 @@ export const categoryApi = createApi({
             query: (chapterId) =>
                 `/task-template/by-chapter/${chapterId}`,
         }),
+
+        updateChapterTemplate: builder.mutation({
+            query: ({ id, data }) => ({
+                url: `/chapter-template/${id}`,
+                method: "PUT",
+                body: data
+            }),
+            invalidatesTags: ["Category"]
+        })
+
+
 
     }),
 });
@@ -101,4 +122,6 @@ export const {
     useCreateChapterTemplateMutation,
     useGetTaskTemplatesByChapterQuery,
     useCreateTaskTemplateMutation,
+    useUpdateTaskTemplateMutation,
+    useUpdateChapterTemplateMutation,
 } = categoryApi;

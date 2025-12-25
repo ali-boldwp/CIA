@@ -1,11 +1,13 @@
 import React, { useRef, useMemo } from "react";
 import JoditEditor from "jodit-react";
-import { useCreateChapterTemplateMutation } from "../../../../services/categoryApi";
+import { useCreateChapterTemplateMutation,useUpdateChapterTemplateMutation } from "../../../../services/categoryApi";
 import { toast } from "react-toastify";
 import { IoMdSettings } from "react-icons/io";
 import { useNavigate } from "react-router-dom";
 
 const CategoryViewform = ({ chapter, categoryId, onUpdate, onCreated }) => {
+    const [updateChapterTemplate] = useUpdateChapterTemplateMutation();
+
     const editor = useRef(null);
     const navigate = useNavigate();
 
@@ -51,6 +53,26 @@ const CategoryViewform = ({ chapter, categoryId, onUpdate, onCreated }) => {
         navigate(`/categories/chapter/${chapter.uid}`);
     };
 
+    const handleUpdate = async (payload) => {
+        if (!chapter.isCreated) return;
+
+        try {
+            await updateChapterTemplate({
+                id: chapter.uid,
+                data: {
+                    ...payload,
+                    category: categoryId
+                }
+            }).unwrap();
+
+            toast.success("Capitol actualizat cu succes");
+        } catch {
+            toast.error("Actualizarea a eșuat");
+        }
+    };
+
+
+
     return (
         <div className="form-box">
             <div style={{ position: "relative" }}>
@@ -62,8 +84,13 @@ const CategoryViewform = ({ chapter, categoryId, onUpdate, onCreated }) => {
                     onChange={(e) =>
                         onUpdate(chapter.uid, { name: e.target.value })
                     }
-                    onBlur={handleTitleBlur}
+                    onBlur={() =>
+                        chapter.isCreated
+                            ? handleUpdate({ name: chapter.name })
+                            : handleTitleBlur()
+                    }
                 />
+
 
                 <IoMdSettings
                     onClick={handleSettingsClick}
@@ -75,17 +102,21 @@ const CategoryViewform = ({ chapter, categoryId, onUpdate, onCreated }) => {
                         right: "7px",
                     }}
                 />
-            </div>
 
-            <JoditEditor
-                ref={editor}
-                value={chapter.content}
-                config={config}
-                tabIndex={1}
-                onBlur={(newContent) =>
-                    onUpdate(chapter.uid, { content: newContent })
-                }
-            />
+
+                <JoditEditor
+                    ref={editor}
+                    value={chapter.content}
+                    config={config}
+                    tabIndex={1}
+                    onBlur={(newContent) => {
+                        onUpdate(chapter.uid, { content: newContent });
+                        handleUpdate({ content: newContent }); // ✅ REAL CONTENT
+                    }}
+                />
+
+
+            </div>
         </div>
     );
 };
