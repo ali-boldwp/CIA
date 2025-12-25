@@ -20,11 +20,6 @@ export const taskApi = createApi({
             query: (id) => `/chapter/${id}`,
             providesTags: ["Chapters"],
         }),
-
-        getChapterByProjectId: builder.query({
-            query: (projectId) => `/chapter/${projectId}`,
-            providesTags: ["Chapters"],
-        }),
         getTaskById: builder.query({
             query: (id) => `/task/${id}`,
             providesTags: ["task"],
@@ -124,7 +119,6 @@ export const taskApi = createApi({
 export const {
     useGetTaskByIdQuery,
     useGetChapterByIdQuery,
-    useGetChapterByProjectIdQuery,
     useCreateChapterMutation,
     useGetTasksByChapterIdQuery,
     useCreateTaskMutation, // ✅ export hook
