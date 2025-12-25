@@ -7,7 +7,8 @@ export const createChapterTemplate = async (data) => {
     // 🔹 count existing chapters in category
     const category = await Category.findById(data.category).select("chapters");
 
-    const nextIndex = (category?.chapters?.length || 0) + 1;
+    const nextIndex = category?.chapters?.length || 0;
+
 
     const chapter = await ChapterTemplate.create({
         ...data,
@@ -63,6 +64,6 @@ export const deleteChapterTemplate = async (id) => {
 
 export const getChaptersByCategoryId = async (categoryId: string) => {
     return ChapterTemplate.find({ category: categoryId })
-        .populate("category")
+        .sort({ index: 1 })
         .lean();
 };

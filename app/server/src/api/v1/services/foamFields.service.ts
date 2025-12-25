@@ -62,6 +62,6 @@ export const deleteFoamField = async (id: string) => {
 // GET BY TASK ID
 export const getFoamFieldsByTaskId = async (taskId: string) => {
     return FoamFields.find({ task: taskId })
-        .populate("task")
+        .sort({ index: 1 })
         .lean();
 };

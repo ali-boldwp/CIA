@@ -7,7 +7,8 @@ export const createTaskTemplate = async (data: Partial<ITaskTemplate>) => {
         .findById(data.chapter)
         .select("tasks");
 
-    const nextIndex = chapter?.tasks?.length || 0;
+    const nextIndex = category?.chapters?.length || 0;
+
 
     const task = await TaskTemplate.create({
         ...data,
@@ -65,6 +66,6 @@ export const deleteTaskTemplate = async (id: string) => {
 // GET TASK TEMPLATES BY CHAPTER ID
 export const getTaskTemplatesByChapterId = async (chapterId: string) => {
     return TaskTemplate.find({ chapter: chapterId })
-        .populate("chapter")
+        .sort({ index: 1 })
         .lean();
 };
