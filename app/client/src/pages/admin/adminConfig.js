@@ -24,6 +24,7 @@ import CategoryView from "./Pages/Categories/View";
 import Profile from "./Pages/Profile";
 import FoamFields from "./Pages/Categories/Task/Components";
 import NewChapter from "./Pages/Categories/Chapter/main";
+import CategoryTemplate from "./Pages/Categories/Template";
 
 const AdminConfig = {
     settings: {
@@ -146,6 +147,10 @@ const AdminConfig = {
                         {
                             path: 'view/:id',
                             element: <CategoryView/>,
+                        },
+                        {
+                            path: ':id',
+                            element: <CategoryTemplate/>,
                         },
                         {
                             path: 'view/:id',
