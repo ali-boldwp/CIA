@@ -113,6 +113,19 @@ export const categoryApi = createApi({
             invalidatesTags: [{ type: "FoamFields", id: "LIST" }],
         }),
 
+        updateFormField: builder.mutation({
+            query: ({ id, data }) => ({
+                url: `/foam-fields/${id}`,
+                method: "PUT",
+                body: data,
+            }),
+            invalidatesTags: (result, error, arg) => [
+                { type: "FoamFields", id: arg.id },
+                { type: "FoamFields", id: "LIST" },
+            ],
+        }),
+
+
         // ================= GET FOAM FIELDS BY TASK =================
         getFoamFieldsByTask: builder.query({
             query: (taskId) => `/foam-fields/by-task/${taskId}`,
@@ -165,6 +178,7 @@ export const {
     useUpdateCategoryMutation,
     useGetFoamFieldsByTaskQuery,
     useCreateFormFieldsMutation,
+    useUpdateFormFieldMutation,
     useGetChapterTemplatesByCategoryQuery,
     useCreateChapterTemplateMutation,
     useGetTaskTemplatesByChapterQuery,

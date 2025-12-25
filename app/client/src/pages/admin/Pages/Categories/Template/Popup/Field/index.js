@@ -1,13 +1,12 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
 import Popup from "../../../../../../Components/Popup";
 import styles from "./style.module.css";
 import { toast } from "react-toastify";
 
-// ✅ apne api hooks yahan set karo (example names)
 import {
     useCreateFormFieldsMutation,
+    useUpdateFormFieldMutation,
 } from "../../../../../../../services/categoryApi";
-
 
 const INPUT_TYPES = [
     "text","number","email","password","textarea",
@@ -31,7 +30,7 @@ const Field = ({ open, onClose, chapterId, taskId, field, onCreated }) => {
     const [loading, setLoading] = useState(false);
 
     const [createField] = useCreateFormFieldsMutation();
-
+    const [updateField] = useUpdateFormFieldMutation();
 
     useEffect(() => {
         setName(field?.name || "");
@@ -49,14 +48,8 @@ const Field = ({ open, onClose, chapterId, taskId, field, onCreated }) => {
         if (!name.trim() || !slug.trim()) return;
 
         // ✅ guards
-        if (!chapterId) {
-            toast.error("Chapter ID missing");
-            return;
-        }
-        if (!taskId) {
-            toast.error("Task ID missing");
-            return;
-        }
+        if (!chapterId) return toast.error("Chapter ID missing");
+        if (!taskId) return toast.error("Task ID missing");
 
         const payload = {
             name: name.trim(),
@@ -67,16 +60,18 @@ const Field = ({ open, onClose, chapterId, taskId, field, onCreated }) => {
         };
 
         setLoading(true);
+
         try {
             await toast.promise(
-                createField(payload).unwrap(),
+                isEdit
+                    ? updateField({ id: field.uid, data: payload }).unwrap()
+                    : createField(payload).unwrap(),
                 {
-                    pending: "Se adaugă...",
-                    success: "Field created",
-                    error: "Operația a eșuat",
+                    pending: isEdit ? "Se salvează..." : "Se adaugă...",
+                    success: isEdit ? "Field updated successfully" : "Field created successfully",
+                    error: isEdit ? "Update failed" : "Create failed",
                 }
             );
-
 
             if (typeof onCreated === "function") onCreated();
             onClose(false);
@@ -97,6 +92,7 @@ const Field = ({ open, onClose, chapterId, taskId, field, onCreated }) => {
                         value={name}
                         onChange={(e) => handleNameChange(e.target.value)}
                         placeholder="Ex: Adresă IP"
+                        autoComplete="off"
                     />
                 </div>
 
@@ -110,6 +106,7 @@ const Field = ({ open, onClose, chapterId, taskId, field, onCreated }) => {
                             setSlug(e.target.value);
                         }}
                         placeholder="ex: adresa-ip"
+                        autoComplete="off"
                     />
                 </div>
 
@@ -139,7 +136,11 @@ const Field = ({ open, onClose, chapterId, taskId, field, onCreated }) => {
                 {loading ? (isEdit ? "Se salvează..." : "Se adaugă...") : (isEdit ? "Salvează" : "Adaugă")}
             </button>
 
-            <button className={styles.cancelBtn} onClick={() => onClose(false)}>
+            <button
+                className={styles.cancelBtn}
+                onClick={() => onClose(false)}
+                disabled={loading}
+            >
                 Anulează
             </button>
         </div>
