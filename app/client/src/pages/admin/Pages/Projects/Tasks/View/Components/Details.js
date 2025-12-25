@@ -7,7 +7,7 @@ import {
 } from "../../../../../../../services/taskApi";
 import "./Detail.css";
 
-const Details = ({ projectId, taskId }) => {
+const Details = ({ projectId, taskId, formValues }) => {
     const { data: projectData } = useGetCreateProjectByIdQuery(projectId, {
         skip: !projectId
     });
@@ -67,6 +67,17 @@ const Details = ({ projectId, taskId }) => {
     };
 
     const handleDone = async () => {
+
+
+        const hasEmptyField = Object.values(formValues || {}).some(
+            value => !value || value.trim() === ""
+        );
+
+        if (hasEmptyField) {
+            toast.error("Please fill all form fields before completing the task");
+            return;
+        }
+
         try {
             await completeTask(taskId).unwrap();
             toast.success("Task finalizat");
@@ -74,6 +85,7 @@ const Details = ({ projectId, taskId }) => {
             toast.error("Finalizarea a eșuat");
         }
     };
+
 
     const isCompleted = task?.completed;
     const isPaused = task?.isPaused;

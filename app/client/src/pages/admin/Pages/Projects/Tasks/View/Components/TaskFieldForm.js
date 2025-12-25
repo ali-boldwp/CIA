@@ -1,15 +1,13 @@
 import React, { useEffect, useState } from "react";
 import styles from "./TaskFieldForm.module.css";
 import { useGetFoamFieldsByTaskIdQuery } from "../../../../../../../services/formFieldsApi";
-import { useParams } from "react-router-dom";
 
-const TaskFieldForm = ({taskId}) => {
+
+const TaskFieldForm = ({ taskId, formValues, setFormValues }) => {
 
     const { data, isLoading } = useGetFoamFieldsByTaskIdQuery(taskId, {
         skip: !taskId,
     });
-
-    const [formValues, setFormValues] = useState({});
 
     useEffect(() => {
         if (data?.data?.length) {
@@ -19,7 +17,7 @@ const TaskFieldForm = ({taskId}) => {
             });
             setFormValues(initialValues);
         }
-    }, [data]);
+    }, [data, setFormValues]);
 
     const handleChange = (slug, value) => {
         setFormValues(prev => ({
@@ -39,17 +37,13 @@ const TaskFieldForm = ({taskId}) => {
                     {field.type === "textarea" ? (
                         <textarea
                             value={formValues[field.slug] || ""}
-                            onChange={e =>
-                                handleChange(field.slug, e.target.value)
-                            }
+                            onChange={e => handleChange(field.slug, e.target.value)}
                         />
                     ) : (
                         <input
                             type={field.type}
                             value={formValues[field.slug] || ""}
-                            onChange={e =>
-                                handleChange(field.slug, e.target.value)
-                            }
+                            onChange={e => handleChange(field.slug, e.target.value)}
                         />
                     )}
                 </div>
@@ -57,5 +51,4 @@ const TaskFieldForm = ({taskId}) => {
         </div>
     );
 };
-
-export default TaskFieldForm;
+export default TaskFieldForm
