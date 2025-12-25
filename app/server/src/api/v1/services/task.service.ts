@@ -11,7 +11,7 @@ export const getAllTasks = async () => {
 };
 
 export const getTaskById = async (taskId: string) => {
-    return await Task.findById(taskId).populate("chapterId");
+    return await Task.findById(taskId).populate("chterIdap");
 };
 
 
