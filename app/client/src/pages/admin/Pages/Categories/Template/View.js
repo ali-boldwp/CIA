@@ -1,5 +1,6 @@
 import Header from "./Components/Header"
 import Sidebar from "./Components/Sidebar";
+import Content from "./Content"
 
 import styles from "./style.module.css";
 
@@ -14,7 +15,11 @@ const View = ({ data }) => {
                 <Sidebar
                     data={ data }
                 />
-                <div> fdsfs </div>
+                <div className={ styles.contentTemplate }>
+                    <Content
+                        data={ data }
+                    />
+                </div>
             </div>
         </div>
     )

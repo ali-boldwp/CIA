@@ -16,11 +16,16 @@
 }
 
 .wrapper ul li > ul {
-    padding-left: 15px;
+    padding-left: 20px;
     margin-top: 9px;
 }
 
 .wrapper ul li {
     margin-bottom: 9px;
     cursor: pointer;
+}
+
+.wrapper ul li span {
+    display: flex;
+    gap: 6px
 }
