@@ -16,7 +16,8 @@ const Template = () => {
             loading={ isLoading }
             content={
                 <View
-                    data={ data?.data }
+                    data={data?.data}
+                    categoryId={categoryId}
                 />
             }
         />

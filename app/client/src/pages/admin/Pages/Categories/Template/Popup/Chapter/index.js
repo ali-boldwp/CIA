@@ -36,40 +36,49 @@ const Chapter = ({ open, onClose, categoryId, chapter }) => {
         []
     );
 
+
+
+
     const handleSubmit = async () => {
         if (!name.trim()) return;
 
+
+        if (!categoryId) {
+            console.error("❌ categoryId missing!", { categoryId });
+            toast.error("Category ID missing");
+            return;
+        }
+
+        const payload = {
+            name: name.trim(),
+            content: content || "",
+            category: categoryId,
+        };
+
+
+
         setLoading(true);
+
         try {
-            if (isEdit) {
-                await updateChapterTemplate({
-                    id: chapter.uid,
-                    data: {
-                        name,
-                        content,
-                        category: categoryId
-                    }
-                }).unwrap();
-
-                toast.success("Capitol actualizat cu succes");
-            } else {
-                await createChapterTemplate({
-                    name,
-                    content: content || "",
-                    category: categoryId
-                }).unwrap();
-
-                toast.success("Capitol creat cu succes");
-            }
-
+            await toast.promise(
+                isEdit
+                    ? updateChapterTemplate({ id: chapter.uid, data: payload }).unwrap()
+                    : createChapterTemplate(payload).unwrap(),
+                {
+                    pending: isEdit ? "Se salvează..." : "Se adaugă...",
+                    success: isEdit
+                        ? "Capitol actualizat cu succes"
+                        : "Capitol creat cu succes",
+                    error: isEdit ? "Actualizarea a eșuat" : "Operația a eșuat",
+                }
+            );
 
             onClose(false);
-        } catch (e) {
-            toast.error(isEdit ? "Actualizarea a eșuat" : "Operația a eșuat");
         } finally {
             setLoading(false);
         }
     };
+
 
     const contentUI = (
         <div className="form-box">

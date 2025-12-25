@@ -1,6 +1,15 @@
 
 .titleInput{
-    margin-bottom: 12px;
+    margin-bottom: 14px;
+    border: 1px solid #d1d5db !important;
+    border-radius: 6px;
+    padding: 10px 12px;
+    height: 42px;
+}
+
+.titleInput:focus{
+    border-color: #6b7280 !important;
+    outline: none;
 }
 
 

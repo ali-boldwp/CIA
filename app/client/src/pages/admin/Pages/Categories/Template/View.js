@@ -7,7 +7,7 @@ import ChapterPopup from "./Popup/Chapter"
 import styles from "./style.module.css";
 import {useState} from "react";
 
-const View = ({ data }) => {
+const View = ({ data, categoryId  }) => {
 
     const [ newChapterPopup, setNewChapterPopup ] = useState( false );
 
@@ -29,10 +29,13 @@ const View = ({ data }) => {
                     </div>
                 </div>
             </div>
-            { newChapterPopup && <ChapterPopup
-                open={ newChapterPopup }
-                onClose={ setNewChapterPopup }
-            /> }
+            {newChapterPopup && (
+                <ChapterPopup
+                    open={newChapterPopup}
+                    onClose={setNewChapterPopup}
+                    categoryId={categoryId}
+                />
+            )}
         </>
     )
 
