@@ -4,10 +4,7 @@ import baseQuery from "./apiSlice";
 export const categoryApi = createApi({
     reducerPath: "categoryApi",
     baseQuery,
-    tagTypes: ["Category",
-        "ChapterTemplate",
-        "TaskTemplate",
-        "FoamFields", "CategoryPreview"],
+    tagTypes: ["Category", "ChapterTemplate", "TaskTemplate", "FoamFields", "CategoryPreview"],
     endpoints: (builder) => ({
         // ================= GET ALL CATEGORIES =================
         getCategories: builder.query({
@@ -37,15 +34,15 @@ export const categoryApi = createApi({
             invalidatesTags: [{ type: "Category", id: "LIST" }],
         }),
 
+        // ================= GET CATEGORY BY ID =================
         getCategoryById: builder.query({
             query: (id) => ({
                 url: `/category/${id}`,
                 method: "GET",
             }),
-            providesTags: (result, error, id) => [
-                { type: "Category", id },
-            ],
+            providesTags: (result, error, id) => [{ type: "Category", id }],
         }),
+
         // ================= UPDATE CATEGORY =================
         updateCategory: builder.mutation({
             query: ({ id, ...body }) => ({
@@ -58,6 +55,8 @@ export const categoryApi = createApi({
                 { type: "Category", id: "LIST" },
             ],
         }),
+
+        // ================= CREATE CHAPTER TEMPLATE =================
         createChapterTemplate: builder.mutation({
             query: (body) => ({
                 url: "/chapter-template",
@@ -69,6 +68,7 @@ export const categoryApi = createApi({
             ],
         }),
 
+        // ================= GET CHAPTER TEMPLATES BY CATEGORY =================
         getChapterTemplatesByCategory: builder.query({
             query: (categoryId) => `/chapter-template/by-category/${categoryId}`,
             providesTags: (result, error, categoryId) =>
@@ -80,7 +80,7 @@ export const categoryApi = createApi({
                     : [{ type: "ChapterTemplate", id: `LIST-${categoryId}` }],
         }),
 
-
+        // ================= CREATE TASK TEMPLATE =================
         createTaskTemplate: builder.mutation({
             query: (body) => ({
                 url: "/task-template",
@@ -90,15 +90,20 @@ export const categoryApi = createApi({
             invalidatesTags: [{ type: "TaskTemplate", id: "LIST" }],
         }),
 
+        // ================= UPDATE TASK TEMPLATE =================
         updateTaskTemplate: builder.mutation({
             query: ({ id, data }) => ({
                 url: `/task-template/${id}`,
                 method: "PUT",
-                body: data
+                body: data,
             }),
-            invalidatesTags: ["Task"]
+            invalidatesTags: (result, error, arg) => [
+                { type: "TaskTemplate", id: arg.id },
+                { type: "TaskTemplate", id: "LIST" },
+            ],
         }),
 
+        // ================= CREATE FORM FIELDS =================
         createFormFields: builder.mutation({
             query: (body) => ({
                 url: "/foam-fields",
@@ -107,6 +112,8 @@ export const categoryApi = createApi({
             }),
             invalidatesTags: [{ type: "FoamFields", id: "LIST" }],
         }),
+
+        // ================= GET FOAM FIELDS BY TASK =================
         getFoamFieldsByTask: builder.query({
             query: (taskId) => `/foam-fields/by-task/${taskId}`,
             providesTags: (result) =>
@@ -121,11 +128,12 @@ export const categoryApi = createApi({
                     : [{ type: "FoamFields", id: "LIST" }],
         }),
 
+        // ================= GET TASK TEMPLATES BY CHAPTER =================
         getTaskTemplatesByChapter: builder.query({
-            query: (chapterId) =>
-                `/task-template/by-chapter/${chapterId}`,
+            query: (chapterId) => `/task-template/by-chapter/${chapterId}`,
         }),
 
+        // ================= UPDATE CHAPTER TEMPLATE =================
         updateChapterTemplate: builder.mutation({
             query: ({ id, data }) => ({
                 url: `/chapter-template/${id}`,
@@ -138,20 +146,15 @@ export const categoryApi = createApi({
             ],
         }),
 
-            invalidatesTags: ["Category"]
-        }),
-
+        // ================= UPDATE CHAPTER TEMPLATE INDEX =================
         updateChapterTemplateIndex: builder.mutation({
             query: ({ id, data }) => ({
                 url: `/category/${id}/update-index`,
                 method: "PUT",
-                body: data
+                body: data,
             }),
-            invalidatesTags: ["Category"]
-        })
-
-
-
+            invalidatesTags: [{ type: "Category", id: "LIST" }],
+        }),
     }),
 });
 
