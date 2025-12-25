@@ -241,57 +241,10 @@ const Chapter = ({
                                             <span className="disabled-text"></span>
                                         ) : (
                                             <>
-                                                {task.completed ? (
-                                                    <>
-                                                        {/* Edit and Delete buttons - Only for admin and manager */}
-                                                        {(user?.role === "admin" || user?.role === "manager") && (
-                                                            <span className="btnActionBoth">
-                                                                <FiEdit2 className="icon edit" />
-                                                                <FiTrash2 className="icon delete" />
-                                                            </span>
-                                                        )}
-                                                    </>
-                                                ) : (
-                                                    <>
-                                                        {/* Start/Resume/Pause/Done buttons - For admin, manager and analyst */}
-
-
-                                                                {/*{!task.analyst ? (*/}
-                                                                {/*    <button*/}
-                                                                {/*        className="btn start"*/}
-                                                                {/*        onClick={() => handleStart(task._id, item._id)}*/}
-                                                                {/*    >*/}
-                                                                {/*        Start*/}
-                                                                {/*    </button>*/}
-                                                                {/*) : (*/}
-                                                                {/*    <>*/}
-                                                                {/*        {task.isPaused ? (*/}
-                                                                {/*            <button*/}
-                                                                {/*                className="btn start"*/}
-                                                                {/*                onClick={() => handleResume(task._id, item._id)}*/}
-                                                                {/*            >*/}
-                                                                {/*                Resume*/}
-                                                                {/*            </button>*/}
-                                                                {/*        ) : (*/}
-                                                                {/*            <button*/}
-                                                                {/*                className="btn stop"*/}
-                                                                {/*                onClick={() => handlePause(task._id, item._id)}*/}
-                                                                {/*            >*/}
-                                                                {/*                Pause*/}
-                                                                {/*            </button>*/}
-                                                                {/*        )}*/}
-
-                                                                {/*        <button*/}
-                                                                {/*            className="btn done"*/}
-                                                                {/*            onClick={() => handleComplete(task._id, item._id)}*/}
-                                                                {/*        >*/}
-                                                                {/*            Done*/}
-                                                                {/*        </button>*/}
-                                                                {/*    </>*/}
-                                                                {/*)}*/}
+                                                  
 
                                                         <Link to={`${task._id}/progress`}
-                                                             className="btn start"
+                                                             className="btn view"
 
                                                           >
                                                             view
@@ -303,8 +256,8 @@ const Chapter = ({
                                                                 <FiTrash2 className="icon delete" />
                                                             </span>
                                                         )}
-                                                    </>
-                                                )}
+
+
                                             </>
                                         )}
                                     </div>
