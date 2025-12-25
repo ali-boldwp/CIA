@@ -25,9 +25,9 @@ const Chapter = ({ open, onClose }) => {
     return (
         <>
             <Popup
-                content={ content }
+                content={ content() }
                 header={ "New Chapter" }
-                footer={ footer }
+                footer={ footer() }
                 onClose={ onClose }
             />
         </>
