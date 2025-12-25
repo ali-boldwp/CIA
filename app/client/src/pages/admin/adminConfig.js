@@ -25,6 +25,8 @@ import Profile from "./Pages/Profile";
 import FoamFields from "./Pages/Categories/Task/Components";
 import NewChapter from "./Pages/Categories/Chapter/main";
 import CategoryTemplate from "./Pages/Categories/Template";
+import TaskView from "./Pages/Projects/Tasks/View/Components/TaskView";
+import ViewTask from "./Pages/Projects/Tasks/View";
 
 const AdminConfig = {
     settings: {
@@ -68,7 +70,11 @@ const AdminConfig = {
                         },
                         {
                             path: 'view/:id/tasks',
-                            element: <ProjectTasks/>
+                            element: <ProjectTasks/>,
+                        },
+                        {
+                            path: 'view/:id/tasks/:taskId/progress',
+                            element: <ViewTask/>
                         },
                         {
                             path: 'view/:id/cost',
