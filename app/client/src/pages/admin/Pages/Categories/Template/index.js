@@ -7,9 +7,10 @@ const Template = () => {
 
     const { id: categoryId } = useParams();
 
-    const { data, isLoading } = useGetCategoryByIdQuery(categoryId, {
+    const { data, isLoading, refetch } = useGetCategoryByIdQuery(categoryId, {
         skip: !categoryId
     });
+
 
     return (
         <Layout
@@ -18,7 +19,9 @@ const Template = () => {
                 <View
                     data={data?.data}
                     categoryId={categoryId}
+                    onChapterCreated={refetch}
                 />
+
             }
         />
     )

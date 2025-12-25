@@ -64,15 +64,23 @@ export const categoryApi = createApi({
                 method: "POST",
                 body,
             }),
-            invalidatesTags: [{ type: "ChapterTemplate", id: "LIST" }, { type: "CategoryPreview" }],
+            invalidatesTags: (result, error, body) => [
+                { type: "ChapterTemplate", id: `LIST-${body.category}` },
+            ],
         }),
+
         getChapterTemplatesByCategory: builder.query({
-            query: (categoryId) =>
-                `/chapter-template/by-category/${categoryId}`,
-            providesTags: (result, error, id) => [
-                { type: "CategoryPreview" },
-            ]
+            query: (categoryId) => `/chapter-template/by-category/${categoryId}`,
+            providesTags: (result, error, categoryId) =>
+                result?.data
+                    ? [
+                        ...result.data.map((ch) => ({ type: "ChapterTemplate", id: ch._id })),
+                        { type: "ChapterTemplate", id: `LIST-${categoryId}` },
+                    ]
+                    : [{ type: "ChapterTemplate", id: `LIST-${categoryId}` }],
         }),
+
+
         createTaskTemplate: builder.mutation({
             query: (body) => ({
                 url: "/task-template",
@@ -122,10 +130,14 @@ export const categoryApi = createApi({
             query: ({ id, data }) => ({
                 url: `/chapter-template/${id}`,
                 method: "PUT",
-                body: data
+                body: data,
             }),
-            invalidatesTags: ["Category"]
-        })
+            invalidatesTags: (result, error, arg) => [
+                { type: "ChapterTemplate", id: arg.id },
+                { type: "ChapterTemplate", id: `LIST-${arg.data.category}` },
+            ],
+        }),
+
 
 
 
