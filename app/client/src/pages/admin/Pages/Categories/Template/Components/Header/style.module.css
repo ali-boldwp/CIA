@@ -1,0 +1,7 @@
+.header {
+    background: linear-gradient(90.5deg, rgba(37, 99, 235, 0.98) 0%, rgba(79, 70, 229, 0.98) 99.89%);
+    padding: 12px 24px;
+    color: #FFF;
+    display: flex;
+    justify-content: space-between;
+}
