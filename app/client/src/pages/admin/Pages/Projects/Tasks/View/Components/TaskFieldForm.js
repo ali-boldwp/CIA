@@ -27,7 +27,7 @@ const TaskFieldForm = ({ onSubmit }) => {
 
     return (
         <div className="task-field-form">
-            <h3 style={{marginBottom:"20px"}}>Adaugă categorie</h3>
+
             <div className="form-field">
                 <label>Nume câmp</label>
                 <input
@@ -61,14 +61,6 @@ const TaskFieldForm = ({ onSubmit }) => {
                 </select>
             </div>
 
-            <div className="form-actions">
-                <button className="btn-reset" onClick={handleReset}>
-                    Reset
-                </button>
-                <button className="btn-add" onClick={handleSubmit}>
-                    Adaugă
-                </button>
-            </div>
         </div>
     );
 };
