@@ -11,7 +11,7 @@ import {
 
 import { toast } from "react-toastify";
 
-const Task = ({ open, onClose, chapterId, task, onCreated }) => {
+const Task = ({ open, onClose, chapterId, categoryId, task, onCreated }) => {
     const editor = useRef(null);
 
     const [name, setName] = useState(task?.name || "");
@@ -43,23 +43,34 @@ const Task = ({ open, onClose, chapterId, task, onCreated }) => {
     const handleSubmit = async () => {
         if (!name.trim()) return;
 
-        // ✅ guard: chapterId required
+        // ✅ guards
         if (!chapterId) {
             console.error("❌ chapterId missing!", { chapterId });
             toast.error("Chapter ID missing");
             return;
         }
+        if (!categoryId) {
+            console.error("❌ categoryId missing!", { categoryId });
+            toast.error("Category ID missing");
+            return;
+        }
 
+        // ✅ payload (send both variants to avoid backend mismatch)
         const payload = {
             name: name.trim(),
             content: content || "",
-            chapter: chapterId, // ✅ SAME AS TaskViewFoam
+
+            chapter: chapterId,
+            chapterId: chapterId,
+
+            category: categoryId,
+            categoryId: categoryId,
         };
 
         setLoading(true);
 
         try {
-            const res = await toast.promise(
+            await toast.promise(
                 isEdit
                     ? updateTaskTemplate({ id: task.uid, data: payload }).unwrap()
                     : createTaskTemplate(payload).unwrap(),
@@ -70,23 +81,13 @@ const Task = ({ open, onClose, chapterId, task, onCreated }) => {
                 }
             );
 
-            // ✅ if create: extract real id and inform parent like TaskViewFoam
-            if (!isEdit) {
-                const realId = res?.data?._id;
-                if (!realId) {
-                    console.error("Invalid create response:", res);
-                } else if (typeof onCreated === "function") {
-                    // if you use temp uid on frontend, pass it here instead of null
-                    onCreated(null, realId);
-                }
-            } else {
-                // ✅ edit: just refetch / notify parent
-                if (typeof onCreated === "function") onCreated();
-            }
+            // ✅ simplest + safest: refetch after create/update
+            if (typeof onCreated === "function") onCreated();
 
             onClose(false);
         } catch (e) {
             console.error("Task submit error:", e);
+            toast.error(e?.data?.message || e?.message || "Something went wrong");
         } finally {
             setLoading(false);
         }
@@ -123,13 +124,7 @@ const Task = ({ open, onClose, chapterId, task, onCreated }) => {
                 onClick={handleSubmit}
                 disabled={loading || !name.trim()}
             >
-                {loading
-                    ? isEdit
-                        ? "Se salvează..."
-                        : "Se adaugă..."
-                    : isEdit
-                        ? "Salvează"
-                        : "Adaugă"}
+                {loading ? (isEdit ? "Se salvează..." : "Se adaugă...") : isEdit ? "Salvează" : "Adaugă"}
             </button>
 
             <button className={styles.cancelBtn} onClick={() => onClose(false)}>

@@ -3,12 +3,16 @@ import ChapterTemplate from "../models/chapterTemplate.model";
 
 // CREATE TASK TEMPLATE
 export const createTaskTemplate = async (data: Partial<ITaskTemplate>) => {
+    if (!data?.chapter) throw new Error("chapter is required");
+
+    // ✅ chapter ke current tasks count se next index
     const chapter = await ChapterTemplate
         .findById(data.chapter)
         .select("tasks");
 
-    const nextIndex = category?.chapters?.length || 0;
+    if (!chapter) throw new Error("ChapterTemplate not found");
 
+    const nextIndex = chapter?.tasks?.length || 0;
 
     const task = await TaskTemplate.create({
         ...data,
@@ -23,8 +27,6 @@ export const createTaskTemplate = async (data: Partial<ITaskTemplate>) => {
     return task;
 };
 
-
-
 // UPDATE TASK TEMPLATE
 export const updateTaskTemplate = async (
     id: string,
@@ -33,7 +35,7 @@ export const updateTaskTemplate = async (
     const existing = await TaskTemplate.findById(id);
     if (!existing) throw new Error("TaskTemplate not found");
 
-    // chapter change handling
+    // ✅ chapter change handling
     if (data.chapter && existing.chapter.toString() !== data.chapter.toString()) {
         await ChapterTemplate.findByIdAndUpdate(
             existing.chapter,
