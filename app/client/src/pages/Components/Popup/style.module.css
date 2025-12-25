@@ -1,0 +1,41 @@
+.popup {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    justify-content: center;
+    align-items: center;
+}
+
+.overlay {
+    height: 100vh;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    background: rgba( 0, 0, 0, 0.75 );
+}
+
+.wrap {
+    background: #FFF;
+    z-index: 9999;
+    min-width: 400px;
+    border-radius: 4px;
+}
+
+.header {
+    padding: 12px 24px;
+    border-bottom: 1px solid rgba( 0, 0, 0, 0.75 );
+}
+
+.body {
+    padding: 24px;
+}
+
+.footer {
+    border-top: 1px solid rgba( 0, 0, 0, 0.75 );
+    padding: 12px 24px;
+}

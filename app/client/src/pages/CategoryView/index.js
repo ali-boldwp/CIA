@@ -9,6 +9,8 @@ import {
     useGetChapterTemplatesByCategoryQuery
 } from "../../services/categoryApi";
 
+import ChapterPopup from "../admin/Pages/Categories/Template/Popup/Chapter"
+
 const CategoryView = () => {
     const { id: categoryId } = useParams();
 
@@ -72,21 +74,26 @@ const CategoryView = () => {
     };
 
     return (
-        <div className="CategoryView">
-            <Header category={category} />
+        <>
+            <div className="CategoryView">
+                <Header category={category} />
 
-            {chapters.map(chapter => (
-                <CategoryViewform
-                    key={chapter.uid}
-                    chapter={chapter}
-                    categoryId={categoryId}
-                    onUpdate={updateChapter}
-                    onCreated={replaceChapterId}
-                />
-            ))}
+                {chapters.map(chapter => (
+                    <CategoryViewform
+                        key={chapter.uid}
+                        chapter={chapter}
+                        categoryId={categoryId}
+                        onUpdate={updateChapter}
+                        onCreated={replaceChapterId}
+                    />
+                ))}
 
-            <AddButton onAdd={addNewChapter} />
-        </div>
+                <AddButton onAdd={addNewChapter} />
+            </div>
+            <ChapterPopup
+                onClose={ () => {} }
+            />
+        </>
     );
 };
 
