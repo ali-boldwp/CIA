@@ -41,3 +41,21 @@
     display: flex;
     gap: 6px
 }
+
+
+.chapterRow{
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.dragIcon{
+    display: flex;
+    align-items: center;
+}
+
+.chapterName{
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}

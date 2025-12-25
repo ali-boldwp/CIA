@@ -1,4 +1,5 @@
-import React, { useMemo, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
+
 import Popup from "../../../../../../Components/Popup";
 import styles from "./style.module.css";
 
@@ -24,6 +25,13 @@ const Chapter = ({ open, onClose, categoryId, chapter, onCreated }) => {
 
     const [createChapterTemplate] = useCreateChapterTemplateMutation();
     const [updateChapterTemplate] = useUpdateChapterTemplateMutation();
+
+
+    useEffect(() => {
+        setName(chapter?.name || "");
+        setContent(chapter?.content || "");
+    }, [chapter, open]);
+
 
     const config = useMemo(
         () => ({

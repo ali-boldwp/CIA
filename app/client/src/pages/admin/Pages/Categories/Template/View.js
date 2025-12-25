@@ -10,7 +10,9 @@ import {useState} from "react";
 const View = ({ data, categoryId, onChapterCreated }) => {
 
 
-    const [ newChapterPopup, setNewChapterPopup ] = useState( false );
+    const [newChapterPopup, setNewChapterPopup] = useState(false);
+    const [selectedChapter, setSelectedChapter] = useState(null);
+
 
     return (
         <>
@@ -20,9 +22,17 @@ const View = ({ data, categoryId, onChapterCreated }) => {
                 />
                 <div className={ styles.content }>
                     <Sidebar
-                        data={ data }
-                        openChapterNew={ setNewChapterPopup }
+                        data={data}
+                        openChapterNew={() => {
+                            setSelectedChapter(null);
+                            setNewChapterPopup(true);
+                        }}
+                        onEditChapter={(ch) => {
+                            setSelectedChapter(ch);
+                            setNewChapterPopup(true);
+                        }}
                     />
+
                     <div className={ styles.contentTemplate }>
                         <Content
                             data={ data }
@@ -35,10 +45,11 @@ const View = ({ data, categoryId, onChapterCreated }) => {
                     open={newChapterPopup}
                     onClose={setNewChapterPopup}
                     categoryId={categoryId}
+                    chapter={selectedChapter}
                     onCreated={onChapterCreated}
                 />
-
             )}
+
         </>
     )
 
