@@ -9,6 +9,7 @@
     font-size: 14px;
     font-style: normal;
     list-style: none;
+    color: #42413e;
 }
 
 .wrapper > ul > li > span {
@@ -17,11 +18,22 @@
 
 .wrapper ul li > ul {
     padding-left: 20px;
-    margin-top: 9px;
+    margin-top: 12px;
+    border-left: 1px solid rgba( 0, 0, 0, 0.25 );
+}
+
+.wrapper > ul > li ul {
+    padding-left: 12.5px;
+    margin-left: 7.5px;
+}
+
+.wrapper > ul > li > ul {
+    padding-left: 20px;
+    margin-left: 0;
 }
 
 .wrapper ul li {
-    margin-bottom: 9px;
+    margin-bottom: 12px;
     cursor: pointer;
 }
 

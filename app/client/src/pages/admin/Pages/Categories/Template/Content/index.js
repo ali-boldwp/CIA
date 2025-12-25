@@ -10,15 +10,17 @@ const Content = ({ data }) => {
             <Title
                 title={ data.title }
             />
-            {
-                data.chapters.map((chapter, ci) => {
-                    return (
-                        <Chapter
-                            data={ chapter }
-                        />
-                    )
-                })
-            }
+            <div className={ styles.chapters }>
+                {
+                    data.chapters.map((chapter, ci) => {
+                        return (
+                            <Chapter
+                                data={ chapter }
+                            />
+                        )
+                    })
+                }
+            </div>
         </div>
     );
 
