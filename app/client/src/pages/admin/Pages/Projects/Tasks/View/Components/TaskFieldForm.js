@@ -1,62 +1,60 @@
 import React, { useEffect, useState } from "react";
-import "./TaskFieldForm.css";
-import {useGetFoamFieldsByTaskIdQuery} from "../../../../../../../services/formFieldsApi";
-import {useParams} from "react-router-dom";
+import styles from "./TaskFieldForm.module.css";
+import { useGetFoamFieldsByTaskIdQuery } from "../../../../../../../services/formFieldsApi";
+import { useParams } from "react-router-dom";
 
 const TaskFieldForm = () => {
-    const {taskId}=useParams()
+    const { taskId } = useParams();
+
     const { data, isLoading } = useGetFoamFieldsByTaskIdQuery(taskId, {
         skip: !taskId,
     });
 
-    const [name, setName] = useState("");
-    const [slug, setSlug] = useState("");
-    const [type, setType] = useState("text");
+    const [formValues, setFormValues] = useState({});
 
-    // 🔥 AUTO FILL FORM
     useEffect(() => {
         if (data?.data?.length) {
-            const field = data.data[0]; // example: first field
-            setName(field.name || "");
-            setSlug(field.slug || "");
-            setType(field.type || "text");
+            const initialValues = {};
+            data.data.forEach(field => {
+                initialValues[field.slug] = "";
+            });
+            setFormValues(initialValues);
         }
     }, [data]);
+
+    const handleChange = (slug, value) => {
+        setFormValues(prev => ({
+            ...prev,
+            [slug]: value,
+        }));
+    };
 
     if (isLoading) return <p>Loading...</p>;
 
     return (
-        <div className="task-field-form">
-            <div className="form-field">
-                <label>Nume câmp</label>
-                <input
-                    type="text"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                />
-            </div>
+        <div className={styles.taskFieldForm}>
+            {data?.data?.map(field => (
+                <div key={field._id} className={styles.formField}>
+                    <label>{field.name}</label>
 
-            <div className="form-field">
-                <label>Slug</label>
-                <input
-                    type="text"
-                    value={slug}
-                    onChange={(e) => setSlug(e.target.value)}
-                />
-            </div>
-
-            <div className="form-field">
-                <label>Tip câmp</label>
-                <select
-                    value={type}
-                    onChange={(e) => setType(e.target.value)}
-                >
-                    <option value="text">text</option>
-                    <option value="number">number</option>
-                    <option value="date">date</option>
-                    <option value="textarea">textarea</option>
-                </select>
-            </div>
+                    {field.type === "textarea" ? (
+                        <textarea
+                            value={formValues[field.slug] || ""}
+                            onChange={e =>
+                                handleChange(field.slug, e.target.value)
+                            }
+                        />
+                    ) : (
+                        <input
+                            type={field.type}
+                            value={formValues[field.slug] || ""}
+                            onChange={e =>
+                                handleChange(field.slug, e.target.value)
+                            }
+                        />
+                    )}
+                </div>
+            ))}
         </div>
     );
 };
