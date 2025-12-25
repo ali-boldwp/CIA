@@ -14,8 +14,9 @@ router.post("/", auth, taskController.createTask);
 
 router.get("/", auth, taskController.getAllTasks);
 
-
 router.get("/:id", auth, taskController.getTaskById);
+
+router.get("/:id/view", auth, taskController.getTask);
 
 router.patch("/:id", auth, taskController.updateTask);
 
