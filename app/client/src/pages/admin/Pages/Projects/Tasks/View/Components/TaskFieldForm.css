@@ -3,13 +3,17 @@
     border-radius: 8px;
     padding: 16px;
     margin-top: 20px;
-    max-width: 520px;
+    width:100%;
+    display:flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
 }
 
 .form-field {
     display: flex;
     flex-direction: column;
     margin-bottom: 14px;
+    width:49%;
 }
 
 .form-field label {
