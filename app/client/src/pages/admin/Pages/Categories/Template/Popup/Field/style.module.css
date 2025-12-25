@@ -1,0 +1,66 @@
+/* style.module.css */
+
+.formGrid {
+    display: grid;
+    gap: 14px;
+}
+
+.fieldRow {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.label {
+    font-size: 13px;
+    font-weight: 700;
+    color: #0f172a;
+}
+
+.input {
+    height: 42px;
+    border: 1px solid #d1d5db !important;
+    border-radius: 6px;
+    padding: 0 12px;
+    outline: none;
+    font-size: 14px;
+    font-family: inherit;
+}
+
+.input:focus {
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+}
+
+.footerRow {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+.addBtn {
+    height: 40px;
+    padding: 0 14px;
+    border-radius: 6px;
+    border: none;
+    background: #2563eb;
+    color: #fff;
+    cursor: pointer;
+    font-weight: 700;
+}
+
+.cancelBtn {
+    height: 40px;
+    padding: 0 14px;
+    border-radius: 6px;
+    border: 1px solid #d1d5db;
+    background: #fff;
+    cursor: pointer;
+    font-weight: 700;
+}
+
+.addBtn:disabled,
+.cancelBtn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
