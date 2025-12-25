@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import * as chapterService from '../services/chapter.service'
 import { ok } from "../../../utils/ApiResponse";
+import * as taskService from "../services/task.service";
 
 
 
@@ -49,6 +50,15 @@ export const getChapterByProjectId = async (req: Request, res: Response, next: N
         }
 
         return res.json(ok(chapters));
+    } catch (err) {
+        next(err);
+    }
+};
+
+export const getChapterById = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const chapter = await chapterService.getChapterById(req.params.id);
+        res.json(ok(chapter));
     } catch (err) {
         next(err);
     }

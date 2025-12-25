@@ -9,7 +9,9 @@ router.post("/", auth, chapterController.createChapter);
 
 router.get("/", auth, chapterController.getAllChapter);
 
-router.get("/:id", auth, chapterController.getChapterByProjectId);
+router.get("/:id" , auth , chapterController.getChapterById);
+
+router.get("/:projectId", auth, chapterController.getChapterByProjectId);
 
 router.put("/:id", auth, chapterController.updateChapter);
 
