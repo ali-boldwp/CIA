@@ -7,7 +7,7 @@ export const categoryApi = createApi({
     tagTypes: ["Category",
         "ChapterTemplate",
         "TaskTemplate",
-        "FoamFields",],
+        "FoamFields", "CategoryPreview"],
     endpoints: (builder) => ({
         // ================= GET ALL CATEGORIES =================
         getCategories: builder.query({
@@ -64,11 +64,14 @@ export const categoryApi = createApi({
                 method: "POST",
                 body,
             }),
-            invalidatesTags: [{ type: "ChapterTemplate", id: "LIST" }],
+            invalidatesTags: [{ type: "ChapterTemplate", id: "LIST" }, { type: "CategoryPreview" }],
         }),
         getChapterTemplatesByCategory: builder.query({
             query: (categoryId) =>
                 `/chapter-template/by-category/${categoryId}`,
+            providesTags: (result, error, id) => [
+                { type: "CategoryPreview" },
+            ]
         }),
         createTaskTemplate: builder.mutation({
             query: (body) => ({
