@@ -110,6 +110,7 @@ const View = ({ data, categoryId, onChapterCreated }) => {
                         onClose={setNewTaskPopup}
                         chapterId={selectedTask?.chapterId}
                         task={selectedTask}
+                        categoryId={categoryId}
                         onCreated={onChapterCreated}
                     />
                 )}
