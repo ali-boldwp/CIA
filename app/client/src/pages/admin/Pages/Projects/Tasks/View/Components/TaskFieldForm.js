@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
 import "./TaskFieldForm.css";
 import {useGetFoamFieldsByTaskIdQuery} from "../../../../../../../services/formFieldsApi";
+import {useParams} from "react-router-dom";
 
-
-const TaskFieldForm = ({ taskId }) => {
+const TaskFieldForm = () => {
+    const {taskId}=useParams()
     const { data, isLoading } = useGetFoamFieldsByTaskIdQuery(taskId, {
         skip: !taskId,
     });
