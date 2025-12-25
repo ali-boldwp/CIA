@@ -4,13 +4,13 @@ import Details from './Details'
 import TaskFieldForm from "./TaskFieldForm";
 
 const TaskView = () => {
-    const {id:projectId}=useParams();
+    const {id:projectId,taskId}=useParams();
 
-    const {taskId}=useParams()
+
     return (
         <div>
         <Details projectId={projectId} taskId={taskId} />
-            <TaskFieldForm/>
+        <TaskFieldForm taskId={taskId} />
         </div>
     );
 };
