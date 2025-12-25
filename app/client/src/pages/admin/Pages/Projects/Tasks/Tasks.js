@@ -6,7 +6,7 @@ import React, {useEffect, useState} from "react";
 import {
     useCreateChapterMutation,
     useCreateTaskMutation,
-    useGetChapterByIdQuery,
+    useGetChapterByProjectIdQuery,
     useStartTaskMutation,
     usePauseTaskMutation,
     useResumeTaskMutation,
@@ -67,7 +67,7 @@ const ProjectTasks = ({
         ship:!projectId
     })
 
-    const {data:chapter, refetch: refetchChapters}=useGetChapterByIdQuery(projectId, {
+    const {data:chapter, refetch: refetchChapters}=useGetChapterByProjectIdQuery(projectId, {
         skip: !projectId,
     });
     const chapterData=chapter?.data || [];
