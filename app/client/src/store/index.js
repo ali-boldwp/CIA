@@ -15,6 +15,7 @@ import { taskApi } from "../services/taskApi";
 import { statsApi } from "../services/V1/statesApi";
 import {humintExpanseApi} from "../services/humintExpanseApi";
 import { categoryApi } from "../services/categoryApi";
+import {foamFieldsApi} from "../services/formFieldsApi";
 
 const store = configureStore({
     reducer: {
@@ -32,6 +33,7 @@ const store = configureStore({
         [taskApi.reducerPath]:taskApi.reducer,
         [notificationApi.reducerPath]:notificationApi.reducer,
         [humintExpanseApi.reducerPath]:humintExpanseApi.reducer,
+        [foamFieldsApi.reducerPath]: foamFieldsApi.reducer,
 
         // V1 APIs don't touch those
 
@@ -56,7 +58,8 @@ const store = configureStore({
             taskApi.middleware,
             humintExpanseApi.middleware,
             statsApi.middleware,
-            categoryApi.middleware
+            categoryApi.middleware,
+            foamFieldsApi.middleware
 
         ),
 });
