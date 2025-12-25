@@ -20,6 +20,10 @@ export const taskApi = createApi({
             query: (id) => `/chapter/${id}`,
             providesTags: ["Chapters"],
         }),
+        getTaskById: builder.query({
+            query: (id) => `/task/${id}`,
+            providesTags: ["task"],
+        }),
 
 
         // Get Tasks by chapter
@@ -113,7 +117,7 @@ export const taskApi = createApi({
 });
 
 export const {
-
+    useGetTaskByIdQuery,
     useGetChapterByIdQuery,
     useCreateChapterMutation,
     useGetTasksByChapterIdQuery,

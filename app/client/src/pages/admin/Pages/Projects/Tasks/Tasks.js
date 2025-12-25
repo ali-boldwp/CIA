@@ -1,5 +1,6 @@
 import "./TaskPage.css"
 import { useSelector } from "react-redux";
+import { Outlet } from "react-router-dom";
 import {Link, useNavigate, useParams} from "react-router-dom";
 import React, {useEffect, useState} from "react";
 import {
@@ -372,6 +373,7 @@ const ProjectTasks = ({
                 setActiveChapterId={ setActiveChapterId }
                 setShowTaskForm={ setShowTaskForm }
                 refetchChapters={ refetchChapters }
+                projectId={projectId}
             />
 
 
@@ -449,6 +451,7 @@ const ProjectTasks = ({
                 )}
 
             </div>
+            <Outlet/>
         </div>
     );
 
