@@ -28,7 +28,6 @@ export const getCategoryById = async (id: string) => {
                 },
             },
         })
-        .lean();
 };
 
 

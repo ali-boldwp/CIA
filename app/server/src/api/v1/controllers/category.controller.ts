@@ -62,27 +62,36 @@ export const getCategoryById = async (
 
 export const reorderCategoryTree = async (req, res) => {
     try {
-        const { id: categoryId } = req.params;
         const { chapters } = req.body;
 
-        // 🔹 Update chapters index
-        for (const ch of chapters) {
+        // 🔹 Chapters order → index map
+        for (let chIndex = 0; chIndex < chapters.length; chIndex++) {
+            const ch = chapters[chIndex];
+
             await ChapterTemplate.findByIdAndUpdate(ch._id, {
-                index: ch.index,
+                index: chIndex, // 🔥 index = position
             });
 
-            // 🔹 Update tasks index
-            if (ch.tasks) {
-                for (const task of ch.tasks) {
+            // 🔹 Tasks order → index map
+            if (Array.isArray(ch.tasks)) {
+                for (let taskIndex = 0; taskIndex < ch.tasks.length; taskIndex++) {
+                    const task = ch.tasks[taskIndex];
+
                     await TaskTemplate.findByIdAndUpdate(task._id, {
-                        index: task.index,
+                        index: taskIndex,
                     });
 
-                    // 🔹 Update foam fields index
-                    if (task.foamFields) {
-                        for (const field of task.foamFields) {
+                    // 🔹 FoamFields order → index map
+                    if (Array.isArray(task.foamFields)) {
+                        for (
+                            let fieldIndex = 0;
+                            fieldIndex < task.foamFields.length;
+                            fieldIndex++
+                        ) {
+                            const field = task.foamFields[fieldIndex];
+
                             await FoamFields.findByIdAndUpdate(field._id, {
-                                index: field.index,
+                                index: fieldIndex,
                             });
                         }
                     }
@@ -95,12 +104,14 @@ export const reorderCategoryTree = async (req, res) => {
             message: "Order updated successfully",
         });
     } catch (err) {
+        console.error("Reorder error:", err);
         return res.status(500).json({
             success: false,
             message: err.message,
         });
     }
 };
+
 
 
 export const getCategoryTree = async (req, res) => {
