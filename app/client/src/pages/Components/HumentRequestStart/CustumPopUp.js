@@ -1,5 +1,3 @@
-// /home/ubaid/workspace/app/client/src/pages/Humint/CustumPopUp.js
-
 import React, { useState } from "react";
 import styles from "./CustumPop.module.css";
 import { useNavigate } from "react-router-dom";

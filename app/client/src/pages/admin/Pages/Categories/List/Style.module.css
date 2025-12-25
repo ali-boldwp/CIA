@@ -1,0 +1,183 @@
+/* ================= Main wrapper ================= */
+.main {
+    padding: 0px;
+}
+
+/* ================= Card 1 ================= */
+.topCard {
+    background: #ffffff;
+    border-radius: 4px;
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.07);
+    padding: 14px 18px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.titleDiv{
+    display: flex;
+    gap: 100px;
+}
+
+
+.cardTitle {
+    font-size: 20px;
+    font-weight: 700;
+    font-style: italic;
+    color: #0F172A;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+
+/* 🔢 Count text (same style jaisa screenshot) */
+.countText {
+    font-size: 14px;
+    font-weight: 700;
+    font-style: italic;
+    color: #64748b;
+}
+
+/* ================= Card 2 ================= */
+.tableCard {
+    background: #ffffff;
+    border-radius: 4px;
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.07);
+    margin-bottom: 10px;
+    font-weight: bold;
+}
+
+.table {
+    width: 100%;
+}
+
+.tableHeader {
+    display: grid;
+    grid-template-columns: 30% 15% 15% 20% 20%;
+    font-size: 14px;
+    opacity: 0.7;
+    border-bottom: 1px solid lightgray;
+    padding: 24px;
+    background-color: #fafafc;
+    font-weight: bold;
+}
+
+.tableRow {
+    display: grid;
+    grid-template-columns: 30% 15% 15% 20% 20%;
+    padding: 15px 24px;
+    border-bottom: 1px solid lightgray;
+    align-items: center;
+}
+
+.col {
+    font-size: 14px;
+}
+
+/* ================= Status ================= */
+.stateBadge {
+    padding: 6px 12px;
+    border-radius: 12px;
+    font-size: 13px;
+}
+
+.active {
+    background: #d6fbe6;
+    color: #1a9a4e;
+    border: 1px solid #22C55E;
+}
+
+.inactive {
+    background: #fffbeb;
+    color: #92400e;
+    border: 1px solid #f59e0b;
+}
+
+/* ================= Actions ================= */
+.actions {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center !important;
+}
+
+.openBtn,
+.deleteBtn {
+    min-width: 90px !important;
+    height: 32px !important;
+    padding: 6px 10px !important;
+    font-size: 12px !important;
+    border-radius: 8px !important;
+    border: 1px solid #ddd !important;
+    background: white !important;
+    white-space: nowrap !important;
+    cursor: pointer;
+    color: black;
+}
+
+.deleteBtn {
+    margin-left: 6px;
+}
+
+/* ================= Pagination ================= */
+.pagination {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    align-items: center;
+    padding: 15px 24px;
+}
+
+.pagination button {
+    padding: 12px;
+    border: 1px solid #d1d8ee;
+    background: #fff;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.pagination button:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+.addCategoryText {
+    font-size: 14px;
+    font-weight: 600;
+    color: #2563eb;
+    cursor: pointer;
+    user-select: none;
+    transition: all 0.2s ease;
+}
+
+.addCategoryText:hover {
+    text-decoration: underline;
+    filter: brightness(1.1);
+}
+
+
+.addIcon {
+    font-size: 16px;
+}
+
+/* ================= Responsive ================= */
+@media (max-width: 992px) {
+    .tableHeader,
+    .tableRow {
+        grid-template-columns: 1fr;
+        gap: 10px;
+        padding: 15px 0;
+    }
+
+    .topCard {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+
+    .actions {
+        justify-content: flex-start;
+    }
+}

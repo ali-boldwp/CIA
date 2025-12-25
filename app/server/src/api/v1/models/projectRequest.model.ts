@@ -6,7 +6,7 @@ export interface IProjectRequest extends Document {
     projectName: string;
     projectSubject: string;
     reportType: string;
-    entityType: string;
+    entityType: Types.ObjectId;
     priority: string;
     deliverableLanguage: string[];
     projectDescription: string;
@@ -58,7 +58,7 @@ const projectRequestSchema = new Schema<IProjectRequest>(
         projectName: { type: String, required: false },
         projectSubject: { type: String, required: false },
         reportType: { type: String, required: false },
-        entityType: { type: String, required: false },
+        entityType: { type: Schema.Types.ObjectId, ref : "Category" ,  required: false },
         priority: { type: String, required: false },
         deliverableLanguage: {
             type: [String],

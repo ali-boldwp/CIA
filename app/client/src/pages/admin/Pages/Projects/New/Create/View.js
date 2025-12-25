@@ -1,5 +1,7 @@
 import {Link, useNavigate, useParams} from "react-router-dom";
 import {useGetAnalystsQuery} from "../../../../../../services/userApi";
+import { useGetCategoriesQuery } from "../../../../../../services/categoryApi";
+
 import styles from "./NewProjectstyle.css";
 import React, {useEffect, useRef, useState} from "react";
 import {toast} from "react-toastify";
@@ -23,6 +25,18 @@ const CreateProject = ({ data, main }) => {
         id: String(a._id),
         name: a.name,
     }));
+
+
+    // Categogies
+
+    const { data: catRes, isLoading: catsLoading, isError: catsError } = useGetCategoriesQuery();
+
+    const categories = Array.isArray(catRes?.data) ? catRes.data : [];
+    const categoryOptions = categories.map((c) => ({
+        id: String(c._id),
+        name: c.name,
+    }));
+
 
     // LOAD REQUEST BY ID
 
@@ -208,12 +222,16 @@ const CreateProject = ({ data, main }) => {
     // DROPDOWN HANDLERS
     // ============================
     const toggleAnalyst = (id) => {
+
+        if (id === responsible) return;
+
         if (selectedAnalysts.includes(id)) {
             setSelectedAnalysts(selectedAnalysts.filter((a) => a !== id));
         } else {
             setSelectedAnalysts([...selectedAnalysts, id]);
         }
     };
+
 
     // ============================
     // FILE HANDLERS
@@ -458,42 +476,38 @@ const CreateProject = ({ data, main }) => {
 
                         <div className="form-field">
                             <label>Tip entitate</label>
+
                             <select
                                 className={`${styles.input} input-box ${styles.selectAnalyst}`}
                                 value={entityType}
-                                onChange={(e) =>
-                                    setEntityType(e.target.value)
-                                }
-                            >
-                                <option value="Selectați tipul entității">
-                                    Selectați tipul entității
-                                </option>
+                                onChange={(e) => {
+                                    const selectedId = e.target.value;
 
-                                <option value="Societate">
-                                    Societate
-                                </option>
-                                <option value="Persoana">Persoana</option>
-                                <option value="ONG">ONG</option>
-                                <option value="Investigatie frauda">
-                                    Investigatie frauda
-                                </option>
-                                <option value="Analiza de piata">
-                                    Analiza de piata
-                                </option>
-                                <option value="Supraveghere operativa">
-                                    Supraveghere operativa
-                                </option>
-                                <option value="TCSM">TCSM</option>
-                                <option value="Protectie supraveghere clandestina">
-                                    Protectie supraveghere clandestina
-                                </option>
+                                    setEntityType(selectedId);      // state me _id save
+                                    console.log("Selected category Mongo ID:", selectedId);
+                                }}
+                            >
+                                <option value="">Selectați tipul entității</option>
+
+                                {categoryOptions.map((c) => (
+                                    <option key={c.id} value={c.id}>
+                                        {c.name}
+                                    </option>
+                                ))}
                             </select>
-                            {errors.entityType && (
+
+
+                            {catsError && (
                                 <p className={styles.errorText}>
-                                    {errors.entityType}
+                                    Nu s-au putut încărca categoriile.
                                 </p>
                             )}
+
+                            {errors.entityType && (
+                                <p className={styles.errorText}>{errors.entityType}</p>
+                            )}
                         </div>
+
 
                         <div className="form-field">
                             <label>Termen limită</label>
@@ -690,18 +704,19 @@ const CreateProject = ({ data, main }) => {
                                 <div className="dropdown-list">
                                     {analystOptions.map((a) => (
                                         <label
-                                            className="checkbox-item"
+                                            className={`checkbox-item ${
+                                                a.id === responsible ? "disabled" : ""
+                                            }`}
                                             key={a.id}
                                         >
-                                            <input
+
+                                        <input
                                                 type="checkbox"
-                                                checked={selectedAnalysts.includes(
-                                                    a.id
-                                                )}
-                                                onChange={() =>
-                                                    toggleAnalyst(a.id)
-                                                }
+                                                checked={selectedAnalysts.includes(a.id)}
+                                                disabled={a.id === responsible}
+                                                onChange={() => toggleAnalyst(a.id)}
                                             />
+
                                             {a.name}
                                         </label>
                                     ))}
@@ -962,11 +977,6 @@ const CreateProject = ({ data, main }) => {
 
                     {/* SAVE BUTTON */}
                     <div className="button-row">
-                        <button className="draftProject" onClick={handleDraft} disabled={isCreating}>
-                            Salvează draft
-                        </button>
-
-
 
                         <button
                             className="createProject"
@@ -975,6 +985,14 @@ const CreateProject = ({ data, main }) => {
                         >
                             {isCreating ? "Se creează..." : (id ? "Creează proiect nou" : "Creează proiect nou")}
                         </button>
+
+                        <button className="draftProject" onClick={handleDraft} disabled={isCreating}>
+                            Salvează draft
+                        </button>
+
+
+
+
 
                     </div>
 

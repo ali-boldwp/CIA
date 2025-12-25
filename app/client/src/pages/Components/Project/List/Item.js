@@ -1,31 +1,98 @@
 import { Link } from "react-router-dom";
 import { useRef, useState, useEffect } from "react";
+import { toast } from "react-toastify";
+import {
+    useSubmitHumintMutation,
+    useApproveHumintMutation,
+    useSentHumintMutation,
+} from "../../../../services/humintApi";
 
 const HUMINT_OPTIONS = [
-    { value: "requested", label: "S-a solicitat HUMINT" },
-    { value: "received",  label: "Primit HUMINT" },
-    { value: "delivered", label: "Predat HUMINT" },
+    { value: "Requested", label: "S-a solicitat HUMINT" },
+    { value: "Approved", label: "Primit HUMINT" },
+    { value: "Sent", label: "Predat HUMINT" },
 ];
 
-const Item = ({ data }) => {
+// ✅ HUMINT status UI mapping
+const HUMINT_STATUS_UI = {
+    Requested: {
+        text: "S-a solicitat HUMINT",
+        style: {
+            color: "#92400E",
+            backgroundColor: "#FFFBEB",
+            border: "1px solid #F59E0B",
+            fontStyle: "italic",
+            fontWeight: 700,
+            fontSize: "12px",
+        },
+    },
+    Sent: {
+        text: "Predat HUMINT",
+        style: {
+            color: "#075985",
+            backgroundColor: "#E0F2FE",
+            border: "1px solid #0EA5E9",
+            fontStyle: "italic",
+            fontWeight: 700,
+            fontSize: "12px",
+        },
+    },
+    Approved: {
+        text: "Primit HUMINT",
+        style: {
+            color: "#166534",
+            backgroundColor: "#ECFDF5",
+            border: "1px solid #22C55E",
+            fontStyle: "italic",
+            fontWeight: 700,
+            fontSize: "12px",
+        },
+    },
+};
+
+const HUMINT_DEFAULT_UI = {
+    text: "Nu s-a solicitat HUMINT",
+    style: {
+        color: "#334155",
+        backgroundColor: "#F8FAFC",
+        border: "1px solid #CBD5E1",
+        fontStyle: "italic",
+        fontWeight: 700,
+        fontSize: "12px",
+    },
+};
+
+
+const Item = ({ data, refetchProjects }) => {
     const [open, setOpen] = useState(false);
 
     // 👉 default status based on humintId
     const [humintStatus, setHumintStatus] = useState(
-        data?.humintId ? "requested" : "none"
+        data?.humintId?.status || "none"
     );
 
+
     const dropdownRef = useRef(null);
+    // Mongo se humint status
+    const mongoHumintStatus = data?.humintId?.status;
+
+    const [submitHumint] = useSubmitHumintMutation();
+    const [approveHumint] = useApproveHumintMutation();
+    const [sentHumint] = useSentHumintMutation();
+
+
+// UI select
+    const humintUI = mongoHumintStatus
+        ? (HUMINT_STATUS_UI[mongoHumintStatus] || HUMINT_DEFAULT_UI)
+        : HUMINT_DEFAULT_UI;
+
     const chatId = data.groupChatId;
 
     // Sync if data changes
     useEffect(() => {
-        if (data?.humintId) {
-            setHumintStatus("requested");
-        } else {
-            setHumintStatus("none");
-        }
-    }, [data?.humintId]);
+        setHumintStatus(data?.humintId?.status || "none");
+    }, [data?.humintId?.status]);
+
 
     // Click outside closes dropdown
     useEffect(() => {
@@ -50,30 +117,105 @@ const Item = ({ data }) => {
 
     // ✅ HUMINT dropdown selection handler (still keeps internal state, but button text hard-coded)
     const handleSelectHumint = (value) => {
+        const humintId =
+            typeof data?.humintId === "string"
+                ? data.humintId
+                : data?.humintId?._id;
+
+        if (!humintId) {
+            toast.error("HUMINT ID missing");
+            return;
+        }
+
         setHumintStatus(value);
         setOpen(false);
+
+
+
+        let apiPromise;
+
+
+        if (value === "Requested") {
+            apiPromise = submitHumint(humintId).unwrap();
+        }
+        else if (value === "Approved") {
+            apiPromise = approveHumint(humintId).unwrap();
+        }
+        else if (value === "Sent") {
+            apiPromise = sentHumint(humintId).unwrap();
+        }
+
+        if (!apiPromise) {
+            toast.error("Invalid status selected");
+            return;
+        }
+
+
+        toast.promise(apiPromise, {
+            pending: "Updating HUMINT status...",
+            success: "HUMINT status updated ",
+            error: "Failed to update status ",
+        });
+
+        // ✅ YAHI PAR TABLE REFRESH
+        apiPromise.then(() => {
+            refetchProjects?.();
+        });
+
+        // ❌ error case me rollback
+        apiPromise.catch(() => {
+            setHumintStatus(data?.humintId?.status || "none");
+        });
     };
+
+
     const formatDeadline = (deadline) => {
         if (!deadline) {
             return {
                 className: "deadline-empty",
                 date: "—",
-                status: null,
+                daysText: null,
+                isExpired: false,
             };
         }
 
-        const d = new Date(deadline);
+        // 🔒 Always work in UTC
+        const today = new Date();
+        const todayUTC = new Date(
+            Date.UTC(
+                today.getUTCFullYear(),
+                today.getUTCMonth(),
+                today.getUTCDate()
+            )
+        );
 
+        const d = new Date(deadline);
+        const deadlineUTC = new Date(
+            Date.UTC(
+                d.getUTCFullYear(),
+                d.getUTCMonth(),
+                d.getUTCDate()
+            )
+        );
+
+        // 🔢 Difference in days (UTC safe)
+        const diffTime = deadlineUTC - todayUTC;
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+        // 📅 Format date (UTC)
         const day = String(d.getUTCDate()).padStart(2, "0");
         const month = String(d.getUTCMonth() + 1).padStart(2, "0");
         const year = d.getUTCFullYear();
 
         return {
             className: "deadline-date-simple",
-            date: `${day}.${month}.${year}`,
-            status: null,
+            date: `${day}-${month}-${year}`,
+            daysText: diffDays < 0 ? null : `${diffDays} zile`,
+            isExpired: diffDays < 0,
         };
     };
+
+
 
 
 
@@ -106,15 +248,18 @@ const Item = ({ data }) => {
             {/* Deadline */}
             <div className="col deadline">
                 {(() => {
-                    const { className, date, status } = formatDeadline(data.deadline);
+                    const { className, date, daysText, isExpired } =
+                        formatDeadline(data.deadline);
+                        const zile=isExpired ?"depășit":daysText;
                     return (
-                        <span className={className}>
-                            <span className="deadline-date">{date}</span>
-                            {status && <span className="deadline-status">• {status}</span>}
-                        </span>
+                        <div className={className}>
+                            <span className={isExpired ? `expired` : `deadline-date`}>{date}.{zile}</span>
+                        </div>
                     );
                 })()}
             </div>
+
+
 
             {/* Progress */}
             <div className="colProgress progress" style={{ gap: "10px" }}>
@@ -131,15 +276,21 @@ const Item = ({ data }) => {
             </div>
 
             {/* ✅ Status HUMINT column (based on humintId) */}
+            {/* ✅ Status HUMINT (dynamic from Mongo) */}
             <div className="col status">
-    <span
-        className={`status-badge-approved ${
-            hasHumint ? "orange" : "gray"
-        }`}
-    >
-        {hasHumint ? "S-a solicitat HUMINT" : "Nu s-a solicitat HUMINT"}
-    </span>
+  <span
+      className="status-badge-approved"
+      style={{
+          ...humintUI.style,
+          padding: "4px 10px",
+          borderRadius: "999px",
+          display: "inline-block",
+      }}
+  >
+    {humintUI.text}
+  </span>
             </div>
+
 
             {/* ACTIONS + HUMINT DROPDOWN */}
             <div

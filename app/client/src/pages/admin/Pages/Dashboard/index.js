@@ -31,7 +31,12 @@ const View = () => {
     const [ projects, setProjects ] = useState([]);
 
     const { data: statsData, isLoading: statsLoading } = useGetStatsQuery();
-    const { data: projectsData, isLoading: projectsLoading } = useGetProjectsQuery({ limit: 5 });
+    const {
+        data: projectsData,
+        isLoading: projectsLoading,
+        refetch: refetchProjects,
+    } = useGetProjectsQuery({ limit: 5 });
+
 
     useEffect( () => {
 
@@ -66,7 +71,8 @@ const View = () => {
             content={
                 <>
                     <Stats stats={ stats } />
-                    <ProjectList data={ projects } header={true} />
+                    <ProjectList data={projects} header={true} refetchProjects={refetchProjects} />
+
                     <Team />
                     <CalenderList />
                 </>

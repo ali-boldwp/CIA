@@ -18,6 +18,15 @@ import HumentRequestView from "./Pages/Humint/View";
 import RequestProject from "./Pages/Projects/Request/New";
 import Users from "./Pages/Users";
 import UsersList from "./Pages/Users/List";
+import Categories from "./Pages/Categories";
+import CategoriesList from "./Pages/Categories/List";
+import CategoryView from "./Pages/Categories/View";
+import Profile from "./Pages/Profile";
+import FoamFields from "./Pages/Categories/Task/Components";
+import NewChapter from "./Pages/Categories/Chapter/main";
+import CategoryTemplate from "./Pages/Categories/Template";
+import TaskView from "./Pages/Projects/Tasks/View/Components/TaskView";
+import ViewTask from "./Pages/Projects/Tasks/View";
 
 const AdminConfig = {
     settings: {
@@ -25,69 +34,77 @@ const AdminConfig = {
             config: {}
         }
     },
-    auth: [ 'admin', 'manager' ],
+    auth: ['admin', 'manager'],
     routes: [
         {
             path: "/",
-            element: <Admin />,
+            element: <Admin/>,
             children: [
                 {
                     index: true,
-                    element: <View />
+                    element: <View/>
+                },
+                {
+                    path: 'profile',
+                    element: <Profile/>
                 },
                 {
                     path: 'project',
-                    element: <Projects />,
+                    element: <Projects/>,
                     children: [
                         {
                             index: true,
-                            element: <ProjectsList />
+                            element: <ProjectsList/>
                         },
                         {
                             path: 'search/:keyword',
-                            element: <ProjectSearch />
+                            element: <ProjectSearch/>
                         },
                         {
                             path: 'all',
-                            element: <ProjectsList />
+                            element: <ProjectsList/>
                         },
                         {
                             path: 'view/:id',
-                            element: <ProjectView />
+                            element: <ProjectView/>
                         },
                         {
                             path: 'view/:id/tasks',
-                            element: <ProjectTasks />
+                            element: <ProjectTasks/>,
+                        },
+                        {
+                            path: 'view/:id/tasks/:taskId/progress',
+                            element: <ViewTask/>
                         },
                         {
                             path: 'view/:id/cost',
-                            element: <ProjectCost />
+                            element: <ProjectCost/>
                         },
                         {
                             path: 'new',
-                            element: <NewProject />,
+                            element: <NewProject/>,
                             children: [
                                 {
                                     index: true,
-                                    element: <CreateProject />
+                                    element: <CreateProject/>
                                 },
                                 {
                                     path: ':id',
-                                    element: <CreateProject />
+                                    element: <CreateProject/>
                                 }
                             ]
                         },
                         {
                             path: 'request',
-                            element: <NewProject />,
+                            element: <NewProject/>,
                             children: [
                                 {
                                     index: true,
-                                    element: <ProjectRequestList />
+                                    element: <ProjectRequestList/>
                                 },
                                 {
                                     path: 'new',
-                                    element: <RequestProject />
+                                    element: <RequestProject/>
                                 }
                             ]
                         }
@@ -95,36 +112,67 @@ const AdminConfig = {
                 },
                 {
                     path: 'humint',
-                    element: <Hument />,
+                    element: <Hument/>,
                     children: [
                         {
                             index: true,
-                            element: <Humints />
+                            element: <Humints/>
                         },
                         {
                             path: 'new',
-                            element: <HumentNew />
+                            element: <HumentNew/>
                         },
                         {
                             path: 'new/:id',
-                            element: <HumentRequest />
+                            element: <HumentRequest/>
                         },
                         {
                             path: 'request/:id',
-                            element: <HumentRequestView />
+                            element: <HumentRequestView/>
                         }
                     ]
                 },
                 {
                     path: 'users',
-                    element: <Users />,
+                    element: <Users/>,
                     children: [
                         {
                             index: true,
-                            element: <UsersList />
+                            element: <UsersList/>
                         }
                     ]
-                }
+                },
+                {
+                    path: 'categories',
+                    element: <Categories/>,
+                    children: [
+                        {
+                            index: true,
+                            element: <CategoriesList/>,
+                        },
+                        {
+                            path: 'view/:id',
+                            element: <CategoryView/>,
+                        },
+                        {
+                            path: ':id',
+                            element: <CategoryTemplate/>,
+                        },
+                        {
+                            path: 'view/:id',
+                            element: <CategoryView/>,
+                        },
+                        {
+                            path: 'chapter/task/:id',
+                            element: <FoamFields/>,
+
+                        },
+                        {
+                            path: 'chapter/:id',
+                            element: <NewChapter/>,
+                        },
+                    ]
+                },
             ]
         }
     ]

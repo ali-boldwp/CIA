@@ -39,6 +39,7 @@ export interface IHumint extends Document {
         | "Clarification"
         | "Approved"
         | "Rejected"
+        | "Sent"
         | "Completed";
 
     createdAt: Date;
@@ -123,6 +124,7 @@ const humintSchema = new Schema<IHumint>(
                 "Clarification",
                 "Approved",
                 "Rejected",
+                "Sent",
                 "Completed",
             ],
             default: "Draft",

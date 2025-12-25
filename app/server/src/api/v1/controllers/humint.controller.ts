@@ -229,10 +229,6 @@ export const approveHumint = async (req: Request, res: Response, next: NextFunct
 };
 
 
-
-/* -------------------------------------------------------
-   REJECT
--------------------------------------------------------- */
 export const rejectHumint = async (req: Request, res: Response, next: NextFunction) => {
     try {
         if (!requireManagerOrAdmin(req, res)) return;
@@ -257,6 +253,24 @@ export const rejectHumint = async (req: Request, res: Response, next: NextFuncti
                 type: "alert",
             });
         }
+
+        res.json(ok(humint));
+    } catch (err) {
+        next(err);
+    }
+};
+
+
+/* -------------------------------------------------------
+   Sent
+-------------------------------------------------------- */
+export const sentHumint = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        if (!requireManagerOrAdmin(req, res)) return;
+
+        const managerId = req.user.id;
+
+        const humint = await humintService.sentHumint(req.params.id , managerId);
 
         res.json(ok(humint));
     } catch (err) {

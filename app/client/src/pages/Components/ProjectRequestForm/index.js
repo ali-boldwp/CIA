@@ -5,6 +5,8 @@ import { useRequestProjectMutation } from "../../../services/projectApi";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import { useGetAnalystsQuery } from "../../../services/userApi";
+import { useGetCategoriesQuery } from "../../../services/categoryApi";
+
 
 const Index = () => {
 
@@ -70,6 +72,19 @@ const Index = () => {
             setAssignedAnalysts([...assignedAnalysts, id]);
         }
     };
+
+
+    // Categories
+
+
+    const { data: catRes, isLoading: catsLoading, isError: catsError } = useGetCategoriesQuery();
+    const categories = Array.isArray(catRes?.data) ? catRes.data : [];
+
+    const categoryOptions = categories.map((c) => ({
+        id: String(c._id),
+        name: c.name,
+    }));
+
 
     useEffect(() => {
         const handler = (e) => {
@@ -581,10 +596,16 @@ const Index = () => {
                                             type="checkbox"
                                             className={styles.checkboxSquare}
                                             checked={contractDone}
-                                            onChange={() =>
-                                                setContractDone(!contractDone)
-                                            }
+                                            onChange={(e) => {
+                                                const checked = e.target.checked;
+                                                setContractDone(checked);
+
+                                                if (!checked) {
+                                                    setContractNumber("");
+                                                }
+                                            }}
                                         />
+
                                     </span>
                                         <input
                                             className={`${styles.input} ${errors.contractNumber ? styles.inputError : ''}`}
@@ -612,10 +633,17 @@ const Index = () => {
                                             type="checkbox"
                                             className={styles.checkboxSquare}
                                             checked={annexDone}
-                                            onChange={() =>
-                                                setAnnexDone(!annexDone)
-                                            }
+                                            onChange={(e) => {
+                                                const checked = e.target.checked;
+                                                setAnnexDone(checked);
+
+
+                                                if (!checked) {
+                                                    setAnnexNumber("");
+                                                }
+                                            }}
                                         />
+
                                     </span>
                                         <input
                                             className={`${styles.input} ${errors.annexNumber ? styles.inputError : ''}`}
@@ -674,49 +702,45 @@ const Index = () => {
                                 </div>
 
                                 {/* ENTITY TYPE (Dropdown) */}
-                                <div
-                                    className={`${styles.gridItem} ${styles.span2Left}`}
-                                >
+
+                                <div className={`${styles.gridItem} ${styles.span2Left}`}>
                                     <label className={styles.label}>
                                         Tip entitate / caz
                                         <select
-                                            className={`${styles.input} ${styles.selectAnalyst} ${errors.entityType ? styles.inputError : ''}`}
+                                            className={`${styles.input} ${styles.selectAnalyst} ${errors.entityType ? styles.inputError : ""}`}
                                             value={entityType}
-                                            onChange={(e) =>
-                                                setEntityType(e.target.value)
-                                            }
+                                            onChange={(e) => {
+                                                const selectedId = e.target.value;
+                                                setEntityType(selectedId);
+                                                console.log("Selected category Mongo ID:", selectedId);
+                                            }}
+                                            disabled={catsLoading}
                                         >
-                                            <option value="Selectați tipul entității">
-                                                Selectați tipul entității
+                                            <option value="">
+                                                {catsLoading ? "Se încarcă..." : "Selectați tipul entității"}
                                             </option>
-                                            <option value="Societate">
-                                                Societate
-                                            </option>
-                                            <option value="Persoana">
-                                                Persoana
-                                            </option>
-                                            <option value="ONG">ONG</option>
-                                            <option value="Investigatie frauda">
-                                                Investigatie frauda
-                                            </option>
-                                            <option value="Analiza de piata">
-                                                Analiza de piata
-                                            </option>
-                                            <option value="Supraveghere operativa">
-                                                Supraveghere operativa
-                                            </option>
-                                            <option value="TCSM">TCSM</option>
-                                            <option value="Protectie supraveghere clandestina">
-                                                Protectie supraveghere clandestina
-                                            </option>
+
+                                            {categoryOptions.map((c) => (
+                                                <option key={c.id} value={c.id}>
+                                                    {c.name}
+                                                </option>
+                                            ))}
                                         </select>
                                     </label>
+
+                                    {catsError && (
+                                        <div className={styles.errorMessage}>
+                                            Nu s-au putut încărca categoriile.
+                                        </div>
+                                    )}
+
                                     {errors.entityType && (
                                         <div className={styles.errorMessage}>
                                             {errors.entityType}
                                         </div>
                                     )}
                                 </div>
+
 
                                 {/* DEADLINE */}
                                 <div

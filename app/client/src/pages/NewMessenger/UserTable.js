@@ -49,15 +49,25 @@ const UserTable = ({ mode = "single" }) => {
     const isRowSelected = (id) =>
         mode === "group" && selectedIds.includes(id);
 
-    const startSingleChat = async (id) => {
+    const startSingleChat = async (id, name) => {
         try {
             const res = await createDirectChat(id).unwrap();
             const chat = res?.data || res;
-            if (chat?._id) navigate(`/messenger/${chat._id}`);
+
+            if (chat?._id) {
+                // ✅ save chatId -> name mapping
+                const prev = JSON.parse(localStorage.getItem("dmNames") || "{}");
+                prev[chat._id] = name;
+                localStorage.setItem("dmNames", JSON.stringify(prev));
+
+                navigate(`/messenger/${chat._id}`);
+            }
         } catch (err) {
             console.error(err);
         }
     };
+
+
 
     // 🔵 CONFIRM GROUP CREATE
     const confirmCreateGroup = async () => {
@@ -161,12 +171,13 @@ const UserTable = ({ mode = "single" }) => {
                                     <td>
                                         <button
                                             disabled={isCreatingDirect}
-                                            onClick={() =>
-                                                startSingleChat(id)
-                                            }
+                                            onClick={() => startSingleChat(id, user.name)}
+                                            className={styles.bulkActionBtn}
                                         >
                                             Start Chat
                                         </button>
+
+
                                     </td>
                                 )}
                             </tr>
@@ -187,11 +198,11 @@ const UserTable = ({ mode = "single" }) => {
             {showPopup && (
                 <div className={styles.popupOverlay}>
                     <div className={styles.popup}>
-                        <h4>Create group</h4>
+                        <h4>Creează un grup</h4>
 
                         <input
                             type="text"
-                            placeholder="Enter group name"
+                            placeholder="Introdu numele grupului"
                             value={groupName}
                             onChange={(e) =>
                                 setGroupName(e.target.value)
@@ -205,7 +216,7 @@ const UserTable = ({ mode = "single" }) => {
                                 onClick={() => setShowPopup(false)}
                                 className={styles.popupCancel}
                             >
-                                Cancel
+                                Anulează
                             </button>
 
                             <button
@@ -213,11 +224,9 @@ const UserTable = ({ mode = "single" }) => {
                                 disabled={
                                     !groupName.trim() || isCreatingGroup
                                 }
-                                className={styles.popupConfirm}
+                                className={styles.bulkActionBtn}
                             >
-                                {isCreatingGroup
-                                    ? "Creating..."
-                                    : "Create"}
+                                {isCreatingGroup ? "Se creează..." : "Creează"}
                             </button>
                         </div>
                     </div>

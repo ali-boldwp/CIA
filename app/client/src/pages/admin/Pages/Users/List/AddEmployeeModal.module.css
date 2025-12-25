@@ -259,8 +259,9 @@
 .resetBtn {
     background: #334155;
     color: #ffffff;
-    padding: 10px 22px;
-    border-radius: 4px;
+    width: 180px;
+    height: 40px;
+    border-radius: 5px;
     border: none;
     cursor: pointer;
     font-size: 14px;
@@ -275,14 +276,15 @@
 }
 
 .saveBtn {
-    background: #22c55e;
+    background: #10B981;
     color: #ffffff;
-    padding: 10px 24px;
-    border-radius: 8px;
+    width: 180px;
+    height: 40px;
+    border-radius: 5px;
     border: none;
     cursor: pointer;
     font-size: 14px;
-    font-weight: 600;
+    font-weight: 700;
     font-style: italic;
 }
 .colorInput {

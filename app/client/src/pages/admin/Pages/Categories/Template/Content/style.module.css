@@ -1,0 +1,20 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    padding: 24px;
+    font-style: normal;
+}
+
+.container h1 {
+    font-size: 24px;
+}
+
+.container h2 {
+    font-size: 20px;
+}
+
+.chapters {
+    display: flex;
+    flex-direction: column;
+    gap: 36px
+}

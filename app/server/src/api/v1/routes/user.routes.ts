@@ -3,6 +3,7 @@ import * as userController from "../controllers/user.controller";
 import { auth } from "../../../middlewares/auth.middleware";
 import { authorizeRoles } from "../../../middlewares/role.middleware";
 import { Role } from "../../../constants/roles";
+import {updateMyProfile} from "../controllers/user.controller";
 
 const router = Router();
 
@@ -40,6 +41,12 @@ router.get(
     userController.getUsers
 );
 
+router.put(
+    "/profile",
+    auth,
+    userController.updateMyProfile
+);
+
 
 /* -------------------------
    UPDATE USER
@@ -50,6 +57,7 @@ router.put(
     // authorizeRoles(Role.ADMIN, Role.MANAGER),
     userController.updateUser
 );
+
 
 
 /* -------------------------

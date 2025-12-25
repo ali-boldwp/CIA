@@ -1,0 +1,61 @@
+.wrapper {
+    background: #FFF;
+    padding: 24px;
+    border-radius: 4px;
+    width: 300px;
+}
+
+.wrapper ul {
+    font-size: 14px;
+    font-style: normal;
+    list-style: none;
+    color: #42413e;
+}
+
+.wrapper > ul > li > span {
+    font-weight: bold;
+}
+
+.wrapper ul li > ul {
+    padding-left: 20px;
+    margin-top: 12px;
+    border-left: 1px solid rgba( 0, 0, 0, 0.25 );
+}
+
+.wrapper > ul > li ul {
+    padding-left: 12.5px;
+    margin-left: 7.5px;
+}
+
+.wrapper > ul > li > ul {
+    padding-left: 20px;
+    margin-left: 0;
+}
+
+.wrapper ul li {
+    margin-bottom: 12px;
+    cursor: pointer;
+}
+
+.wrapper ul li span {
+    display: flex;
+    gap: 6px
+}
+
+
+.chapterRow{
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.dragIcon{
+    display: flex;
+    align-items: center;
+}
+
+.chapterName{
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}

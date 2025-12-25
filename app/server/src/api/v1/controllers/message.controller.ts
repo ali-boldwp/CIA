@@ -55,31 +55,41 @@ export const sendMessage = async (req, res, next) => {
 
 
 
-export const getMessages = async (req: Request, res: Response, next: NextFunction) => {
+export const getMessages = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+) => {
     try {
-        const { chatId } = req.params;
-        const limit = parseInt(req.query.limit as string) || 10;
-        const before = req.query.before as string | undefined;
+        let { chatId } = req.params;
 
-        let filter: any = { chatId };
-
-        // If "before" is provided → load messages older than that ID
-        if (before) {
-            const beforeMsg = await Message.findById(before);
-            if (!beforeMsg) return res.json({ success: true, data: [] });
-
-            filter.createdAt = { $lt: beforeMsg.createdAt };
+        // ✅ handle "open" chat safely
+        if (chatId === "open") {
+            return res.json({ success: true, data: [], projectFiles: [] });
         }
 
+        // ✅ default = 100 messages
+        const limit = parseInt(req.query.limit as string) || 100;
+        const before = req.query.before as string | undefined;
+
+        const filter: any = { chatId };
+
+        // ✅ BEFORE pagination (simple & fast)
+        if (before) {
+            filter._id = { $lt: before };
+        }
+
+        // ✅ get messages
         const messages = await Message.find(filter)
             .populate("sender", "name role")
-            .sort({ createdAt: -1 }) // newest first
+            .sort({ _id: -1 })     // newest first
             .limit(limit);
 
         const project = await ProjectRequest.findOne({
             groupChatId: chatId
         }).select("files");
-        // Return in normal order (old → new)
+
+        // ✅ send oldest → newest
         res.json({
             success: true,
             data: messages.reverse(),
@@ -90,4 +100,5 @@ export const getMessages = async (req: Request, res: Response, next: NextFunctio
         next(err);
     }
 };
+
 

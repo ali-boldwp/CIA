@@ -126,10 +126,9 @@ const Sidebar = ({
                                                     : "....,"
                                             }
 
-                                            {c.isPinned && (
-                                                <FaThumbtack className="sidebar-pin-icon" />
-                                            )}
+                                            {c.isPinned && <FaThumbtack className="sidebar-pin-icon" />}
                                         </div>
+
 
 
 

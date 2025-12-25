@@ -9,6 +9,7 @@ import {
 } from "../../../../../../../services/taskApi";
 import {FiEdit2, FiTrash2} from "react-icons/fi";
 import { useState } from "react";
+import {Link} from "react-router-dom";
 
 const Chapter = ({
                      data,
@@ -21,7 +22,8 @@ const Chapter = ({
                      refetchProgress,
                      setActiveChapterId,
                      setShowTaskForm,
-                     refetchChapters
+                     refetchChapters,
+                     projectId
                  }) => {
 
     const { user } = useSelector((state) => state.auth);
@@ -239,8 +241,14 @@ const Chapter = ({
                                             <span className="disabled-text"></span>
                                         ) : (
                                             <>
-                                                {task.completed ? (
-                                                    <>
+                                                  
+
+                                                        <Link to={`${task._id}/progress`}
+                                                             className="btn view"
+
+                                                          >
+                                                            view
+                                                    </Link>
                                                         {/* Edit and Delete buttons - Only for admin and manager */}
                                                         {(user?.role === "admin" || user?.role === "manager") && (
                                                             <span className="btnActionBoth">
@@ -248,57 +256,8 @@ const Chapter = ({
                                                                 <FiTrash2 className="icon delete" />
                                                             </span>
                                                         )}
-                                                    </>
-                                                ) : (
-                                                    <>
-                                                        {/* Start/Resume/Pause/Done buttons - For admin, manager and analyst */}
-                                                        {(user?.role === "analyst") && (
-                                                            <>
-                                                                {!task.analyst ? (
-                                                                    <button
-                                                                        className="btn start"
-                                                                        onClick={() => handleStart(task._id, item._id)}
-                                                                    >
-                                                                        Start
-                                                                    </button>
-                                                                ) : (
-                                                                    <>
-                                                                        {task.isPaused ? (
-                                                                            <button
-                                                                                className="btn start"
-                                                                                onClick={() => handleResume(task._id, item._id)}
-                                                                            >
-                                                                                Resume
-                                                                            </button>
-                                                                        ) : (
-                                                                            <button
-                                                                                className="btn stop"
-                                                                                onClick={() => handlePause(task._id, item._id)}
-                                                                            >
-                                                                                Pause
-                                                                            </button>
-                                                                        )}
 
-                                                                        <button
-                                                                            className="btn done"
-                                                                            onClick={() => handleComplete(task._id, item._id)}
-                                                                        >
-                                                                            Done
-                                                                        </button>
-                                                                    </>
-                                                                )}
-                                                            </>
-                                                        )}
 
-                                                        {/* Edit and Delete buttons - Only for admin and manager */}
-                                                        {(user?.role === "admin" || user?.role === "manager") && (
-                                                            <span className="btnActionBoth">
-                                                                <FiEdit2 className="icon edit" />
-                                                                <FiTrash2 className="icon delete" />
-                                                            </span>
-                                                        )}
-                                                    </>
-                                                )}
                                             </>
                                         )}
                                     </div>

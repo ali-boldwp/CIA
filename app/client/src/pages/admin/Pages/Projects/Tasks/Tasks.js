@@ -1,5 +1,6 @@
 import "./TaskPage.css"
 import { useSelector } from "react-redux";
+import { Outlet } from "react-router-dom";
 import {Link, useNavigate, useParams} from "react-router-dom";
 import React, {useEffect, useState} from "react";
 import {
@@ -372,6 +373,7 @@ const ProjectTasks = ({
                 setActiveChapterId={ setActiveChapterId }
                 setShowTaskForm={ setShowTaskForm }
                 refetchChapters={ refetchChapters }
+                projectId={projectId}
             />
 
 
@@ -415,11 +417,21 @@ const ProjectTasks = ({
 
 
                 {showReviewPopup && (
-                    <ReviewPopUp onClose={() => setShowReviewPopup(false)} onAddObservation={handleAddObservation} observation={ Observation?.data } />
+                    <ReviewPopUp
+                        onClose={() => setShowReviewPopup(false)}
+                        onAddObservation={handleAddObservation}
+                        observation={Observation?.data}
+                    />
+
                 )}
 
                 {showEditingPopup && (
-                    <EditingPopUp final={()=>handleFinalize("revision")} data={Observation?.data || []} onClose={() => setShowEditingPopup(false)} />
+                    <ReviewPopUp
+                        onClose={() => setShowReviewPopup(false)}
+                        onAddObservation={handleAddObservation}
+                        observation={Observation?.data || []}
+                    />
+
                 )}
 
                 {showPleaseWait  && (
@@ -439,6 +451,7 @@ const ProjectTasks = ({
                 )}
 
             </div>
+            <Outlet/>
         </div>
     );
 

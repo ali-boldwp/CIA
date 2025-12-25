@@ -5,11 +5,11 @@ import User from "../models/user.model";
 import Chat from "../models/chat.model";
 import Chapter from "../models/chapter.model";
 import Task from "../models/task.model";
-import projectData from "../data/data.js"
 import Requested from "../models/requested.model"
 import Humint from "../models/humint.model";
 import { createNotification } from "../services/notification.service";
 import { ok } from "../../../utils/ApiResponse";
+
 
 
 export const createProject = async (
@@ -74,25 +74,13 @@ export const createProject = async (
         }
 
 
-        const entityType = project.entityType;
-        if (projectData[entityType]) {
-            for (const chapterObj of projectData[entityType]) {
-                const chapter = await Chapter.create({
-                    name: chapterObj.name,
-                    projectId: project._id
-                });
-
-                if (chapterObj.tasks?.length) {
-                    for (const t of chapterObj.tasks) {
-                        await Task.create({
-                            name: t.name,
-                            chapterId: chapter._id,
-                            completed: false
-                        });
-                    }
-                }
-            }
+        if (project.entityType) {
+            await createdProjectService.cloneTemplatesToProject(
+                project.entityType.toString(),
+                project._id.toString()
+            );
         }
+
 
 
         const admins = await User.find({ role: "admin" }).select("_id");
@@ -197,6 +185,8 @@ export const getAllProjects = async (req: Request, res: Response, next: NextFunc
     // pagination
     let page  = parseInt(req.query.page as string, 10) || 1;
     let limit = parseInt(req.query.limit as string, 10) || 10;
+    let statusParam = req.query.status as string | undefined;
+
     if (page < 1) page = 1;
     if (limit < 1) limit = 1;
 
@@ -206,23 +196,54 @@ export const getAllProjects = async (req: Request, res: Response, next: NextFunc
     const onlyWithoutHumint = req.query.onlyWithoutHumint === "true";
 
     // -------- ROLE FILTER ----------
-    let roleFilter: any;
+    let roleFilter: any = {};
+
+// -------- ROLE BASE ----------
     if (user.role === "sales") {
+
+        // default statuses for sales
+        let allowedStatuses = ["approved", "revision", "observation", "finished"];
+
+        // 👉 status query handling
+        if (statusParam && statusParam !== "all") {
+            allowedStatuses = [statusParam];
+        }
+
         roleFilter = {
             fromRequestId: user.id,
-            status: { $in: ["approved", "revision", "observation", "finished"] }
+            status: { $in: allowedStatuses }
         };
 
-    } else if (user.role === "analyst") {
+    }
+    else if (user.role === "analyst") {
+
         roleFilter = {
             responsibleAnalyst: user.id
         };
+
+        // analyst ke liye bhi status filter optional
+        if (statusParam && statusParam !== "all") {
+            roleFilter.status = statusParam;
+        }
+
     }
     else if (user.role === "admin" || user.role === "manager") {
-        roleFilter = {};      // no restriction
-    } else {
-        return res.status(403).json({ status: "error", message: "Forbidden" });
+
+        roleFilter = {};
+
+        // admin / manager → status filter optional
+        if (statusParam && statusParam !== "all") {
+            roleFilter.status = statusParam;
+        }
+
     }
+    else {
+        return res.status(403).json({
+            status: "error",
+            message: "Forbidden"
+        });
+    }
+
 
     // -------- SEARCH FILTER ----------
     let baseFilter: any = roleFilter;

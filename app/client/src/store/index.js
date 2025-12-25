@@ -14,6 +14,7 @@ import {notificationApi} from "../services/notificationApi";
 import { taskApi } from "../services/taskApi";
 import { statsApi } from "../services/V1/statesApi";
 import {humintExpanseApi} from "../services/humintExpanseApi";
+import { categoryApi } from "../services/categoryApi";
 
 const store = configureStore({
     reducer: {
@@ -34,7 +35,8 @@ const store = configureStore({
 
         // V1 APIs don't touch those
 
-        [ statsApi.reducerPath ]: statsApi.reducer
+        [ statsApi.reducerPath ]: statsApi.reducer,
+            [categoryApi.reducerPath]: categoryApi.reducer,
 
 
     },
@@ -53,7 +55,8 @@ const store = configureStore({
             notificationApi.middleware,
             taskApi.middleware,
             humintExpanseApi.middleware,
-            statsApi.middleware
+            statsApi.middleware,
+            categoryApi.middleware
 
         ),
 });

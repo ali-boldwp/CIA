@@ -35,7 +35,23 @@
     font-size: 18px;        /* 20px se 1px zyada */
     font-weight: 800;       /* thoda aur bold */
 }
-
+.deadline-date {
+    color:#0C4A6E;
+    border-radius: 30px;
+    background: #BFE2FF;
+    font-weight: 800;
+    padding: 6px 10px;
+    border:1px solid #E9F5FF;
+    font-size: 10pt !important;
+}
+.expired {
+    color:#0C4A6E;
+    border-radius: 30px;
+    background: #BFE2FF;
+    font-weight: bold;
+    padding: 6px 10px;
+    font-size: 10pt;
+}
 .project-infoDash {
     display: flex;
     flex-direction: column;
@@ -125,12 +141,7 @@
 }
 
 /* Deadline */
-.deadline-date {
-    font-size: 12px; /* 13px se kam */
-    padding: 6px 10px;
-    background: #dff2ff;
-    border-radius: 8px;
-}
+
 
 .expired {
     background: #ffd9d9;
