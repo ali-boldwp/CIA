@@ -16,7 +16,12 @@ const Popup = ({ isOpen, onClose, onSubmit, loading, apiError }) => {
     if (!isOpen) return null;
 
     const slugify = (value) =>
-        value.toLowerCase().trim().replace(/\s+/g, "_").replace(/[^a-z0-9_]/g, "");
+        value
+            .toLowerCase()
+            .trim()
+            .replace(/\s+/g, "-")      // space → dash
+            .replace(/[^a-z0-9-]/g, ""); // only a-z, 0-9, -
+
 
     const handleReset = () => {
         setName("");
@@ -28,12 +33,17 @@ const Popup = ({ isOpen, onClose, onSubmit, loading, apiError }) => {
     const handleNameChange = (value) => {
         setName(value);
 
+        if (!isSlugTouched) {
+            setSlug(slugify(value));
+        }
     };
+
 
     const handleSlugChange = (value) => {
         setIsSlugTouched(true);
         setSlug(value);
     };
+
 
     const handleAdd = async () => {
         if (!name.trim() || !slug.trim()) return;
