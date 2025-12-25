@@ -2,7 +2,7 @@ import Header from "./Components/Header"
 import Sidebar from "./Components/Sidebar";
 import Content from "./Content"
 
-import Popup from "../../../../Components/Popup";
+import ChapterPopup from "./Popup/Chapter"
 
 import styles from "./style.module.css";
 import {useState} from "react";
@@ -29,10 +29,8 @@ const View = ({ data }) => {
                     </div>
                 </div>
             </div>
-            { newChapterPopup && <Popup
-                content={ "content" }
-                header={ "Poptip Title" }
-                footer={ "Popup Button" }
+            { newChapterPopup && <ChapterPopup
+                open={ newChapterPopup }
                 onClose={ setNewChapterPopup }
             /> }
         </>
