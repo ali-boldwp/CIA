@@ -30,11 +30,7 @@ const View = ({ data, categoryId, onChapterCreated }) => {
     // Title PopUp
 
     const [titlePopup, setTitlePopup] = useState(false);
-    const [localTitle, setLocalTitle] = useState(data?.title || "");
-
-    useEffect(() => {
-        setLocalTitle(data?.title || "");
-    }, [data]);
+;
 
 
 
@@ -98,9 +94,10 @@ const View = ({ data, categoryId, onChapterCreated }) => {
 
                     <div className={ styles.contentTemplate }>
                         <Content
-                            data={{ ...data, title: localTitle }}
+                            data={data}
                             onTitleClick={() => setTitlePopup(true)}
                         />
+
 
                     </div>
                 </div>
@@ -143,10 +140,15 @@ const View = ({ data, categoryId, onChapterCreated }) => {
                 <TitlePopup
                     open={titlePopup}
                     onClose={setTitlePopup}
-                    title={localTitle}
-                    onSaved={(newTitle) => setLocalTitle(newTitle)}
+                    categoryId={categoryId}
+                    titleData={{
+                        title: data?.title || "",
+                        content: data?.content || "",
+                    }}
+                    onUpdated={onChapterCreated}
                 />
             )}
+
 
 
 
