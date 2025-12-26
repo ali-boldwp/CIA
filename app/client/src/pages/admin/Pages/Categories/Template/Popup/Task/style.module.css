@@ -1,4 +1,3 @@
-
 .titleInput{
     margin-bottom: 14px;
     border: 1px solid #d1d5db !important;
@@ -12,13 +11,10 @@
     outline: none;
 }
 
-
 .editorWrap :global(.jodit-container){
     border-radius: 6px;
     overflow: hidden;
 }
-
-
 
 
 .footerRow{
@@ -29,6 +25,34 @@
 }
 
 
+.rightBtns{
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+
+.deleteBtn{
+    margin-right: auto;
+    height: 40px;
+    padding: 0 14px;
+    border-radius: 6px;
+    border: 2px solid #ef4444;
+    background: #fff;
+    color: #ef4444;
+    cursor: pointer;
+    font-weight: 800;
+}
+
+.deleteBtn:hover{
+    background: #fee2e2;
+}
+
+.deleteBtn:disabled{
+    opacity: .5;
+    cursor: not-allowed;
+}
+
 .cancelBtn {
     height: 40px;
     padding: 0 14px;
@@ -37,6 +61,10 @@
     background: #fff;
     cursor: pointer;
     font-weight: 700;
+}
+
+.cancelBtn:hover{
+    background: #f3f4f6;
 }
 
 .addBtn {
@@ -50,12 +78,15 @@
     font-weight: 700;
 }
 
+.addBtn:hover{
+    background: #1d4ed8;
+}
+
 .cancelBtn:disabled,
 .addBtn:disabled {
     opacity: 0.5;
     cursor: not-allowed;
 }
-
 
 .editorWrap :global(.jodit-toolbar__box){
     border-top-left-radius: 6px;

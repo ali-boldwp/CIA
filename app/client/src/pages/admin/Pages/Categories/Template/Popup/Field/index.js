@@ -6,11 +6,24 @@ import { toast } from "react-toastify";
 import {
     useCreateFormFieldsMutation,
     useUpdateFormFieldMutation,
+    useDeleteFormFieldMutation,
 } from "../../../../../../../services/categoryApi";
 
+import ConfirmDelete from "../ConfirmDelete"; // ✅ same confirm popup reuse
+
 const INPUT_TYPES = [
-    "text","number","email","password","textarea","information",
-    "select","checkbox","radio","date","file","url"
+    "text",
+    "number",
+    "email",
+    "password",
+    "textarea",
+    "information",
+    "select",
+    "checkbox",
+    "radio",
+    "date",
+    "file",
+    "url",
 ];
 
 const slugify = (value) =>
@@ -29,14 +42,20 @@ const Field = ({ open, onClose, chapterId, taskId, field, onCreated }) => {
     const [isSlugTouched, setIsSlugTouched] = useState(false);
     const [loading, setLoading] = useState(false);
 
+
+    const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false);
+    const [deleteLoading, setDeleteLoading] = useState(false);
+
     const [createField] = useCreateFormFieldsMutation();
     const [updateField] = useUpdateFormFieldMutation();
+    const [deleteField] = useDeleteFormFieldMutation();
 
     useEffect(() => {
         setName(field?.name || "");
         setSlug(field?.slug || "");
         setType(field?.type || "text");
         setIsSlugTouched(false);
+        setConfirmDeleteOpen(false);
     }, [field, open]);
 
     const handleNameChange = (val) => {
@@ -47,7 +66,7 @@ const Field = ({ open, onClose, chapterId, taskId, field, onCreated }) => {
     const handleSubmit = async () => {
         if (!name.trim() || !slug.trim()) return;
 
-        // ✅ guards
+
         if (!chapterId) return toast.error("Chapter ID missing");
         if (!taskId) return toast.error("Task ID missing");
 
@@ -68,8 +87,8 @@ const Field = ({ open, onClose, chapterId, taskId, field, onCreated }) => {
                     : createField(payload).unwrap(),
                 {
                     pending: isEdit ? "Se salvează..." : "Se adaugă...",
-                    success: isEdit ? "Field updated successfully" : "Field created successfully",
-                    error: isEdit ? "Update failed" : "Create failed",
+                    success: isEdit ? "Câmp actualizat cu succes" : "Câmp creat cu succes",
+                    error: isEdit ? "Actualizarea a eșuat" : "Operația a eșuat",
                 }
             );
 
@@ -79,6 +98,29 @@ const Field = ({ open, onClose, chapterId, taskId, field, onCreated }) => {
             console.error("Field submit error:", e);
         } finally {
             setLoading(false);
+        }
+    };
+
+
+    const handleConfirmDelete = async () => {
+        if (!field?.uid) return;
+
+        setDeleteLoading(true);
+        try {
+            await toast.promise(deleteField(field.uid).unwrap(), {
+                pending: "Se șterge...",
+                success: "Câmp șters cu succes",
+                error: "Ștergerea a eșuat",
+            });
+
+            if (typeof onCreated === "function") onCreated();
+
+            setConfirmDeleteOpen(false);
+            onClose(false);
+        } catch (e) {
+            console.error("Delete field error:", e);
+        } finally {
+            setDeleteLoading(false);
         }
     };
 
@@ -118,7 +160,9 @@ const Field = ({ open, onClose, chapterId, taskId, field, onCreated }) => {
                         onChange={(e) => setType(e.target.value)}
                     >
                         {INPUT_TYPES.map((t) => (
-                            <option key={t} value={t}>{t}</option>
+                            <option key={t} value={t}>
+                                {t}
+                            </option>
                         ))}
                     </select>
                 </div>
@@ -128,32 +172,59 @@ const Field = ({ open, onClose, chapterId, taskId, field, onCreated }) => {
 
     const footerUI = (
         <div className={styles.footerRow}>
-            <button
-                className={styles.addBtn}
-                onClick={handleSubmit}
-                disabled={loading || !name.trim() || !slug.trim()}
-            >
-                {loading ? (isEdit ? "Se salvează..." : "Se adaugă...") : (isEdit ? "Salvează" : "Adaugă")}
-            </button>
 
-            <button
-                className={styles.cancelBtn}
-                onClick={() => onClose(false)}
-                disabled={loading}
-            >
-                Anulează
-            </button>
+            {isEdit && (
+                <button
+                    className={styles.deleteBtn}
+                    onClick={() => setConfirmDeleteOpen(true)}
+                    disabled={loading}
+                >
+                    Șterge
+                </button>
+            )}
+
+
+            <div className={styles.rightBtns}>
+                <button
+                    className={styles.addBtn}
+                    onClick={handleSubmit}
+                    disabled={loading || !name.trim() || !slug.trim()}
+                >
+                    {loading ? (isEdit ? "Se salvează..." : "Se adaugă...") : isEdit ? "Salvează" : "Adaugă"}
+                </button>
+
+                <button
+                    className={styles.cancelBtn}
+                    onClick={() => onClose(false)}
+                    disabled={loading}
+                >
+                    Anulează
+                </button>
+            </div>
         </div>
     );
 
     return (
-        <Popup
-            open={open}
-            header={isEdit ? "Update Field" : "New Field"}
-            content={contentUI}
-            footer={footerUI}
-            onClose={onClose}
-        />
+        <>
+
+            <Popup
+                open={open && !confirmDeleteOpen}
+                header={isEdit ? "Update Field" : "New Field"}
+                content={contentUI}
+                footer={footerUI}
+                onClose={onClose}
+            />
+
+
+            {confirmDeleteOpen && (
+                <ConfirmDelete
+                    open={confirmDeleteOpen}
+                    onClose={setConfirmDeleteOpen}
+                    onConfirm={handleConfirmDelete}
+                    loading={deleteLoading}
+                />
+            )}
+        </>
     );
 };
 
