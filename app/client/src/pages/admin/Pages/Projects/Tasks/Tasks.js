@@ -3,6 +3,8 @@ import { useSelector } from "react-redux";
 import { Outlet } from "react-router-dom";
 import {Link, useNavigate, useParams} from "react-router-dom";
 import React, {useEffect, useState} from "react";
+import html2pdf from "html2pdf.js";
+
 import {
     useCreateChapterMutation,
     useCreateTaskMutation,
@@ -25,6 +27,7 @@ import EditingPopUp from "./Popup/EditingPopUp/EditingPopUp";
 import PleaseWaitPopUp from "./Popup/PleaseWaitPopUp/PleaseWaitPopUp";
 import Chapter from "./Components/Chapter";
 import Details from "./Components/Details";
+import {useGetCategoryByIdQuery} from "../../../../../services/categoryApi";
 
 
 
@@ -80,6 +83,14 @@ const ProjectTasks = ({
     const project = projectData?.data;
     const isFinalized = project?.status === "revision" || project?.isFinalized;
     const isObservation = project?.status === "observation";
+
+    const entityType = project?.entityType; // 🔥 categoryId
+
+    const { data: categoryResponse } = useGetCategoryByIdQuery(entityType, {
+        skip: !entityType,
+    });
+
+    const category = categoryResponse?.data;
 
 
 
@@ -331,9 +342,20 @@ const ProjectTasks = ({
     // if (isLoading) return <p>Loading project data...</p>;
     // if (isError) return <p>Error fetching project data!</p>;
 
+    const handleExportPDF = () => {
+        const element = document.getElementById("export-report");
+
+        html2pdf().from(element).set({
+            margin: 10,
+            filename: `project-${projectId}-report.pdf`,
+            html2canvas: { scale: 2 },
+            jsPDF: { unit: "mm", format: "a4" },
+        }).save();
+    };
+
     return (
         <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
-
+            {/* ================= EXPORTABLE REPORT HTML ================= */}
             <Details
                 isFinalizedLocal={ isFinalizedLocal }
                 setShowReviewPopup={ setShowReviewPopup }
@@ -352,6 +374,7 @@ const ProjectTasks = ({
                 getInitials={ getInitials }
                 assigned={ assigned }
                 legendColors={ legendColors }
+                onExportPDF={handleExportPDF}
                 projectId={ projectId }
                 project={project}
                 status={pro}
