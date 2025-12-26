@@ -30,7 +30,18 @@ const View = ({ data, categoryId, onChapterCreated }) => {
     // Title PopUp
 
     const [titlePopup, setTitlePopup] = useState(false);
-;
+
+    // For Set Data According to drag and drop
+
+    const [localData, setLocalData] = useState(null);
+
+    useEffect(() => {
+        setLocalData(data);
+    }, [data]);
+
+    if (!localData) return null;
+
+    ;
 
 
 
@@ -38,12 +49,12 @@ const View = ({ data, categoryId, onChapterCreated }) => {
     return (
         <>
             <div className={ styles.container }>
-                <Header
-                    title={ data.name }
-                />
+                <Header title={localData.name} />
+
                 <div className={ styles.content }>
                     <Sidebar
-                        data={data}
+                        data={localData}
+                        setData={setLocalData}
                         openChapterNew={() => {
                             setSelectedChapter(null);
                             setNewChapterPopup(true);
@@ -94,7 +105,7 @@ const View = ({ data, categoryId, onChapterCreated }) => {
 
                     <div className={ styles.contentTemplate }>
                         <Content
-                            data={data}
+                            data={localData}
                             onTitleClick={() => setTitlePopup(true)}
                         />
 

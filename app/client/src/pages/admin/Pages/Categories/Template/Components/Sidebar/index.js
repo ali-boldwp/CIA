@@ -4,16 +4,13 @@ import { useEffect, useState } from "react";
 
 import {useUpdateChapterTemplateIndexMutation} from "../../../../../../../services/categoryApi";
 
-const Sidebar = ({ data: _data, openChapterNew, onEditChapter, openTaskNew, onEditTask, openFieldNew, onEditField }) => {
+const Sidebar = ({ data, setData, openChapterNew, onEditChapter, openTaskNew, onEditTask, openFieldNew, onEditField }) => {
 
 
 
 
-    const [ data, setData ] = useState( _data );
 
-    useEffect(() => {
-        setData(_data);
-    }, [_data]);
+
 
 
     const [ update ] = useUpdateChapterTemplateIndexMutation();
