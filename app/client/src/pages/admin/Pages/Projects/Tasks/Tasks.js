@@ -3,6 +3,8 @@ import { useSelector } from "react-redux";
 import { Outlet } from "react-router-dom";
 import {Link, useNavigate, useParams} from "react-router-dom";
 import React, {useEffect, useState} from "react";
+import html2pdf from "html2pdf.js";
+
 import {
     useCreateChapterMutation,
     useCreateTaskMutation,
@@ -25,6 +27,9 @@ import EditingPopUp from "./Popup/EditingPopUp/EditingPopUp";
 import PleaseWaitPopUp from "./Popup/PleaseWaitPopUp/PleaseWaitPopUp";
 import Chapter from "./Components/Chapter";
 import Details from "./Components/Details";
+import {useGetCategoryByIdQuery} from "../../../../../services/categoryApi";
+import styles from "../../Categories/Template/style.module.css";
+import Content from "../../Categories/Template/Content";
 
 
 
@@ -80,6 +85,14 @@ const ProjectTasks = ({
     const project = projectData?.data;
     const isFinalized = project?.status === "revision" || project?.isFinalized;
     const isObservation = project?.status === "observation";
+
+    const entityType = project?.entityType; // 🔥 categoryId
+
+    const { data: categoryResponse } = useGetCategoryByIdQuery(entityType, {
+        skip: !entityType,
+    });
+
+    const category = categoryResponse?.data;
 
 
 
@@ -306,6 +319,7 @@ const ProjectTasks = ({
         });
     });
 
+
     const allTasks = Object.values(tasksByChapter).flat();
 
     const totalTasks = allTasks.length;
@@ -331,8 +345,71 @@ const ProjectTasks = ({
     // if (isLoading) return <p>Loading project data...</p>;
     // if (isError) return <p>Error fetching project data!</p>;
 
+    const handleExportPDF = () => {
+        const element = document.getElementById("export-report");
+
+        html2pdf().from(element).set({
+            margin: 10,
+            filename: `project-${projectId}-report.pdf`,
+            html2canvas: { scale: 2 },
+            jsPDF: { unit: "mm", format: "a4" },
+        }).save();
+    };
+
+    // 🔥 SLUG REPLACER FUNCTION
+    const replaceSlugsWithValues = (html, values = {}) => {
+        if (!html) return html;
+
+        let updatedHtml = html;
+
+        Object.keys(values).forEach((slug) => {
+            const value = values[slug] || "";
+            const regex = new RegExp(`\\[${slug}\\]`, "g");
+            updatedHtml = updatedHtml.replace(regex, value);
+        });
+
+        return updatedHtml;
+    };
+
+    // 🔥 ALL TASK FORM DATA COMBINED (slug → value)
+    const combinedTaskData = {};
+
+    Object.values(tasksByChapter)
+        .flat()
+        .forEach(task => {
+            if (task.data && typeof task.data === "object") {
+                Object.assign(combinedTaskData, task.data);
+            }
+        });
+
+
+    const contentData = category
+        ? {
+            title: category.title || category.name || "Project Report",
+            chapters: (category.chapters || []).map(chapter => ({
+                ...chapter,
+                content: replaceSlugsWithValues(
+                    chapter.content,
+                    combinedTaskData   // 🔥 slug → real value
+                ),
+            })),
+        }
+        : null;
+
     return (
         <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+            {/* ================= EXPORTABLE CONTENT ================= */}
+            <div
+                id="export-report"
+                className={styles.contentTemplate}
+            >
+                {contentData && (
+                    <Content
+                        data={contentData}
+                        onTitleClick={() => {}}
+                    />
+                )}
+            </div>
 
             <Details
                 isFinalizedLocal={ isFinalizedLocal }
@@ -352,6 +429,7 @@ const ProjectTasks = ({
                 getInitials={ getInitials }
                 assigned={ assigned }
                 legendColors={ legendColors }
+                onExportPDF={handleExportPDF}
                 projectId={ projectId }
                 project={project}
                 status={pro}

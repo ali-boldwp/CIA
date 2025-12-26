@@ -24,6 +24,7 @@ const Details = (
         analystTimes,
         project,
         status,
+        onExportPDF,
     }
 ) => {
 
@@ -228,7 +229,7 @@ const Details = (
 
 
                     <div className="export-dropdown">
-                        <button className="project-btn">Exporta raport ▾</button>
+                        <button className="project-btn"  onClick={onExportPDF}>Exporta raport ▾</button>
 
                         <div className="dropdown-menu">
                             <button className="dropdown-item">Export Word</button>
