@@ -1,6 +1,7 @@
 import Category ,{ ICategory } from "../models/category.model";
 import Chapter from "../models/chapter.model";
 import Task from "../models/task.model";
+import Employee from "../models/employee.model";
 
 export const createCategory = async (data: Partial<ICategory>) => {
     return await Category.create(data);
@@ -12,6 +13,10 @@ export const getAllCategory = async () => {
 
 export const updateCategory = async (id: string, data: Partial<ICategory>) => {
     return await Category.findByIdAndUpdate(id, data, { new: true });
+};
+
+export const deleteCategory = async (id: string) => {
+    return await Category.findByIdAndDelete(id);
 };
 
 export const getCategoryById = async (id: string) => {
