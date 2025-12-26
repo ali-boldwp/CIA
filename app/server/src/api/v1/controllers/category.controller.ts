@@ -1,11 +1,13 @@
 import { Request, Response, NextFunction } from "express";
 import * as categoryService from '../services/category.service'
 import { ok } from "../../../utils/ApiResponse";
+import ProjectRequest from "../models/projectRequest.model";
 import ChapterTemplate from "../models/chapterTemplate.model";
 import TaskTemplate from "../models/taskTemplate.model";
 import FoamFields from "../models/foamFields.model";
 import Category from "../models/category.model";
-
+import Chapter from "../models/chapter.model";
+import Task from "../models/task.model";
 
 
 
@@ -139,5 +141,86 @@ export const getCategoryTree = async (req, res) => {
             success: false,
             message: err.message,
         });
+    }
+};
+
+const normalize = (str = "") =>
+    str.toLowerCase().trim().replace(/\s+/g, "_");
+
+export const getProjectFormData = async (req, res) => {
+    try {
+        const { projectId } = req.params;
+
+        const project = await ProjectRequest.findById(projectId);
+        if (!project) {
+            return res.status(404).json({ message: "Project not found" });
+        }
+
+        await categoryService.syncProjectWithTemplate(
+            project._id.toString(),
+            project.entityType.toString()
+        );
+
+        const category = await Category.findById(project.entityType).populate({
+            path: "chapters",
+            options: { sort: { index: 1 } },
+            populate: {
+                path: "tasks",
+                options: { sort: { index: 1 } },
+                populate: {
+                    path: "foamFields",
+                    options: { sort: { index: 1 } },
+                },
+            },
+        });
+
+        const runtimeChapters = await Chapter.find({ projectId });
+        const runtimeTasks = await Task.find({
+            chapterId: { $in: runtimeChapters.map(c => c._id) },
+        });
+
+        // 🔥 FLAT RESULT
+        const result: Record<string, any> = {};
+
+        for (const chapterTpl of category.chapters as any[]) {
+
+            const runtimeChapter = runtimeChapters.find(
+                c => normalize(c.name) === normalize(chapterTpl.name)
+            );
+
+            if (!runtimeChapter) continue;
+
+            for (const taskTpl of chapterTpl.tasks) {
+
+                const runtimeTask = runtimeTasks
+                    .filter(
+                        t =>
+                            normalize(t.name) === normalize(taskTpl.name) &&
+                            t.chapterId.toString() === runtimeChapter._id.toString()
+                    )
+                    .sort(
+                        (a, b) =>
+                            Object.keys(b.data || {}).length -
+                            Object.keys(a.data || {}).length
+                    )[0];
+
+                const taskData = runtimeTask?.data || {};
+
+                for (const field of taskTpl.foamFields) {
+                    result[field.slug] = taskData[field.slug] ?? null;
+
+                }
+
+            }
+        }
+
+        return res.json({
+            success: true,
+            data: result,
+        });
+
+    } catch (err) {
+        console.error(err);
+        return res.status(500).json({ message: "Server error" });
     }
 };
