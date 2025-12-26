@@ -56,6 +56,16 @@ export const categoryApi = createApi({
             ],
         }),
 
+        deleteCategory: builder.mutation({
+            query: (id) => ({
+                url: `/category/${id}`,
+                method: "DELETE",
+            }),
+            invalidatesTags: [
+                { type: "Category", id: "LIST" },
+            ],
+        }),
+
         // ================= CREATE CHAPTER TEMPLATE =================
         createChapterTemplate: builder.mutation({
             query: (body) => ({
@@ -232,7 +242,7 @@ export const {
     useDeleteChapterTemplateMutation,
     useDeleteTaskTemplateMutation,
     useDeleteFormFieldMutation,
-
+    useDeleteCategoryMutation,
 
     useUpdateChapterTemplateIndexMutation,
 } = categoryApi;

@@ -36,42 +36,18 @@ const Task = ({ open, onClose, chapterId, categoryId, task, onCreated }) => {
         setConfirmDeleteOpen(false);
     }, [task, open]);
 
-    const config = useMemo(
-        () => ({
-            readonly: false,
-            placeholder: "Conținut inițial",
-            height: 300,
+    const config = {
+        uploader: {
+            url: `${process.env.REACT_APP_API_BASE_URL}/upload/image`,
+            method: "POST",
+            fieldName: "file",
+            withCredentials: false,
+            insertImageAsBase64URI: false, // 🔥 IMPORTANT
+            imagesExtensions: ["jpg", "png", "jpeg", "webp"],
+        },
+        imageDefaultWidth: 500,
+    };
 
-            uploader: {
-                insertImageAsBase64URI: true,
-            },
-
-            // ✅ IMAGE SETTINGS
-            imageDefaultWidth: 500,          // default width
-            imageDefaultAlign: "center",
-
-            // allow resize handles
-            allowResizeX: true,
-            allowResizeY: true,
-
-            // ✅ FORCE MAX WIDTH
-            style: {
-                maxWidth: "100%",
-            },
-
-            // toolbar buttons
-            buttons: [
-                "bold", "italic", "underline",
-                "|",
-                "ul", "ol",
-                "|",
-                "image", "link",
-                "|",
-                "align", "undo", "redo"
-            ],
-        }),
-        []
-    );
 
 
     const handleSubmit = async () => {
