@@ -28,6 +28,8 @@ import PleaseWaitPopUp from "./Popup/PleaseWaitPopUp/PleaseWaitPopUp";
 import Chapter from "./Components/Chapter";
 import Details from "./Components/Details";
 import {useGetCategoryByIdQuery} from "../../../../../services/categoryApi";
+import styles from "../../Categories/Template/style.module.css";
+import Content from "../../Categories/Template/Content";
 
 
 
@@ -317,6 +319,7 @@ const ProjectTasks = ({
         });
     });
 
+
     const allTasks = Object.values(tasksByChapter).flat();
 
     const totalTasks = allTasks.length;
@@ -353,9 +356,61 @@ const ProjectTasks = ({
         }).save();
     };
 
+    // 🔥 SLUG REPLACER FUNCTION
+    const replaceSlugsWithValues = (html, values = {}) => {
+        if (!html) return html;
+
+        let updatedHtml = html;
+
+        Object.keys(values).forEach((slug) => {
+            const value = values[slug] || "";
+            const regex = new RegExp(`\\[${slug}\\]`, "g");
+            updatedHtml = updatedHtml.replace(regex, value);
+        });
+
+        return updatedHtml;
+    };
+
+    // 🔥 ALL TASK FORM DATA COMBINED (slug → value)
+    const combinedTaskData = {};
+
+    Object.values(tasksByChapter)
+        .flat()
+        .forEach(task => {
+            if (task.data && typeof task.data === "object") {
+                Object.assign(combinedTaskData, task.data);
+            }
+        });
+
+
+    const contentData = category
+        ? {
+            title: category.title || category.name || "Project Report",
+            chapters: (category.chapters || []).map(chapter => ({
+                ...chapter,
+                content: replaceSlugsWithValues(
+                    chapter.content,
+                    combinedTaskData   // 🔥 slug → real value
+                ),
+            })),
+        }
+        : null;
+
     return (
         <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
-            {/* ================= EXPORTABLE REPORT HTML ================= */}
+            {/* ================= EXPORTABLE CONTENT ================= */}
+            <div
+                id="export-report"
+                className={styles.contentTemplate}
+            >
+                {contentData && (
+                    <Content
+                        data={contentData}
+                        onTitleClick={() => {}}
+                    />
+                )}
+            </div>
+
             <Details
                 isFinalizedLocal={ isFinalizedLocal }
                 setShowReviewPopup={ setShowReviewPopup }
