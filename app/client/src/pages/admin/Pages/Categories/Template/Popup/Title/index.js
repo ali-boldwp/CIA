@@ -5,20 +5,16 @@ import styles from "./style.module.css";
 
 import JoditEditor from "jodit-react";
 import { toast } from "react-toastify";
+import { useUpdateCategoryMutation } from "../../../../../../../services/categoryApi";
 
-/**
- * Props:
- * open: boolean
- * onClose: (false) => void
- * titleData: { title?: string, content?: string } (optional)
- * onSave: ({ title, content }) => void  // parent will handle state update for now
- */
-const Title = ({ open, onClose, titleData, onSave }) => {
+const Title = ({ open, onClose, categoryId, titleData, onUpdated }) => {
     const editor = useRef(null);
 
     const [title, setTitle] = useState(titleData?.title || "");
     const [content, setContent] = useState(titleData?.content || "");
     const [loading, setLoading] = useState(false);
+
+    const [updateCategory] = useUpdateCategoryMutation();
 
     useEffect(() => {
         setTitle(titleData?.title || "");
@@ -28,7 +24,7 @@ const Title = ({ open, onClose, titleData, onSave }) => {
     const config = useMemo(
         () => ({
             readonly: false,
-            placeholder: "Write title content...",
+            placeholder: "Conținut titlu",
             height: 300,
             uploader: {
                 insertImageAsBase64URI: true,
@@ -38,23 +34,36 @@ const Title = ({ open, onClose, titleData, onSave }) => {
     );
 
     const handleSubmit = async () => {
-        if (!title.trim()) return toast.error("Title is required");
+        if (!title.trim()) {
+            toast.error("Titlul este obligatoriu");
+            return;
+        }
+
+        if (!categoryId) {
+            toast.error("Category ID missing");
+            return;
+        }
 
         setLoading(true);
+
         try {
-            // ✅ backend integration skipped for now
-            if (typeof onSave === "function") {
-                onSave({
+            await toast.promise(
+                updateCategory({
+                    id: categoryId,
                     title: title.trim(),
                     content: content || "",
-                });
-            }
+                }).unwrap(),
+                {
+                    pending: "Se salvează...",
+                    success: "Titlu actualizat cu succes",
+                    error: "Actualizarea a eșuat",
+                }
+            );
 
-            toast.success("Title updated (local)");
+            if (typeof onUpdated === "function") onUpdated();
             onClose(false);
         } catch (e) {
-            console.error("Title submit error:", e);
-            toast.error("Update failed");
+            console.error("Title update error:", e);
         } finally {
             setLoading(false);
         }
@@ -65,7 +74,7 @@ const Title = ({ open, onClose, titleData, onSave }) => {
             <div style={{ position: "relative" }}>
                 <input
                     type="text"
-                    placeholder="Conținut titlu"
+                    placeholder="Titlu"
                     className={`input ${styles.titleInput}`}
                     value={title}
                     onChange={(e) => setTitle(e.target.value)}
@@ -107,7 +116,7 @@ const Title = ({ open, onClose, titleData, onSave }) => {
     return (
         <Popup
             open={open}
-            header={"Actualizează titlul"}
+            header="Actualizează titlul"
             content={contentUI}
             footer={footerUI}
             onClose={onClose}

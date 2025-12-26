@@ -30,11 +30,18 @@ const View = ({ data, categoryId, onChapterCreated }) => {
     // Title PopUp
 
     const [titlePopup, setTitlePopup] = useState(false);
-    const [localTitle, setLocalTitle] = useState(data?.title || "");
+
+    // For Set Data According to drag and drop
+
+    const [localData, setLocalData] = useState(null);
 
     useEffect(() => {
-        setLocalTitle(data?.title || "");
+        setLocalData(data);
     }, [data]);
+
+    if (!localData) return null;
+
+    ;
 
 
 
@@ -42,12 +49,12 @@ const View = ({ data, categoryId, onChapterCreated }) => {
     return (
         <>
             <div className={ styles.container }>
-                <Header
-                    title={ data.name }
-                />
+                <Header title={localData.name} />
+
                 <div className={ styles.content }>
                     <Sidebar
-                        data={data}
+                        data={localData}
+                        setData={setLocalData}
                         openChapterNew={() => {
                             setSelectedChapter(null);
                             setNewChapterPopup(true);
@@ -98,9 +105,10 @@ const View = ({ data, categoryId, onChapterCreated }) => {
 
                     <div className={ styles.contentTemplate }>
                         <Content
-                            data={{ ...data, title: localTitle }}
+                            data={localData}
                             onTitleClick={() => setTitlePopup(true)}
                         />
+
 
                     </div>
                 </div>
@@ -143,10 +151,15 @@ const View = ({ data, categoryId, onChapterCreated }) => {
                 <TitlePopup
                     open={titlePopup}
                     onClose={setTitlePopup}
-                    title={localTitle}
-                    onSaved={(newTitle) => setLocalTitle(newTitle)}
+                    categoryId={categoryId}
+                    titleData={{
+                        title: data?.title || "",
+                        content: data?.content || "",
+                    }}
+                    onUpdated={onChapterCreated}
                 />
             )}
+
 
 
 
