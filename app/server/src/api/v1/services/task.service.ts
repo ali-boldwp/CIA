@@ -52,15 +52,33 @@ export const addTimeToAnalystExpanse = async (analystId, projectId, diffSeconds)
 };
 
 
-export const updateTask = async (id: string, name: string) => {
+export const updateTask = async (
+    id: string,
+    payload: {
+        name?: string;
+        data?: Record<string, any>;
+    }
+) => {
     const task = await Task.findById(id);
     if (!task) throw new Error("Task not found");
 
-    task.name = name;
-    await task.save();
+    // ✅ update name if provided
+    if (payload.name !== undefined) {
+        task.name = payload.name;
+    }
 
+    // ✅ update dynamic form data if provided
+    if (payload.data !== undefined) {
+        task.data = {
+            ...(task.data || {}), // merge old data
+            ...payload.data,
+        };
+    }
+
+    await task.save();
     return task;
 };
+
 
 
 export const deleteTask = async (id: string) => {

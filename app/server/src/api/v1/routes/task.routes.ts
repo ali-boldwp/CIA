@@ -18,7 +18,7 @@ router.get("/:id", auth, taskController.getTaskById);
 
 router.get("/:id/view", auth, taskController.getTask);
 
-router.patch("/:id", auth, taskController.updateTask);
+router.put("/:id", auth, taskController.updateTask);
 
 router.delete("/:id" , auth , taskController.deleteTask);
 

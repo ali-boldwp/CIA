@@ -31,7 +31,10 @@ export const updateTask = async (
     try {
         const updatedTask = await taskService.updateTask(
             req.params.id,
-            req.body.name
+            {
+                name: req.body.name,
+                data: req.body.data,
+            }
         );
 
         res.json(ok(updatedTask));
@@ -39,6 +42,7 @@ export const updateTask = async (
         next(err);
     }
 };
+
 
 
 export const deleteTask = async (
