@@ -24,11 +24,39 @@ const Title = ({ open, onClose, categoryId, titleData, onUpdated }) => {
     const config = useMemo(
         () => ({
             readonly: false,
-            placeholder: "Conținut titlu",
+            placeholder: "Conținut inițial",
             height: 300,
+
             uploader: {
                 insertImageAsBase64URI: true,
             },
+            filebrowser: {
+                insertImageAsBase64URI: true, // ✅ IMPORTANT
+            },
+
+            // ✅ IMAGE SETTINGS
+            imageDefaultWidth: 500,          // default width
+            imageDefaultAlign: "center",
+
+            // allow resize handles
+            allowResizeX: true,
+            allowResizeY: true,
+
+            // ✅ FORCE MAX WIDTH
+            style: {
+                maxWidth: "100%",
+            },
+
+            // toolbar buttons
+            buttons: [
+                "bold", "italic", "underline",
+                "|",
+                "ul", "ol",
+                "|",
+                "image", "link",
+                "|",
+                "align", "undo", "redo"
+            ],
         }),
         []
     );

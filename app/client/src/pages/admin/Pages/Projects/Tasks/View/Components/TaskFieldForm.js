@@ -42,6 +42,9 @@ const TaskFieldForm = ({ taskId, taskData, formValues, setFormValues }) => {
             uploader: {
                 insertImageAsBase64URI: true,
             },
+            filebrowser: {
+                insertImageAsBase64URI: true, // ✅ IMPORTANT
+            },
 
             // ✅ IMAGE SETTINGS
             imageDefaultWidth: 500,          // default width
