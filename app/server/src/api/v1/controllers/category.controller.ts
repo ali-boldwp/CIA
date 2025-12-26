@@ -8,6 +8,7 @@ import FoamFields from "../models/foamFields.model";
 import Category from "../models/category.model";
 import Chapter from "../models/chapter.model";
 import Task from "../models/task.model";
+import * as employeeService from "../services/employee.service";
 
 
 
@@ -37,6 +38,16 @@ export const updateCategory = async (req: Request, res: Response, next: NextFunc
         next(err);
     }
 };
+
+export const deleteCategory = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const category = await categoryService.deleteCategory(req.params.id);
+        res.json(ok(category));
+    } catch (err) {
+        next(err);
+    }
+};
+
 
 export const getCategoryById = async (
     req: Request,
