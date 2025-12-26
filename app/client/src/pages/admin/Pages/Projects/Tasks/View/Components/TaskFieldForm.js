@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from "react";
+
 import styles from "./TaskFieldForm.module.css";
 import { useGetFoamFieldsByTaskIdQuery } from "../../../../../../../services/formFieldsApi";
-
+import React, { useEffect, useState, useRef, useMemo } from "react";
+import JoditEditor from "jodit-react";
 
 const TaskFieldForm = ({ taskId, formValues, setFormValues }) => {
 
@@ -26,6 +27,21 @@ const TaskFieldForm = ({ taskId, formValues, setFormValues }) => {
         }));
     };
 
+    const editor = useRef(null);
+
+    const config = useMemo(
+        () => ({
+            readonly: false,
+            placeholder: "Information likhein...",
+            height: 300,
+            uploader: {
+                insertImageAsBase64URI: true,
+            },
+        }),
+        []
+    );
+
+
     if (isLoading) return <p>Loading...</p>;
 
     return (
@@ -34,18 +50,39 @@ const TaskFieldForm = ({ taskId, formValues, setFormValues }) => {
                 <div key={field._id} className={styles.formField}>
                     <label>{field.name}</label>
 
-                    {field.type === "textarea" ? (
-                        <textarea
+                    {/* 🔹 INFORMATION → JODIT EDITOR */}
+                    {field.type === "information" && (
+                        <JoditEditor
+                            ref={editor}
                             value={formValues[field.slug] || ""}
-                            onChange={e => handleChange(field.slug, e.target.value)}
-                        />
-                    ) : (
-                        <input
-                            type={field.type}
-                            value={formValues[field.slug] || ""}
-                            onChange={e => handleChange(field.slug, e.target.value)}
+                            config={config}
+                            onBlur={(newContent) =>
+                                handleChange(field.slug, newContent)
+                            }
                         />
                     )}
+
+                    {/* 🔹 TEXTAREA */}
+                    {field.type === "textarea" && (
+                        <textarea
+                            value={formValues[field.slug] || ""}
+                            onChange={e =>
+                                handleChange(field.slug, e.target.value)
+                            }
+                        />
+                    )}
+
+                    {/* 🔹 OTHER INPUT TYPES */}
+                    {field.type !== "textarea" &&
+                        field.type !== "information" && (
+                            <input
+                                type={field.type}
+                                value={formValues[field.slug] || ""}
+                                onChange={e =>
+                                    handleChange(field.slug, e.target.value)
+                                }
+                            />
+                        )}
                 </div>
             ))}
         </div>

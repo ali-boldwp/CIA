@@ -9,7 +9,7 @@ import {
 } from "../../../../../../../services/categoryApi";
 
 const INPUT_TYPES = [
-    "text","number","email","password","textarea",
+    "text","number","email","password","textarea","information",
     "select","checkbox","radio","date","file","url"
 ];
 
