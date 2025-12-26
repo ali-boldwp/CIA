@@ -1,8 +1,9 @@
 import React, { useMemo, useState } from "react";
 import styles from "./Style.module.css";
 import Popup from "./Popup";
-import { useCreateCategoryMutation } from "../../../../../services/categoryApi";
+import {useCreateCategoryMutation, useDeleteCategoryMutation} from "../../../../../services/categoryApi";
 import {Link} from "react-router-dom";
+import { toast } from "react-toastify";
 
 function View({ data, isError }) {
     const categories = data || [];
@@ -13,7 +14,8 @@ function View({ data, isError }) {
     // ✅ Create mutation
     const [createCategory, { isLoading: isCreating, error: createError }] =
         useCreateCategoryMutation();
-
+    const [deleteCategory, { isLoading: isDeleting }] =
+        useDeleteCategoryMutation();
     /* Pagination */
     const [page, setPage] = useState(1);
     const limit = 10;
@@ -38,6 +40,23 @@ function View({ data, isError }) {
 
     const statusClass = (status) =>
         status === "active" ? styles.active : styles.inactive;
+
+    const handleDeleteCategory = async (id) => {
+        if (!window.confirm("Sigur doriți să ștergeți această categorie?")) return;
+
+        try {
+            await toast.promise(
+                deleteCategory(id).unwrap(),
+                {
+                    pending: "Se șterge categoria...",
+                    success: "Categoria a fost ștearsă cu succes",
+                    error: "Ștergerea categoriei a eșuat",
+                }
+            );
+        } catch (err) {
+            console.error("Delete error:", err);
+        }
+    };
 
     return (
         <div className={styles.main}>
@@ -111,7 +130,14 @@ function View({ data, isError }) {
 
                                 <div className={styles.actions}>
                                     <Link to={`/categories/${c._id}`} className={styles.openBtn}>Deschide</Link>
-                                    <button className={styles.deleteBtn}>🗑 Șterge</button>
+                                    <button
+                                        className={styles.deleteBtn}
+                                        onClick={() => handleDeleteCategory(c._id)}
+                                        disabled={isDeleting}
+                                    >
+                                        {isDeleting ? "Se șterge..." : "🗑 Șterge"}
+                                    </button>
+
                                 </div>
                             </div>
                         ))}
