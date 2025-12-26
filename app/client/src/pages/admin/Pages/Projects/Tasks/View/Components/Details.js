@@ -73,7 +73,7 @@ const Details = ({ projectId, taskId, formValues }) => {
         );
 
         if (hasEmptyField) {
-            toast.error("Please fill all form fields before completing the task");
+            toast.error("Vă rugăm să completați toate câmpurile înainte de finalizarea task-ului");
             return;
         }
 
@@ -87,9 +87,9 @@ const Details = ({ projectId, taskId, formValues }) => {
             // ✅ STEP 2: COMPLETE TASK
             await completeTask(taskId).unwrap();
 
-            toast.success("Task completed & form saved successfully");
+            toast.success("Task finalizat cu succes, iar datele au fost salvate");
         } catch (err) {
-            toast.error("Something went wrong while submitting data");
+            toast.error("A apărut o eroare la trimiterea datelor");
         }
     };
 
