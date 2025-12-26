@@ -11,10 +11,6 @@ import {
     useCreateChapterMutation,
     useCreateTaskMutation,
     useGetChapterByIdQuery,
-    useStartTaskMutation,
-    usePauseTaskMutation,
-    useResumeTaskMutation,
-    useCompleteTaskMutation,
     useUpdateEditableMutation,
     useFinalizeTaskMutation,
     useCreateObservationMutation,
@@ -22,10 +18,8 @@ import {
 } from "../../../../../services/taskApi";
 import { useGetCreateProjectByIdQuery , useGetAnalystsProjectProgressQuery } from "../../../../../services/projectApi";
 import {toast} from "react-toastify";
-import {FiEdit2, FiTrash2} from "react-icons/fi";
 import ChapterCreation from "../../../../taskPage/components/ChapterCreation";
 import ReviewPopUp from "./Popup/ReviewPop/ReviewPopUp";
-import EditingPopUp from "./Popup/EditingPopUp/EditingPopUp";
 import PleaseWaitPopUp from "./Popup/PleaseWaitPopUp/PleaseWaitPopUp";
 import Chapter from "./Components/Chapter";
 import Details from "./Components/Details";
@@ -53,8 +47,6 @@ const ProjectTasks = ({
     const [showPleaseWait, setShowPleaseWait] = useState(false);
     const [allBtn,setAllBtn]=useState(false);
     const [isFinalizedLocal, setIsFinalizedLocal] = useState(false);
-    const [showExportContent, setShowExportContent] = useState(false);
-
 
 
     const [updateEditable] = useUpdateEditableMutation();

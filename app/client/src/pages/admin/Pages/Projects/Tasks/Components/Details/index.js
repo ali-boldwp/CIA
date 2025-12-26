@@ -1,4 +1,4 @@
-import React from "react";
+import React,{useState} from "react";
 import {useSelector} from "react-redux";
 import {Link} from "react-router-dom";
 
@@ -36,8 +36,21 @@ const Details = (
         ? `/humint/request/${humintId}`
         : `/humint/new/${projectId}`;
 
+    const [showExport, setShowExport] = useState(false);
+    const [exportLoading, setExportLoading] = useState(false);
 
+    const handleExportPDFClick = async () => {
+        try {
+            setExportLoading(true);
+            setShowExport(false); // dropdown close
 
+            await onExportPDF();  // 👈 parent ka async function
+        } catch (e) {
+            console.error(e);
+        } finally {
+            setExportLoading(false);
+        }
+    };
 
     return(
         <div className="task-container">
@@ -229,13 +242,38 @@ const Details = (
 
 
                     <div className="export-dropdown">
-                        <button className="project-btn"  onClick={onExportPDF}>Exporta raport ▾</button>
+                        <button
+                            className="project-btn export-trigger"
+                            onClick={() => setShowExport(prev => !prev)}
+                            disabled={exportLoading}
+                        >
+                            {exportLoading ? (
+                                <>
+                                    <span className="spinner" />
+                                    Exporting…
+                                </>
+                            ) : (
+                                <>Export ▾</>
+                            )}
+                        </button>
 
-                        <div className="dropdown-menu">
-                            <button className="dropdown-item">Export Word</button>
-                            <button className="dropdown-item">Export PDF</button>
-                        </div>
+                        {showExport && !exportLoading && (
+                            <div className="dropdown-menu export-menu">
+                                <button
+                                    className="dropdown-item"
+                                    onClick={handleExportPDFClick}
+                                >
+                                    📄 Export PDF
+                                </button>
+
+                                <button className="dropdown-item disabled">
+                                    📝 Export Word
+                                </button>
+                            </div>
+                        )}
                     </div>
+
+
 
                 </div>
 
