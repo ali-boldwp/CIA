@@ -3,7 +3,9 @@ import { useSelector } from "react-redux";
 import { Outlet } from "react-router-dom";
 import {Link, useNavigate, useParams} from "react-router-dom";
 import React, {useEffect, useState} from "react";
-import html2pdf from "html2pdf.js";
+import jsPDF from "jspdf";
+import html2canvas from "html2canvas";
+
 
 import {
     useCreateChapterMutation,
@@ -51,6 +53,7 @@ const ProjectTasks = ({
     const [showPleaseWait, setShowPleaseWait] = useState(false);
     const [allBtn,setAllBtn]=useState(false);
     const [isFinalizedLocal, setIsFinalizedLocal] = useState(false);
+    const [showExportContent, setShowExportContent] = useState(false);
 
 
 
@@ -345,16 +348,35 @@ const ProjectTasks = ({
     // if (isLoading) return <p>Loading project data...</p>;
     // if (isError) return <p>Error fetching project data!</p>;
 
-    const handleExportPDF = () => {
+    const handleExportPDF = async () => {
         const element = document.getElementById("export-report");
+        if (!element) {
+            toast.error("Export content not found");
+            return;
+        }
 
-        html2pdf().from(element).set({
-            margin: 10,
-            filename: `project-${projectId}-report.pdf`,
-            html2canvas: { scale: 2 },
-            jsPDF: { unit: "mm", format: "a4" },
-        }).save();
+        const canvas = await html2canvas(element, {
+            scale: 2,
+            backgroundColor: "#ffffff",
+            useCORS: true
+        });
+
+        const imgData = canvas.toDataURL("image/png");
+
+        const pdf = new jsPDF("p", "mm", "a4");
+
+        const pdfWidth = pdf.internal.pageSize.getWidth();
+        const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+
+        pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight);
+        pdf.save(`project-${projectId}-report.pdf`);
     };
+
+
+
+
+
+
 
     // 🔥 SLUG REPLACER FUNCTION
     const replaceSlugsWithValues = (html, values = {}) => {
@@ -402,14 +424,18 @@ const ProjectTasks = ({
             <div
                 id="export-report"
                 className={styles.contentTemplate}
+                style={{
+                    position: "fixed",
+                    top: 0,
+                    left: "-9999px",   // 👈 screen se bahar
+                    width: "210mm",
+                    background: "white"
+                }}
             >
-                {contentData && (
-                    <Content
-                        data={contentData}
-                        onTitleClick={() => {}}
-                    />
-                )}
+                {contentData && <Content data={contentData} />}
             </div>
+
+
 
             <Details
                 isFinalizedLocal={ isFinalizedLocal }
