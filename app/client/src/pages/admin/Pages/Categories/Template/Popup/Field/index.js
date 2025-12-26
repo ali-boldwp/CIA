@@ -94,9 +94,13 @@ const Field = ({ open, onClose, chapterId, taskId, field, onCreated }) => {
 
             if (typeof onCreated === "function") onCreated();
             onClose(false);
-        } catch (e) {
-            console.error("Field submit error:", e);
-        } finally {
+        } catch (err) {
+            toast.error(
+                err?.data?.message ||
+                "This field already exists (duplicate slug)"
+            );
+        }
+        finally {
             setLoading(false);
         }
     };

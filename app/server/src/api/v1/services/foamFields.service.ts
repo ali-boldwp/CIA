@@ -3,6 +3,23 @@ import TaskTemplate from "../models/taskTemplate.model";
 
 // CREATE
 export const createFoamField = async (data: Partial<IFoamFields>) => {
+    if (!data.task || !data.name) {
+        throw new Error("Task and field name are required");
+    }
+
+    const name = data.name.trim();
+
+    const existingField = await FoamFields.findOne({
+        task: data.task,
+        name,
+    });
+
+    if (existingField) {
+        throw new Error(
+            `This field cannot be created because a field with the same slug (name) already exists in this task.`
+        );
+    }
+
     const task = await TaskTemplate
         .findById(data.task)
         .select("foamFields");
@@ -11,6 +28,7 @@ export const createFoamField = async (data: Partial<IFoamFields>) => {
 
     const field = await FoamFields.create({
         ...data,
+        name,
         index: nextIndex,
     });
 
@@ -21,6 +39,7 @@ export const createFoamField = async (data: Partial<IFoamFields>) => {
 
     return field;
 };
+
 
 
 
