@@ -46,29 +46,9 @@ const Task = ({ open, onClose, chapterId, categoryId, task, onCreated }) => {
                 insertImageAsBase64URI: true,
             },
 
-            // ✅ IMAGE SETTINGS
-            imageDefaultWidth: 500,          // default width
-            imageDefaultAlign: "center",
-
-            // allow resize handles
-            allowResizeX: true,
-            allowResizeY: true,
-
-            // ✅ FORCE MAX WIDTH
-            style: {
-                maxWidth: "100%",
+            filebrowser: {
+                insertImageAsBase64URI: true,
             },
-
-            // toolbar buttons
-            buttons: [
-                "bold", "italic", "underline",
-                "|",
-                "ul", "ol",
-                "|",
-                "image", "link",
-                "|",
-                "align", "undo", "redo"
-            ],
         }),
         []
     );
