@@ -11,6 +11,7 @@ export const createFoamField = async (req: Request, res: Response, next: NextFun
     }
 };
 
+
 export const updateFoamField = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const updated = await foamFieldService.updateFoamField(req.params.id, req.body);
