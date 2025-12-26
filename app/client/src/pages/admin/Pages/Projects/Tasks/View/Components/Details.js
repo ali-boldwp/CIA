@@ -12,7 +12,7 @@ const Details = ({ projectId, taskId, formValues }) => {
         skip: !projectId
     });
 
-    const { data: taskData } = useGetTaskQuery(taskId, {
+    const { data: taskData,refetch } = useGetTaskQuery(taskId, {
         skip: !taskId
     });
 
@@ -44,6 +44,7 @@ const Details = ({ projectId, taskId, formValues }) => {
         try {
             await startTask(taskId).unwrap();
             toast.success("Task pornit");
+            refetch();
         } catch {
             toast.error("Pornirea a eșuat");
         }
@@ -53,6 +54,7 @@ const Details = ({ projectId, taskId, formValues }) => {
         try {
             await pauseTask(taskId).unwrap();
             toast.success("Task pus pe pauză");
+            refetch();
         } catch {
             toast.error("Pauza a eșuat");
         }
@@ -62,6 +64,7 @@ const Details = ({ projectId, taskId, formValues }) => {
         try {
             await resumeTask(taskId).unwrap();
             toast.success("Task reluat");
+            refetch();
         } catch {
             toast.error("Reluarea a eșuat");
         }
@@ -83,6 +86,7 @@ const Details = ({ projectId, taskId, formValues }) => {
                 id: taskId,
                 data: formValues,   // 🔥 YAHI FORM DATA JAYEGA
             }).unwrap();
+            refetch();
 
             // ✅ STEP 2: COMPLETE TASK
             await completeTask(taskId).unwrap();
