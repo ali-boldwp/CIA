@@ -3,7 +3,7 @@ import {toast} from "react-toastify";
 import { useGetCreateProjectByIdQuery } from "../../../../../../../services/projectApi";
 import {
     useGetTaskQuery,
-    useGetChapterByIdQuery, useStartTaskMutation, usePauseTaskMutation, useResumeTaskMutation, useCompleteTaskMutation
+    useGetChapterByIdQuery,useUpdateTaskMutation, useStartTaskMutation, usePauseTaskMutation, useResumeTaskMutation, useCompleteTaskMutation
 } from "../../../../../../../services/taskApi";
 import "./Detail.css";
 
@@ -24,6 +24,7 @@ const Details = ({ projectId, taskId, formValues }) => {
     const [startTask] = useStartTaskMutation();
     const [pauseTask] = usePauseTaskMutation();
     const [resumeTask] = useResumeTaskMutation();
+    const [updateTask] = useUpdateTaskMutation();
     const [completeTask] = useCompleteTaskMutation();
 
     const project = projectData?.data;
@@ -67,10 +68,8 @@ const Details = ({ projectId, taskId, formValues }) => {
     };
 
     const handleDone = async () => {
-
-
         const hasEmptyField = Object.values(formValues || {}).some(
-            value => !value || value.trim() === ""
+            value => !value || value.toString().trim() === ""
         );
 
         if (hasEmptyField) {
@@ -79,12 +78,21 @@ const Details = ({ projectId, taskId, formValues }) => {
         }
 
         try {
+            // ✅ STEP 1: SAVE FORM DATA
+            await updateTask({
+                id: taskId,
+                data: formValues,   // 🔥 YAHI FORM DATA JAYEGA
+            }).unwrap();
+
+            // ✅ STEP 2: COMPLETE TASK
             await completeTask(taskId).unwrap();
-            toast.success("Task finalizat");
-        } catch {
-            toast.error("Finalizarea a eșuat");
+
+            toast.success("Task completed & form saved successfully");
+        } catch (err) {
+            toast.error("Something went wrong while submitting data");
         }
     };
+
 
 
     const isCompleted = task?.completed;
