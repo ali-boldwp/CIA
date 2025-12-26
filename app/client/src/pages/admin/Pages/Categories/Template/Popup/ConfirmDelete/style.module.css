@@ -1,0 +1,44 @@
+.box{
+    padding: 10px 2px;
+}
+
+.text{
+    font-size: 14px;
+    font-weight: 700;
+    text-align: center;
+    margin: 0;
+}
+
+.footerRow{
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    align-items: center;
+}
+
+.cancelBtn {
+    height: 40px;
+    padding: 0 14px;
+    border-radius: 6px;
+    border: 1px solid #d1d5db;
+    background: #fff;
+    cursor: pointer;
+    font-weight: 700;
+}
+
+.deleteBtn {
+    height: 40px;
+    padding: 0 14px;
+    border-radius: 6px;
+    border: none;
+    background: #ef4444;
+    color: #fff;
+    cursor: pointer;
+    font-weight: 700;
+}
+
+.cancelBtn:disabled,
+.deleteBtn:disabled{
+    opacity: 0.5;
+    cursor: not-allowed;
+}

@@ -6,52 +6,48 @@ import styles from "./style.module.css";
 import JoditEditor from "jodit-react";
 import {
     useCreateChapterTemplateMutation,
-    useUpdateChapterTemplateMutation
+    useUpdateChapterTemplateMutation,
+    useDeleteChapterTemplateMutation,
 } from "../../../../../../../services/categoryApi";
 
 import { toast } from "react-toastify";
+import ConfirmDelete from "../ConfirmDelete";
 
 const Chapter = ({ open, onClose, categoryId, chapter, onCreated }) => {
-
     const editor = useRef(null);
-
 
     const [name, setName] = useState(chapter?.name || "");
     const [content, setContent] = useState(chapter?.content || "");
 
-
     const isEdit = Boolean(chapter?.uid);
     const [loading, setLoading] = useState(false);
 
+    const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false);
+    const [deleteLoading, setDeleteLoading] = useState(false);
+
     const [createChapterTemplate] = useCreateChapterTemplateMutation();
     const [updateChapterTemplate] = useUpdateChapterTemplateMutation();
-
+    const [deleteChapterTemplate] = useDeleteChapterTemplateMutation();
 
     useEffect(() => {
         setName(chapter?.name || "");
         setContent(chapter?.content || "");
+        setConfirmDeleteOpen(false);
     }, [chapter, open]);
-
 
     const config = useMemo(
         () => ({
             readonly: false,
             placeholder: "Conținut inițial",
             height: 300,
-            uploader: {
-                insertImageAsBase64URI: true
-            }
+            uploader: { insertImageAsBase64URI: true },
         }),
         []
     );
 
-
-
-
     const handleSubmit = async () => {
         if (!name.trim()) return;
 
-        // ✅ guard
         if (!categoryId) {
             console.error("❌ categoryId missing!", { categoryId });
             toast.error("Category ID missing");
@@ -80,19 +76,38 @@ const Chapter = ({ open, onClose, categoryId, chapter, onCreated }) => {
                 }
             );
 
-            // ✅ tell parent to refetch category / chapters (if provided)
             if (typeof onCreated === "function") onCreated();
-
-            // ✅ close popup
             onClose(false);
         } catch (e) {
-            // toast.promise already shows error, but keep console for debugging
             console.error("Chapter submit error:", e);
         } finally {
             setLoading(false);
         }
     };
 
+
+    const handleConfirmDelete = async () => {
+        if (!chapter?.uid) return;
+
+        setDeleteLoading(true);
+        try {
+            await toast.promise(deleteChapterTemplate(chapter.uid).unwrap(), {
+                pending: "Se șterge...",
+                success: "Capitol șters cu succes",
+                error: "Ștergerea a eșuat",
+            });
+
+            if (typeof onCreated === "function") onCreated();
+
+            // close both
+            setConfirmDeleteOpen(false);
+            onClose(false);
+        } catch (e) {
+            console.error("Delete chapter error:", e);
+        } finally {
+            setDeleteLoading(false);
+        }
+    };
 
     const contentUI = (
         <div className="form-box">
@@ -114,35 +129,70 @@ const Chapter = ({ open, onClose, categoryId, chapter, onCreated }) => {
                         onBlur={(newContent) => setContent(newContent)}
                     />
                 </div>
-
             </div>
         </div>
     );
 
     const footerUI = (
         <div className={styles.footerRow}>
-            <button
-                className={styles.addBtn}
-                onClick={handleSubmit}
-                disabled={loading || !name.trim()}
-            >
-                {loading ? (isEdit ? "Se salvează..." : "Se adaugă...") : (isEdit ? "Salvează" : "Adaugă")}
-            </button>
+            {isEdit && (
+                <button
+                    className={styles.deleteBtn}
+                    onClick={() => setConfirmDeleteOpen(true)}
+                    disabled={loading}
+                >
+                    Șterge
+                </button>
+            )}
 
-            <button className={styles.cancelBtn} onClick={() => onClose(false)}>
-                Anulează
-            </button>
+            <div className={styles.rightBtns}>
+                <button
+                    className={styles.addBtn}
+                    onClick={handleSubmit}
+                    disabled={loading || !name.trim()}
+                >
+                    {loading
+                        ? isEdit
+                            ? "Se salvează..."
+                            : "Se adaugă..."
+                        : isEdit
+                            ? "Salvează"
+                            : "Salvează"}
+                </button>
+
+                <button
+                    className={styles.cancelBtn}
+                    onClick={() => onClose(false)}
+                    disabled={loading}
+                >
+                    Anulează
+                </button>
+            </div>
         </div>
+
     );
 
     return (
-        <Popup
-            open={open}
-            header={isEdit ? "Update Chapter" : "New Chapter"}
-            content={contentUI}
-            footer={footerUI}
-            onClose={onClose}
-        />
+        <>
+
+            <Popup
+                open={open && !confirmDeleteOpen}
+                header={isEdit ? "Update Chapter" : "New Chapter"}
+                content={contentUI}
+                footer={footerUI}
+                onClose={onClose}
+            />
+
+
+            {confirmDeleteOpen && (
+                <ConfirmDelete
+                    open={confirmDeleteOpen}
+                    onClose={setConfirmDeleteOpen}
+                    onConfirm={handleConfirmDelete}
+                    loading={deleteLoading}
+                />
+            )}
+        </>
     );
 };
 

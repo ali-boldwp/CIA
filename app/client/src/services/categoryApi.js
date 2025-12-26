@@ -168,6 +168,50 @@ export const categoryApi = createApi({
             }),
             invalidatesTags: [{ type: "Category", id: "LIST" }],
         }),
+
+        // ================= DELETE FORM FIELD =================
+        deleteFormField: builder.mutation({
+            query: (id) => ({
+                url: `/foam-fields/${id}`,
+                method: "DELETE",
+            }),
+            invalidatesTags: (result, error, id) => [
+                { type: "FoamFields", id },
+                { type: "FoamFields", id: "LIST" },
+                { type: "Category", id: "LIST" }, // optional (refetch)
+            ],
+        }),
+
+
+        // ================= DELETE TASK TEMPLATE =================
+        deleteTaskTemplate: builder.mutation({
+            query: (id) => ({
+                url: `/task-template/${id}`,
+                method: "DELETE",
+            }),
+            invalidatesTags: (result, error, id) => [
+                { type: "TaskTemplate", id },
+                { type: "TaskTemplate", id: "LIST" },
+                // (optional) category bhi refetch hoti rahe
+                { type: "Category", id: "LIST" },
+            ],
+        }),
+
+
+        // ================= DELETE CHAPTER TEMPLATE =================
+        deleteChapterTemplate: builder.mutation({
+            query: (id) => ({
+                url: `/chapter-template/${id}`,
+                method: "DELETE",
+            }),
+            invalidatesTags: (result, error, id) => [
+                { type: "ChapterTemplate", id },
+
+                { type: "ChapterTemplate", id: "LIST" },
+
+            ],
+        }),
+
     }),
 });
 
@@ -185,5 +229,10 @@ export const {
     useCreateTaskTemplateMutation,
     useUpdateTaskTemplateMutation,
     useUpdateChapterTemplateMutation,
+    useDeleteChapterTemplateMutation,
+    useDeleteTaskTemplateMutation,
+    useDeleteFormFieldMutation,
+
+
     useUpdateChapterTemplateIndexMutation,
 } = categoryApi;
