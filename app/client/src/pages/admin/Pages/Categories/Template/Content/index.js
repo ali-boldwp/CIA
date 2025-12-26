@@ -1,29 +1,19 @@
-import Title from "./Title"
-import Chapter from "./Chapter"
+import Title from "./Title";
+import Chapter from "./Chapter";
+import styles from "./style.module.css";
 
-import styles from "./style.module.css"
-
-const Content = ({ data }) => {
-
+const Content = ({ data, onTitleClick }) => {
     return (
-        <div className={ styles.container }>
-            <Title
-                title={ data.title }
-            />
-            <div className={ styles.chapters }>
-                {
-                    data.chapters.map((chapter, ci) => {
-                        return (
-                            <Chapter
-                                data={ chapter }
-                            />
-                        )
-                    })
-                }
+        <div className={styles.container}>
+            <Title title={data.title} onClick={onTitleClick} />
+
+            <div className={styles.chapters}>
+                {data.chapters.map((chapter, ci) => {
+                    return <Chapter key={chapter._id || ci} data={chapter} />;
+                })}
             </div>
         </div>
     );
-
-}
+};
 
 export default Content;

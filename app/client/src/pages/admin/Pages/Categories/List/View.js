@@ -110,7 +110,7 @@ function View({ data, isError }) {
                                 </div>
 
                                 <div className={styles.actions}>
-                                    <Link to={`/categories/view/${c._id}`} className={styles.openBtn}>Deschide</Link>
+                                    <Link to={`/categories/${c._id}`} className={styles.openBtn}>Deschide</Link>
                                     <button className={styles.deleteBtn}>🗑 Șterge</button>
                                 </div>
                             </div>

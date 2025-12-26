@@ -5,11 +5,12 @@ import Content from "./Content"
 import ChapterPopup from "./Popup/Chapter";
 import TaskPopup from "./Popup/Task";
 import FieldPopup from "./Popup/Field";
+import TitlePopup from "./Popup/Title";
 
 
 
 import styles from "./style.module.css";
-import {useState} from "react";
+import {useState , useEffect} from "react";
 
 const View = ({ data, categoryId, onChapterCreated }) => {
 
@@ -25,6 +26,15 @@ const View = ({ data, categoryId, onChapterCreated }) => {
     // Field popup state
     const [newFieldPopup, setNewFieldPopup] = useState(false);
     const [selectedField, setSelectedField] = useState(null);
+
+    // Title PopUp
+
+    const [titlePopup, setTitlePopup] = useState(false);
+    const [localTitle, setLocalTitle] = useState(data?.title || "");
+
+    useEffect(() => {
+        setLocalTitle(data?.title || "");
+    }, [data]);
 
 
 
@@ -47,9 +57,9 @@ const View = ({ data, categoryId, onChapterCreated }) => {
                             setNewChapterPopup(true);
                         }}
 
-                        // ✅ TASK POPUP
+
                         openTaskNew={(chapter) => {
-                            setSelectedTask({ chapterId: chapter._id }); // new task for this chapter
+                            setSelectedTask({ chapterId: chapter._id });
                             setNewTaskPopup(true);
                         }}
                         onEditTask={(task, chapter) => {
@@ -58,12 +68,12 @@ const View = ({ data, categoryId, onChapterCreated }) => {
                                 name: task.name,
                                 content: task.content || "",
                                 chapterId: chapter._id,
-                                taskId: task._id, // (optional) if you want it too
+                                taskId: task._id,
                             });
                             setNewTaskPopup(true);
                         }}
 
-                        // ✅ FIELD POPUP
+
                         openFieldNew={(task, chapter) => {
                             setSelectedField({
                                 chapterId: chapter._id,
@@ -88,8 +98,10 @@ const View = ({ data, categoryId, onChapterCreated }) => {
 
                     <div className={ styles.contentTemplate }>
                         <Content
-                            data={ data }
+                            data={{ ...data, title: localTitle }}
+                            onTitleClick={() => setTitlePopup(true)}
                         />
+
                     </div>
                 </div>
             </div>
@@ -125,6 +137,17 @@ const View = ({ data, categoryId, onChapterCreated }) => {
                     onCreated={onChapterCreated} // refetch
                 />
             )}
+
+
+            {titlePopup && (
+                <TitlePopup
+                    open={titlePopup}
+                    onClose={setTitlePopup}
+                    title={localTitle}
+                    onSaved={(newTitle) => setLocalTitle(newTitle)}
+                />
+            )}
+
 
 
 
