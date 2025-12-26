@@ -36,18 +36,22 @@ const Task = ({ open, onClose, chapterId, categoryId, task, onCreated }) => {
         setConfirmDeleteOpen(false);
     }, [task, open]);
 
-    const config = {
-        uploader: {
-            url: `${process.env.REACT_APP_API_BASE_URL}/upload/image`,
-            method: "POST",
-            fieldName: "file",
-            withCredentials: false,
-            insertImageAsBase64URI: false, // 🔥 IMPORTANT
-            imagesExtensions: ["jpg", "png", "jpeg", "webp"],
-        },
-        imageDefaultWidth: 500,
-    };
+    const config = useMemo(
+        () => ({
+            readonly: false,
+            placeholder: "Conținut inițial",
+            height: 300,
 
+            uploader: {
+                insertImageAsBase64URI: true,
+            },
+
+            filebrowser: {
+                insertImageAsBase64URI: true,
+            },
+        }),
+        []
+    );
 
 
     const handleSubmit = async () => {

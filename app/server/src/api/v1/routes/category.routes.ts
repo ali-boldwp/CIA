@@ -1,7 +1,7 @@
 import { Router } from "express";
 import * as categoryController from "../controllers/category.controller"
 import { auth } from "../../../middlewares/auth.middleware";
-import {getProjectFormData} from "../controllers/category.controller";
+
 
 
 const router = Router();
@@ -9,7 +9,7 @@ const router = Router();
 router.post("/", auth, categoryController.createCategory);
 router.get("/", auth, categoryController.getAllCategory);
 router.put("/:id", auth, categoryController.updateCategory);
-
+router.delete("/:id", auth, categoryController.deleteCategory);
 
 router.get("/projects/:projectId/form-data", auth, categoryController.getProjectFormData);
 router.get("/:id/tree", auth, categoryController.getCategoryTree);

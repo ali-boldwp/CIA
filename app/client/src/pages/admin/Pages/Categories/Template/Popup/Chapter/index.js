@@ -40,10 +40,18 @@ const Chapter = ({ open, onClose, categoryId, chapter, onCreated }) => {
             readonly: false,
             placeholder: "Conținut inițial",
             height: 300,
-            uploader: { insertImageAsBase64URI: true },
+
+            uploader: {
+                insertImageAsBase64URI: true,
+            },
+
+            filebrowser: {
+                insertImageAsBase64URI: true,
+            },
         }),
         []
     );
+
 
     const handleSubmit = async () => {
         if (!name.trim()) return;
