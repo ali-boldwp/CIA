@@ -47,6 +47,19 @@ export const taskApi = createApi({
             }),
         }),
 
+        updateTask: builder.mutation({
+            query: ({ id, name, data }) => ({
+                url: `/task/${id}`,
+                method: "PUT",
+                body: {
+                    name,   // optional
+                    data,   // 🔥 dynamic form data
+                },
+            }),
+            invalidatesTags: ["task"],
+        }),
+
+
 
         startTask: builder.mutation({
             query: (taskId) => ({
@@ -128,7 +141,8 @@ export const {
     useGetTaskQuery,
 
     useGetTasksByChapterIdQuery,
-    useCreateTaskMutation, // ✅ export hook
+    useCreateTaskMutation,
+    useUpdateTaskMutation,
     useStartTaskMutation,
     usePauseTaskMutation,
     useResumeTaskMutation,

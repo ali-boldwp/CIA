@@ -9,6 +9,7 @@ export interface ITask extends Document {
 
     totalSeconds: number;
     lastStartTimestamp?: number;
+    data: Record<string, any>;
 }
 
 const taskSchema = new Schema<ITask>(
@@ -39,6 +40,11 @@ const taskSchema = new Schema<ITask>(
 
 
         lastStartTimestamp: { type: Number },
+
+        data: {
+            type: Schema.Types.Mixed,
+            default: {}, // important
+        },
 
     },
     {
