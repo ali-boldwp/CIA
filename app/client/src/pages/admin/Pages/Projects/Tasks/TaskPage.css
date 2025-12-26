@@ -1070,44 +1070,109 @@
 
 /* -------- EXPORT DROPDOWN -------- */
 
+/* EXPORT DROPDOWN */
 .export-dropdown {
     position: relative;
 }
 
-.export {
-    background: #ffffff;
+.export-trigger {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: white;
+    border: 1px solid #d1d5db;
+    padding: 7px 16px;
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
 }
 
-.dropdown-menu {
-    display: none;
+.export-trigger:hover {
+    background: #f8fafc;
+    border-color: #2563eb;
+}
+
+/* Dropdown box */
+.export-menu {
     position: absolute;
     right: 0;
-    top: 38px;
+    top: 42px;
     background: white;
-    border: 1px solid #dcdcdc;
-    border-radius: 6px;
-    padding: 5px 0;
-    width: 130px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    border-radius: 10px;
+    min-width: 160px;
+    border: 1px solid #e5e7eb;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+    overflow: hidden;
+    z-index: 100;
+    animation: dropdownFade 0.15s ease;
 }
 
-.export-dropdown:hover .dropdown-menu {
-    display: block;
-}
-
+/* Items */
 .dropdown-item {
     width: 100%;
-    background: transparent;
-    border: none;
-    padding: 8px 12px;
+    padding: 10px 14px;
     font-size: 13px;
+    border: none;
+    background: transparent;
     text-align: left;
     cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: background 0.15s ease;
 }
 
 .dropdown-item:hover {
-    background: #f3f4f6;
+    background: #f1f5f9;
 }
+
+/* Disabled state */
+.dropdown-item.disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+/* Small animation */
+@keyframes dropdownFade {
+    from {
+        opacity: 0;
+        transform: translateY(-6px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+/* Export loader spinner */
+.spinner {
+    width: 14px;
+    height: 14px;
+    border: 2px solid #c7d2fe;
+    border-top: 2px solid #2563eb;
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+    display: inline-block;
+}
+
+.export-trigger {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.export-trigger:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
 .chapter-wrapper {
     width: 100%;
     font-family: "Inter", sans-serif;
