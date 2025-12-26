@@ -4,7 +4,7 @@ import { useGetFoamFieldsByTaskIdQuery } from "../../../../../../../services/for
 import React, { useEffect, useState, useRef, useMemo } from "react";
 import JoditEditor from "jodit-react";
 
-const TaskFieldForm = ({ taskId, formValues, setFormValues }) => {
+const TaskFieldForm = ({ taskId, taskData, formValues, setFormValues }) => {
 
     const { data, isLoading } = useGetFoamFieldsByTaskIdQuery(taskId, {
         skip: !taskId,
@@ -13,12 +13,16 @@ const TaskFieldForm = ({ taskId, formValues, setFormValues }) => {
     useEffect(() => {
         if (data?.data?.length) {
             const initialValues = {};
+
             data.data.forEach(field => {
-                initialValues[field.slug] = "";
+                // 🔑 AGAR TASK ME DATA HAI → USE IT
+                initialValues[field.slug] =
+                    taskData?.[field.slug] || "";
             });
+
             setFormValues(initialValues);
         }
-    }, [data, setFormValues]);
+    }, [data, taskData, setFormValues]);
 
     const handleChange = (slug, value) => {
         setFormValues(prev => ({
@@ -32,7 +36,7 @@ const TaskFieldForm = ({ taskId, formValues, setFormValues }) => {
     const config = useMemo(
         () => ({
             readonly: false,
-            placeholder: "Information likhein...",
+
             height: 300,
             uploader: {
                 insertImageAsBase64URI: true,
