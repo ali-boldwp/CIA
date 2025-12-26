@@ -41,12 +41,38 @@ const Task = ({ open, onClose, chapterId, categoryId, task, onCreated }) => {
             readonly: false,
             placeholder: "Conținut inițial",
             height: 300,
+
             uploader: {
                 insertImageAsBase64URI: true,
             },
+
+            // ✅ IMAGE SETTINGS
+            imageDefaultWidth: 500,          // default width
+            imageDefaultAlign: "center",
+
+            // allow resize handles
+            allowResizeX: true,
+            allowResizeY: true,
+
+            // ✅ FORCE MAX WIDTH
+            style: {
+                maxWidth: "100%",
+            },
+
+            // toolbar buttons
+            buttons: [
+                "bold", "italic", "underline",
+                "|",
+                "ul", "ol",
+                "|",
+                "image", "link",
+                "|",
+                "align", "undo", "redo"
+            ],
         }),
         []
     );
+
 
     const handleSubmit = async () => {
         if (!name.trim()) return;
