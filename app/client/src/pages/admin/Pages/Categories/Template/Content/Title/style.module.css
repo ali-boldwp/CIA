@@ -7,3 +7,10 @@
 .wrapper h1 {
     text-align: center;
 }
+
+
+.placeholder {
+    color: #999;
+    cursor: pointer;
+    font-style: italic;
+}
