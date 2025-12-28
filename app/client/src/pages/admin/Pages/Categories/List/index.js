@@ -15,6 +15,7 @@ const Categories = () => {
             header={{
                 search: false,
                 back: true,
+                title: "Entities",
                 content: <Header />,
             }}
             content={
