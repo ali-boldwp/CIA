@@ -68,28 +68,28 @@ const SummarySection = ({ employeeTotalCost = 0 }) => {
                     <div className={`${styles.summaryBox} ${styles.boxGray}`}>
                         <span className={styles.sLabel}>Cheltuieli angajati</span>
                         <span className={styles.sValue}>
-                            {employeeTotalCost} {currency}
+                            { employeeTotalCost} {currency}
                         </span>
                     </div>
 
                     <div className={`${styles.summaryBox} ${styles.boxTfsa}`}>
                         <span className={styles.sLabel}>Cheltuieli TESA</span>
                         <span className={styles.sValue}>
-                            {stats.cheltuieliTESA ?? 0} {currency}
+                            {(stats.cheltuieliTESA ?? 0).toFixed(2)} {currency}
                         </span>
                     </div>
 
                     <div className={`${styles.summaryBox} ${styles.boxCyan}`}>
                         <span className={styles.sLabel}>Cheltuieli OSINT</span>
                         <span className={styles.sValue}>
-                            {stats.cheltuieliOSINT ?? 0} {currency}
+                            {(stats.cheltuieliOSINT ?? 0).toFixed(2)} {currency}
                         </span>
                     </div>
 
                     <div className={`${styles.summaryBox} ${styles.boxYellow}`}>
                         <span className={styles.sLabel}>Cheltuieli Supraveghere Tehnică</span>
                         <span className={styles.sValue}>
-                            {stats.supraveghereTehnica ?? 0} {currency}
+                            {(stats.supraveghereTehnica ?? 0).toFixed(2)} {currency}
                         </span>
                     </div>
 
@@ -97,28 +97,28 @@ const SummarySection = ({ employeeTotalCost = 0 }) => {
                     <div className={`${styles.summaryBox} ${styles.boxBlue}`}>
                         <span className={styles.sLabel}>Cheltuieli fixe</span>
                         <span className={styles.sValue}>
-                            {stats.cheltuieliFixe ?? 0} {currency}
+                            {( stats.cheltuieliFixe ?? 0).toFixed(2)} {currency}
                         </span>
                     </div>
 
                     <div className={`${styles.summaryBox} ${styles.boxOther}`}>
                         <span className={styles.sLabel}>Alte cheltuieli</span>
                         <span className={styles.sValue}>
-                            {stats.alteCheltuieli ?? 0} {currency}
+                            {(stats.alteCheltuieli ?? 0).toFixed(2)} {currency}
                         </span>
                     </div>
 
                     <div className={`${styles.summaryBox} ${styles.boxPurple}`}>
                         <span className={styles.sLabel}>Preț proiect</span>
                         <span className={styles.sValue}>
-                            {stats.pretProject ?? 0} {currency}
+                            {(stats.pretProject ?? 0).toFixed(2)} {currency}
                         </span>
                     </div>
 
                     <div className={`${styles.summaryBox} ${styles.boxLightgray}`}>
                         <span className={styles.sLabel}>Total cheltuieli</span>
                         <span className={styles.sValue}>
-                            {stats.totalCheltuieli ?? 0} {currency}
+                            {(stats.totalCheltuieli ?? 0).toFixed(2)} {currency}
                         </span>
                     </div>
 
@@ -128,12 +128,12 @@ const SummarySection = ({ employeeTotalCost = 0 }) => {
                             <div className={styles.profitTopRow}>
                                 <span className={styles.sLabelGreen}>Profit</span>
                                 <span className={styles.profitPercentage}>
-                                    {stats.profitPercentage ?? 0}%
+                                    { (stats.profitPercentage ?? 0).toFixed(2)}%
                                 </span>
                             </div>
                             <div className={styles.profitBottomRow}>
                                 <span className={styles.profitValue}>
-                                    {stats.profit ?? 0} {currency}
+                                    { (stats.profit ?? 0).toFixed(2) } {currency}
                                 </span>
                             </div>
                         </div>

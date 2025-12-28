@@ -9,7 +9,7 @@ export const getAnalystsFinalSalary = async (req, res) => {
         const report = [];
 
         // ✔ Static conversion rate (No URL needed)
-        const EUR_RATE = 0.20; // 1 RON = 0.20 EUR
+        const EUR_RATE = 0.1965; // 1 RON = 0.20 EUR
 
         let totalSalaryRON = 0;
         let totalSalaryEUR = 0;
@@ -71,7 +71,7 @@ export const getProjectAnalystExpanse = async (req, res) => {
 
         const expanses = await analystExpanseService.getAnalystExpansesByProject(projectId);
 
-        const RON_TO_EUR = 0.20;
+        const RON_TO_EUR = 0.1965;
 
         const updatedExpanses = expanses.map((exp) => {
             const analyst = exp.analystId;

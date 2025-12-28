@@ -25,53 +25,53 @@ const Billing = ({ billing }) => {
                 {/* Row 1 */}
                 <div className={`${styles.card} ${styles.blue}`}>
                     <span>Cheltuieli angajați</span>
-                    <div className={`${styles.text}`}>{billing.staff} {currency}</div>
+                    <div className={`${styles.text}`}>{billing.staff.toFixed(2)} {currency}</div>
                 </div>
 
                 <div className={`${styles.card} ${styles.lightBlue}`}>
                     <span>Cheltuieli TESA</span>
-                    <div className={`${styles.text}`}>{billing.tesa} {currency}</div>
+                    <div className={`${styles.text}`}>{billing.tesa.toFixed(2)} {currency}</div>
                 </div>
 
                 <div className={`${styles.card} ${styles.cyan}`}>
                     <span>Cheltuieli OSINT</span>
-                    <div className={`${styles.text}`}>{billing.osint} {currency}</div>
+                    <div className={`${styles.text}`}>{billing.osint.toFixed(2)} {currency}</div>
                 </div>
 
                 <div className={`${styles.card} ${styles.orange}`}>
                     <span>Cheltuieli Supraveghere / Tehnica</span>
-                    <div className={`${styles.text}`}>{billing.humint} {currency}</div>
+                    <div className={`${styles.text}`}>{billing.humint.toFixed(2)} {currency}</div>
                 </div>
 
                 <div className={`${styles.card} ${styles.gray}`}>
                     <span>Cheltuieli fixe</span>
-                    <div className={`${styles.text}`}>{billing.fixed} {currency}</div>
+                    <div className={`${styles.text}`}>{billing.fixed.toFixed(2)} {currency}</div>
                 </div>
 
                 <div className={`${styles.card} ${styles.green}`}>
                     <span>Alte cheltuieli</span>
-                    <div className={`${styles.text}`}>{billing.other} {currency}</div>
+                    <div className={`${styles.text}`}>{billing.other.toFixed(2)} {currency}</div>
                 </div>
 
                 {/* Row 2 */}
                 <div className={`${styles.card} ${styles.purple} ${styles.wide}`}>
                     <span>Pret proiect</span>
-                    <div className={`${styles.text}`}>{billing.price} {currency}</div>
+                    <div className={`${styles.text}`}>{billing.price.toFixed(2)} {currency}</div>
                 </div>
 
                 <div className={`${styles.card} ${styles.lightGray} ${styles.wide}`}>
                     <span>Total cheltuieli</span>
-                    <div className={`${styles.text}`}>{billing.total} {currency}</div>
+                    <div className={`${styles.text}`}>{billing.total.toFixed(2)} {currency}</div>
                 </div>
 
                 <div className={`${styles.card} ${styles.profit}`}>
                     <div className={styles.profitTop}>
                         <span>Profit</span>
                         <span className={styles.percent}>
-                            {billing.percentage}%
+                            {billing.percentage.toFixed(2)}%
                         </span>
                     </div>
-                    <div className={`${styles.text}`}>{billing.margin} {currency}</div>
+                    <div className={`${styles.text}`}>{billing.margin.toFixed(2)} {currency}</div>
                 </div>
 
                 <div className={`${styles.card} ${styles.duration}`}>
