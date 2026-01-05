@@ -2,7 +2,7 @@ import ProjectList from "../../../../Components/Project/List";
 import { useEffect, useState } from "react";
 import { useGetProjectsQuery } from "../../../../../services/projectApi";
 import { useGetMeQuery } from "../../../../../services/userApi";
-import { useSearchParams } from "react-router-dom";
+import { useLocation, useSearchParams } from "react-router-dom";
 
 import Layout from "../../../../../layouts";
 import Header from "../../../Components/Header";
@@ -10,17 +10,23 @@ import Header from "../../../Components/Header";
 const ProjectsList = () => {
     const [projects, setProjects] = useState([]);
     const { isLoading } = useGetMeQuery();
+
+    const location = useLocation();
     const [searchParams] = useSearchParams();
 
-    // UI → Mongo mapping
+    // ✅ status logic sirf /project par
+    const isStatusPage = location.pathname === "/project";
+
     const uiStatus = searchParams.get("status") || "Active";
     const mongoStatus = uiStatus === "Finished" ? "finished" : "approved";
+
+    const queryArgs = isStatusPage ? { status: mongoStatus } : {};
 
     const {
         data: projectsData,
         isLoading: projectsLoading,
         refetch,
-    } = useGetProjectsQuery({ status: mongoStatus });
+    } = useGetProjectsQuery(queryArgs);
 
     useEffect(() => {
         if (projectsData) {
@@ -36,9 +42,7 @@ const ProjectsList = () => {
                 back: true,
                 title: (
                     <>
-                        {uiStatus === "Finished"
-                            ? "Proiecte finalizate"
-                            : "Proiecte active în derulare"}{" "}
+                        Proiecte{" "}
                         <span className="count" style={{ fontSize: "12px" }}>
               {projects.length} proiecte
             </span>

@@ -183,12 +183,23 @@ export const getAllProjects = async (req: Request, res: Response, next: NextFunc
     const user = req.user;
 
     // pagination
+    // pagination
     let page  = parseInt(req.query.page as string, 10) || 1;
-    let limit = parseInt(req.query.limit as string, 10) || 10;
     let statusParam = req.query.status as string | undefined;
 
+// ✅ Only on /project?status=... => NO LIMIT
+// otherwise default 10
+    const hasStatusFilter = typeof statusParam === "string" && statusParam.length > 0;
+
+    let limit = hasStatusFilter
+        ? 0 // ✅ no limit when status present
+        : (parseInt(req.query.limit as string, 10) || 10); // ✅ default 10 otherwise
+
     if (page < 1) page = 1;
-    if (limit < 1) limit = 1;
+
+// ✅ only validate limit when it's not 0
+    if (limit !== 0 && limit < 1) limit = 1;
+
 
     const search = req.query.search ? String(req.query.search).trim() : "";
 
