@@ -137,7 +137,7 @@ const Stats = ({ stats }) => {
                         }
                         title={ "Finalizate" }
                         value={ stats?.completed }
-                        link={ `/project?status=Active` }
+                        link={ `/project?status=Finished` }
                         linkTitle={ "Vezi toate proiectele" }
                     />
 

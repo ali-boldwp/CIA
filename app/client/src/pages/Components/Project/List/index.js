@@ -46,7 +46,7 @@ const ProjectList = ({ data, header = false, refetchProjects }) => {
                     </h3>
 
                     {/* ✅ FIXED LINK */}
-                    <Link to="/project?status=Active" style={{ fontSize: "14px" }}>
+                    <Link to="/project/all" style={{ fontSize: "14px" }}>
                         Vezi toate proiectele
                     </Link>
                 </div>
