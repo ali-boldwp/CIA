@@ -1,32 +1,68 @@
 import Item from "./Item";
-import {Link} from "react-router-dom";
-
+import { Link, useLocation, useSearchParams } from "react-router-dom";
 import "./style.css";
 
 const ProjectList = ({ data, header = false, refetchProjects }) => {
+    const location = useLocation();
+    const [searchParams, setSearchParams] = useSearchParams();
 
-    console.log( data )
+    // ✅ sirf /project path par dropdown
+    const isProjectPage = location.pathname === "/project";
+
+    // ✅ URL value: Active | Finished
+    const uiStatus = searchParams.get("status") || "Active";
+
+    const handleStatusChange = (e) => {
+        setSearchParams({ status: e.target.value });
+    };
 
     return (
         <div className="main">
-
-            { header && <div className="projects-header" style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between" }}>
-                <div>
-                    <h3>Proiecte active în derulare <span className="count">{ data.length } proiecte</span></h3>
-
+            {/* ✅ Dropdown only on /project */}
+            {isProjectPage && (
+                <div style={{ marginBottom: "12px", display: "flex", justifyContent: "flex-end" }}>
+                    <select
+                        value={uiStatus}
+                        onChange={handleStatusChange}
+                        style={{
+                            padding: "6px 10px",
+                            borderRadius: "8px",
+                            border: "1px solid #ddd",
+                            fontSize: "13px",
+                            fontWeight: 600,
+                        }}
+                    >
+                        <option value="Active">Active</option>
+                        <option value="Finished">Finished</option>
+                    </select>
                 </div>
-                <Link to={ "/project/all" } style={{ fontSize: '14px' }} > View All Projects </Link>
-            </div> }
+            )}
 
+            {header && (
+                <div className="projects-header" style={{ display: "flex", justifyContent: "space-between" }}>
+                    <h3>
+                        Proiecte{" "}
+                        <span className="count">{data.length} proiecte</span>
+                    </h3>
+
+                    {/* ✅ FIXED LINK */}
+                    <Link to="/project?status=Active" style={{ fontSize: "14px" }}>
+                        Vezi toate proiectele
+                    </Link>
+                </div>
+            )}
+
+            {/* table */}
             <div className="responsive-table-wrapper">
                 <div className="projects-wrapper">
                     <div className="projects-table-header">
-                        <span>Nume proiect / Responsabili & echipă</span>
+                        <span>Nume proiect</span>
                         <span>Deadline</span>
                         <span>Progres</span>
                         <span>Status HUMINT</span>
-                        <span style={{ textAlign: "right !important" }}>Acțiuni</span>
+                        <span style={{ textAlign: "right" }}>Acțiuni</span>
                     </div>
+
                     <div className="projects-list">
                         {data.map((project) => (
                             <Item
@@ -35,14 +71,11 @@ const ProjectList = ({ data, header = false, refetchProjects }) => {
                                 refetchProjects={refetchProjects}
                             />
                         ))}
-
                     </div>
                 </div>
             </div>
-
         </div>
     );
-
-}
+};
 
 export default ProjectList;
