@@ -17,6 +17,7 @@ const INPUT_TYPES = [
     "email",
     "password",
     "textarea",
+    "table",
     "information",
     "select",
     "checkbox",
