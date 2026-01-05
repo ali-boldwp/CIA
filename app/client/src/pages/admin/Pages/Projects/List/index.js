@@ -1,48 +1,60 @@
 import ProjectList from "../../../../Components/Project/List";
-import {useEffect, useState} from "react";
-import {useGetProjectsQuery} from "../../../../../services/projectApi";
+import { useEffect, useState } from "react";
+import { useGetProjectsQuery } from "../../../../../services/projectApi";
 import { useGetMeQuery } from "../../../../../services/userApi";
+import { useSearchParams } from "react-router-dom";
 
 import Layout from "../../../../../layouts";
 import Header from "../../../Components/Header";
 
 const ProjectsList = () => {
-
-    const [ projects, setProjects ] = useState([]);
+    const [projects, setProjects] = useState([]);
     const { isLoading } = useGetMeQuery();
-    const { data: projectsData, isLoading: projectsLoading } = useGetProjectsQuery({ });
+    const [searchParams] = useSearchParams();
 
-    useEffect( () => {
+    // UI → Mongo mapping
+    const uiStatus = searchParams.get("status") || "Active";
+    const mongoStatus = uiStatus === "Finished" ? "finished" : "approved";
 
-        if ( projectsData ) {
+    const {
+        data: projectsData,
+        isLoading: projectsLoading,
+        refetch,
+    } = useGetProjectsQuery({ status: mongoStatus });
 
-            // console.log( projectsData.data )
-
-            setProjects( projectsData.data );
-
+    useEffect(() => {
+        if (projectsData) {
+            setProjects(projectsData.data);
         }
+    }, [projectsData]);
 
-    }, [ projectsData ]);
-
-    return(
-        <>
-            <Layout
-                header={
-                    {
-                        createProject: false,
-                        search: false,
-                        back: true,
-                        title: <>Proiecte active în derulare <span className="count" style={{ fontSize: '12px' }}> {projects.length} proiecte</span> </>,
-                        content: <Header createProject={ true } />
-                    }
-                }
-                loading={ isLoading }
-                content={ <ProjectList data={ projects } /> }
-            />
-
-        </>
-    )
-
-}
+    return (
+        <Layout
+            header={{
+                createProject: false,
+                search: false,
+                back: true,
+                title: (
+                    <>
+                        {uiStatus === "Finished"
+                            ? "Proiecte finalizate"
+                            : "Proiecte active în derulare"}{" "}
+                        <span className="count" style={{ fontSize: "12px" }}>
+              {projects.length} proiecte
+            </span>
+                    </>
+                ),
+                content: <Header createProject={true} />,
+            }}
+            loading={isLoading || projectsLoading}
+            content={
+                <ProjectList
+                    data={projects}
+                    refetchProjects={refetch}
+                />
+            }
+        />
+    );
+};
 
 export default ProjectsList;

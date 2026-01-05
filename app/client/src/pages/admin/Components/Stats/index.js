@@ -5,6 +5,8 @@ import Item from "./Item";
 
 const Stats = ({ stats }) => {
 
+    const status = "Active";
+
     return (
         <>
             <div className="stats-container">
@@ -135,6 +137,8 @@ const Stats = ({ stats }) => {
                         }
                         title={ "Finalizate" }
                         value={ stats?.completed }
+                        link={ `/project/all?status=${status}` }
+                        linkTitle={ "Vezi toate proiectele" }
                     />
 
                     <Item
