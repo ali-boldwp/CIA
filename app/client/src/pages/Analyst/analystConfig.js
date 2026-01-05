@@ -8,6 +8,7 @@ import HumentRequestView from "../admin/Pages/Humint/View";
 import Projects from "../admin/Pages/Projects";
 import ProjectSearch from "../admin/Pages/Projects/Search";
 import ProjectTasks from "../admin/Pages/Projects/Tasks";
+import ViewTask from "../admin/Pages/Projects/Tasks/View";
 
 
 const analystConfig = {
@@ -37,6 +38,10 @@ const analystConfig = {
                         {
                             path: 'view/:id',
                             element: <ProjectTasks />
+                        },
+                        {
+                            path: 'view/:id/tasks/:taskId/progress',
+                            element: <ViewTask/>
                         }
                     ]
                 },
