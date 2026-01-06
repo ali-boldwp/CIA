@@ -82,8 +82,8 @@ const ImageDropzoneField = ({ label, value, onChange, buttonText = "+ Adaugă po
                         ) : (
                             <>
                                 <div className={styles.placeholder}>
-                                    <span className={styles.icon} />
-                                    <span>Plasează imagine/grafic aici</span>
+                                    <span/>
+                                    <span>🖼️ Plasează imagine/grafic aici</span>
                                 </div>
 
                                 {/* clickable input */}
