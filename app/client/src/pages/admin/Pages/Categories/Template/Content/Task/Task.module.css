@@ -1,0 +1,14 @@
+.item {
+    list-style: none;
+    padding: 5px 20px;
+    border-radius: 8px;
+    background: #fff;
+    cursor: pointer;
+    transition: 0.2s ease;
+}
+.name {
+    font-size: 14px;
+    font-weight: 600;
+    color: #222;
+    display: block;
+}
