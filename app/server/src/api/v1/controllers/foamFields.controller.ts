@@ -93,3 +93,21 @@ export const getTableColumns = async (
     }
 };
 
+export const deleteTableColumn = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+) => {
+    try {
+        const { fieldId, columnId } = req.params;
+
+        const updatedField = await foamFieldService.deleteTableColumn(
+            fieldId,
+            columnId
+        );
+
+        res.json(ok(updatedField));
+    } catch (err) {
+        next(err);
+    }
+};

@@ -211,3 +211,22 @@ export const updateTableColumn = async (
     await field.save();
     return field;
 };
+
+export const deleteTableColumn = async (fieldId: string, columnId: string) => {
+    const field = await FoamFields.findById(fieldId);
+    if (!field) throw new Error("FoamField not found");
+
+    if (field.type !== "table") {
+        throw new Error("Only table fields can have columns");
+    }
+
+    const column = field.columns?.id(columnId);
+    if (!column) {
+        throw new Error("Column not found");
+    }
+
+    column.deleteOne(); // remove subdocument
+    await field.save();
+
+    return field;
+};

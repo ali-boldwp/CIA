@@ -30,4 +30,11 @@ router.get(
 
 router.delete("/:id", auth, foamFieldsController.deleteFoamField);
 
+router.delete(
+    "/:fieldId/columns/:columnId",
+    auth,
+    foamFieldsController.deleteTableColumn
+);
+
+
 export default router;

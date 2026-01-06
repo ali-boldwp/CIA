@@ -6,6 +6,8 @@ import ChapterPopup from "./Popup/Chapter";
 import TaskPopup from "./Popup/Task";
 import FieldPopup from "./Popup/Field";
 import TitlePopup from "./Popup/Title";
+import TablePopup from "./Popup/Table";
+
 
 
 
@@ -30,6 +32,12 @@ const View = ({ data, categoryId, onChapterCreated }) => {
     // Title PopUp
 
     const [titlePopup, setTitlePopup] = useState(false);
+
+    // Table Column popup state
+
+    const [newColumnPopup, setNewColumnPopup] = useState(false);
+    const [selectedColumn, setSelectedColumn] = useState(null);
+
 
     // For Set Data According to drag and drop
 
@@ -99,6 +107,32 @@ const View = ({ data, categoryId, onChapterCreated }) => {
                             });
                             setNewFieldPopup(true);
                         }}
+
+                        openColumnNew={(field, task, chapter) => {
+                            setSelectedColumn({
+                                chapterId: chapter._id,
+                                taskId: task._id,
+                                tableField: field,
+                            });
+                            setNewColumnPopup(true);
+                        }}
+
+                        onEditColumn={(column, field, task, chapter) => {
+                            setSelectedColumn({
+                                chapterId: chapter._id,
+                                taskId: task._id,
+                                tableField: field,
+                                column: {
+                                    uid: column._id,
+                                    name: column.name,
+                                    slug: column.slug,
+                                    type: column.type || "text",
+                                },
+                            });
+                            setNewColumnPopup(true);
+                        }}
+
+
                     />
 
 
@@ -145,6 +179,21 @@ const View = ({ data, categoryId, onChapterCreated }) => {
                     onCreated={onChapterCreated} // refetch
                 />
             )}
+
+            {newColumnPopup && (
+                <TablePopup
+                    open={newColumnPopup}
+                    onClose={setNewColumnPopup}
+                    chapterId={selectedColumn?.chapterId}
+                    taskId={selectedColumn?.taskId}
+                    tableField={selectedColumn?.tableField}
+                    column={selectedColumn?.column || null}
+                    onCreated={onChapterCreated}
+                />
+
+
+            )}
+
 
 
             {titlePopup && (
