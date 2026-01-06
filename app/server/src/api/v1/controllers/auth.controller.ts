@@ -24,3 +24,28 @@ export const login = async (req: Request, res: Response, next: NextFunction) => 
         next(err);
     }
 };
+
+export const heartbeat = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const userId = (req as any).user?.id;
+
+        if (!userId) {
+            return res.status(401).json({ message: 'Unauthorized' });
+        }
+
+        const { user, accessToken } = await authService.refreshAccessToken(userId);
+
+        res.json(
+            ok(
+                {
+                    user,
+                    accessToken,
+                    timestamp: new Date().toISOString()
+                },
+                'Auth service heartbeat'
+            )
+        );
+    } catch (err) {
+        next(err);
+    }
+};

@@ -1,11 +1,23 @@
 // src/services/authApi.js
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import Cookies from 'js-cookie';
+import { setUser } from '../features/auth/authSlice';
 
 export const authApi = createApi({
     reducerPath: 'authApi',
     baseQuery: fetchBaseQuery({
         baseUrl: process.env.REACT_APP_AUTH_API,
+        prepareHeaders: (headers) => {
+            const cookieToken = Cookies.get('accessToken');
+            const localToken = localStorage.getItem('token');
+            const token = cookieToken || localToken;
+
+            if (token) {
+                headers.set('Authorization', `Bearer ${token}`);
+            }
+
+            return headers;
+        },
     }),
     endpoints: (builder) => ({
         login: builder.mutation({
@@ -36,7 +48,35 @@ export const authApi = createApi({
         getUser: builder.query({
             query: () => '/user/me',  // 👈 Another endpoint
         }),
+        heartbeat: builder.query({
+            query: () => ({
+                url: '/heartbeat',
+                method: 'GET',
+            }),
+            async onQueryStarted(_arg, { queryFulfilled, dispatch }) {
+                try {
+                    const { data } = await queryFulfilled;
+                    const { accessToken, user } = data.data || {};
+
+                    if (accessToken) {
+                        Cookies.set('accessToken', accessToken, {
+                            expires: 1,
+                            sameSite: 'strict',
+                            secure: false,
+                        });
+                        localStorage.setItem('token', accessToken);
+                    }
+
+                    if (user) {
+                        dispatch(setUser(user));
+                        localStorage.setItem('user', JSON.stringify(user));
+                    }
+                } catch (err) {
+                    console.error('Heartbeat failed', err);
+                }
+            },
+        }),
     }),
 });
 
-export const { useLoginMutation, useGetUserQuery } = authApi;
+export const { useLoginMutation, useGetUserQuery, useHeartbeatQuery } = authApi;
