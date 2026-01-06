@@ -164,7 +164,7 @@ const Sidebar = ({ data, setData, openChapterNew, onEditChapter, openTaskNew, on
                                                                                                             <span
                                                                                                                 {...prov.dragHandleProps}
                                                                                                             >
-                                                                                                                {field.type == "table" ?
+                                                                                                                {field.type === "table" ?
                                                                                                                     <CiViewTable />
                                                                                                                      :
                                                                                                                     <svg xmlns="http://www.w3.org/2000/svg" fill="#000000" width="15px" height="15px" viewBox="0 0 24 24">

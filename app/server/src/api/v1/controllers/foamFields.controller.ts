@@ -39,3 +39,57 @@ export const getFoamFieldsByTaskId = async (req: Request, res: Response, next: N
         next(err);
     }
 };
+
+export const addTableColumn = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+) => {
+    try {
+        const fieldId = req.params.id;
+        const column = await foamFieldService.addTableColumn(
+            fieldId,
+            req.body
+        );
+        res.json(ok(column));
+    } catch (err) {
+        next(err);
+    }
+};
+
+export const updateTableColumn = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+) => {
+    try {
+        const { fieldId, columnId } = req.params;
+        const updatedField =
+            await foamFieldService.updateTableColumn(
+                fieldId,
+                columnId,
+                req.body
+            );
+
+        res.json(ok(updatedField));
+    } catch (err) {
+        next(err);
+    }
+};
+
+export const getTableColumns = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+) => {
+    try {
+        const fieldId = req.params.id;
+        const columns =
+            await foamFieldService.getTableColumns(fieldId);
+
+        res.json(ok(columns));
+    } catch (err) {
+        next(err);
+    }
+};
+
