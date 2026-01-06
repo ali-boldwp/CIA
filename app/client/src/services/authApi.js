@@ -7,6 +7,17 @@ export const authApi = createApi({
     reducerPath: 'authApi',
     baseQuery: fetchBaseQuery({
         baseUrl: process.env.REACT_APP_AUTH_API,
+        prepareHeaders: (headers) => {
+            const cookieToken = Cookies.get('accessToken');
+            const localToken = localStorage.getItem('token');
+            const token = cookieToken || localToken;
+
+            if (token) {
+                headers.set('Authorization', `Bearer ${token}`);
+            }
+
+            return headers;
+        },
     }),
     endpoints: (builder) => ({
         login: builder.mutation({
