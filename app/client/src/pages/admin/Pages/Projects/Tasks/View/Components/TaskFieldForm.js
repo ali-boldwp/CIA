@@ -47,7 +47,11 @@ const TaskFieldForm = ({ taskId, taskData, formValues, setFormValues }) => {
 
         const initialValues = {};
         data.data.forEach((field) => {
-            initialValues[field.slug] = taskData?.[field.slug] || "";
+            initialValues[field.slug] =
+                field.type === "table"
+                    ? taskData?.[field.slug] || []
+                    : taskData?.[field.slug] || "";
+
         });
 
         setFormValues(initialValues);

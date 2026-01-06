@@ -51,8 +51,19 @@ export const cloneTemplatesToProject = async (
                 name: f.name,
                 type: f.type,
                 slug: f.slug,
-                task: projectTask._id
+                task: projectTask._id,
+
+                // ✅ COPY TABLE COLUMNS
+                columns:
+                    f.type === "table"
+                        ? (f.columns || []).map((c: any) => ({
+                            name: c.name,
+                            slug: c.slug,
+                            type: c.type,
+                        }))
+                        : undefined,
             }));
+
 
             await FoamFields.insertMany(fields);
         }
