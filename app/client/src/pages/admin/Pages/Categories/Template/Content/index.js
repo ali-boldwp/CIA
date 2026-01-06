@@ -2,14 +2,14 @@ import Title from "./Title";
 import Chapter from "./Chapter";
 import styles from "./style.module.css";
 
-const Content = ({ data, onTitleClick }) => {
+const Content = ({ data,tasks = [], onTitleClick }) => {
     return (
         <div className={styles.container}>
             <Title title={data.title} onClick={onTitleClick} />
 
             <div className={styles.chapters}>
                 {data.chapters.map((chapter, ci) => {
-                    return <Chapter key={chapter._id || ci} data={chapter} />;
+                    return <Chapter key={chapter._id || ci} data={chapter} tasks={tasks} />;
                 })}
             </div>
         </div>
