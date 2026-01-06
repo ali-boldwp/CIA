@@ -1,44 +1,106 @@
+
 .taskFieldForm {
-    background: #ffffff;
-    border-radius: 8px;
-    padding: 16px;
-    margin-top: 20px;
     width: 100%;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
+    overflow: hidden;
+    margin-top: 10px;
+    background: #FFFFFF;
+    padding:20px;
+    border-radius: 8px;
+    font-style: normal;
 }
 
-.formField {
-    display: flex;
-    flex-direction: column;
-    margin-bottom: 14px;
-    width: 49%;
-}
-
-.formField label {
-    font-size: 13px;
+/* Header */
+.formHeader {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    height: 44px;
+    background: #f1f5f9;
+    border-bottom: 1px solid #e5e7eb;
+    font-size: 14px;
     font-weight: 600;
-    margin-bottom: 6px;
+    border-radius: 8px;
     color: #0f172a;
 }
 
+.formHeader div {
+    display: flex;
+    align-items: center;
+    padding: 0 14px;
+}
+
+.formHeader div:first-child {
+    border-right: 1px solid #e5e7eb;
+}
+.formField {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    min-height: 48px;
+    border: 1px solid #e5e7eb;
+    border-radius: 5px;
+    overflow: hidden;
+    background: #ffffff;
+
+}
+.formField2 label{
+    font-size: 20px;
+    font-weight:700;
+    margin-top: 30px;
+}
+
+.formField:last-child {
+    margin-bottom: 0;
+}
+
+.formField label {
+    display: flex;
+    align-items: center;
+    min-height: 48px;
+    padding: 0 14px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #0f172a;
+    border-right: 1px solid #e5e7eb;
+    background: #ffffff;
+}
+
+/* ✅ right side padding same feel */
+.detailCell {
+    display: flex;
+    align-items: center;
+    min-height: 48px;
+}
+
+
+/* inputs */
 .formField input,
-.formField select,
-.formField textarea {
-    padding: 10px 12px;
-    border-radius: 6px;
-    border: 1px solid #cbd5e1;
+.formField textarea,
+.formField select {
+    width: calc(100% - 24px);
+    height: 36px;
+    margin: 6px 12px;
+    padding: 6px 10px;
     font-size: 14px;
+    border: none;
     outline: none;
+    background: transparent;
 }
 
-.formField input:focus,
-.formField select:focus,
-.formField textarea:focus {
-    border-color: #6366f1;
+/* textarea */
+.formField textarea {
+    min-height: 30px;
+    /*height: auto;*/
+    resize: vertical;
 }
 
+/* jodit container  width inside detail cell */
+.formField :global(.jodit-container) {
+    width: calc(100% - 24px);
+    border: 1px solid #e5e7eb; /* subtle like inputs */
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+/* optional actions */
 .formActions {
     display: flex;
     justify-content: flex-end;
@@ -63,4 +125,201 @@
     border-radius: 6px;
     cursor: pointer;
     font-weight: 600;
+}
+/* existing */
+.formField {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    min-height: 48px;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    overflow: hidden;
+    background: #ffffff;
+}
+
+/* ✅ label class so we can reuse in fullRow */
+.fieldLabel {
+    display: flex;
+    align-items: center;
+    min-height: 48px;
+    padding: 0 14px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #0f172a;
+    border-right: 1px solid #e5e7eb;
+    background: #ffffff;
+}
+.fieldLabel2 {
+    display: flex;
+    align-items: center;
+    min-height: 48px;
+    padding: 0 14px;
+    margin-top:30px;
+    font-size: 20px;
+    font-weight: 700;
+    color: #0f172a;
+    border-right: 1px solid #e5e7eb;
+    background: #ffffff;
+}
+
+/* ✅ Full row layout (label on top, input full width below) */
+.fullRow {
+    grid-template-columns: 1fr; /* one column */
+    margin-top:10px;
+    background: none;
+}
+
+.fullRow .fieldLabel {
+    border-right: none;
+}
+
+.fieldLabel {
+    display: flex;
+    align-items: center;
+    min-height: 48px;
+    padding: 0 14px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #0f172a;
+    border-right: 1px solid #e5e7eb;
+    background: #ffffff;
+}
+
+/* jodit full width in full row */
+.fullWidthInput :global(.jodit-container) {
+    width: 100%;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    overflow: hidden;
+
+}
+
+/* detail cell (normal rows) */
+.detailCell {
+    display: flex;
+    align-items: center;
+    min-height: 48px;
+}
+
+/* file input look */
+.fileInput {
+    width: 100%;
+    padding: 20px;
+    border: 1px dashed #cbd5e1;
+    border-radius: 8px;
+    background: #f8fafc !important;
+}
+
+
+/* TABLE UI (like screenshot) */
+.tableBox {
+    width: 100%;
+}
+
+.tableGrid {
+    width: 100%;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    overflow: hidden;
+    background: #ffffff;
+}
+
+/* header row */
+.tableHead {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: 1fr;
+    background: #f1f5f9;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.tableHeadCell {
+    padding: 10px 12px;
+    font-size: 12px;
+    font-weight: 700;
+    color: #0f172a;
+    text-transform: uppercase;
+    border-right: 1px solid #e5e7eb;
+}
+
+.tableHeadCell:last-child {
+    border-right: none;
+}
+
+/* body rows */
+.tableBody {
+    background: #ffffff;
+}
+
+.tableRow {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: 1fr;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.tableRow:last-child {
+    border-bottom: none;
+}
+
+.tableCell {
+    border-right: 1px solid #e5e7eb;
+}
+
+.tableCell:last-child {
+    border-right: none;
+}
+
+.tableInput {
+    width: 100%;
+    height: 38px;
+    padding: 0 10px;
+    border: none;
+    outline: none;
+    background: transparent;
+    font-size: 14px;
+}
+.btnAddRow {
+    margin-top: 10px;
+    background: #2563eb;
+    color: #ffffff;
+    border: none;
+    padding: 8px 14px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 13px;
+}
+
+.btnAddRow:hover {
+    background: #1d4ed8;
+}
+.formFooter {
+    padding: 14px 0;
+    display: flex;
+    justify-content: flex-start; /* screenshot jaisa left */
+    background: #ffffff;
+}
+
+.saveBtn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+
+    background: #16af7c;
+    color: #ffffff;
+
+    border: none;
+    border-radius: 10px;
+
+    padding: 10px 14px;
+    font-size: 13px;
+    font-weight: 700;
+
+    cursor: pointer;
+    box-shadow: 0 1px 2px rgba(16, 24, 40, 0.08);
+}
+
+.saveBtn:hover {
+    background: #288f6d;
 }
