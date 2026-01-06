@@ -9,6 +9,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { Provider } from 'react-redux';
 import store from './store';
 import "@fontsource/inter";
+import AuthHeartbeat from './auth/AuthHeartbeat';
 
 
 
@@ -24,6 +25,7 @@ function App() {
                 <AuthProvider>
                     <BrowserRouter>
                         <div className={'container'} style={{ minHeight: "100vh" }}>
+                            <AuthHeartbeat />
                             <ToastContainer />
                             <AppRoutes/>
                         </div>
