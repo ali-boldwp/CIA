@@ -10,6 +10,16 @@ interface LoginResult {
     accessToken: string;
 }
 
+const findUserOrThrow = async (userId: string): Promise<IUser> => {
+    const user = await User.findById(userId);
+
+    if (!user) {
+        throw new ApiError(httpStatus.UNAUTHORIZED, 'User not found');
+    }
+
+    return user;
+};
+
 const signAccessToken = (user: IUser): string => {
     return jwt.sign(
         {
@@ -60,6 +70,13 @@ export const login = async (payload: {
         throw new ApiError(httpStatus.UNAUTHORIZED, 'Invalid credentials');
     }
 
+    const accessToken = signAccessToken(user);
+
+    return { user, accessToken };
+};
+
+export const refreshAccessToken = async (userId: string): Promise<LoginResult> => {
+    const user = await findUserOrThrow(userId);
     const accessToken = signAccessToken(user);
 
     return { user, accessToken };
