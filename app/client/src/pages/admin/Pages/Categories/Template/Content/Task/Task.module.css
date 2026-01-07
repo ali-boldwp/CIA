@@ -12,3 +12,22 @@
     color: #222;
     display: block;
 }
+
+.table {
+    width: 100%;
+    border: 1px solid lightgray;
+    border-collapse: collapse;   /* IMPORTANT */
+    margin-bottom: 40px;
+}
+
+.tablehead, .tabledata{
+    border: none;
+    width: auto !important;
+    text-align: start !important;
+    padding: 20px !important;
+
+}
+
+.tablerow{
+    border-bottom:1px solid lightgray !important;
+}
