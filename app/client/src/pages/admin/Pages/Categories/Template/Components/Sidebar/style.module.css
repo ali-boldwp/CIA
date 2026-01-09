@@ -3,6 +3,7 @@
     padding: 24px;
     border-radius: 4px;
     width: 300px;
+
 }
 
 .wrapper ul {
@@ -12,6 +13,8 @@
     color: #42413e;
     margin: 0;
     padding: 0;
+    height:100%;
+    overflow: auto;
 }
 
 .wrapper > ul > li > span {

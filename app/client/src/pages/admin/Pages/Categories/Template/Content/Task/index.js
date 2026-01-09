@@ -8,6 +8,8 @@ const Task = ({ taskId }) => {
             {
                 taskId?.foamFields?.map((nme) => (
                     nme.type === "table" && (
+                        <>
+                        <span>{nme.name}</span>
                         <table className={styles.table} style={{ marginTop: "10px" }}>
                             <tr className={styles.tablerow}>
                                 {nme.columns.map((item, index) => (
@@ -25,6 +27,7 @@ const Task = ({ taskId }) => {
                                 ))}
                             </tr>
                         </table>
+                        </>
                     )
                 ))
             }
