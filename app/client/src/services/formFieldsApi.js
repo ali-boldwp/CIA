@@ -40,6 +40,31 @@ export const foamFieldsApi = createApi({
             }),
             invalidatesTags: ["FoamFields"],
         }),
+
+        getTableRowsByFieldId: builder.query({
+            query: (fieldId) => `/foam-fields/by-field/${fieldId}`,
+            providesTags: ["FoamFields"],
+        }),
+
+        // ✅ Add single row
+        addTableRow: builder.mutation({
+            query: (data) => ({
+                url: `/foam-fields/table-row`,
+                method: "POST",
+                body: data,
+            }),
+            invalidatesTags: ["FoamFields"],
+        }),
+
+        // ✅ Add bulk rows
+        addBulkTableRows: builder.mutation({
+            query: (rows) => ({
+                url: `/foam-fields/table-row/bulk`,
+                method: "POST",
+                body: { rows },
+            }),
+            invalidatesTags: ["FoamFields"],
+        }),
     }),
 });
 
@@ -48,4 +73,7 @@ export const {
     useAddTableColumnMutation,
     useUpdateTableColumnMutation,
     useDeleteTableColumnMutation,
+    useGetTableRowsByFieldIdQuery,
+    useAddTableRowMutation,
+    useAddBulkTableRowsMutation,
 } = foamFieldsApi;

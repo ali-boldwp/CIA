@@ -7,6 +7,8 @@ import TaskPopup from "./Popup/Task";
 import FieldPopup from "./Popup/Field";
 import TitlePopup from "./Popup/Title";
 import TablePopup from "./Popup/Table";
+import TableRecordsPopup from "./Popup/TableRecords";
+
 
 
 
@@ -37,6 +39,11 @@ const View = ({ data, categoryId, onChapterCreated }) => {
 
     const [newColumnPopup, setNewColumnPopup] = useState(false);
     const [selectedColumn, setSelectedColumn] = useState(null);
+
+
+    // 🔹 Table Records popup state
+    const [recordPopup, setRecordPopup] = useState(false);
+    const [recordData, setRecordData] = useState(null);
 
 
     // For Set Data According to drag and drop
@@ -132,6 +139,14 @@ const View = ({ data, categoryId, onChapterCreated }) => {
                             setNewColumnPopup(true);
                         }}
 
+                        openTableRecords={(field, task, chapter) => {
+                            setRecordData({
+                                tableField: field,
+                                taskId: task._id,
+                            });
+                            setRecordPopup(true);
+                        }}
+
 
                     />
 
@@ -208,6 +223,17 @@ const View = ({ data, categoryId, onChapterCreated }) => {
                     onUpdated={onChapterCreated}
                 />
             )}
+
+            {recordPopup && (
+                <TableRecordsPopup
+                    open={recordPopup}
+                    onClose={setRecordPopup}
+                    tableField={recordData?.tableField}
+                    taskId={recordData?.taskId}
+                    onCreated={onChapterCreated}
+                />
+            )}
+
 
 
 
