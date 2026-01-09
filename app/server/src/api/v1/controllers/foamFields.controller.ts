@@ -111,3 +111,50 @@ export const deleteTableColumn = async (
         next(err);
     }
 };
+
+
+
+export const addTableRow = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+) => {
+    try {
+        const row = await foamFieldService.addTableRow(req.body);
+        res.json(ok(row));
+    } catch (err) {
+        next(err);
+    }
+};
+
+export const getTableRows = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+) => {
+    try {
+        const fieldId = req.params.fieldId;
+        const rows = await foamFieldService.getTableRows(fieldId);
+        res.json(ok(rows));
+    } catch (err) {
+        next(err);
+    }
+};
+
+
+export const addBulkTableRows = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+) => {
+    try {
+        const { rows } = req.body;
+
+        const result =
+            await foamFieldService.addBulkTableRows(rows);
+
+        res.json(ok(result));
+    } catch (err) {
+        next(err);
+    }
+};

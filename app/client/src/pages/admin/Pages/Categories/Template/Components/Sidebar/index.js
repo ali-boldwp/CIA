@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { CiViewTable } from "react-icons/ci";
 import {useUpdateChapterTemplateIndexMutation} from "../../../../../../../services/categoryApi";
 
-const Sidebar = ({ data, setData, openChapterNew, onEditChapter, openTaskNew, onEditTask, openFieldNew, onEditField,  openColumnNew ,   onEditColumn,}) => {
+const Sidebar = ({ data, setData, openChapterNew, onEditChapter, openTaskNew, onEditTask, openFieldNew, onEditField,  openColumnNew ,   onEditColumn, openTableRecords}) => {
 
 
 
@@ -232,6 +232,28 @@ const Sidebar = ({ data, setData, openChapterNew, onEditChapter, openTaskNew, on
                         Add New Column
                       </span>
                                                                                                                         </li>
+                                                                                                                        {field.type === "table" && (
+                                                                                                                            <li
+                                                                                                                                onClick={() => openTableRecords(field, task, chapter)}
+                                                                                                                                style={{
+                                                                                                                                    fontSize: "12px",
+                                                                                                                                    fontWeight: "bold",
+                                                                                                                                    color: "#9e9c96",
+                                                                                                                                    cursor: "pointer",
+                                                                                                                                }}
+                                                                                                                            >
+    <span
+        style={{
+            display: "inline-flex",
+            alignItems: "center",
+            gap: "6px",
+        }}
+    >
+      {/* icon */}
+        Add New Record
+    </span>
+                                                                                                                            </li>
+                                                                                                                        )}
                                                                                                                     </ul>
                                                                                                                 </div>
                                                                                                             ) : (

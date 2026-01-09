@@ -1,5 +1,7 @@
 import FoamFields, { IFoamFields , IColumn } from "../models/foamFields.model";
 import TaskTemplate from "../models/taskTemplate.model";
+import TableRow from "../models/tableRow.model";
+
 
 // CREATE
 export const createFoamField = async (data: Partial<IFoamFields>) => {
@@ -229,4 +231,61 @@ export const deleteTableColumn = async (fieldId: string, columnId: string) => {
     await field.save();
 
     return field;
+};
+
+
+export const addTableRow = async (payload) => {
+    const field = await FoamFields.findById(payload.field);
+
+    if (!field || field.type !== "table") {
+        throw new Error("Invalid table field");
+    }
+
+    const validSlugs = field.columns?.map(c => c.slug) || [];
+
+    for (const key of Object.keys(payload.data)) {
+        if (!validSlugs.includes(key)) {
+            throw new Error(`Invalid column: ${key}`);
+        }
+    }
+
+    return TableRow.create(payload);
+};
+
+export const addBulkTableRows = async (rows: any[]) => {
+    if (!Array.isArray(rows) || !rows.length) {
+        throw new Error("Rows array is required");
+    }
+
+    // 🔎 validate using existing single-row logic
+    const createdRows = [];
+
+    for (const payload of rows) {
+        const field = await FoamFields.findById(payload.field);
+
+        if (!field || field.type !== "table") {
+            throw new Error("Invalid table field");
+        }
+
+        const validSlugs = field.columns?.map(c => c.slug) || [];
+
+        for (const key of Object.keys(payload.data)) {
+            if (!validSlugs.includes(key)) {
+                throw new Error(`Invalid column: ${key}`);
+            }
+        }
+
+        createdRows.push(payload);
+    }
+
+    // 🚀 bulk insert
+    return TableRow.insertMany(createdRows);
+};
+
+
+
+export const getTableRows = async (fieldId: string) => {
+    return TableRow.find({ field: fieldId })
+        .sort({ createdAt: 1 })
+        .lean();
 };

@@ -36,5 +36,22 @@ router.delete(
     foamFieldsController.deleteTableColumn
 );
 
+router.post(
+    "/table-row",
+    auth,
+    foamFieldsController.addTableRow
+);
+
+router.post(
+    "/table-row/bulk",
+    auth,
+    foamFieldsController.addBulkTableRows
+);
+
+router.get(
+    "/by-field/:fieldId",
+    auth,
+    foamFieldsController.getTableRows
+);
 
 export default router;
