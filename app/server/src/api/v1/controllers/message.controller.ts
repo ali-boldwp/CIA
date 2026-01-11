@@ -63,9 +63,9 @@ export const getMessages = async (
     try {
         let { chatId } = req.params;
 
-        // ✅ handle "open" chat safely
-        if (chatId === "open") {
-            return res.json({ success: true, data: [], projectFiles: [] });
+        const isOpenChat = chatId === "open";
+        if (isOpenChat) {
+            chatId = null;
         }
 
         // ✅ default = 100 messages
@@ -100,5 +100,4 @@ export const getMessages = async (
         next(err);
     }
 };
-
 
