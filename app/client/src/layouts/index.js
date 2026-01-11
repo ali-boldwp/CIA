@@ -6,6 +6,7 @@ import {useSelector} from "react-redux";
 import {Link} from "react-router-dom";
 import store from "../store";
 import {notificationApi} from "../services/notificationApi";
+import {chatApi} from "../services/chatApi";
 
 const Layout = ({
         loading = true,
@@ -15,13 +16,19 @@ const Layout = ({
 
     const user = useSelector((state) => state.auth.user);
 
-    socket.emit( "notifications", user?._id );
-
     useEffect(() => {
 
         if (!user?._id) return;
 
-        socket.emit( "join_notification", user?._id );
+        const joinNotifications = () => {
+            socket.emit("join_notification", user?._id);
+        };
+
+        if (socket.connected) {
+            joinNotifications();
+        }
+
+        socket.on("connect", joinNotifications);
 
         const handler = (payload) => {
             toast(
@@ -46,12 +53,18 @@ const Layout = ({
                 }
             );
             store.dispatch( notificationApi.util.invalidateTags(["Notifications"]) );
+            if (payload?.link?.includes("/messenger/")) {
+                store.dispatch(chatApi.util.invalidateTags(["Chats"]));
+            }
         };
 
         socket.on("notification", handler);
 
 
-        return () => socket.off("notification", handler);
+        return () => {
+            socket.off("notification", handler);
+            socket.off("connect", joinNotifications);
+        };
 
     }, [ user?._id ]);
 

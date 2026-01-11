@@ -97,10 +97,12 @@ const Sidebar = ({
                     {
                         filteredChats.map((c) => {
                             console.log( "c", c )
-                            const otherUser = c.participants?.find(
-                                p => p?._id !== user?._id
-                            );
+                            const otherUser = c.participants?.find((p) => {
+                                const participantId = p?.user?._id || p?.user || p?._id;
+                                return participantId !== user?._id;
+                            });
                             console.log( "otherUser", otherUser )
+                            const directMessageName = otherUser?.user?.name || otherUser?.name || "Unknown user";
                             return(
 
                                 <div
@@ -119,11 +121,9 @@ const Sidebar = ({
                                                 ? c.groupName?.length > 17
                                                     ? c.groupName.slice(0, 17) + "..."
                                                     : c.groupName
-                                                : otherUser?.name
-                                                    ? otherUser.name.length > 15
-                                                        ? otherUser.name.slice(0, 15) + "..."
-                                                        : otherUser.name
-                                                    : "....,"
+                                                : directMessageName.length > 15
+                                                    ? directMessageName.slice(0, 15) + "..."
+                                                    : directMessageName
                                             }
 
                                             {c.isPinned && <FaThumbtack className="sidebar-pin-icon" />}

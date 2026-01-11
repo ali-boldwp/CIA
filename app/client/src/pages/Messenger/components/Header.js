@@ -63,11 +63,13 @@ const MessengerPage = ({
     const [downloadFile] = useDownloadFileMutation();
 
 
-    const [chat, setChat] = useState(ChatID);
+    const [chat, setChat] = useState(ChatID || "");
+
+    const currentUser = JSON.parse(localStorage.getItem("user"));
+    const currentUserId = currentUser?._id;
 
 
     const [searchTerm, setSearchTerm] = useState("");
-    const [messages, setMessages] = useState([]);
     const [oldmessage, setOldMessage] = useState([]);
     const [loadingOlder, setLoadingOlder] = useState(false);
     const [hasMore, setHasMore] = useState(true);
@@ -81,12 +83,23 @@ const MessengerPage = ({
 
 
     const currentChat = chats?.data?.find(c => c._id === chat) || null;
+    const isOpenChat = chat === "open";
+    const showGroupActions = isOpenChat || (currentChat?.isGroup && (currentChat?.participants?.length || 0) > 2);
+
+    const getSenderName = (senderId) => {
+        const participant = currentChat?.participants?.find(
+            (p) => p._id === senderId || p.user === senderId
+        );
+        if (participant?.name) return participant.name;
+
+        const matchedUser = allUsers?.data?.find((u) => u._id === senderId);
+        return matchedUser?.name;
+    };
 
     useEffect(() => {
-        if (ChatID) {
-            setChat(ChatID);
-            socket.emit("join_chat", ChatID);
-        }
+        const nextChatId = ChatID || "open";
+        setChat(nextChatId);
+        socket.emit("join_chat", nextChatId);
     }, [ChatID]);
 
     useEffect(() => {
@@ -106,16 +119,44 @@ const MessengerPage = ({
     }, [data]);
 
     useEffect(() => {
+        if (!chat) return;
 
-        console.log("Joining chat:", chatID);
-        socket.emit("join_chat", chatID);
+        const joinChat = () => {
+            socket.emit("join_chat", chat);
+        };
 
-        socket.on("new_message", async (msg) => {
+        if (socket.connected) {
+            joinChat();
+        }
 
-            setMessages(prev => [...prev, msg]);
+        socket.on("connect", joinChat);
+
+        return () => {
+            socket.off("connect", joinChat);
+        };
+    }, [chat]);
+
+    useEffect(() => {
+
+        const handleNewMessage = async (msg) => {
+            const resolvedName = typeof msg.sender === "string"
+                ? getSenderName(msg.sender)
+                : msg.sender?.name;
+            const normalizedMessage = {
+                ...msg,
+                createdAt: msg.createdAt || new Date().toISOString(),
+                sender: typeof msg.sender === "string"
+                    ? {
+                        _id: msg.sender,
+                        name: resolvedName,
+                    }
+                    : msg.sender,
+            };
+
+            setOldMessage(prev => [...prev, normalizedMessage]);
 
             // auto-mark seen if user is viewing that chat
-            if (msg.chatId === chat) {
+            if (msg.chatId === chat || (!msg.chatId && chat === "open")) {
                 try {
                     await markSeen(chat).unwrap();
 
@@ -125,20 +166,19 @@ const MessengerPage = ({
                 } catch (e) {
                 }
             }
-        });
-
-
-        return () => {
-            socket.off("new_message");
         };
 
-    }, []);
+        socket.on("new_message", handleNewMessage);
+
+        return () => {
+            socket.off("new_message", handleNewMessage);
+        };
+
+    }, [chat, currentUserId, markSeen, currentChat, allUsers]);
 
     const openChat = async (ID) => {
 
         setOldMessage([]);
-        setMessages([]);
-
         setChat(ID);
 
         try {
@@ -191,14 +231,11 @@ const MessengerPage = ({
 
 
     useEffect(() => {
-        if (messages.length > 0) {
+        if (oldmessage.length > 0) {
             messagesEndRef.current?.scrollIntoView({behavior: "smooth"});
         }
-    }, [messages]);
+    }, [oldmessage]);
 
-
-    const currentUser = JSON.parse(localStorage.getItem("user"));
-    const currentUserId = currentUser?._id;
 
     const handleSend = async () => {
         if (!text.trim()) return;
@@ -422,33 +459,44 @@ const MessengerPage = ({
                                 <div className="chat-tags">
 
                                     {/* PIN BUTTON */}
-                                    <span className="tag tag-pin" onClick={handlePin} style={{cursor: "pointer"}}>
-                                        <span className="tag-icon">
-                                            <FaThumbtack style={{color: currentChat?.isPinned ? "red" : "gray"}}/>
+                                    {isOpenChat ? (
+                                        <span className="tag tag-pin" style={{cursor: "default"}}>
+                                            <span className="tag-icon">
+                                                <FaThumbtack style={{color: "red"}}/>
+                                            </span>
+                                            Pinned
                                         </span>
-                                        {currentChat?.isPinned ? "Pinned" : "Pin"}
-                                    </span>
+                                    ) : (
+                                        <span className="tag tag-pin" onClick={handlePin} style={{cursor: "pointer"}}>
+                                            <span className="tag-icon">
+                                                <FaThumbtack style={{color: currentChat?.isPinned ? "red" : "gray"}}/>
+                                            </span>
+                                            {currentChat?.isPinned ? "Pinned" : "Pin"}
+                                        </span>
+                                    )}
 
+                                    {!isOpenChat && (
+                                        <>
+                                            {/* MUTE BUTTON */}
+                                            <span
+                                                className="tag tag-mute"
+                                                onClick={handleMute}
+                                                style={{cursor: "pointer"}}
+                                            >
+                                                <FiVolumeX
+                                                    className="tag-icon"
+                                                    style={{color: currentChat?.isMuted ? "orange" : "gray"}}
+                                                />
+                                                {currentChat?.isMuted ? "Muted" : "Mute"}
+                                            </span>
 
-                                    {/* MUTE BUTTON */}
-                                    <span
-                                        className="tag tag-mute"
-                                        onClick={handleMute}
-                                        style={{cursor: "pointer"}}
-                                    >
-                                        <FiVolumeX
-                                            className="tag-icon"
-                                            style={{color: currentChat?.isMuted ? "orange" : "gray"}}
-                                        />
-                                        {currentChat?.isMuted ? "Muted" : "Mute"}
-                                    </span>
-
-
-                                    {/* Archive — (if needed later) */}
-                                    <span className="tag tag-archive">
-                                        <FiArchive className="tag-icon"/>
-                                        Archive
-                                    </span>
+                                            {/* Archive — (if needed later) */}
+                                            <span className="tag tag-archive">
+                                                <FiArchive className="tag-icon"/>
+                                                Archive
+                                            </span>
+                                        </>
+                                    )}
                                 </div>
 
                             </div>
@@ -599,73 +647,77 @@ const MessengerPage = ({
 
                     {/* RIGHT: details */}
                     <aside className="sidebar-right card" style={{maxWidth: '350px'}}>
-                        <div className="sidebar-right-section">
-                            <div className="rightCreateGroup">
-                                <div>
-                                    <div className="section-title">Detalii conversație</div>
-                                    <div className="section-subtitle">Membri
-                                        ({chats?.data?.find(c => c._id === chat)?.participants?.length || 0})
-                                    </div>
-                                </div>
-                                <button
-                                    className="pill"
-                                    onClick={() => setIsModalOpen(true)}
-                                >
-                                    <FiUserPlus className="pill-icon"/>
-                                    Adaugă în grup
-                                </button>
-
-                            </div>
-                            <div className="member-list">
-                                {getParticipants().map((member, i) => (
-                                    <div className="member-row" key={i}>
-
-                                        <div className={"member-avatar member-avatar-" + (i % 10)}/>
-
-                                        <div className="member-name">{member.name}</div>
-
-                                        <div className="member-controls">
-                                            <button
-                                                className={styles.deleteBtn}
-                                                onClick={() => handleRemoveMember(member.id)}
-                                            >
-                                                🗑 Șterge
-                                            </button>
+                        {showGroupActions && (
+                            <div className="sidebar-right-section">
+                                <div className="rightCreateGroup">
+                                    <div>
+                                        <div className="section-title">Detalii conversație</div>
+                                        <div className="section-subtitle">Membri
+                                            ({chats?.data?.find(c => c._id === chat)?.participants?.length || 0})
                                         </div>
                                     </div>
-                                ))}
+                                    <button
+                                        className="pill"
+                                        onClick={() => setIsModalOpen(true)}
+                                    >
+                                        <FiUserPlus className="pill-icon"/>
+                                        Adaugă în grup
+                                    </button>
+
+                                </div>
+                                <div className="member-list">
+                                    {getParticipants().map((member, i) => (
+                                        <div className="member-row" key={i}>
+
+                                            <div className={"member-avatar member-avatar-" + (i % 10)}/>
+
+                                            <div className="member-name">{member.name}</div>
+
+                                            <div className="member-controls">
+                                                <button
+                                                    className={styles.deleteBtn}
+                                                    onClick={() => handleRemoveMember(member.id)}
+                                                >
+                                                    🗑 Șterge
+                                                </button>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
                             </div>
-                        </div>
+                        )}
 
-                        <div className="sidebar-right-section">
-                            <div className="section-subtitle">Permisiuni</div>
+                        {showGroupActions && (
+                            <div className="sidebar-right-section">
+                                <div className="section-subtitle">Permisiuni</div>
 
-                            <div
-                                style={{
+                                <div
+                                    style={{
 
-                                    // display: "flex",
-                                    // flexDirection: "column",   // 👈 items ko column banayega
-                                    // alignItems: "center",      // 👈 center horizontally (optional)
-                                    // justifyContent: "center",  // 👈 vertical center (optional)
-                                    // width: "100%",
-                                    gap: "10px",
-                                }}
-                            >
-                                <button className="pill pill-warning flex-start">
-                                    Șterge grup doar Manager
-                                </button>
+                                        // display: "flex",
+                                        // flexDirection: "column",   // 👈 items ko column banayega
+                                        // alignItems: "center",      // 👈 center horizontally (optional)
+                                        // justifyContent: "center",  // 👈 vertical center (optional)
+                                        // width: "100%",
+                                        gap: "10px",
+                                    }}
+                                >
+                                    <button className="pill pill-warning flex-start">
+                                        Șterge grup doar Manager
+                                    </button>
 
-                                <button className="pill flex-start">
-                                    Adăugare/ștergere membri: Manager
-                                </button>
-                                <button className="pill flex-start">
-                                    Pin/Mute/Archive: toți membrii
-                                </button>
+                                    <button className="pill flex-start">
+                                        Adăugare/ștergere membri: Manager
+                                    </button>
+                                    <button className="pill flex-start">
+                                        Pin/Mute/Archive: toți membrii
+                                    </button>
+
+                                </div>
+
 
                             </div>
-
-
-                        </div>
+                        )}
 
                         {/*<div className="sidebar-right-section">
                             <div className="section-subtitle">Log audit</div>
@@ -696,24 +748,26 @@ const MessengerPage = ({
                         </div>*/}
 
 
-                        <div className="sidebar-right-footer">
-                            <button
-                                className="btn-outline full-width"
-                                onClick={handleLeaveGroup}
-                            >
-                                <FiLogOut className="btn-icon"/>
-                                Ieșire grup
-                            </button>
+                        {showGroupActions && (
+                            <div className="sidebar-right-footer">
+                                <button
+                                    className="btn-outline full-width"
+                                    onClick={handleLeaveGroup}
+                                >
+                                    <FiLogOut className="btn-icon"/>
+                                    Ieșire grup
+                                </button>
 
-                            <button
-                                className="btn-outline full-width remove"
-                                onClick={handleDeleteGroup}
-                            >
-                                <FiTrash2 className="btn-icon"/>
-                                Șterge grup (Mgr)
-                            </button>
+                                <button
+                                    className="btn-outline full-width remove"
+                                    onClick={handleDeleteGroup}
+                                >
+                                    <FiTrash2 className="btn-icon"/>
+                                    Șterge grup (Mgr)
+                                </button>
 
-                        </div>
+                            </div>
+                        )}
                     </aside>
                     {isModalOpen && (
                         <div className="popup-overlay">

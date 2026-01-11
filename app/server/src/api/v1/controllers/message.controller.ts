@@ -63,16 +63,23 @@ export const getMessages = async (
     try {
         let { chatId } = req.params;
 
-        // ✅ handle "open" chat safely
-        if (chatId === "open") {
-            return res.json({ success: true, data: [], projectFiles: [] });
+        const isOpenChat = chatId === "open";
+        if (isOpenChat) {
+            chatId = null;
         }
 
         // ✅ default = 100 messages
         const limit = parseInt(req.query.limit as string) || 100;
         const before = req.query.before as string | undefined;
 
-        const filter: any = { chatId };
+        const filter: any = isOpenChat
+            ? {
+                $or: [
+                    { chatId: null },
+                    { chatId: { $exists: false } },
+                ],
+            }
+            : { chatId };
 
         // ✅ BEFORE pagination (simple & fast)
         if (before) {
@@ -100,5 +107,3 @@ export const getMessages = async (
         next(err);
     }
 };
-
-
