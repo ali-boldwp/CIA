@@ -95,7 +95,7 @@ const MessengerPage = ({
     };
 
     useEffect(() => {
-        const nextChatId = ChatID || "";
+        const nextChatId = ChatID || "open";
         setChat(nextChatId);
         socket.emit("join_chat", nextChatId);
     }, [ChatID]);
@@ -137,7 +137,7 @@ const MessengerPage = ({
             setOldMessage(prev => [...prev, normalizedMessage]);
 
             // auto-mark seen if user is viewing that chat
-            if (msg.chatId === chat || (!msg.chatId && !chat)) {
+            if (msg.chatId === chat || (!msg.chatId && chat === "open")) {
                 try {
                     await markSeen(chat).unwrap();
 
