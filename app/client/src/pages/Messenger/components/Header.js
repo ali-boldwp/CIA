@@ -119,7 +119,24 @@ const MessengerPage = ({
     }, [data]);
 
     useEffect(() => {
-        socket.emit("join_chat", chat);
+        if (!chat) return;
+
+        const joinChat = () => {
+            socket.emit("join_chat", chat);
+        };
+
+        if (socket.connected) {
+            joinChat();
+        }
+
+        socket.on("connect", joinChat);
+
+        return () => {
+            socket.off("connect", joinChat);
+        };
+    }, [chat]);
+
+    useEffect(() => {
 
         const handleNewMessage = async (msg) => {
             const resolvedName = typeof msg.sender === "string"
