@@ -72,7 +72,14 @@ export const getMessages = async (
         const limit = parseInt(req.query.limit as string) || 100;
         const before = req.query.before as string | undefined;
 
-        const filter: any = { chatId };
+        const filter: any = isOpenChat
+            ? {
+                $or: [
+                    { chatId: null },
+                    { chatId: { $exists: false } },
+                ],
+            }
+            : { chatId };
 
         // ✅ BEFORE pagination (simple & fast)
         if (before) {
@@ -100,4 +107,3 @@ export const getMessages = async (
         next(err);
     }
 };
-
