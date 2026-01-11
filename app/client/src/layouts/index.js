@@ -6,6 +6,7 @@ import {useSelector} from "react-redux";
 import {Link} from "react-router-dom";
 import store from "../store";
 import {notificationApi} from "../services/notificationApi";
+import {chatApi} from "../services/chatApi";
 
 const Layout = ({
         loading = true,
@@ -46,6 +47,9 @@ const Layout = ({
                 }
             );
             store.dispatch( notificationApi.util.invalidateTags(["Notifications"]) );
+            if (payload?.link?.includes("/messenger/")) {
+                store.dispatch(chatApi.util.invalidateTags(["Chats"]));
+            }
         };
 
         socket.on("notification", handler);

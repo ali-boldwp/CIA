@@ -3,6 +3,7 @@ import User from "../models/user.model";
 import Chat from "../models/chat.model";
 import Message from "../models/message.model";
 import { logAudit} from "../../../utils/logAudit";
+import { createNotification } from "../services/notification.service";
 import { Types } from "mongoose";
 
 
@@ -320,6 +321,8 @@ export const pinChat = async (req, res) => {
 export const createGroupChat = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const creatorId = (req as any).user.id;
+        const creator = await User.findById(creatorId).select("name");
+        const creatorName = creator?.name || "Un utilizator";
         const { users, groupName, isGroup } = req.body;
 
         if (!users || !Array.isArray(users) || users.length < 1) {
@@ -373,6 +376,14 @@ export const createGroupChat = async (req: Request, res: Response, next: NextFun
                 `A creat un chat direct`
             );
 
+            await createNotification({
+                user: otherUserId,
+                title: "Chat direct nou",
+                text: `${creatorName} a început o conversație cu tine.`,
+                link: `/messenger/${newChat._id}`,
+                type: "info"
+            });
+
             return res.json({
                 success: true,
                 message: "Direct chat created successfully",
@@ -413,6 +424,19 @@ export const createGroupChat = async (req: Request, res: Response, next: NextFun
             newGroup._id,
             creatorId,
             `A creat grupul „${groupName}” cu: ${userNames}`
+        );
+
+        const notifyUsers = uniqueUsers.filter((id) => id !== creatorId);
+        await Promise.all(
+            notifyUsers.map((userId) =>
+                createNotification({
+                    user: userId,
+                    title: "Grup nou",
+                    text: `${creatorName} te-a adăugat în grupul „${groupName}”.`,
+                    link: `/messenger/${newGroup._id}`,
+                    type: "info"
+                })
+            )
         );
 
         return res.json({
@@ -697,6 +721,5 @@ export const getUnseenCount = async (req, res) => {
         return res.status(500).json({ message: "Server error" });
     }
 };
-
 
 
