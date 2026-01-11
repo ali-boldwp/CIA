@@ -70,7 +70,6 @@ const MessengerPage = ({
 
 
     const [searchTerm, setSearchTerm] = useState("");
-    const [messages, setMessages] = useState([]);
     const [oldmessage, setOldMessage] = useState([]);
     const [loadingOlder, setLoadingOlder] = useState(false);
     const [hasMore, setHasMore] = useState(true);
@@ -111,7 +110,7 @@ const MessengerPage = ({
         socket.emit("join_chat", chat);
 
         const handleNewMessage = async (msg) => {
-            setMessages(prev => [...prev, msg]);
+            setOldMessage(prev => [...prev, msg]);
 
             // auto-mark seen if user is viewing that chat
             if (msg.chatId === chat || (!msg.chatId && !chat)) {
@@ -137,8 +136,6 @@ const MessengerPage = ({
     const openChat = async (ID) => {
 
         setOldMessage([]);
-        setMessages([]);
-
         setChat(ID);
 
         try {
@@ -191,10 +188,10 @@ const MessengerPage = ({
 
 
     useEffect(() => {
-        if (messages.length > 0) {
+        if (oldmessage.length > 0) {
             messagesEndRef.current?.scrollIntoView({behavior: "smooth"});
         }
-    }, [messages]);
+    }, [oldmessage]);
 
 
     const handleSend = async () => {
