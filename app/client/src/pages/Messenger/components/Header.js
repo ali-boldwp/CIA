@@ -116,7 +116,6 @@ const MessengerPage = ({
                 sender: typeof msg.sender === "string"
                     ? {
                         _id: msg.sender,
-                        name: currentUser?.name || "Me",
                     }
                     : msg.sender,
             };
