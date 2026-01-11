@@ -98,10 +98,10 @@ const Sidebar = ({
                         filteredChats.map((c) => {
                             console.log( "c", c )
                             const otherUser = c.participants?.find(
-                                p => p?._id !== user?._id
+                                p => (p?._id ?? p?.user) !== user?._id
                             );
                             console.log( "otherUser", otherUser )
-                            const directMessageName = otherUser?.name || "Direct message";
+                            const directMessageName = otherUser?.name || otherUser?.user?.name || "Unknown user";
                             return(
 
                                 <div
