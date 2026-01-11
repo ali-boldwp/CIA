@@ -84,6 +84,16 @@ const MessengerPage = ({
 
     const currentChat = chats?.data?.find(c => c._id === chat) || null;
 
+    const getSenderName = (senderId) => {
+        const participant = currentChat?.participants?.find(
+            (p) => p._id === senderId || p.user === senderId
+        );
+        if (participant?.name) return participant.name;
+
+        const matchedUser = allUsers?.data?.find((u) => u._id === senderId);
+        return matchedUser?.name;
+    };
+
     useEffect(() => {
         const nextChatId = ChatID || "";
         setChat(nextChatId);
@@ -110,12 +120,16 @@ const MessengerPage = ({
         socket.emit("join_chat", chat);
 
         const handleNewMessage = async (msg) => {
+            const resolvedName = typeof msg.sender === "string"
+                ? getSenderName(msg.sender)
+                : msg.sender?.name;
             const normalizedMessage = {
                 ...msg,
                 createdAt: msg.createdAt || new Date().toISOString(),
                 sender: typeof msg.sender === "string"
                     ? {
                         _id: msg.sender,
+                        name: resolvedName,
                     }
                     : msg.sender,
             };
@@ -141,7 +155,7 @@ const MessengerPage = ({
             socket.off("new_message", handleNewMessage);
         };
 
-    }, [chat, currentUserId, markSeen]);
+    }, [chat, currentUserId, markSeen, currentChat, allUsers]);
 
     const openChat = async (ID) => {
 
