@@ -16,13 +16,19 @@ const Layout = ({
 
     const user = useSelector((state) => state.auth.user);
 
-    socket.emit( "notifications", user?._id );
-
     useEffect(() => {
 
         if (!user?._id) return;
 
-        socket.emit( "join_notification", user?._id );
+        const joinNotifications = () => {
+            socket.emit("join_notification", user?._id);
+        };
+
+        if (socket.connected) {
+            joinNotifications();
+        }
+
+        socket.on("connect", joinNotifications);
 
         const handler = (payload) => {
             toast(
@@ -55,7 +61,10 @@ const Layout = ({
         socket.on("notification", handler);
 
 
-        return () => socket.off("notification", handler);
+        return () => {
+            socket.off("notification", handler);
+            socket.off("connect", joinNotifications);
+        };
 
     }, [ user?._id ]);
 
