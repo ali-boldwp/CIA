@@ -84,6 +84,7 @@ const MessengerPage = ({
 
     const currentChat = chats?.data?.find(c => c._id === chat) || null;
     const isOpenChat = chat === "open";
+    const showGroupActions = isOpenChat || currentChat?.isGroup;
 
     const getSenderName = (senderId) => {
         const participant = currentChat?.participants?.find(
@@ -629,73 +630,77 @@ const MessengerPage = ({
 
                     {/* RIGHT: details */}
                     <aside className="sidebar-right card" style={{maxWidth: '350px'}}>
-                        <div className="sidebar-right-section">
-                            <div className="rightCreateGroup">
-                                <div>
-                                    <div className="section-title">Detalii conversație</div>
-                                    <div className="section-subtitle">Membri
-                                        ({chats?.data?.find(c => c._id === chat)?.participants?.length || 0})
-                                    </div>
-                                </div>
-                                <button
-                                    className="pill"
-                                    onClick={() => setIsModalOpen(true)}
-                                >
-                                    <FiUserPlus className="pill-icon"/>
-                                    Adaugă în grup
-                                </button>
-
-                            </div>
-                            <div className="member-list">
-                                {getParticipants().map((member, i) => (
-                                    <div className="member-row" key={i}>
-
-                                        <div className={"member-avatar member-avatar-" + (i % 10)}/>
-
-                                        <div className="member-name">{member.name}</div>
-
-                                        <div className="member-controls">
-                                            <button
-                                                className={styles.deleteBtn}
-                                                onClick={() => handleRemoveMember(member.id)}
-                                            >
-                                                🗑 Șterge
-                                            </button>
+                        {showGroupActions && (
+                            <div className="sidebar-right-section">
+                                <div className="rightCreateGroup">
+                                    <div>
+                                        <div className="section-title">Detalii conversație</div>
+                                        <div className="section-subtitle">Membri
+                                            ({chats?.data?.find(c => c._id === chat)?.participants?.length || 0})
                                         </div>
                                     </div>
-                                ))}
+                                    <button
+                                        className="pill"
+                                        onClick={() => setIsModalOpen(true)}
+                                    >
+                                        <FiUserPlus className="pill-icon"/>
+                                        Adaugă în grup
+                                    </button>
+
+                                </div>
+                                <div className="member-list">
+                                    {getParticipants().map((member, i) => (
+                                        <div className="member-row" key={i}>
+
+                                            <div className={"member-avatar member-avatar-" + (i % 10)}/>
+
+                                            <div className="member-name">{member.name}</div>
+
+                                            <div className="member-controls">
+                                                <button
+                                                    className={styles.deleteBtn}
+                                                    onClick={() => handleRemoveMember(member.id)}
+                                                >
+                                                    🗑 Șterge
+                                                </button>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
                             </div>
-                        </div>
+                        )}
 
-                        <div className="sidebar-right-section">
-                            <div className="section-subtitle">Permisiuni</div>
+                        {showGroupActions && (
+                            <div className="sidebar-right-section">
+                                <div className="section-subtitle">Permisiuni</div>
 
-                            <div
-                                style={{
+                                <div
+                                    style={{
 
-                                    // display: "flex",
-                                    // flexDirection: "column",   // 👈 items ko column banayega
-                                    // alignItems: "center",      // 👈 center horizontally (optional)
-                                    // justifyContent: "center",  // 👈 vertical center (optional)
-                                    // width: "100%",
-                                    gap: "10px",
-                                }}
-                            >
-                                <button className="pill pill-warning flex-start">
-                                    Șterge grup doar Manager
-                                </button>
+                                        // display: "flex",
+                                        // flexDirection: "column",   // 👈 items ko column banayega
+                                        // alignItems: "center",      // 👈 center horizontally (optional)
+                                        // justifyContent: "center",  // 👈 vertical center (optional)
+                                        // width: "100%",
+                                        gap: "10px",
+                                    }}
+                                >
+                                    <button className="pill pill-warning flex-start">
+                                        Șterge grup doar Manager
+                                    </button>
 
-                                <button className="pill flex-start">
-                                    Adăugare/ștergere membri: Manager
-                                </button>
-                                <button className="pill flex-start">
-                                    Pin/Mute/Archive: toți membrii
-                                </button>
+                                    <button className="pill flex-start">
+                                        Adăugare/ștergere membri: Manager
+                                    </button>
+                                    <button className="pill flex-start">
+                                        Pin/Mute/Archive: toți membrii
+                                    </button>
+
+                                </div>
+
 
                             </div>
-
-
-                        </div>
+                        )}
 
                         {/*<div className="sidebar-right-section">
                             <div className="section-subtitle">Log audit</div>
@@ -726,24 +731,26 @@ const MessengerPage = ({
                         </div>*/}
 
 
-                        <div className="sidebar-right-footer">
-                            <button
-                                className="btn-outline full-width"
-                                onClick={handleLeaveGroup}
-                            >
-                                <FiLogOut className="btn-icon"/>
-                                Ieșire grup
-                            </button>
+                        {showGroupActions && (
+                            <div className="sidebar-right-footer">
+                                <button
+                                    className="btn-outline full-width"
+                                    onClick={handleLeaveGroup}
+                                >
+                                    <FiLogOut className="btn-icon"/>
+                                    Ieșire grup
+                                </button>
 
-                            <button
-                                className="btn-outline full-width remove"
-                                onClick={handleDeleteGroup}
-                            >
-                                <FiTrash2 className="btn-icon"/>
-                                Șterge grup (Mgr)
-                            </button>
+                                <button
+                                    className="btn-outline full-width remove"
+                                    onClick={handleDeleteGroup}
+                                >
+                                    <FiTrash2 className="btn-icon"/>
+                                    Șterge grup (Mgr)
+                                </button>
 
-                        </div>
+                            </div>
+                        )}
                     </aside>
                     {isModalOpen && (
                         <div className="popup-overlay">
