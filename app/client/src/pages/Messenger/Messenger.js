@@ -11,7 +11,7 @@ const Messenger = () => {
 
     const navigation = useNavigate();
 
-    const { data, isLoading } = useGetMessagesQuery( { chatId: ChatID, limit: 100 }, {skip: ChatID === "open"});
+    const { data, isLoading } = useGetMessagesQuery({ chatId: ChatID, limit: 100 });
     const {data: chats, isLoading: chatsLoading, refetch: refetchChats} = useGetMyChatsQuery();
     const {
         data: auditData,
