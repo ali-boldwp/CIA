@@ -110,7 +110,18 @@ const MessengerPage = ({
         socket.emit("join_chat", chat);
 
         const handleNewMessage = async (msg) => {
-            setOldMessage(prev => [...prev, msg]);
+            const normalizedMessage = {
+                ...msg,
+                createdAt: msg.createdAt || new Date().toISOString(),
+                sender: typeof msg.sender === "string"
+                    ? {
+                        _id: msg.sender,
+                        name: currentUser?.name || "Me",
+                    }
+                    : msg.sender,
+            };
+
+            setOldMessage(prev => [...prev, normalizedMessage]);
 
             // auto-mark seen if user is viewing that chat
             if (msg.chatId === chat || (!msg.chatId && !chat)) {
