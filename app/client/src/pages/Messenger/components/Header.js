@@ -63,7 +63,10 @@ const MessengerPage = ({
     const [downloadFile] = useDownloadFileMutation();
 
 
-    const [chat, setChat] = useState(ChatID);
+    const [chat, setChat] = useState(ChatID || "");
+
+    const currentUser = JSON.parse(localStorage.getItem("user"));
+    const currentUserId = currentUser?._id;
 
 
     const [searchTerm, setSearchTerm] = useState("");
@@ -83,10 +86,9 @@ const MessengerPage = ({
     const currentChat = chats?.data?.find(c => c._id === chat) || null;
 
     useEffect(() => {
-        if (ChatID) {
-            setChat(ChatID);
-            socket.emit("join_chat", ChatID);
-        }
+        const nextChatId = ChatID || "";
+        setChat(nextChatId);
+        socket.emit("join_chat", nextChatId);
     }, [ChatID]);
 
     useEffect(() => {
@@ -106,16 +108,13 @@ const MessengerPage = ({
     }, [data]);
 
     useEffect(() => {
+        socket.emit("join_chat", chat);
 
-        console.log("Joining chat:", chatID);
-        socket.emit("join_chat", chatID);
-
-        socket.on("new_message", async (msg) => {
-
+        const handleNewMessage = async (msg) => {
             setMessages(prev => [...prev, msg]);
 
             // auto-mark seen if user is viewing that chat
-            if (msg.chatId === chat) {
+            if (msg.chatId === chat || (!msg.chatId && !chat)) {
                 try {
                     await markSeen(chat).unwrap();
 
@@ -125,14 +124,15 @@ const MessengerPage = ({
                 } catch (e) {
                 }
             }
-        });
-
-
-        return () => {
-            socket.off("new_message");
         };
 
-    }, []);
+        socket.on("new_message", handleNewMessage);
+
+        return () => {
+            socket.off("new_message", handleNewMessage);
+        };
+
+    }, [chat, currentUserId, markSeen]);
 
     const openChat = async (ID) => {
 
@@ -196,9 +196,6 @@ const MessengerPage = ({
         }
     }, [messages]);
 
-
-    const currentUser = JSON.parse(localStorage.getItem("user"));
-    const currentUserId = currentUser?._id;
 
     const handleSend = async () => {
         if (!text.trim()) return;
