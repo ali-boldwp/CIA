@@ -84,7 +84,7 @@ const MessengerPage = ({
 
     const currentChat = chats?.data?.find(c => c._id === chat) || null;
     const isOpenChat = chat === "open";
-    const showGroupActions = isOpenChat || currentChat?.isGroup;
+    const showGroupActions = isOpenChat || (currentChat?.isGroup && (currentChat?.participants?.length || 0) > 2);
 
     const getSenderName = (senderId) => {
         const participant = currentChat?.participants?.find(

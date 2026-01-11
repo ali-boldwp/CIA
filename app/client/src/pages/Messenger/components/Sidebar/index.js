@@ -101,6 +101,7 @@ const Sidebar = ({
                                 p => p?._id !== user?._id
                             );
                             console.log( "otherUser", otherUser )
+                            const directMessageName = otherUser?.name || "Direct message";
                             return(
 
                                 <div
@@ -119,11 +120,9 @@ const Sidebar = ({
                                                 ? c.groupName?.length > 17
                                                     ? c.groupName.slice(0, 17) + "..."
                                                     : c.groupName
-                                                : otherUser?.name
-                                                    ? otherUser.name.length > 15
-                                                        ? otherUser.name.slice(0, 15) + "..."
-                                                        : otherUser.name
-                                                    : "....,"
+                                                : directMessageName.length > 15
+                                                    ? directMessageName.slice(0, 15) + "..."
+                                                    : directMessageName
                                             }
 
                                             {c.isPinned && <FaThumbtack className="sidebar-pin-icon" />}
