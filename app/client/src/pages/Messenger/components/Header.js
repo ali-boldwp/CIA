@@ -83,6 +83,7 @@ const MessengerPage = ({
 
 
     const currentChat = chats?.data?.find(c => c._id === chat) || null;
+    const isOpenChat = chat === "open";
 
     const getSenderName = (senderId) => {
         const participant = currentChat?.participants?.find(
@@ -440,33 +441,44 @@ const MessengerPage = ({
                                 <div className="chat-tags">
 
                                     {/* PIN BUTTON */}
-                                    <span className="tag tag-pin" onClick={handlePin} style={{cursor: "pointer"}}>
-                                        <span className="tag-icon">
-                                            <FaThumbtack style={{color: currentChat?.isPinned ? "red" : "gray"}}/>
+                                    {isOpenChat ? (
+                                        <span className="tag tag-pin" style={{cursor: "default"}}>
+                                            <span className="tag-icon">
+                                                <FaThumbtack style={{color: "red"}}/>
+                                            </span>
+                                            Pinned
                                         </span>
-                                        {currentChat?.isPinned ? "Pinned" : "Pin"}
-                                    </span>
+                                    ) : (
+                                        <span className="tag tag-pin" onClick={handlePin} style={{cursor: "pointer"}}>
+                                            <span className="tag-icon">
+                                                <FaThumbtack style={{color: currentChat?.isPinned ? "red" : "gray"}}/>
+                                            </span>
+                                            {currentChat?.isPinned ? "Pinned" : "Pin"}
+                                        </span>
+                                    )}
 
+                                    {!isOpenChat && (
+                                        <>
+                                            {/* MUTE BUTTON */}
+                                            <span
+                                                className="tag tag-mute"
+                                                onClick={handleMute}
+                                                style={{cursor: "pointer"}}
+                                            >
+                                                <FiVolumeX
+                                                    className="tag-icon"
+                                                    style={{color: currentChat?.isMuted ? "orange" : "gray"}}
+                                                />
+                                                {currentChat?.isMuted ? "Muted" : "Mute"}
+                                            </span>
 
-                                    {/* MUTE BUTTON */}
-                                    <span
-                                        className="tag tag-mute"
-                                        onClick={handleMute}
-                                        style={{cursor: "pointer"}}
-                                    >
-                                        <FiVolumeX
-                                            className="tag-icon"
-                                            style={{color: currentChat?.isMuted ? "orange" : "gray"}}
-                                        />
-                                        {currentChat?.isMuted ? "Muted" : "Mute"}
-                                    </span>
-
-
-                                    {/* Archive — (if needed later) */}
-                                    <span className="tag tag-archive">
-                                        <FiArchive className="tag-icon"/>
-                                        Archive
-                                    </span>
+                                            {/* Archive — (if needed later) */}
+                                            <span className="tag tag-archive">
+                                                <FiArchive className="tag-icon"/>
+                                                Archive
+                                            </span>
+                                        </>
+                                    )}
                                 </div>
 
                             </div>
