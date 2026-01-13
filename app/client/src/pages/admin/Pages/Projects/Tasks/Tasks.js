@@ -340,6 +340,46 @@ const ProjectTasks = ({
     // if (isLoading) return <p>Loading project data...</p>;
     // if (isError) return <p>Error fetching project data!</p>;
 
+
+    const addWatermarkToAllPages = (pdf) => {
+        const pageCount = pdf.getNumberOfPages();
+        const pageWidth = pdf.internal.pageSize.getWidth();
+        const pageHeight = pdf.internal.pageSize.getHeight();
+
+        const text = "CONFIDENTIAL";
+        const fontSize = 80;
+        const angle = 45;
+
+        for (let i = 1; i <= pageCount; i++) {
+            pdf.setPage(i);
+            pdf.saveGraphicsState();
+
+            pdf.setFont("helvetica");
+            pdf.setFontSize(fontSize);
+            pdf.setTextColor(180, 180, 180);
+            pdf.setGState(new pdf.GState({ opacity: 0.20 }));
+
+            // 🔥 text width (jsPDF units)
+            const textWidth =
+                pdf.getStringUnitWidth(text) *
+                fontSize /
+                pdf.internal.scaleFactor;
+
+
+            const x = (pageWidth / 2) + (textWidth * 0.18);
+            const y = (pageHeight / 2) + (fontSize * 0.95);
+
+            pdf.text(text, x, y, {
+                align: "center",
+                angle: angle,
+            });
+
+            pdf.restoreGraphicsState();
+        }
+    };
+
+
+
     const handleExportPDF = async () => {
         const element = document.getElementById("export-report");
         if (!element) {
@@ -350,7 +390,9 @@ const ProjectTasks = ({
         const canvas = await html2canvas(element, {
             scale: 2,
             backgroundColor: "#ffffff",
-            useCORS: true
+            useCORS: true,
+            windowWidth: element.scrollWidth,
+            windowHeight: element.scrollHeight,
         });
 
         const imgData = canvas.toDataURL("image/png");
@@ -358,11 +400,28 @@ const ProjectTasks = ({
         const pdf = new jsPDF("p", "mm", "a4");
 
         const pdfWidth = pdf.internal.pageSize.getWidth();
-        const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+        const pdfHeight = pdf.internal.pageSize.getHeight();
 
-        pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight);
+        const imgHeight = (canvas.height * pdfWidth) / canvas.width;
+        let heightLeft = imgHeight;
+        let position = 0;
+
+        pdf.addImage(imgData, "PNG", 0, position, pdfWidth, imgHeight);
+        heightLeft -= pdfHeight;
+
+        while (heightLeft > 0) {
+            position -= pdfHeight;
+            pdf.addPage();
+            pdf.addImage(imgData, "PNG", 0, position, pdfWidth, imgHeight);
+            heightLeft -= pdfHeight;
+        }
+
+        // 🔥 APPLY WATERMARK TO ALL PAGES
+        addWatermarkToAllPages(pdf);
+
         pdf.save(`project-${projectId}-report.pdf`);
     };
+
 
 
 
@@ -415,13 +474,12 @@ const ProjectTasks = ({
             {/* ================= EXPORTABLE CONTENT ================= */}
             <div
                 id="export-report"
-                className={styles.contentTemplate}
                 style={{
-                    position: "fixed",
+                    position: "absolute",
                     top: 0,
-                    left: "-9999px",   // 👈 screen se bahar
+                    left: "-9999px",
                     width: "210mm",
-                    background: "white"
+                    background: "white",
                 }}
             >
                 {contentData && <Content data={contentData} />}
