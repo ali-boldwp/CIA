@@ -40,7 +40,7 @@ const analystConfig = {
                             element: <ProjectTasks />
                         },
                         {
-                            path: 'view/:id/tasks/:taskId/progress',
+                            path: 'view/:id/:taskId/progress',
                             element: <ViewTask/>
                         }
                     ]
