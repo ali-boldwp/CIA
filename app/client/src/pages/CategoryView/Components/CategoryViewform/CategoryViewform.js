@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import {
     useCreateChapterTemplateMutation,
     useUpdateChapterTemplateMutation
@@ -19,6 +19,10 @@ const BLOCK_TYPES = [
     { value: "code", label: "Code" },
     { value: "html", label: "Custom HTML" }
 ];
+
+const PAGE_HEIGHT = 1123;
+const PAGE_WIDTH = 794;
+const PAGE_PADDING = 48;
 
 const createBlock = (type = "paragraph") => {
     const id = `${type}-${Date.now()}-${Math.random().toString(16).slice(2)}`;
@@ -182,10 +186,42 @@ const CategoryViewform = ({ chapter, categoryId, onUpdate, onCreated }) => {
     const [createChapterTemplate] = useCreateChapterTemplateMutation();
     const [blocks, setBlocks] = useState(() => htmlToBlocks(chapter.content || ""));
     const [addType, setAddType] = useState("paragraph");
+    const [pages, setPages] = useState([]);
+    const blockRefs = useMemo(() => [], []);
 
     useEffect(() => {
         setBlocks(htmlToBlocks(chapter.content || ""));
     }, [chapter.uid, chapter.content]);
+
+    useEffect(() => {
+        const handle = window.requestAnimationFrame(() => {
+            const availableHeight = PAGE_HEIGHT - PAGE_PADDING * 2;
+            const nextPages = [];
+            let currentPage = [];
+            let currentHeight = 0;
+
+            blocks.forEach((block, index) => {
+                const height = blockRefs[index]?.offsetHeight || 0;
+
+                if (currentHeight + height > availableHeight && currentPage.length) {
+                    nextPages.push(currentPage);
+                    currentPage = [];
+                    currentHeight = 0;
+                }
+
+                currentPage.push(block);
+                currentHeight += height;
+            });
+
+            if (currentPage.length) {
+                nextPages.push(currentPage);
+            }
+
+            setPages(nextPages.length ? nextPages : [blocks]);
+        });
+
+        return () => window.cancelAnimationFrame(handle);
+    }, [blocks, blockRefs]);
 
     // 🔹 CREATE ON BLUR
     const handleTitleBlur = async () => {
@@ -279,6 +315,214 @@ const CategoryViewform = ({ chapter, categoryId, onUpdate, onCreated }) => {
         });
     };
 
+    const renderBlock = (block, index, { withRef } = {}) => (
+        <div
+            key={block.id}
+            className="block"
+            ref={withRef ? (element) => { blockRefs[index] = element; } : undefined}
+        >
+            <div className="block-controls">
+                <span className="block-type">
+                    {BLOCK_TYPES.find((type) => type.value === block.type)?.label}
+                </span>
+                <div className="block-controls-actions">
+                    <button type="button" onClick={() => handleMoveBlock(index, -1)}>↑</button>
+                    <button type="button" onClick={() => handleMoveBlock(index, 1)}>↓</button>
+                    <button type="button" onClick={() => handleDeleteBlock(index)}>✕</button>
+                </div>
+            </div>
+
+            {block.type === "paragraph" && (
+                <textarea
+                    className="block-input"
+                    placeholder="Write your text…"
+                    value={block.content}
+                    onChange={(event) => handleBlockChange(index, { content: event.target.value })}
+                    onBlur={() => handleBlockChange(index, {}, true)}
+                />
+            )}
+
+            {block.type === "heading" && (
+                <div className="block-field-row">
+                    <select
+                        className="block-select"
+                        value={block.level}
+                        onChange={(event) => handleBlockChange(index, { level: Number(event.target.value) })}
+                        onBlur={() => handleBlockChange(index, {}, true)}
+                    >
+                        <option value={1}>Heading 1</option>
+                        <option value={2}>Heading 2</option>
+                        <option value={3}>Heading 3</option>
+                        <option value={4}>Heading 4</option>
+                    </select>
+                    <input
+                        className="block-input"
+                        type="text"
+                        placeholder="Heading text"
+                        value={block.content}
+                        onChange={(event) => handleBlockChange(index, { content: event.target.value })}
+                        onBlur={() => handleBlockChange(index, {}, true)}
+                    />
+                </div>
+            )}
+
+            {block.type === "list" && (
+                <>
+                    <div className="block-field-row">
+                        <select
+                            className="block-select"
+                            value={block.ordered ? "ordered" : "unordered"}
+                            onChange={(event) =>
+                                handleBlockChange(index, { ordered: event.target.value === "ordered" })
+                            }
+                            onBlur={() => handleBlockChange(index, {}, true)}
+                        >
+                            <option value="unordered">Bulleted list</option>
+                            <option value="ordered">Numbered list</option>
+                        </select>
+                    </div>
+                    <textarea
+                        className="block-input"
+                        placeholder="List items (one per line)"
+                        value={(block.items || []).join("\n")}
+                        onChange={(event) =>
+                            handleBlockChange(index, {
+                                items: event.target.value.split("\n").length
+                                    ? event.target.value.split("\n")
+                                    : [""]
+                            })
+                        }
+                        onBlur={() => handleBlockChange(index, {}, true)}
+                    />
+                </>
+            )}
+
+            {block.type === "quote" && (
+                <div className="block-field-column">
+                    <textarea
+                        className="block-input"
+                        placeholder="Quote"
+                        value={block.content}
+                        onChange={(event) => handleBlockChange(index, { content: event.target.value })}
+                        onBlur={() => handleBlockChange(index, {}, true)}
+                    />
+                    <input
+                        className="block-input"
+                        type="text"
+                        placeholder="Citation"
+                        value={block.citation}
+                        onChange={(event) => handleBlockChange(index, { citation: event.target.value })}
+                        onBlur={() => handleBlockChange(index, {}, true)}
+                    />
+                </div>
+            )}
+
+            {block.type === "image" && (
+                <div className="block-field-column">
+                    <input
+                        className="block-input"
+                        type="text"
+                        placeholder="Image URL"
+                        value={block.url}
+                        onChange={(event) => handleBlockChange(index, { url: event.target.value })}
+                        onBlur={() => handleBlockChange(index, {}, true)}
+                    />
+                    <input
+                        className="block-input"
+                        type="text"
+                        placeholder="Alt text"
+                        value={block.alt}
+                        onChange={(event) => handleBlockChange(index, { alt: event.target.value })}
+                        onBlur={() => handleBlockChange(index, {}, true)}
+                    />
+                    <input
+                        className="block-input"
+                        type="text"
+                        placeholder="Caption"
+                        value={block.caption}
+                        onChange={(event) => handleBlockChange(index, { caption: event.target.value })}
+                        onBlur={() => handleBlockChange(index, {}, true)}
+                    />
+                </div>
+            )}
+
+            {block.type === "button" && (
+                <div className="block-field-column">
+                    <input
+                        className="block-input"
+                        type="text"
+                        placeholder="Button text"
+                        value={block.text}
+                        onChange={(event) => handleBlockChange(index, { text: event.target.value })}
+                        onBlur={() => handleBlockChange(index, {}, true)}
+                    />
+                    <input
+                        className="block-input"
+                        type="text"
+                        placeholder="Button URL"
+                        value={block.url}
+                        onChange={(event) => handleBlockChange(index, { url: event.target.value })}
+                        onBlur={() => handleBlockChange(index, {}, true)}
+                    />
+                    <select
+                        className="block-select"
+                        value={block.variant}
+                        onChange={(event) => handleBlockChange(index, { variant: event.target.value })}
+                        onBlur={() => handleBlockChange(index, {}, true)}
+                    >
+                        <option value="primary">Primary</option>
+                        <option value="secondary">Secondary</option>
+                    </select>
+                </div>
+            )}
+
+            {block.type === "divider" && <div className="block-divider" />}
+
+            {block.type === "spacer" && (
+                <div className="block-field-row">
+                    <input
+                        className="block-input"
+                        type="number"
+                        min="8"
+                        max="120"
+                        value={block.height}
+                        onChange={(event) =>
+                            handleBlockChange(index, { height: Number(event.target.value) })
+                        }
+                        onBlur={() => handleBlockChange(index, {}, true)}
+                    />
+                    <span className="block-hint">px spacer height</span>
+                </div>
+            )}
+
+            {block.type === "code" && (
+                <textarea
+                    className="block-input block-monospace"
+                    placeholder="Code snippet"
+                    value={block.content}
+                    onChange={(event) => handleBlockChange(index, { content: event.target.value })}
+                    onBlur={() => handleBlockChange(index, {}, true)}
+                />
+            )}
+
+            {block.type === "html" && (
+                <textarea
+                    className="block-input block-monospace"
+                    placeholder="Custom HTML"
+                    value={block.content}
+                    onChange={(event) => handleBlockChange(index, { content: event.target.value })}
+                    onBlur={() => handleBlockChange(index, {}, true)}
+                />
+            )}
+
+            <div className="block-add-row">
+                <button type="button" onClick={() => handleAddBlock(index)}>
+                    + Add block below
+                </button>
+            </div>
+        </div>
+    );
+
     return (
         <div className="form-box">
             <div style={{ position: "relative" }}>
@@ -308,7 +552,7 @@ const CategoryViewform = ({ chapter, categoryId, onUpdate, onCreated }) => {
                     }}
                 />
 
-                <div className="block-editor">
+                <div className="block-editor a4-editor">
                     <div className="block-toolbar">
                         <span className="block-toolbar-title">Blocks</span>
                         <div className="block-toolbar-actions">
@@ -329,209 +573,29 @@ const CategoryViewform = ({ chapter, categoryId, onUpdate, onCreated }) => {
                         </div>
                     </div>
 
-                    {blocks.map((block, index) => (
-                        <div key={block.id} className="block">
-                            <div className="block-controls">
-                                <span className="block-type">
-                                    {BLOCK_TYPES.find((type) => type.value === block.type)?.label}
-                                </span>
-                                <div className="block-controls-actions">
-                                    <button type="button" onClick={() => handleMoveBlock(index, -1)}>↑</button>
-                                    <button type="button" onClick={() => handleMoveBlock(index, 1)}>↓</button>
-                                    <button type="button" onClick={() => handleDeleteBlock(index)}>✕</button>
-                                </div>
+                    <div
+                        className="a4-page a4-measure"
+                        style={{ width: PAGE_WIDTH, height: PAGE_HEIGHT, padding: PAGE_PADDING }}
+                        aria-hidden="true"
+                    >
+                        {blocks.map((block, index) => renderBlock(block, index, { withRef: true }))}
+                    </div>
+
+                    <div className="a4-pages">
+                        {pages.map((pageBlocks, pageIndex) => (
+                            <div
+                                key={`page-${pageIndex}`}
+                                className="a4-page"
+                                style={{ width: PAGE_WIDTH, height: PAGE_HEIGHT, padding: PAGE_PADDING }}
+                            >
+                                {pageBlocks.map((block) => {
+                                    const index = blocks.findIndex((item) => item.id === block.id);
+                                    return renderBlock(block, index);
+                                })}
+                                <div className="a4-page-number">Page {pageIndex + 1}</div>
                             </div>
-
-                            {block.type === "paragraph" && (
-                                <textarea
-                                    className="block-input"
-                                    placeholder="Write your text…"
-                                    value={block.content}
-                                    onChange={(event) => handleBlockChange(index, { content: event.target.value })}
-                                    onBlur={() => handleBlockChange(index, {}, true)}
-                                />
-                            )}
-
-                            {block.type === "heading" && (
-                                <div className="block-field-row">
-                                    <select
-                                        className="block-select"
-                                        value={block.level}
-                                        onChange={(event) => handleBlockChange(index, { level: Number(event.target.value) })}
-                                        onBlur={() => handleBlockChange(index, {}, true)}
-                                    >
-                                        <option value={1}>Heading 1</option>
-                                        <option value={2}>Heading 2</option>
-                                        <option value={3}>Heading 3</option>
-                                        <option value={4}>Heading 4</option>
-                                    </select>
-                                    <input
-                                        className="block-input"
-                                        type="text"
-                                        placeholder="Heading text"
-                                        value={block.content}
-                                        onChange={(event) => handleBlockChange(index, { content: event.target.value })}
-                                        onBlur={() => handleBlockChange(index, {}, true)}
-                                    />
-                                </div>
-                            )}
-
-                            {block.type === "list" && (
-                                <>
-                                    <div className="block-field-row">
-                                        <select
-                                            className="block-select"
-                                            value={block.ordered ? "ordered" : "unordered"}
-                                            onChange={(event) =>
-                                                handleBlockChange(index, { ordered: event.target.value === "ordered" })
-                                            }
-                                            onBlur={() => handleBlockChange(index, {}, true)}
-                                        >
-                                            <option value="unordered">Bulleted list</option>
-                                            <option value="ordered">Numbered list</option>
-                                        </select>
-                                    </div>
-                                    <textarea
-                                        className="block-input"
-                                        placeholder="List items (one per line)"
-                                        value={(block.items || []).join("\n")}
-                                        onChange={(event) =>
-                                            handleBlockChange(index, {
-                                                items: event.target.value.split("\n").length
-                                                    ? event.target.value.split("\n")
-                                                    : [""]
-                                            })
-                                        }
-                                        onBlur={() => handleBlockChange(index, {}, true)}
-                                    />
-                                </>
-                            )}
-
-                            {block.type === "quote" && (
-                                <div className="block-field-column">
-                                    <textarea
-                                        className="block-input"
-                                        placeholder="Quote"
-                                        value={block.content}
-                                        onChange={(event) => handleBlockChange(index, { content: event.target.value })}
-                                        onBlur={() => handleBlockChange(index, {}, true)}
-                                    />
-                                    <input
-                                        className="block-input"
-                                        type="text"
-                                        placeholder="Citation"
-                                        value={block.citation}
-                                        onChange={(event) => handleBlockChange(index, { citation: event.target.value })}
-                                        onBlur={() => handleBlockChange(index, {}, true)}
-                                    />
-                                </div>
-                            )}
-
-                            {block.type === "image" && (
-                                <div className="block-field-column">
-                                    <input
-                                        className="block-input"
-                                        type="text"
-                                        placeholder="Image URL"
-                                        value={block.url}
-                                        onChange={(event) => handleBlockChange(index, { url: event.target.value })}
-                                        onBlur={() => handleBlockChange(index, {}, true)}
-                                    />
-                                    <input
-                                        className="block-input"
-                                        type="text"
-                                        placeholder="Alt text"
-                                        value={block.alt}
-                                        onChange={(event) => handleBlockChange(index, { alt: event.target.value })}
-                                        onBlur={() => handleBlockChange(index, {}, true)}
-                                    />
-                                    <input
-                                        className="block-input"
-                                        type="text"
-                                        placeholder="Caption"
-                                        value={block.caption}
-                                        onChange={(event) => handleBlockChange(index, { caption: event.target.value })}
-                                        onBlur={() => handleBlockChange(index, {}, true)}
-                                    />
-                                </div>
-                            )}
-
-                            {block.type === "button" && (
-                                <div className="block-field-column">
-                                    <input
-                                        className="block-input"
-                                        type="text"
-                                        placeholder="Button text"
-                                        value={block.text}
-                                        onChange={(event) => handleBlockChange(index, { text: event.target.value })}
-                                        onBlur={() => handleBlockChange(index, {}, true)}
-                                    />
-                                    <input
-                                        className="block-input"
-                                        type="text"
-                                        placeholder="Button URL"
-                                        value={block.url}
-                                        onChange={(event) => handleBlockChange(index, { url: event.target.value })}
-                                        onBlur={() => handleBlockChange(index, {}, true)}
-                                    />
-                                    <select
-                                        className="block-select"
-                                        value={block.variant}
-                                        onChange={(event) => handleBlockChange(index, { variant: event.target.value })}
-                                        onBlur={() => handleBlockChange(index, {}, true)}
-                                    >
-                                        <option value="primary">Primary</option>
-                                        <option value="secondary">Secondary</option>
-                                    </select>
-                                </div>
-                            )}
-
-                            {block.type === "divider" && <div className="block-divider" />}
-
-                            {block.type === "spacer" && (
-                                <div className="block-field-row">
-                                    <input
-                                        className="block-input"
-                                        type="number"
-                                        min="8"
-                                        max="120"
-                                        value={block.height}
-                                        onChange={(event) =>
-                                            handleBlockChange(index, { height: Number(event.target.value) })
-                                        }
-                                        onBlur={() => handleBlockChange(index, {}, true)}
-                                    />
-                                    <span className="block-hint">px spacer height</span>
-                                </div>
-                            )}
-
-                            {block.type === "code" && (
-                                <textarea
-                                    className="block-input block-monospace"
-                                    placeholder="Code snippet"
-                                    value={block.content}
-                                    onChange={(event) => handleBlockChange(index, { content: event.target.value })}
-                                    onBlur={() => handleBlockChange(index, {}, true)}
-                                />
-                            )}
-
-                            {block.type === "html" && (
-                                <textarea
-                                    className="block-input block-monospace"
-                                    placeholder="Custom HTML"
-                                    value={block.content}
-                                    onChange={(event) => handleBlockChange(index, { content: event.target.value })}
-                                    onBlur={() => handleBlockChange(index, {}, true)}
-                                />
-                            )}
-
-                            <div className="block-add-row">
-                                <button type="button" onClick={() => handleAddBlock(index)}>
-                                    + Add block below
-                                </button>
-                            </div>
-                        </div>
-                    ))}
+                        ))}
+                    </div>
                 </div>
             </div>
         </div>
