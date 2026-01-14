@@ -315,6 +315,8 @@ const CategoryViewform = ({ chapter, categoryId, onUpdate, onCreated }) => {
         });
     };
 
+    const handleAddBlockToEnd = () => handleAddBlock(blocks.length - 1);
+
     const renderBlock = (block, index, { withRef } = {}) => (
         <div
             key={block.id}
@@ -567,7 +569,7 @@ const CategoryViewform = ({ chapter, categoryId, onUpdate, onCreated }) => {
                                     </option>
                                 ))}
                             </select>
-                            <button type="button" className="block-add" onClick={() => handleAddBlock(blocks.length - 1)}>
+                            <button type="button" className="block-add" onClick={handleAddBlockToEnd}>
                                 + Add block
                             </button>
                         </div>
@@ -614,6 +616,9 @@ const CategoryViewform = ({ chapter, categoryId, onUpdate, onCreated }) => {
                             </div>
                         ))}
                     </div>
+                    <button type="button" className="block-fab" onClick={handleAddBlockToEnd}>
+                        + Add new block
+                    </button>
                 </div>
             </div>
         </div>
