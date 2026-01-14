@@ -109,6 +109,45 @@
     padding-bottom: 12px;
 }
 
+.block-library {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 12px;
+    border-radius: 8px;
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+}
+
+.block-library-title {
+    font-size: 12px;
+    font-weight: 600;
+    color: #475569;
+    text-transform: uppercase;
+}
+
+.block-library-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 8px;
+}
+
+.block-library-item {
+    border: 1px solid #d5dbe7;
+    background: #f8fafc;
+    border-radius: 6px;
+    padding: 8px 10px;
+    font-size: 12px;
+    color: #1f2937;
+    cursor: pointer;
+    text-align: left;
+}
+
+.block-library-item:hover {
+    border-color: #2563eb;
+    color: #1d4ed8;
+}
+
 .block-toolbar-title {
     font-size: 14px;
     font-weight: 600;

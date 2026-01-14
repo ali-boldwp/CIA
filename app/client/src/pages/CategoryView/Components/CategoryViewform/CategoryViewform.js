@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
     useCreateChapterTemplateMutation,
     useUpdateChapterTemplateMutation
@@ -187,7 +187,7 @@ const CategoryViewform = ({ chapter, categoryId, onUpdate, onCreated }) => {
     const [blocks, setBlocks] = useState(() => htmlToBlocks(chapter.content || ""));
     const [addType, setAddType] = useState("paragraph");
     const [pages, setPages] = useState([]);
-    const blockRefs = useMemo(() => [], []);
+    const blockRefs = useRef([]);
 
     useEffect(() => {
         setBlocks(htmlToBlocks(chapter.content || ""));
@@ -201,7 +201,7 @@ const CategoryViewform = ({ chapter, categoryId, onUpdate, onCreated }) => {
             let currentHeight = 0;
 
             blocks.forEach((block, index) => {
-                const height = blockRefs[index]?.offsetHeight || 0;
+                const height = blockRefs.current[index]?.offsetHeight || 0;
 
                 if (currentHeight + height > availableHeight && currentPage.length) {
                     nextPages.push(currentPage);
@@ -221,7 +221,7 @@ const CategoryViewform = ({ chapter, categoryId, onUpdate, onCreated }) => {
         });
 
         return () => window.cancelAnimationFrame(handle);
-    }, [blocks, blockRefs]);
+    }, [blocks]);
 
     // 🔹 CREATE ON BLUR
     const handleTitleBlur = async () => {
@@ -319,7 +319,7 @@ const CategoryViewform = ({ chapter, categoryId, onUpdate, onCreated }) => {
         <div
             key={block.id}
             className="block"
-            ref={withRef ? (element) => { blockRefs[index] = element; } : undefined}
+            ref={withRef ? (element) => { blockRefs.current[index] = element; } : undefined}
         >
             <div className="block-controls">
                 <span className="block-type">
@@ -570,6 +570,24 @@ const CategoryViewform = ({ chapter, categoryId, onUpdate, onCreated }) => {
                             <button type="button" className="block-add" onClick={() => handleAddBlock(blocks.length - 1)}>
                                 + Add block
                             </button>
+                        </div>
+                    </div>
+                    <div className="block-library">
+                        <span className="block-library-title">Block Library</span>
+                        <div className="block-library-grid">
+                            {BLOCK_TYPES.map((type) => (
+                                <button
+                                    key={`library-${type.value}`}
+                                    type="button"
+                                    className="block-library-item"
+                                    onClick={() => {
+                                        setAddType(type.value);
+                                        handleAddBlock(blocks.length - 1);
+                                    }}
+                                >
+                                    {type.label}
+                                </button>
+                            ))}
                         </div>
                     </div>
 
