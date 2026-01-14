@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from "react";
 import { toast } from "react-toastify";
-import { IoMdSettings } from "react-icons/io";
 import {
     useCreateChapterTemplateMutation,
     useUpdateChapterTemplateMutation
@@ -50,6 +49,19 @@ const createBlock = (type = "paragraph") => {
         default:
             return { id, type, content: "" };
     }
+};
+
+const createBlockFromType = (block, nextType) => {
+    if (block.type === nextType) return block;
+    const next = createBlock(nextType);
+    if (block.content && ["paragraph", "heading", "quote", "code", "html"].includes(nextType)) {
+        next.content = block.content;
+    }
+    if (block.items && nextType === "list") {
+        next.items = block.items;
+    }
+    next.id = block.id;
+    return next;
 };
 
 const escapeHtml = (value) =>
@@ -180,14 +192,22 @@ const blocksToHtml = (blocks = []) =>
         })
         .join("");
 
-const BlockToolbar = ({ addType, onAddTypeChange, onAddBlock }) => (
-    <div className={styles.toolbar}>
-        <span className={styles.toolbarTitle}>Blocks</span>
-        <div className={styles.toolbarActions}>
+const BlockCard = ({
+    block,
+    index,
+    onChange,
+    onPersist,
+    onTypeChange,
+    onEnter,
+    containerRef,
+    inputRef
+}) => (
+    <div className={styles.blockCard} ref={containerRef}>
+        <div className={styles.blockControls}>
             <select
-                value={addType}
-                onChange={(event) => onAddTypeChange(event.target.value)}
-                className={styles.select}
+                className={styles.typePicker}
+                value={block.type}
+                onChange={(event) => onTypeChange(index, event.target.value)}
             >
                 {BLOCK_TYPES.map((type) => (
                     <option key={type.value} value={type.value}>
@@ -195,60 +215,17 @@ const BlockToolbar = ({ addType, onAddTypeChange, onAddBlock }) => (
                     </option>
                 ))}
             </select>
-            <button type="button" className={styles.addButton} onClick={onAddBlock}>
-                + Add block
-            </button>
-        </div>
-    </div>
-);
-
-const BlockLibrary = ({ onPick }) => (
-    <div className={styles.library}>
-        <span className={styles.libraryTitle}>Block Library</span>
-        <div className={styles.libraryGrid}>
-            {BLOCK_TYPES.map((type) => (
-                <button
-                    key={`library-${type.value}`}
-                    type="button"
-                    className={styles.libraryItem}
-                    onClick={() => onPick(type.value)}
-                >
-                    {type.label}
-                </button>
-            ))}
-        </div>
-    </div>
-);
-
-const BlockCard = ({
-    block,
-    index,
-    onMove,
-    onDelete,
-    onChange,
-    onPersist,
-    onAddBelow,
-    inputRef
-}) => (
-    <div className={styles.blockCard} ref={inputRef}>
-        <div className={styles.blockControls}>
-            <span className={styles.blockType}>
-                {BLOCK_TYPES.find((type) => type.value === block.type)?.label}
-            </span>
-            <div className={styles.blockActions}>
-                <button type="button" onClick={() => onMove(index, -1)}>↑</button>
-                <button type="button" onClick={() => onMove(index, 1)}>↓</button>
-                <button type="button" onClick={() => onDelete(index)}>✕</button>
-            </div>
         </div>
 
         {block.type === "paragraph" && (
             <textarea
-                className={styles.input}
+                className={`${styles.input} ${styles.paragraph}`}
                 placeholder="Write your text…"
                 value={block.content}
                 onChange={(event) => onChange(index, { content: event.target.value })}
                 onBlur={() => onPersist(index)}
+                onKeyDown={(event) => onEnter(event, index)}
+                ref={inputRef}
             />
         )}
 
@@ -266,12 +243,14 @@ const BlockCard = ({
                     <option value={4}>Heading 4</option>
                 </select>
                 <input
-                    className={styles.input}
+                    className={`${styles.input} ${styles.heading}`}
                     type="text"
                     placeholder="Heading text"
                     value={block.content}
                     onChange={(event) => onChange(index, { content: event.target.value })}
                     onBlur={() => onPersist(index)}
+                    onKeyDown={(event) => onEnter(event, index)}
+                    ref={inputRef}
                 />
             </div>
         )}
@@ -292,7 +271,7 @@ const BlockCard = ({
                     </select>
                 </div>
                 <textarea
-                    className={styles.input}
+                    className={`${styles.input} ${styles.paragraph}`}
                     placeholder="List items (one per line)"
                     value={(block.items || []).join("\n")}
                     onChange={(event) =>
@@ -303,6 +282,8 @@ const BlockCard = ({
                         })
                     }
                     onBlur={() => onPersist(index)}
+                    onKeyDown={(event) => onEnter(event, index)}
+                    ref={inputRef}
                 />
             </>
         )}
@@ -310,19 +291,22 @@ const BlockCard = ({
         {block.type === "quote" && (
             <div className={styles.column}>
                 <textarea
-                    className={styles.input}
+                    className={`${styles.input} ${styles.paragraph}`}
                     placeholder="Quote"
                     value={block.content}
                     onChange={(event) => onChange(index, { content: event.target.value })}
                     onBlur={() => onPersist(index)}
+                    onKeyDown={(event) => onEnter(event, index)}
+                    ref={inputRef}
                 />
                 <input
-                    className={styles.input}
+                    className={`${styles.input} ${styles.paragraph}`}
                     type="text"
                     placeholder="Citation"
                     value={block.citation}
                     onChange={(event) => onChange(index, { citation: event.target.value })}
                     onBlur={() => onPersist(index)}
+                    onKeyDown={(event) => onEnter(event, index)}
                 />
             </div>
         )}
@@ -330,7 +314,7 @@ const BlockCard = ({
         {block.type === "image" && (
             <div className={styles.column}>
                 <input
-                    className={styles.input}
+                    className={`${styles.input} ${styles.paragraph}`}
                     type="text"
                     placeholder="Image URL"
                     value={block.url}
@@ -338,7 +322,7 @@ const BlockCard = ({
                     onBlur={() => onPersist(index)}
                 />
                 <input
-                    className={styles.input}
+                    className={`${styles.input} ${styles.paragraph}`}
                     type="text"
                     placeholder="Alt text"
                     value={block.alt}
@@ -346,7 +330,7 @@ const BlockCard = ({
                     onBlur={() => onPersist(index)}
                 />
                 <input
-                    className={styles.input}
+                    className={`${styles.input} ${styles.paragraph}`}
                     type="text"
                     placeholder="Caption"
                     value={block.caption}
@@ -359,7 +343,7 @@ const BlockCard = ({
         {block.type === "button" && (
             <div className={styles.column}>
                 <input
-                    className={styles.input}
+                    className={`${styles.input} ${styles.paragraph}`}
                     type="text"
                     placeholder="Button text"
                     value={block.text}
@@ -367,7 +351,7 @@ const BlockCard = ({
                     onBlur={() => onPersist(index)}
                 />
                 <input
-                    className={styles.input}
+                    className={`${styles.input} ${styles.paragraph}`}
                     type="text"
                     placeholder="Button URL"
                     value={block.url}
@@ -404,30 +388,28 @@ const BlockCard = ({
         )}
 
         {block.type === "code" && (
-            <textarea
-                className={`${styles.input} ${styles.monospace}`}
-                placeholder="Code snippet"
-                value={block.content}
-                onChange={(event) => onChange(index, { content: event.target.value })}
-                onBlur={() => onPersist(index)}
-            />
-        )}
+                <textarea
+                    className={`${styles.input} ${styles.monospace}`}
+                    placeholder="Code snippet"
+                    value={block.content}
+                    onChange={(event) => onChange(index, { content: event.target.value })}
+                    onBlur={() => onPersist(index)}
+                    onKeyDown={(event) => onEnter(event, index)}
+                    ref={inputRef}
+                />
+            )}
 
-        {block.type === "html" && (
-            <textarea
-                className={`${styles.input} ${styles.monospace}`}
-                placeholder="Custom HTML"
-                value={block.content}
-                onChange={(event) => onChange(index, { content: event.target.value })}
-                onBlur={() => onPersist(index)}
-            />
-        )}
-
-        <div className={styles.addRow}>
-            <button type="button" onClick={() => onAddBelow(index)}>
-                + Add block below
-            </button>
-        </div>
+            {block.type === "html" && (
+                <textarea
+                    className={`${styles.input} ${styles.monospace}`}
+                    placeholder="Custom HTML"
+                    value={block.content}
+                    onChange={(event) => onChange(index, { content: event.target.value })}
+                    onBlur={() => onPersist(index)}
+                    onKeyDown={(event) => onEnter(event, index)}
+                    ref={inputRef}
+                />
+            )}
     </div>
 );
 
@@ -435,9 +417,9 @@ const ChapterEditor = ({ chapter, categoryId }) => {
     const [updateChapterTemplate] = useUpdateChapterTemplateMutation();
     const [createChapterTemplate] = useCreateChapterTemplateMutation();
     const [blocks, setBlocks] = useState(() => htmlToBlocks(chapter.content || ""));
-    const [addType, setAddType] = useState("paragraph");
     const [pages, setPages] = useState([]);
     const blockRefs = useRef([]);
+    const inputRefs = useRef([]);
     const [name, setName] = useState(chapter.name || "");
 
     useEffect(() => {
@@ -529,49 +511,52 @@ const ChapterEditor = ({ chapter, categoryId }) => {
         return index;
     };
 
-    const handleMoveBlock = (index, direction) => {
-        setBlocks((prev) => {
-            const next = [...prev];
-            const newIndex = index + direction;
-            if (newIndex < 0 || newIndex >= next.length) return prev;
-            const [moved] = next.splice(index, 1);
-            next.splice(newIndex, 0, moved);
-            updateContent(next, true);
-            return next;
-        });
-    };
-
-    const handleDeleteBlock = (index) => {
-        setBlocks((prev) => {
-            const next = prev.filter((_, idx) => idx !== index);
-            const normalized = next.length ? next : [createBlock("paragraph")];
-            updateContent(normalized, true);
-            return normalized;
-        });
-    };
-
     const handleAddBlock = (index = blocks.length) => {
+        const nextBlock = createBlock("paragraph");
         setBlocks((prev) => {
             const next = [...prev];
-            next.splice(index + 1, 0, createBlock(addType));
+            next.splice(index + 1, 0, nextBlock);
             updateContent(next, true);
             return next;
         });
     };
 
-    const handleAddBlockToEnd = () => handleAddBlock(blocks.length - 1);
+    const handleEnter = (event, index) => {
+        if (event.key !== "Enter" || event.shiftKey) return;
+        event.preventDefault();
+        handleAddBlock(index);
+        window.requestAnimationFrame(() => {
+            inputRefs.current[index + 1]?.focus();
+        });
+    };
+
+    const handleTypeChange = (index, nextType) => {
+        setBlocks((prev) => {
+            const next = prev.map((block, idx) =>
+                idx === index ? createBlockFromType(block, nextType) : block
+            );
+            updateContent(next, true);
+            return next;
+        });
+    };
 
     const renderBlock = (block, index, withRef = false) => (
         <BlockCard
             key={block.id}
             block={block}
             index={index}
-            onMove={handleMoveBlock}
-            onDelete={handleDeleteBlock}
             onChange={handleBlockChange}
             onPersist={handlePersistBlock}
-            onAddBelow={handleAddBlock}
-            inputRef={withRef ? (element) => { blockRefs.current[index] = element; } : undefined}
+            onTypeChange={handleTypeChange}
+            onEnter={handleEnter}
+            containerRef={(element) => {
+                if (withRef) {
+                    blockRefs.current[index] = element;
+                }
+            }}
+            inputRef={(element) => {
+                inputRefs.current[index] = element;
+            }}
         />
     );
 
@@ -590,22 +575,9 @@ const ChapterEditor = ({ chapter, categoryId }) => {
                             : handleTitleBlur()
                     }
                 />
-                <IoMdSettings className={styles.settingsIcon} />
             </div>
 
             <div className={styles.editor}>
-                <BlockToolbar
-                    addType={addType}
-                    onAddTypeChange={setAddType}
-                    onAddBlock={handleAddBlockToEnd}
-                />
-                <BlockLibrary
-                    onPick={(type) => {
-                        setAddType(type);
-                        handleAddBlockToEnd();
-                    }}
-                />
-
                 <div
                     className={`${styles.page} ${styles.pageMeasure}`}
                     style={{ width: PAGE_WIDTH, height: PAGE_HEIGHT, padding: PAGE_PADDING }}
@@ -629,10 +601,6 @@ const ChapterEditor = ({ chapter, categoryId }) => {
                         </div>
                     ))}
                 </div>
-
-                <button type="button" className={styles.fab} onClick={handleAddBlockToEnd}>
-                    + Add new block
-                </button>
             </div>
         </div>
     );

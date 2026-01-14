@@ -1,5 +1,4 @@
 import Layout from "../../../../../layouts/Template";
-import View from "./View";
 import { useParams } from "react-router-dom";
 import {
     useGetCategoryByIdQuery,
@@ -11,7 +10,7 @@ import BlockEditor from "./BlockEditor";
 const Template = () => {
     const { id: categoryId } = useParams();
 
-    const { data, isLoading, refetch } = useGetCategoryByIdQuery(categoryId, {
+    const { isLoading } = useGetCategoryByIdQuery(categoryId, {
         skip: !categoryId
     });
 
@@ -39,11 +38,6 @@ const Template = () => {
             loading={isLoading}
             content={
                 <>
-                    <View
-                        data={data?.data}
-                        categoryId={categoryId}
-                        onChapterCreated={refetch}
-                    />
                     <BlockEditor chapters={chapters} categoryId={categoryId} />
                 </>
             }
