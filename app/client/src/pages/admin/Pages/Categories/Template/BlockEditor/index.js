@@ -3,7 +3,7 @@ import { toast } from "react-toastify";
 import {
     useCreateChapterTemplateMutation,
     useUpdateChapterTemplateMutation
-} from "../../../../../services/categoryApi";
+} from "../../../../../../services/categoryApi";
 import styles from "./style.module.css";
 
 const BLOCK_TYPES = [
