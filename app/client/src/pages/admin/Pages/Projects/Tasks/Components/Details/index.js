@@ -227,7 +227,9 @@ const Details = (
                     </button>
 
 
-                    <button className="project-btn">
+                    <button className="project-btn"
+                            onClick={() => window.open("http://192.168.0.117:5021", "_blank")}
+                    >
                         Cauta in Notes App
                     </button>
 
