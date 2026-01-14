@@ -253,7 +253,7 @@ const Item = ({ data, refetchProjects }) => {
                         const zile=isExpired ?"depășit":daysText;
                     return (
                         <div className={className}>
-                            <span className={isExpired ? `expired` : `deadline-date`}>{date} {zile}</span>
+                            <span className={isExpired ? `expired` : `deadline-date`}>{date} -  {zile}</span>
                         </div>
                     );
                 })()}
