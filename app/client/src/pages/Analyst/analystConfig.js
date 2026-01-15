@@ -36,9 +36,13 @@ const analystConfig = {
                             element: <ProjectSearch />
                         },
                         {
-                            path: 'view/:id',
+                            path: 'view/:id/tasks',
                             element: <ProjectTasks />
                         },
+                        // {
+                        //     path: 'view/:id/tasks',
+                        //     element: <ProjectTasks />
+                        // },
                         {
                             path: 'view/:id/tasks/:taskId/progress',
                             element: <ViewTask/>
