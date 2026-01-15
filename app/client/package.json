@@ -5,6 +5,12 @@
   "dependencies": {
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.1",
+    "@editorjs/editorjs": "^2.30.0",
+    "@editorjs/header": "^2.8.1",
+    "@editorjs/image": "^2.10.0",
+    "@editorjs/list": "^2.0.0",
+    "@editorjs/paragraph": "^2.11.0",
+    "@editorjs/table": "^2.4.4",
     "@fontsource/inter": "^5.2.8",
     "@hello-pangea/dnd": "^18.0.1",
     "@hookform/resolvers": "^5.2.2",
