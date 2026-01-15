@@ -84,7 +84,6 @@
 .editorHolder :global(.shortcodeLabel) {
     font-size: 12px;
     font-weight: 600;
-    color: #1F2937;
     text-transform: uppercase;
     letter-spacing: 0.04em;
 }
