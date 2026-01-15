@@ -70,3 +70,34 @@
 .editorHolder :global(.ce-block__content) {
     max-width: 100%;
 }
+
+.editorHolder :global(.shortcodeBlock) {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 12px;
+    border: 1px dashed #CBD5F5;
+    border-radius: 8px;
+    background: #F8FAFF;
+}
+
+.editorHolder :global(.shortcodeLabel) {
+    font-size: 12px;
+    font-weight: 600;
+    color: #1F2937;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.editorHolder :global(.shortcodeInput) {
+    border: 1px solid #D1D5DB;
+    border-radius: 6px;
+    padding: 8px 10px;
+    font-size: 14px;
+    font-family: "Inter", sans-serif;
+}
+
+.editorHolder :global(.shortcodeInput):focus {
+    outline: 2px solid #1D4ED8;
+    outline-offset: 2px;
+}

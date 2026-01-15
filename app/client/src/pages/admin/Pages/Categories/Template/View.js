@@ -21,6 +21,7 @@ import List from "@editorjs/list";
 import Table from "@editorjs/table";
 import ImageTool from "@editorjs/image";
 import Paragraph from "@editorjs/paragraph";
+import ShortcodeTool from "./EditorTools/ShortcodeTool";
 import { toast } from "react-toastify";
 import { useUpdateCategoryMutation } from "../../../../../services/categoryApi";
 
@@ -138,6 +139,9 @@ const View = ({ data, categoryId, onChapterCreated }) => {
                 table: {
                     class: Table,
                     inlineToolbar: true,
+                },
+                shortcode: {
+                    class: ShortcodeTool,
                 },
                 image: {
                     class: ImageTool,
