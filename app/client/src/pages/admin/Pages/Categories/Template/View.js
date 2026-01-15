@@ -14,7 +14,15 @@ import TableRecordsPopup from "./Popup/TableRecords";
 
 
 import styles from "./style.module.css";
-import {useState , useEffect} from "react";
+import { useMemo, useRef, useState, useEffect } from "react";
+import EditorJS from "@editorjs/editorjs";
+import HeaderTool from "@editorjs/header";
+import List from "@editorjs/list";
+import Table from "@editorjs/table";
+import ImageTool from "@editorjs/image";
+import Paragraph from "@editorjs/paragraph";
+import { toast } from "react-toastify";
+import { useUpdateCategoryMutation } from "../../../../../services/categoryApi";
 
 const View = ({ data, categoryId, onChapterCreated }) => {
 
@@ -49,13 +57,161 @@ const View = ({ data, categoryId, onChapterCreated }) => {
     // For Set Data According to drag and drop
 
     const [localData, setLocalData] = useState(null);
+    const [documentData, setDocumentData] = useState(null);
+    const [savingDocument, setSavingDocument] = useState(false);
+    const editorRef = useRef(null);
+    const editorHolderId = useMemo(
+        () => `category-template-editor-${categoryId || "new"}`,
+        [categoryId]
+    );
+    const [updateCategory] = useUpdateCategoryMutation();
 
     useEffect(() => {
         setLocalData(data);
     }, [data]);
 
-    if (!localData) return null;
+    const getInitialDocumentData = (content) => {
+        if (!content) {
+            return {
+                time: Date.now(),
+                blocks: [{ type: "paragraph", data: { text: "" } }],
+                version: "2.30.0",
+            };
+        }
 
+        if (typeof content === "string") {
+            try {
+                const parsed = JSON.parse(content);
+                if (parsed?.blocks) return parsed;
+            } catch (error) {
+                console.warn("Document content is not JSON, using plain text.", error);
+            }
+
+            return {
+                time: Date.now(),
+                blocks: [{ type: "paragraph", data: { text: content } }],
+                version: "2.30.0",
+            };
+        }
+
+        if (content?.blocks) return content;
+
+        return {
+            time: Date.now(),
+            blocks: [{ type: "paragraph", data: { text: "" } }],
+            version: "2.30.0",
+        };
+    };
+
+    useEffect(() => {
+        if (!localData) return;
+
+        const initialData = getInitialDocumentData(data?.content);
+        setDocumentData(initialData);
+
+        if (editorRef.current) {
+            editorRef.current.destroy();
+            editorRef.current = null;
+        }
+
+        editorRef.current = new EditorJS({
+            holder: editorHolderId,
+            data: initialData,
+            placeholder: "Start typing your document...",
+            tools: {
+                paragraph: {
+                    class: Paragraph,
+                    inlineToolbar: true,
+                },
+                header: {
+                    class: HeaderTool,
+                    inlineToolbar: true,
+                    config: {
+                        levels: [2, 3, 4],
+                        defaultLevel: 2,
+                    },
+                },
+                list: {
+                    class: List,
+                    inlineToolbar: true,
+                },
+                table: {
+                    class: Table,
+                    inlineToolbar: true,
+                },
+                image: {
+                    class: ImageTool,
+                    config: {
+                        uploader: {
+                            uploadByFile: (file) => {
+                                return new Promise((resolve, reject) => {
+                                    const reader = new FileReader();
+                                    reader.onload = () => {
+                                        resolve({
+                                            success: 1,
+                                            file: {
+                                                url: reader.result,
+                                            },
+                                        });
+                                    };
+                                    reader.onerror = () => reject(reader.error);
+                                    reader.readAsDataURL(file);
+                                });
+                            },
+                        },
+                    },
+                },
+            },
+            onChange: async () => {
+                if (!editorRef.current) return;
+                const latestData = await editorRef.current.save();
+                setDocumentData(latestData);
+            },
+        });
+
+        return () => {
+            if (editorRef.current) {
+                editorRef.current.destroy();
+                editorRef.current = null;
+            }
+        };
+    }, [data?.content, editorHolderId, localData]);
+
+    const handleDocumentSave = async () => {
+        if (!categoryId) {
+            toast.error("Category ID missing");
+            return;
+        }
+
+        setSavingDocument(true);
+
+        try {
+            const latestData = editorRef.current
+                ? await editorRef.current.save()
+                : documentData;
+
+            await toast.promise(
+                updateCategory({
+                    id: categoryId,
+                    title: localData?.title || data?.title || "",
+                    content: JSON.stringify(latestData || {}),
+                }).unwrap(),
+                {
+                    pending: "Se salvează...",
+                    success: "Document actualizat cu succes",
+                    error: "Actualizarea a eșuat",
+                }
+            );
+
+            if (typeof onChapterCreated === "function") onChapterCreated();
+        } catch (e) {
+            console.error("Document save error:", e);
+        } finally {
+            setSavingDocument(false);
+        }
+    };
+
+    if (!localData) return null;
 
 
 
@@ -157,6 +313,25 @@ const View = ({ data, categoryId, onChapterCreated }) => {
                             onTitleClick={() => setTitlePopup(true)}
                         />
 
+                        <div className={styles.editorSection}>
+                            <div className={styles.editorHeader}>
+                                <h2 className={styles.editorTitle}>Document Editor</h2>
+                                <button
+                                    className={styles.editorSaveBtn}
+                                    onClick={handleDocumentSave}
+                                    disabled={savingDocument}
+                                >
+                                    {savingDocument ? "Se salvează..." : "Salvează document"}
+                                </button>
+                            </div>
+
+                            <div className={styles.editorWrap}>
+                                <div
+                                    id={editorHolderId}
+                                    className={styles.editorHolder}
+                                />
+                            </div>
+                        </div>
 
                     </div>
                 </div>
