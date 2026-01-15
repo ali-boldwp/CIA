@@ -48,6 +48,9 @@ const Messenger = () => {
                         data={ data }
                         chats={ chats }
                         refetchChats={ refetchChats }
+                        auditData={auditData}
+                        auditLoading={auditLoading}
+                        auditError={auditError}
                     />
                 </div>
             }

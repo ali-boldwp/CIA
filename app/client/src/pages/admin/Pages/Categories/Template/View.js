@@ -56,7 +56,6 @@ const View = ({ data, categoryId, onChapterCreated }) => {
 
     if (!localData) return null;
 
-    ;
 
 
 

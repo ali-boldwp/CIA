@@ -36,7 +36,10 @@ const MessengerPage = ({
                            chatID,
                            data,
                            chats,
-                           refetchChats
+                           refetchChats,
+                           auditData,
+                           auditLoading,
+                           auditError
                        }) => {
 
     const {id: ChatID} = useParams();
@@ -259,11 +262,27 @@ const MessengerPage = ({
         const currentChat = chats.data.find(c => c._id === chat);
         if (!currentChat || !currentChat.isGroup) return [];
 
-        return currentChat.participants.map(p => {
-            const user = allUsers.data.find(u => u._id === p.user);
-            return user ? {id: user._id, name: user.name} : null;
-        }).filter(Boolean);
+        return currentChat.participants
+            .map(p => {
+                if (p.user && typeof p.user === "object") {
+                    return {
+                        id: p.user._id,
+                        name: p.user.name
+                    };
+                }
+
+                const user = allUsers.data.find(u => u._id === p.user);
+                return user
+                    ? { id: user._id, name: user.name }
+                    : null;
+            })
+            .filter(Boolean);
     };
+
+
+
+
+
 
 
     const handleRemoveMember = async (userId) => {
@@ -719,7 +738,7 @@ const MessengerPage = ({
                             </div>
                         )}
 
-                        {/*<div className="sidebar-right-section">
+                        <div className="sidebar-right-section">
                             <div className="section-subtitle">Log audit</div>
 
                             <ul className="audit-list">
@@ -745,7 +764,7 @@ const MessengerPage = ({
                                     </li>
                                 ))}
                             </ul>
-                        </div>*/}
+                        </div>
 
 
                         {showGroupActions && (
