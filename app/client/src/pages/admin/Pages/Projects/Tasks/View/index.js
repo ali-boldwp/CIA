@@ -5,6 +5,7 @@ import {useGetCreateProjectByIdQuery} from "../../../../../../services/projectAp
 import TaskView from "./Components/TaskView";
 import Header from "../../../../Components/Header";
 import ProjectHeader from "../../../../../Components/Project/Components/HeaderTask"
+import GeneralInformation from "./Components/Pages/societatea-abc/GeneralInformation";
 
 const ViewTask = () => {
 
@@ -24,7 +25,9 @@ const ViewTask = () => {
                 }
             }
             content={
-                <TaskView/>
+
+            <GeneralInformation/>
+                // <TaskView/>
 
             }
         />

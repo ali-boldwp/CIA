@@ -1,0 +1,185 @@
+.editableTable {
+    background-color: white;
+    border-radius: 8px;
+    padding: 25px;
+    margin-bottom: 30px;
+    box-shadow: 0 3px 15px rgba(0, 0, 0, 0.05);
+    border: 1px solid #e8e8e8;
+}
+
+.tableTitle {
+    color: #2c3e50;
+    font-size: 22px;
+    font-weight: 600;
+    margin-bottom: 25px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #3498db;
+}
+
+.tableContainer {
+    overflow-x: auto;
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+.tableHeader {
+    text-align: left;
+    padding: 20px !important;
+    background-color: #f8f9fa;
+    border-bottom: 2px solid #dee2e6;
+    font-weight: 600;
+    color: #2c3e50;
+    font-size: 15px;
+    white-space: nowrap;
+}
+
+.tableRow {
+    border-bottom: 1px solid #ecf0f1;
+    transition: background-color 0.2s;
+    border-radius: 10px !important;
+}
+
+.tableRow:hover {
+    background-color: #c6196f !important;
+}
+
+.tableCell {
+    padding: 15px;
+    color: #34495e;
+    font-size: 14px;
+    min-width: 150px;
+    cursor: text;
+    position: relative;
+    vertical-align: top;
+}
+th:first-child,td:first-child{
+    width:30%;
+    text-align:start;
+}
+.checkboxCell {
+    min-width: 80px;
+    text-align: center;
+}
+
+.cellValue {
+    display: block;
+    min-height: 20px;
+    color: #7f8c8d;
+    font-style: italic;
+}
+
+.textInput {
+    width: 100%;
+    padding: 8px 10px;
+    border: 1px solid #3498db;
+    border-radius: 4px;
+    font-size: 14px;
+    color: #2c3e50;
+    background-color: #fff;
+}
+
+.textInput:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+}
+
+.selectInput {
+    width: 100%;
+    padding: 8px 10px;
+    border: 1px solid #3498db;
+    border-radius: 4px;
+    font-size: 14px;
+    color: #2c3e50;
+    background-color: #fff;
+    cursor: pointer;
+}
+
+.dateInput {
+    width: 100%;
+    padding: 8px 10px;
+    border: 1px solid #3498db;
+    border-radius: 4px;
+    font-size: 14px;
+    color: #2c3e50;
+    background-color: #fff;
+    font-family: inherit;
+}
+
+.checkboxContainer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+.checkboxInput {
+    position: absolute;
+    opacity: 0;
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    z-index: 2;
+}
+
+.checkboxDisplay {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    width: 20px;
+    height: 20px;
+    margin: 0 auto;
+}
+
+.checkboxSymbol {
+    font-size: 20px;
+    color: #95a5a6;
+}
+
+.checkmark {
+    position: absolute;
+    font-size: 16px;
+    color: #27ae60;
+    font-weight: bold;
+}
+
+.addButtonContainer {
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px dashed #bdc3c7;
+}
+
+.addButton {
+    display: inline-flex;
+    align-items: center;
+    padding: 10px 20px;
+    background-color: #3498db;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 15px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.addButton:hover {
+    background-color: #2980b9;
+}
+
+.addIcon {
+    font-size: 20px;
+    margin-right: 8px;
+    font-weight: bold;
+}
+
+.imageDescription {
+    color: #7f8c8d;
+    font-style: italic;
+    margin-top: 10px;
+    font-size: 14px;
+}
