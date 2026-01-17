@@ -1,0 +1,64 @@
+.navigation {
+    margin: 40px 0;
+    padding: 25px;
+    background-color: white;
+    border-radius: 10px;
+
+}
+
+.navButtons {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    width: 800px;
+}
+
+.saveButton {
+    display: inline-flex;
+    align-items: center;
+    padding: 14px 30px;
+    background-color: #10B981;
+    color: white;
+    border: 1px solid #10B981;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+    flex: 1;
+    width: 197px !important;
+    justify-content: center;
+}
+
+
+
+.nextButton {
+    display: inline-flex;
+    align-items: center;
+    padding: 14px 30px;
+    background-color: #FFFFFF;
+    color: #2563EB;
+    border: 1px solid #2563EB;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s;
+    flex: 1;
+    font-style: italic;
+    width: 282px;
+    height: 44px;
+    justify-content: center;
+}
+
+
+
+.saveIcon {
+    font-size: 20px;
+    margin-right: 12px;
+}
+
+.arrowIcon {
+    font-size: 20px;
+    margin-left: 12px;
+}
