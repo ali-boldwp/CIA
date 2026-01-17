@@ -125,7 +125,7 @@ const Index = () => {
                         ))}
                         </tbody>
                     </table>
-                    <button className={styles.addButton}>Adaugă nouă</button>
+                    <button className={styles.addButton}>➕ Adauga rand</button>
                 </div>
 
                 {/* Section Title */}
@@ -166,7 +166,7 @@ const Index = () => {
                         </tr>
                         </tbody>
                     </table>
-                    <button className={styles.addButton}>Adaugă nouă</button>
+                    <button className={styles.addButton}>➕ Adauga rand</button>
                 </div>
 
                 {/* Section Title */}
@@ -207,11 +207,14 @@ const Index = () => {
                         </tr>
                         </tbody>
                     </table>
-                    <button className={styles.addButton}>Adaugă nouă</button>
+                    <div className={styles.buttonContainer}>
+                        <button className={styles.addButton}>➕ Adauga rand</button>
+                        <button className={styles.deleteTableButton}>🗑️ Elimina tabel</button>
+                    </div>
                 </div>
 
                 {/* Section Title */}
-                <h3 className={styles.sectionTitle}>️🏛️ CONSILIU DE ADMINISTRATIE</h3>
+                <h3 className={styles.sectionTitle}>🏛️ CONSILIU DE ADMINISTRATIE</h3>
 
                 {/* Board of Directors Table */}
                 <div className={styles.tableContainer}>
@@ -254,9 +257,11 @@ const Index = () => {
                             </td>
                         </tr>
                         </tbody>
-
                     </table>
-                    <button className={styles.addButton}>Adaugă nouă</button>
+                    <div className={styles.buttonContainer}>
+                        <button className={styles.addButton}>➕ Adauga rand</button>
+                        <button className={styles.deleteTableButton}>🗑️ Elimina tabel</button>
+                    </div>
                 </div>
 
                 {/* Section Title */}
@@ -303,19 +308,23 @@ const Index = () => {
                             </td>
                         </tr>
                         </tbody>
-
                     </table>
-                    <button className={styles.addButton}>Adaugă nouă</button>
+                    <button className={styles.addButton}>➕ Adauga rand</button>
                 </div>
 
                 {/* Images/Graphics Section */}
                 <div className={styles.imagesSection}>
                     <h3 className={styles.sectionTitle}>🖼️ Imagini / grafice</h3>
                     <ImagePlaceholder />
+                    <Navigation />
                 </div>
 
-                {/* Navigation Buttons */}
-                <Navigation />
+                {/* Note Section */}
+                <div className={styles.noteSection}>
+                    <p className={styles.noteText}>
+                        Nota: Tabelele ‘Conducere/Administratori’ si ‘Consiliu de Administratie’ pot fi eliminate daca nu se aplica.
+                    </p>
+                </div>
 
             </div>
         </div>

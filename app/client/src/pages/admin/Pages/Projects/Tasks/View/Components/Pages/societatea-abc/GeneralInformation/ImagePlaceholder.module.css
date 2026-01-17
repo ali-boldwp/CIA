@@ -60,14 +60,20 @@
 }
 
 .addImageButton {
-    display: inline-flex;
-    align-items: center;
-    padding: 12px 25px;
-    color: white;
+    background-color: #3B82F6;
+    color: #FFFFFF;
     border: none;
-    border-radius: 6px;
-    font-size: 15px;
+    width: 240px;
+    height: 40px;
+    border-radius: 12px;
+    font-size: 18px;
+    font-weight: 700;
     cursor: pointer;
+    border: 1px solid #3B82F6;
+}
+
+.addImageButton:hover {
+    background-color:#2563EB;
 }
 
 
