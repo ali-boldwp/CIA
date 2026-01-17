@@ -33,13 +33,22 @@ const Index = () => {
 
 
                 {/* Navigation Buttons */}
+
                 <div className={styles.navigation}>
-                    <button className={styles.saveButton}>
-                        💾 Salveaza sectiunea
-                    </button>
-                    <button className={styles.nextButton}>
-                        ➡️ Mergi la 1.5 „Sector"
-                    </button>
+                    <div className={styles.navButtons}>
+                        <button className={styles.saveButton}>
+                            <span className={styles.saveIcon}>💾</span>
+                            Salveaza sectiunea
+                        </button>
+                        <button className={styles.middleButton}>
+                            ❌  Exclude acest capitol
+                            <span className={styles.arrowIcon}>→</span>
+                        </button>
+                        <button className={styles.nextButton}>
+                            ➡️  Mergi la I.3. „Date fianciare”
+                            <span className={styles.arrowIcon}>→</span>
+                        </button>
+                    </div>
                 </div>
 
             </div>

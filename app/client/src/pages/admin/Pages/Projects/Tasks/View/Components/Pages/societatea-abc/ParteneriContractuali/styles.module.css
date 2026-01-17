@@ -12,23 +12,42 @@
 
 /* Navigation */
 .navigation {
-    margin-top: 40px;
-    padding-top: 25px;
+    margin: 40px 0;
+
+    background-color: white;
+    border-radius: 10px;
+
+}
+
+.navButtons {
     display: flex;
-    justify-content: space-between;
+    gap: 20px;
     flex-wrap: wrap;
-    gap: 15px;
+    justify-content: start;
+    width:60%;
 }
-
-.sectionWrapper {
-    margin-bottom: 80px; /* gap create karega */
+.middleButton{
+    display: inline-flex;
+    align-items: center;
+    width: 240px;
+    height: 40px;
+    background-color: #FFFFFF;
+    color: #64748B;
+    border: 1px solid #E5E7EB;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s;
+    flex: 1;
+    font-style: italic;
+    justify-content: center;
 }
-
 .saveButton {
     display: inline-flex;
     align-items: center;
-    gap: 10px;
-    padding: 14px 30px;
+    width: 240px;
+    height: 40px;
     background-color: #10B981;
     color: white;
     border: 1px solid #10B981;
@@ -37,17 +56,17 @@
     font-weight: 600;
     cursor: pointer;
     transition: all 0.3s;
+    flex: 1;
+    justify-content: center;
 }
 
-.saveButton:hover {
-    background-color: #059669;
-}
+
 
 .nextButton {
     display: inline-flex;
     align-items: center;
-    gap: 10px;
-    padding: 14px 30px;
+    width: 240px;
+    height: 40px;
     background-color: #FFFFFF;
     color: #2563EB;
     border: 1px solid #2563EB;
@@ -56,11 +75,21 @@
     font-weight: 700;
     cursor: pointer;
     transition: all 0.3s;
+    flex: 1;
     font-style: italic;
+    justify-content: center;
 }
 
-.nextButton:hover {
-    background-color: #f0f7ff;
+
+
+.saveIcon {
+    font-size: 20px;
+    margin-right: 12px;
+}
+
+.arrowIcon {
+    font-size: 20px;
+    margin-left: 12px;
 }
 
 /* Responsive adjustments */
