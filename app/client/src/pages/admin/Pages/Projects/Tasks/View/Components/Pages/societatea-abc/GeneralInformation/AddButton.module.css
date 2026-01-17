@@ -1,0 +1,26 @@
+.addButton {
+    display: inline-flex;
+    align-items: center;
+    padding: 12px 24px;
+    background-color: #3498db;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s;
+    margin: 10px 0;
+}
+
+.addButton:hover {
+    background-color: #2980b9;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.addIcon {
+    font-size: 22px;
+    margin-right: 10px;
+    font-weight: bold;
+}

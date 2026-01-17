@@ -1,9 +1,268 @@
 import React from 'react';
+import EditableTable from './EditableTable';
+import ImagePlaceholder from './ImagePlaceholder';
+import Navigation from './Navigation';
+import './styles.css';
 
 const Index = () => {
+    const generalProfileColumns = [
+        { name: "CRITERIU", type: "text" },
+        { name: "DETALII", type: "text" }
+    ];
+
+    // General Company Profile initial data
+    const generalProfileData = [
+        [
+            { value: "Denumire societate", type: "text" },
+            { value: "", type: "text" }
+        ],
+        [
+            { value: "Cod unic de inregistrare (CUI)", type: "text" },
+            { value: "", type: "text" }
+        ],
+        [
+            { value: "Numar de inmatriculare", type: "text" },
+            { value: "", type: "text" }
+        ],
+        [
+            { value: "Data infiintarii", type: "text" },
+            { value: "", type: "text" }
+        ],
+        [
+            { value: "Adresa sediu social", type: "text" },
+            { value: "", type: "text" }
+        ],
+        [
+            { value: "Obiect principal de activitate (cod CAEN)", type: "text" },
+            { value: "", type: "text" }
+        ],
+        [
+            { value: "Cifra de afaceri (an 2024)", type: "text" },
+            { value: "", type: "text", hasCheckbox: true }
+        ],
+        [
+            { value: "Profit net (an 2024)", type: "text" },
+            { value: "", type: "text", hasCheckbox: true }
+        ],
+        [
+            { value: "Numar mediu angajati", type: "text" },
+            { value: "", type: "text", hasCheckbox: true }
+        ]
+    ];
+
+    // Shareholder Structure columns
+    const shareholderColumns = [
+        { name: "ACTIONAR", type: "text", defaultValue: "[nume actionar]" },
+        { name: "CALITATE DETINUTA", type: "select", defaultValue: "" },
+        { name: "COTA-PARTE", type: "text", defaultValue: "[%]" }
+    ];
+
+    // Management/Administrators columns
+    const managementColumns = [
+        { name: "NUME / DENUMIRE", type: "text", defaultValue: "[nume]" },
+        { name: "CALITATE DETINUTA", type: "select", defaultValue: "" },
+        { name: "DATA NUMIRE", type: "date", defaultValue: "" }
+    ];
+
+    // Board of Directors columns
+    const boardColumns = [
+        { name: "NUME / DENUMIRE", type: "text", defaultValue: "[nume]" },
+        { name: "CALITATE DETINUTA", type: "select", defaultValue: "" },
+        { name: "DATA INCEPUT MANDAT", type: "date", defaultValue: "" },
+        { name: "DATA SFARSIT MANDAT", type: "date", defaultValue: "" }
+    ];
+
+    // Locations/Workpoints columns
+    const locationColumns = [
+        { name: "TIP", type: "text", defaultValue: "Punct de lucru permanent" },
+        { name: "ADRESA", type: "text", defaultValue: "[text editabil]" },
+        { name: "ACT JURIDIC", type: "text", defaultValue: "[text editabil]" },
+        { name: "PERIOADA", type: "text", defaultValue: "[perioada]" }
+    ];
+
     return (
-        <div>
-            General Information
+        <div className="container">
+            {/* Single Main Card Container with everything inside */}
+            <div className="main-card">
+
+                {/* Main Title */}
+                <h1 className="main-title">I. Societatea ABC | 1. Informatii generale</h1>
+
+                {/* Section Title */}
+                <h3 className="section-title">📋 PROFIL GENERAL AL COMPANIEI</h3>
+
+                {/* General Company Profile Table */}
+                <div className="table-container">
+                    <table className="editable-table">
+                        <thead>
+                        <tr>
+                            <th>CRITERIU</th>
+                            <th>DETALII</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {generalProfileData.map((row, rowIndex) => (
+                            <tr key={rowIndex}>
+                                {row.map((cell, cellIndex) => (
+                                    <td key={cellIndex}>
+                                        {cell.hasCheckbox ? (
+                                            <div className="checkbox-cell">
+                                                <input type="checkbox" />
+                                                <span>{cell.value}</span>
+                                            </div>
+                                        ) : (
+                                            cell.value
+                                        )}
+                                    </td>
+                                ))}
+                            </tr>
+                        ))}
+                        </tbody>
+                    </table>
+                    <button className="add-button">Adaugă nouă</button>
+                </div>
+
+                {/* Section Title */}
+                <h3 className="section-title">STRUCTURA ACTIONARIATULUI</h3>
+
+                {/* Shareholder Structure Table */}
+                <div className="table-container">
+                    <table className="editable-table">
+                        <thead>
+                        <tr>
+                            <th>ACTIONAR</th>
+                            <th>CALITATE DETINUTA</th>
+                            <th>COTA-PARTE</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td>[nume actionar]</td>
+                            <td>
+                                <select>
+                                    <option value="">Selectează</option>
+                                    <option value="actionar">Acționar</option>
+                                    <option value="admin">Administrator</option>
+                                </select>
+                            </td>
+                            <td>[%]</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <button className="add-button">Adaugă nouă</button>
+                </div>
+
+                {/* Section Title */}
+                <h3 className="section-title">CONDUCERE / ADMINISTRATORI</h3>
+
+                {/* Management/Administrators Table */}
+                <div className="table-container">
+                    <table className="editable-table">
+                        <thead>
+                        <tr>
+                            <th>NUME / DENUMIRE</th>
+                            <th>CALITATE DETINUTA</th>
+                            <th>DATA NUMIRE</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td>[nume]</td>
+                            <td>
+                                <select>
+                                    <option value="">Selectează</option>
+                                    <option value="director">Director</option>
+                                    <option value="manager">Manager</option>
+                                </select>
+                            </td>
+                            <td>
+                                <input type="date" />
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <button className="add-button">Adaugă nouă</button>
+                </div>
+
+                {/* Section Title */}
+                <h3 className="section-title">CONSILIU DE ADMINISTRATIE</h3>
+
+                {/* Board of Directors Table */}
+                <div className="table-container">
+                    <table className="editable-table">
+                        <thead>
+                        <tr>
+                            <th>NUME / DENUMIRE</th>
+                            <th>CALITATE DETINUTA</th>
+                            <th>DATA INCEPUT MANDAT</th>
+                            <th>DATA SFARSIT MANDAT</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td>[nume]</td>
+                            <td>
+                                <select>
+                                    <option value="">Selectează</option>
+                                    <option value="presedinte">Președinte</option>
+                                    <option value="membru">Membru</option>
+                                </select>
+                            </td>
+                            <td>
+                                <input type="date" />
+                            </td>
+                            <td>
+                                <input type="date" />
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <button className="add-button">Adaugă nouă</button>
+                </div>
+
+                {/* Section Title */}
+                <h3 className="section-title">LOCATII / PUNCTE DE LUCRU</h3>
+
+                {/* Locations/Workpoints Table */}
+                <div className="table-container">
+                    <table className="editable-table">
+                        <thead>
+                        <tr>
+                            <th>TIP</th>
+                            <th>ADRESA</th>
+                            <th>ACT JURIDIC</th>
+                            <th>PERIOADA</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td>Punct de lucru permanent</td>
+                            <td>[text editabil]</td>
+                            <td>[text editabil]</td>
+                            <td>[perioada]</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <button className="add-button">Adaugă nouă</button>
+                </div>
+
+                {/* Images/Graphics Section */}
+                <div className="images-section">
+                    <h3 className="section-title">Imagini / grafice</h3>
+                    <ImagePlaceholder />
+                </div>
+
+                {/* Navigation Buttons */}
+                <Navigation />
+
+                {/* Note Section */}
+                <div className="note-section">
+                    <p>
+                        <strong className="note-label">Nota:</strong> Tabelele 'Conducere/Administratori' si 'Consiliu de Administratie' pot fi eliminate daca nu se aplica.
+                    </p>
+                </div>
+
+            </div>
         </div>
     );
 };
