@@ -9,6 +9,8 @@ import Requested from "../models/requested.model"
 import Humint from "../models/humint.model";
 import { createNotification } from "../services/notification.service";
 import { ok } from "../../../utils/ApiResponse";
+import projectData from "../data/data"
+import Category from "../models/category.model";
 
 
 
@@ -75,11 +77,60 @@ export const createProject = async (
 
 
         if (project.entityType) {
-            await createdProjectService.cloneTemplatesToProject(
-                project.entityType.toString(),
-                project._id.toString()
-            );
+            // 1️⃣ Get the category from DB
+            const category = await Category.findById(project.entityType).lean();
+
+            if (!category) {
+                console.log("Category not found for ID:", project.entityType);
+            } else {
+                const entitySlug = category.slug;
+                const entityChapters = projectData[entitySlug];
+
+                if (entityChapters && entityChapters.length > 0) {
+                    const formattedChapters = [];
+
+                    for (const chapterTemplate of entityChapters) {
+                        // 🔹 Create chapter
+                        const newChapter = await Chapter.create({
+                            name: chapterTemplate.name || "Default Chapter",
+                            projectId: project._id
+                        });
+
+                        // 🔹 Map tasks exactly as in projectData
+                        const tasksToCreate = (chapterTemplate.tasks || []).map((task) => ({
+                            name: task.name,
+                            slug: task.slug, // ✅ exactly same as projectData
+                            chapterId: newChapter._id,
+                            completed: false
+                        }));
+
+
+                        // 🔹 Insert tasks in DB
+                        const createdTasks = await Task.insertMany(tasksToCreate);
+
+
+
+                        // 🔹 Push to project.chapters for frontend use
+                        formattedChapters.push({
+                            _id: newChapter._id,
+                            name: newChapter.name,
+                            tasks: createdTasks.map((t) => ({
+                                _id: t._id,
+                                name: t.name,
+                                slug: t.slug // ✅ frontend routing ke liye
+                            }))
+                        });
+                    }
+
+                    project.chapters = formattedChapters;
+                    await project.save();
+                } else {
+                    console.log("No chapters found for entitySlug:", entitySlug);
+                }
+            }
         }
+
+
 
 
 
@@ -149,10 +200,6 @@ export const createProject = async (
             return false;
         });
 
-        console.log(
-            "Analysts to notify:",
-            analystsToNotify.map(a => a._id.toString())
-        );
 
 // 🔔 6.4 SEND NOTIFICATIONS
         await Promise.all(

@@ -25,6 +25,7 @@ const ViewTask = () => {
             }
             content={
                 <TaskView/>
+
             }
         />
     );

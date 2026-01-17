@@ -59,6 +59,15 @@ export const taskApi = createApi({
             invalidatesTags: ["task"],
         }),
 
+        updateTaskData: builder.mutation({
+            query: ({ id, data }) => ({
+                url: `/task/${id}/data`,
+                method: "PUT",
+                body: { data }
+            }),
+            invalidatesTags: ["task"]
+        }),
+
 
 
         startTask: builder.mutation({
@@ -143,6 +152,7 @@ export const {
     useGetTasksByChapterIdQuery,
     useCreateTaskMutation,
     useUpdateTaskMutation,
+    useUpdateTaskDataMutation,
     useStartTaskMutation,
     usePauseTaskMutation,
     useResumeTaskMutation,
