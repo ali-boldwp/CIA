@@ -1,0 +1,109 @@
+.introductionSection {
+    margin-bottom: 30px;
+}
+
+.introTitle {
+    color: #0F172A;
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.textareaContainer {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 15px;
+}
+
+.introTextarea {
+    width: 100%;
+    min-height: 120px;
+    padding: 20px;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.6;
+    color: #374151;
+    background-color: #FFFFFF;
+    border: 1px solid #CBD5E1;
+    border-radius: 12px;
+    resize: vertical;
+    font-family: 'Inter', sans-serif;
+    transition: all 0.3s ease;
+    box-sizing: border-box;
+    margin-bottom: 15px;
+}
+
+.introTextarea:hover {
+    background-color: #FFFFFF !important;
+    border-color: #CBD5E1 !important;
+}
+
+.introTextarea:focus {
+    background-color: #FFFFFF !important;
+    border-color: #CBD5E1 !important;
+    outline: none !important;
+    box-shadow: none;
+}
+
+.clearButtonContainer {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.clearButton {
+    background-color: #9CA3AF;
+    color: #FFFFFF;
+    width: 220px;
+    height: 33px;
+    border-radius: 12px;
+    font-size: 18px;
+    font-weight: 700;
+    cursor: pointer;
+    border: 1px solid #9CA3AF;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    transition: all 0.3s ease;
+}
+
+.clearButton:hover {
+    background-color: #dc2626;
+    transform: translateY(-2px);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .introTitle {
+        font-size: 18px;
+    }
+
+    .introTextarea {
+        padding: 15px;
+        font-size: 13px;
+    }
+
+    .clearButton {
+        width: 100%;
+        max-width: 220px;
+    }
+}
+
+@media (max-width: 480px) {
+    .introTitle {
+        font-size: 16px;
+    }
+
+    .introTextarea {
+        padding: 12px;
+        font-size: 12px;
+    }
+
+    .clearButton {
+        width: 100%;
+        font-size: 16px;
+    }
+}

@@ -1,0 +1,161 @@
+.tableSection {
+    margin-bottom: 25px;
+}
+
+.sectionTitle {
+    color: #0f172a;
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 15px;
+}
+
+/* Table */
+.tableContainer {
+    margin-bottom: 25px;
+}
+
+.editableTable {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 15px;
+}
+
+.editableTable th {
+    background-color: #f1f5f9;
+    padding: 20px;
+    text-align: left;
+    font-weight: 700;
+    font-size: 14px;
+    border: 1px solid #dee2e6;
+    color: #0f172a;
+}
+
+.editableTable td {
+    padding: 10px 15px;
+    border: 1px solid #dee2e6;
+    color: #374151;
+    font-weight: 700;
+    font-size: 14px;
+    background-color: #fff; /* Always white */
+}
+.editableTable td:last-child{
+    border: none;
+}
+
+/* Remove hover & focus effects for td */
+.editableTable td:hover,
+.editableTable td:focus {
+    background-color: #fff !important;
+}
+
+/* Input fields inside table */
+.editableTable input[type="text"] {
+    border: none;
+    font-size: 14px;
+    font-weight: 700;
+    font-family: Inter;
+    background: #fff;  /* Always white */
+    color: #374151;
+    width: 100%;
+}
+
+/* Remove hover & focus effects for inputs */
+.editableTable input[type="text"]:hover,
+.editableTable input[type="text"]:focus {
+    background-color: #fff !important;
+    border-color: #dee2e6 !important;
+    outline: none !important;
+    box-shadow: none !important;
+}
+
+/* Column widths */
+.colDenumire {
+    width: 20%;
+}
+
+.colDescriere {
+    width: 80%;
+}
+
+/* Simple delete button without background and border */
+.simpleDeleteButton {
+    background: transparent !important; /* Transparent background */
+    border: none !important; /* No border */
+    cursor: pointer;
+    font-size: 18px;
+    padding: 0 !important; /* Remove padding */
+    color: #dc2626; /* red icon */
+    margin: 0 !important; /* Remove margin */
+    width: auto !important; /* Auto width */
+    height: auto !important; /* Auto height */
+    outline: none !important; /* Remove outline */
+    box-shadow: none !important; /* Remove shadow */
+}
+
+.simpleDeleteButton:hover {
+    color: #b91c1c;
+    background: transparent !important;
+    border: none !important;
+}
+
+.simpleDeleteButton:focus {
+    outline: none !important;
+    border: none !important;
+}
+
+.simpleDeleteButton:active {
+    background: transparent !important;
+    border: none !important;
+}
+
+/* Add Button */
+.addButton {
+    background-color: #3b82f6;
+    color: #fff;
+    width: 240px;
+    height: 40px;
+    border-radius: 12px;
+    font-size: 18px;
+    font-weight: 700;
+    cursor: pointer;
+    border: 1px solid #3b82f6;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    margin-top: 15px;
+    transition: all 0.3s ease;
+}
+
+.addButton:hover {
+    background-color: #2563eb;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .editableTable th,
+    .editableTable td {
+        padding: 12px 10px;
+    }
+
+    .addButton {
+        width: 100%;
+        max-width: 220px;
+    }
+}
+
+@media (max-width: 480px) {
+    .editableTable th,
+    .editableTable td {
+        padding: 8px 6px;
+        font-size: 13px;
+    }
+
+    .addButton {
+        font-size: 16px;
+    }
+
+    .simpleDeleteButton {
+        font-size: 16px;
+    }
+}
