@@ -68,7 +68,7 @@ const EditableTable = ({
                             checked={cell.value === 'true'}
                             onChange={(e) => handleCellChange(rowIndex, colIndex, e.target.checked.toString())}
                         />
-                        <span className={styles.checkboxSymbol}>☐</span>
+
                     </div>
                 );
             } else {
@@ -85,15 +85,7 @@ const EditableTable = ({
             }
         }
 
-        // Display mode
-        if (cell.type === 'checkbox') {
-            return (
-                <div className={styles.checkboxDisplay}>
-                    <span className={styles.checkboxSymbol}>☐</span>
-                    {cell.value === 'true' && <span className={styles.checkmark}>✓</span>}
-                </div>
-            );
-        }
+
 
         return (
             <span className={styles.cellValue}>

@@ -28,7 +28,7 @@
 
 .tableHeader {
     text-align: left;
-    padding: 15px;
+    padding: 20px !important;
     background-color: #f8f9fa;
     border-bottom: 2px solid #dee2e6;
     font-weight: 600;
@@ -40,10 +40,11 @@
 .tableRow {
     border-bottom: 1px solid #ecf0f1;
     transition: background-color 0.2s;
+    border-radius: 10px !important;
 }
 
 .tableRow:hover {
-    background-color: #f8f9fa;
+    background-color: #c6196f !important;
 }
 
 .tableCell {
@@ -55,7 +56,10 @@
     position: relative;
     vertical-align: top;
 }
-
+th:first-child,td:first-child{
+    width:30%;
+    text-align:start;
+}
 .checkboxCell {
     min-width: 80px;
     text-align: center;
