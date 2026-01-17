@@ -3,60 +3,55 @@
     padding: 25px;
     background-color: white;
     border-radius: 10px;
-    box-shadow: 0 3px 15px rgba(0, 0, 0, 0.05);
+
 }
 
 .navButtons {
     display: flex;
     gap: 20px;
     flex-wrap: wrap;
+    width: 800px;
 }
 
 .saveButton {
     display: inline-flex;
     align-items: center;
     padding: 14px 30px;
-    background-color: #3498db;
+    background-color: #10B981;
     color: white;
-    border: none;
+    border: 1px solid #10B981;
     border-radius: 8px;
     font-size: 16px;
     font-weight: 600;
     cursor: pointer;
     transition: all 0.3s;
     flex: 1;
-    min-width: 200px;
+    width: 197px !important;
     justify-content: center;
 }
 
-.saveButton:hover {
-    background-color: #2980b9;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(52, 152, 219, 0.3);
-}
+
 
 .nextButton {
     display: inline-flex;
     align-items: center;
     padding: 14px 30px;
-    background-color: #2ecc71;
-    color: white;
-    border: none;
+    background-color: #FFFFFF;
+    color: #2563EB;
+    border: 1px solid #2563EB;
     border-radius: 8px;
     font-size: 16px;
-    font-weight: 600;
+    font-weight: 700;
     cursor: pointer;
     transition: all 0.3s;
     flex: 1;
-    min-width: 200px;
+    font-style: italic;
+    width: 282px;
+    height: 44px;
     justify-content: center;
 }
 
-.nextButton:hover {
-    background-color: #27ae60;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(46, 204, 113, 0.3);
-}
+
 
 .saveIcon {
     font-size: 20px;
