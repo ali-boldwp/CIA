@@ -18,18 +18,31 @@
 }
 
 .section-title {
-    color: #2c3e50;
-    font-size: 18px;
-    font-weight: 600;
-    margin: 25px 0 15px 0;
+    color: #0F172A;
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 20px !important;
     /* REMOVED: padding-bottom: 8px; */
     /* REMOVED: border-bottom: 1px solid #3498db; */
 }
-
+.editable-table input[type="text"]{
+    border:none !important;
+    font-size: 14px !important;
+    font-weight: 700 !important;
+    font-family: Inter !important;
+    background: #fff !important;
+    color:#374151 !important;
+}
+.editable-table input[type="text"]:focus{
+    outline: none !important;
+}
 .table-container {
     margin-bottom: 25px;
 }
-
+th{
+    color:#0F172A !important;
+    font-weight: 700;
+}
 .editable-table {
     width: 100%;
     border-collapse: collapse;
@@ -37,8 +50,9 @@
 }
 
 .editable-table th {
-    background-color: #f8f9fa;
-    padding: 12px 15px;
+    background-color: #F1F5F9;
+    padding: 20px;
+    font-style: normal;
     text-align: left;
     font-weight: 600;
     color: #2c3e50;
@@ -56,7 +70,6 @@
     width: 100%;
     padding: 8px 10px;
     border: 1px solid #ced4da;
-    border-radius: 4px;
     font-size: 14px;
 }
 
@@ -81,7 +94,9 @@
     cursor: pointer;
     transition: background-color 0.3s;
 }
-
+tr:hover{
+    background: transparent !important;
+}
 .add-button:hover {
     background-color: #2980b9;
 }

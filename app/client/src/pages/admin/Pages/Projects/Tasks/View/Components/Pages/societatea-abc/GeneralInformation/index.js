@@ -14,39 +14,39 @@ const Index = () => {
     const generalProfileData = [
         [
             { value: "Denumire societate", type: "text" },
-            { value: "", type: "text" }
+            { value: "[text editabil]", type: "text" }
         ],
         [
             { value: "Cod unic de inregistrare (CUI)", type: "text" },
-            { value: "", type: "text" }
+            { value: "[text editabil]", type: "text" }
         ],
         [
             { value: "Numar de inmatriculare", type: "text" },
-            { value: "", type: "text" }
+            { value: "[text editabil]", type: "text" }
         ],
         [
             { value: "Data infiintarii", type: "text" },
-            { value: "", type: "text" }
+            { value: "[text editabil]", type: "text" }
         ],
         [
             { value: "Adresa sediu social", type: "text" },
-            { value: "", type: "text" }
+            { value: "[text editabil]", type: "text" }
         ],
         [
             { value: "Obiect principal de activitate (cod CAEN)", type: "text" },
-            { value: "", type: "text" }
+            { value: "[text editabil]", type: "text" }
         ],
         [
             { value: "Cifra de afaceri (an 2024)", type: "text" },
-            { value: "", type: "text", hasCheckbox: true }
+            { value: "[valoare] 📈/📉", type: "text", hasCheckbox: true }
         ],
         [
             { value: "Profit net (an 2024)", type: "text" },
-            { value: "", type: "text", hasCheckbox: true }
+            { value: "[valoare] 📈/📉", type: "text", hasCheckbox: true }
         ],
         [
             { value: "Numar mediu angajati", type: "text" },
-            { value: "", type: "text", hasCheckbox: true }
+            { value: "[numar] 📈/📉", type: "text", hasCheckbox: true }
         ]
     ];
 
@@ -105,13 +105,20 @@ const Index = () => {
                             <tr key={rowIndex}>
                                 {row.map((cell, cellIndex) => (
                                     <td key={cellIndex}>
-                                        {cell.hasCheckbox ? (
-                                            <div className="checkbox-cell">
-                                                <input type="checkbox" />
-                                                <span>{cell.value}</span>
-                                            </div>
+                                        {cellIndex === 0 ? (
+                                            // ✅ First column (read-only, non-clickable)
+                                            <input
+                                                type="text"
+                                                value={cell.value}
+                                                className="input"
+                                                disabled
+                                            />
                                         ) : (
-                                            cell.value
+                                            // ✅ Second column (editable)
+                                            <input
+                                                type="text"
+                                                placeholder={cell.value}
+                                            />
                                         )}
                                     </td>
                                 ))}
