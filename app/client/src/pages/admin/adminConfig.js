@@ -73,7 +73,7 @@ const AdminConfig = {
                             element: <ProjectTasks/>,
                         },
                         {
-                            path: 'view/:id/tasks/:taskId/progress',
+                            path: 'view/:id/tasks/:taskId/progress/:taskName',
                             element: <ViewTask/>
                         },
                         {
