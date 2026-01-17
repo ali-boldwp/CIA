@@ -1,0 +1,47 @@
+.titleContainer {
+    margin-bottom: 30px;
+}
+
+.mainTitle {
+    color: #1E3A8A;
+    font-size: 26px;
+    font-weight: 700;
+    margin-bottom: 15px;
+}
+
+.sectionTitle {
+    color: #374151;
+    font-size: 18px;
+    font-weight: 700;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1024px) {
+    .mainTitle {
+        font-size: 24px;
+    }
+
+    .sectionTitle {
+        font-size: 17px;
+    }
+}
+
+@media (max-width: 768px) {
+    .mainTitle {
+        font-size: 22px;
+    }
+
+    .sectionTitle {
+        font-size: 16px;
+    }
+}
+
+@media (max-width: 480px) {
+    .mainTitle {
+        font-size: 20px;
+    }
+
+    .sectionTitle {
+        font-size: 14px;
+    }
+}

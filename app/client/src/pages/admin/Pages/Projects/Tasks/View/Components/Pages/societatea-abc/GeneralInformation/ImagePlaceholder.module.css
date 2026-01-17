@@ -1,32 +1,65 @@
+/* ===============================
+   ImageSection Styles
+=============================== */
+
+.mainTitle {
+    color: #1E3A8A;
+    font-size: 26px;
+    font-weight: 700;
+    margin-bottom: 15px;
+}
+
+/* Image Section wrapper */
 .imageSection {
     margin: 30px 0;
     display: flex;
-    gap:50px;
+    flex-direction: column; /* button upar, images niche vertically */
+    gap: 20px; /* gap between button and grid */
 }
-.addImageButton{
-    height:50px;
-    background: #3B82F6;
+
+/* Add Image Button */
+.addImageButton {
+    background-color: #3B82F6;
+    color: #FFFFFF;
+    border: none;
+    width: 240px; /* desktop size */
+    height: 40px;
+    border-radius: 12px;
+    font-size: 18px;
+    font-weight: 700;
+    cursor: pointer;
+    border: 1px solid #3B82F6;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: all 0.3s;
 }
+
+.addImageButton:hover {
+    background-color: #2563EB;
+}
+
+/* Add icon inside button */
+.addIcon {
+    font-size: 20px;
+}
+
+/* Image Grid */
 .imageGrid {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* responsive columns */
     gap: 20px;
-    max-width: 900px;
-    margin-bottom: 25px;
+    width: 100%;
 }
 
-@media (max-width: 768px) {
-    .imageGrid {
-        grid-template-columns: 1fr;
-    }
-}
-
+/* Each image placeholder */
 .imagePlaceholder {
     background-color: #f8f9fa;
     border: 2px dashed #bdc3c7;
     border-radius: 10px;
     min-height: 140px;
-    width:350px !important;
+    width: 100%; /* grid cell ke width ke hisaab se */
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -40,6 +73,7 @@
     background-color: #ecf0f1;
 }
 
+/* Placeholder icon and text */
 .placeholderIcon {
     font-size: 18px;
     color: #95a5a6;
@@ -52,6 +86,7 @@
     text-align: center;
 }
 
+/* Preview image */
 .previewImage {
     width: 100%;
     height: 100%;
@@ -59,25 +94,43 @@
     border-radius: 8px;
 }
 
-.addImageButton {
-    background-color: #3B82F6;
-    color: #FFFFFF;
-    border: none;
-    width: 240px;
-    height: 40px;
-    border-radius: 12px;
-    font-size: 18px;
-    font-weight: 700;
-    cursor: pointer;
-    border: 1px solid #3B82F6;
+/* ===============================
+   Media Queries (Responsive)
+=============================== */
+
+@media (max-width: 1024px) {
+    .imageGrid {
+        gap: 18px;
+    }
+
+    .addImageButton {
+        width: 200px;
+        height: 40px;
+    }
 }
 
-.addImageButton:hover {
-    background-color:#2563EB;
+@media (max-width: 768px) {
+    .imageGrid {
+        grid-template-columns: 1fr; /* single column on tablet/mobile */
+        gap: 15px;
+    }
+
+    .addImageButton {
+        width: 100%; /* full width on tablet/mobile */
+    }
 }
 
+@media (max-width: 480px) {
+    .imageGrid {
+        gap: 10px;
+    }
 
-.addIcon {
-    font-size: 20px;
-    margin-right: 8px;
+    .mainTitle {
+        font-size: 22px;
+    }
+
+    .addImageButton {
+        font-size: 16px;
+        height: 38px;
+    }
 }
