@@ -1,6 +1,7 @@
 import { Schema, model, Document } from "mongoose";
 
 export interface IHumintExpanse extends Document {
+    project : Schema.Types.ObjectId;
     date: Date;
     description: string;
     utility: number;     
@@ -14,6 +15,12 @@ export interface IHumintExpanse extends Document {
 
 const humintSchema = new Schema<IHumintExpanse>(
     {
+
+        project: {
+            type: Schema.Types.ObjectId,
+            ref: 'ProjectRequest',
+            required: true
+        },
         date: { type: Date, required: true },
         description: { type: String, required: true },
         utility: { type: Number, min: 1, max: 5, required: true },

@@ -5,7 +5,7 @@ import { toast } from "react-toastify";
 
 import styles from "./AddHumintCostPopup.module.css";
 
-const AddHumintCostPopup = ({ isOpen, onClose }) => {
+const AddHumintCostPopup = ({ isOpen, onClose , projectId }) => {
 
 
     const [createExpense, { isLoading }] = useCreateHumintExpanseMutation();
@@ -47,7 +47,12 @@ const AddHumintCostPopup = ({ isOpen, onClose }) => {
 
     const handleSubmit = async () => {
         const payload = {
-            ...formData,
+            project: projectId, // ✅ MUST
+            date: formData.date,
+            description: formData.description,
+            utility: Number(formData.utility),
+            cost: Number(formData.cost),
+            currency: formData.currency,
             taxPercent: Number(formData.taxPercentage),
             taxIncludedCost: Number(formData.costWithTaxes),
             total: Number(formData.total),
@@ -84,6 +89,7 @@ const AddHumintCostPopup = ({ isOpen, onClose }) => {
             console.error(err);
         }
     };
+
 
 
 

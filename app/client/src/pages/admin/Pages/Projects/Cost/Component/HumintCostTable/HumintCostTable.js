@@ -2,10 +2,14 @@ import React from 'react';
 import styles from './HumintCostTable.module.css';
 import { useGetHumintExpensesQuery, useGetHumintTotalsQuery } from '../../../../../../../services/humintExpanseApi';
 
-const HumintCostTable = ({ onAddCost }) => {
+
+
+const HumintCostTable = ({ onAddCost, projectId }) => {
     // Fetch HUMINT data from API
-    const { data: humintExpenses, isLoading: loadingHumint } = useGetHumintExpensesQuery();
-    const { data: humintTotals } = useGetHumintTotalsQuery();
+    const { data: humintExpenses, isLoading: loadingHumint } = useGetHumintExpensesQuery(projectId);
+    const { data: humintTotals } = useGetHumintTotalsQuery(projectId);
+
+
 
     // Extract expenses array from response
     const expenses = humintExpenses?.data || [];
