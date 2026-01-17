@@ -2,7 +2,7 @@ import React from 'react';
 import EditableTable from './EditableTable';
 import ImagePlaceholder from './ImagePlaceholder';
 import Navigation from './Navigation';
-import './styles.css';
+import styles from './styles.module.css';
 
 const Index = () => {
     const generalProfileColumns = [
@@ -81,19 +81,19 @@ const Index = () => {
     ];
 
     return (
-        <div className="container">
+        <div className={styles.container}>
             {/* Single Main Card Container with everything inside */}
-            <div className="main-card">
+            <div className={styles.mainCard}>
 
                 {/* Main Title */}
-                <h1 className="main-title">I. Societatea ABC | 1. Informatii generale</h1>
+                <h1 className={styles.mainTitle}>I. Societatea ABC | 1. Informatii generale</h1>
 
                 {/* Section Title */}
-                <h3 className="section-title">📋 PROFIL GENERAL AL COMPANIEI</h3>
+                <h3 className={styles.sectionTitle}>📋 PROFIL GENERAL AL COMPANIEI</h3>
 
                 {/* General Company Profile Table */}
-                <div className="table-container">
-                    <table className="editable-table">
+                <div className={styles.tableContainer}>
+                    <table className={styles.editableTable}>
                         <thead>
                         <tr>
                             <th>CRITERIU</th>
@@ -110,7 +110,6 @@ const Index = () => {
                                             <input
                                                 type="text"
                                                 value={cell.value}
-                                                className="input"
                                                 disabled
                                             />
                                         ) : (
@@ -126,15 +125,15 @@ const Index = () => {
                         ))}
                         </tbody>
                     </table>
-                    <button className="add-button">Adaugă nouă</button>
+                    <button className={styles.addButton}>➕ Adauga rand</button>
                 </div>
 
                 {/* Section Title */}
-                <h3 className="section-title">STRUCTURA ACTIONARIATULUI</h3>
+                <h3 className={styles.sectionTitle}>STRUCTURA ACTIONARIATULUI</h3>
 
                 {/* Shareholder Structure Table */}
-                <div className="table-container">
-                    <table className="editable-table">
+                <div className={styles.tableContainer}>
+                    <table className={styles.editableTable}>
                         <thead>
                         <tr>
                             <th>ACTIONAR</th>
@@ -156,15 +155,15 @@ const Index = () => {
                         </tr>
                         </tbody>
                     </table>
-                    <button className="add-button">Adaugă nouă</button>
+                    <button className={styles.addButton}>➕ Adauga rand</button>
                 </div>
 
                 {/* Section Title */}
-                <h3 className="section-title">CONDUCERE / ADMINISTRATORI</h3>
+                <h3 className={styles.sectionTitle}>CONDUCERE / ADMINISTRATORI</h3>
 
                 {/* Management/Administrators Table */}
-                <div className="table-container">
-                    <table className="editable-table">
+                <div className={styles.tableContainer}>
+                    <table className={styles.editableTable}>
                         <thead>
                         <tr>
                             <th>NUME / DENUMIRE</th>
@@ -188,15 +187,15 @@ const Index = () => {
                         </tr>
                         </tbody>
                     </table>
-                    <button className="add-button">Adaugă nouă</button>
+                    <button className={styles.addButton}>➕ Adauga rand</button>
                 </div>
 
                 {/* Section Title */}
-                <h3 className="section-title">CONSILIU DE ADMINISTRATIE</h3>
+                <h3 className={styles.sectionTitle}>CONSILIU DE ADMINISTRATIE</h3>
 
                 {/* Board of Directors Table */}
-                <div className="table-container">
-                    <table className="editable-table">
+                <div className={styles.tableContainer}>
+                    <table className={styles.editableTable}>
                         <thead>
                         <tr>
                             <th>NUME / DENUMIRE</th>
@@ -224,15 +223,15 @@ const Index = () => {
                         </tr>
                         </tbody>
                     </table>
-                    <button className="add-button">Adaugă nouă</button>
+                    <button className={styles.addButton}>➕ Adauga rand</button>
                 </div>
 
                 {/* Section Title */}
-                <h3 className="section-title">LOCATII / PUNCTE DE LUCRU</h3>
+                <h3 className={styles.sectionTitle}>LOCATII / PUNCTE DE LUCRU</h3>
 
                 {/* Locations/Workpoints Table */}
-                <div className="table-container">
-                    <table className="editable-table">
+                <div className={styles.tableContainer}>
+                    <table className={styles.editableTable}>
                         <thead>
                         <tr>
                             <th>TIP</th>
@@ -250,12 +249,12 @@ const Index = () => {
                         </tr>
                         </tbody>
                     </table>
-                    <button className="add-button">Adaugă nouă</button>
+                    <button className={styles.addButton}>➕ Adauga rand</button>
                 </div>
 
                 {/* Images/Graphics Section */}
-                <div className="images-section">
-                    <h3 className="section-title">Imagini / grafice</h3>
+                <div className={styles.imagesSection}>
+                    <h3 className={styles.sectionTitle}>🖼️ Imagini / grafice</h3>
                     <ImagePlaceholder />
                 </div>
 
@@ -263,9 +262,9 @@ const Index = () => {
                 <Navigation />
 
                 {/* Note Section */}
-                <div className="note-section">
+                <div className={styles.noteSection}>
                     <p>
-                        <strong className="note-label">Nota:</strong> Tabelele 'Conducere/Administratori' si 'Consiliu de Administratie' pot fi eliminate daca nu se aplica.
+                        <strong className={styles.noteLabel}>Nota:</strong> Tabelele 'Conducere/Administratori' si 'Consiliu de Administratie' pot fi eliminate daca nu se aplica.
                     </p>
                 </div>
 
