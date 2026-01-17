@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import styles from "./styles.module.css";
-import ImagePlaceholder from "./ImagePlaceholder";
+import ImagePlaceholder from "./ImagePlaceholder.js";
 
 const Index = () => {
     const [rows, setRows] = useState([
@@ -22,30 +22,36 @@ const Index = () => {
             <div className={styles.mainCard}>
 
                 <h1 className={styles.mainTitle}>
-                    I. Societatea ABC | 2. Istoric societate
+                    I. Societatea ABC |  6. Achizitii SEAP
                 </h1>
 
                 {/* Istoric */}
-                <h3 className={styles.sectionTitle}>✏️ Istoricul societății</h3>
+                <h3 className={styles.sectionTitle}>Achizitii directe si contracte atribuite (conform SEAP)</h3>
 
                 <div className={styles.textAreaWrapper}>
-          <textarea
-              className={styles.textarea}
-              placeholder="[Scrie aici textul narativ – multiline]"
-          />
+                    <h3 className={styles.sectionTitle}>💬 Introducere</h3>
+                    <textarea
+                        className={styles.textarea}
+                        placeholder="Conform verificarilor efectuate la autoritatile publice, in perioada [2023–2025], Societatea [denumire societate] a fost selectata in peste [50] de proceduri de achizitie publica, derulate de diverse institutii si autoritati
+contractante. Acestea au inclus atat atribuiri in baza unor proceduri competitive (licitatii sau proceduri simplificate), cat si achizitii directe, realizate fara incheierea unui contract formal, conform legislatiei aplicabile.
+Printre cele mai relevante achizitii, din perspectiva valorii sau a autoritatii contractante, se numara: "
+                    />
                     <button className={styles.deleteBox}>Șterge căsuța</button>
                 </div>
 
                 {/* Cronologie */}
                 <h3 className={styles.sectionTitle}>
-                    📜 Cronologia mențiunilor publicate în Monitorul Oficial
+                    📋 Tabel achizitii SEAP
                 </h3>
 
                 <table className={styles.table}>
                     <thead>
                     <tr>
+                        <th>TIP ACHIZITIE</th>
+                        <th>AUTORITATE CONTRACTANTA</th>
+                        <th>OBIECT CONTRACT</th>
+                        <th>VALOARE CONTRACT (RON)</th>
                         <th>DATA</th>
-                        <th>MENȚIUNI</th>
                         <th></th>
                     </tr>
                     </thead>
@@ -55,13 +61,31 @@ const Index = () => {
                             <td>
                                 <input
                                     type="text"
-                                    placeholder="[zz.ll.aaaa]"
+                                    placeholder="[Tip achizitie]"
                                 />
                             </td>
                             <td>
                                 <input
                                     type="text"
-                                    placeholder="descriere editabilă – ex.: Schimbare sediu social"
+                                    placeholder="[Autoritate contractanta]"
+                                />
+                            </td>
+                            <td>
+                                <input
+                                    type="text"
+                                    placeholder="[Obiect contract]"
+                                />
+                            </td>
+                            <td>
+                                <input
+                                    type="text"
+                                    placeholder="[Valoare]"
+                                />
+                            </td>
+                            <td>
+                                <input
+                                    type="text"
+                                    placeholder="[Data]"
                                 />
                             </td>
                             <td>
@@ -96,7 +120,7 @@ const Index = () => {
                             <span className={styles.arrowIcon}>→</span>
                         </button>
                         <button className={styles.nextButton}>
-                            ➡️  Mergi la I.3. „Date fianciare”
+                            ➡️  Mergi la I.7. „Marci OSIM”
                             <span className={styles.arrowIcon}>→</span>
                         </button>
                     </div>
