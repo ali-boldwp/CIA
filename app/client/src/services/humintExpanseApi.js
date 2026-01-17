@@ -19,8 +19,8 @@ export const humintExpanseApi = createApi({
 
         // GET ALL EXPENSES
         getHumintExpenses: builder.query({
-            query: () => ({
-                url: `/humint-expanse`,
+            query: (project) => ({
+                url: `/humint-expanse?project=${project}`,
                 method: "GET",
             }),
             providesTags: ["HumintExpanse"],
@@ -28,36 +28,36 @@ export const humintExpanseApi = createApi({
 
         // GET EXPENSE BY ID
         getHumintExpenseById: builder.query({
-            query: (id) => ({
-                url: `/humint-expanse/${id}`,
+            query: ({ id, project }) => ({
+                url: `/humint-expanse/${id}?project=${project}`,
                 method: "GET",
             }),
             providesTags: ["HumintExpanse"],
         }),
 
-        // UPDATE
+        // UPDATE (project must go in body)
         updateHumintExpanse: builder.mutation({
-            query: ({ id, ...body }) => ({
+            query: ({ id, project, ...body }) => ({
                 url: `/humint-expanse/${id}`,
                 method: "PUT",
-                body,
+                body: { project, ...body },
             }),
             invalidatesTags: ["HumintExpanse"],
         }),
 
-        // DELETE
+        // DELETE (project in query)
         deleteHumintExpanse: builder.mutation({
-            query: (id) => ({
-                url: `/humint-expanse/${id}`,
+            query: ({ id, project }) => ({
+                url: `/humint-expanse/${id}?project=${project}`,
                 method: "DELETE",
             }),
             invalidatesTags: ["HumintExpanse"],
         }),
 
-        // GET TOTAL RON / EUR / USD
+        // TOTALS (PROJECT WISE ✅ FIX)
         getHumintTotals: builder.query({
-            query: () => ({
-                url: `/humint-expanse/totals/grouped`,
+            query: (project) => ({
+                url: `/humint-expanse/totals/grouped?project=${project}`,
                 method: "GET",
             }),
             providesTags: ["HumintExpanse"],

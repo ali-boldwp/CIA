@@ -1,7 +1,7 @@
+
 const projectData = {
     "Persoana": [
         {
-            name: "Profil general",
             tasks: [
                 { name: "Informatii generale" },
                 { name: "Studii" },
@@ -40,69 +40,22 @@ const projectData = {
             ],
         },
     ],
-    "Societate": [
+    "societatea-abc": [
         {
-            name :"Informatii despre societate",
+            name: "SOCIETATEA ABC",
             tasks : [
-                { name : "Informatii generale"},
-                { name : "Istoric societate"},
-                { name : "Date financiare"},
-                { name : "Parteneri contractuali"},
-                { name : "Datorii si inscrieri mobiliare"},
-                { name : "Achizitii SEAP"},
-                { name : "Proprietate intelectuala / Marci OSIM"},
-                { name : "Litigii societate"},
-                { name : "Participatii in alte societati"},
-                { name : "Controverse si aspecte de interes public"},
-                { name : "Informatii din HUMINT (analiza, procesare si introducere in raport)"},
+                { name : "General Information" ,slug :"GeneralInformation"},
+                { name : "Istoric societate" , slug: "IstoricSocietate"},
+                { name : "Date financiare" , slug :"DateFinanciare"},
+                { name : "Parteneri contractuali" , slug :"ParteneriContractuali"},
+                { name : "Datorii si inscrieri mobiliare" , slug :"DatoriiSiInscrieri"},
+                { name : "Achizitii SEAP" , slug :"AchizitiiSEAP"},
+                { name : "Proprietate intelectuala / Marci OSIM" , slug :"ProprietateIntelectuala"},
+                { name : "Litigii societate" , slug :"LitigiiSocietate"},
+                { name : "Participatii in alte societati" , slug :"ParticipatiiSocietate"},
+                { name : "Controverse si aspecte de interes public" , slug :"Controversesi"},
 
             ]
-
-        },
-        {
-            name : "Persoane cheie (asociati / administratori / persoane afiliate)",
-            tasks : [
-
-                { name : "Profil general"},
-                { name : "Relatii de familie"},
-                { name : "Afaceri si structuri de proprietate"},
-                { name : "Verificare juridica si litigii"},
-                { name : "Proprietate intelectuala / Marci OSIM"},
-                { name : "Afilieri cu alte persoane / entitati de interes "},
-                { name : "Controverse si aspecte de interes public "},
-                { name : "Profil reputational si mediatizare "},
-                { name : "Legaturi politice, donatii sau influenta in administratie "},
-                { name : "Beneficiari sau actionari din zone sensibile"},
-                { name : "Factori de vulnerabilitate" },
-            ]
-        },
-        {
-            name : "Persoane cheie (asociati / administratori / persoane afiliate)",
-            tasks : [
-                { name : "Profil general"},
-                { name : "Relatii de familie"},
-                { name : "Afaceri si structuri de proprietate"},
-                { name : "Verificare juridica si litigii"},
-                { name : "Proprietate intelectuala / Marci OSIM"},
-                { name : "Afilieri cu alte persoane / entitati de interes "},
-                { name : "Controverse si aspecte de interes public "},
-                { name : "Profil reputational si mediatizare "},
-                { name : "Legaturi politice, donatii sau influenta in administratie "},
-                { name : "Beneficiari sau actionari din zone sensibile"},
-                { name : "Factori de vulnerabilitate" },
-            ]
-        },
-        {
-            name : "Harta relationala",
-            tasks : [
-                { name :"Harta relationala" },
-            ],
-        },
-        {
-            name : "Executive Summary",
-            tasks : [
-                { name :"Executive Summary" },
-            ],
         },
 
     ],

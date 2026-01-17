@@ -2,6 +2,7 @@ import {Schema, model, Document, Types} from "mongoose";
 
 export interface ICategory extends Document {
     name: string;
+    slug: string;
     status:
         | "active"
         | "suspended";
@@ -18,6 +19,10 @@ const categorySchema = new Schema<ICategory>(
             type: String,
             required: true,
             trim: true
+        },
+        slug: {
+            type: String,
+            required: false,
         },
         chapters: {
             type : [Schema.Types.ObjectId],

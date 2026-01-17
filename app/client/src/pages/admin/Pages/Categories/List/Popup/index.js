@@ -1,16 +1,31 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styles from "./style.module.css";
 import { toast } from "react-toastify";
 
 const Popup = ({ isOpen, onClose, onSubmit, loading, apiError }) => {
     const [name, setName] = useState("");
     const [status, setStatus] = useState("active");
+    const [slug, setSlug] = useState("");
 
-    if (!isOpen) return null;
+    // Function to generate slug from name
+    const generateSlug = (text) => {
+        return text
+            .toLowerCase()
+            .trim()
+            .replace(/[\s_]+/g, "-") // spaces and underscores to hyphen
+            .replace(/[^\w-]+/g, "") // remove special chars
+            .replace(/--+/g, "-"); // remove duplicate hyphens
+    };
+
+    // Update slug automatically when name changes
+    useEffect(() => {
+        setSlug(generateSlug(name));
+    }, [name]);
 
     const handleReset = () => {
         setName("");
         setStatus("active");
+        setSlug("");
     };
 
     const handleAdd = async () => {
@@ -18,6 +33,7 @@ const Popup = ({ isOpen, onClose, onSubmit, loading, apiError }) => {
 
         const payload = {
             name: name.trim(),
+            slug, // include slug in payload
             status,
         };
 
@@ -34,9 +50,12 @@ const Popup = ({ isOpen, onClose, onSubmit, loading, apiError }) => {
             handleReset();
             onClose();
         } catch (e) {
-
+            // handle error if needed
         }
     };
+
+    // Only render modal if open
+    if (!isOpen) return null;
 
     return (
         <div className={styles.overlay} onClick={onClose}>
@@ -63,6 +82,16 @@ const Popup = ({ isOpen, onClose, onSubmit, loading, apiError }) => {
                             placeholder="Ex: Investigații"
                             value={name}
                             onChange={(e) => setName(e.target.value)}
+                        />
+                    </div>
+
+                    <div className={styles.field}>
+                        <label className={styles.label}>Slug</label>
+                        <input
+                            className={styles.input}
+                            type="text"
+                            value={slug}
+                            readOnly
                         />
                     </div>
 
