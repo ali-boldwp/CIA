@@ -2,7 +2,7 @@
     padding: 20px;
 }
 
-.main-card {
+.mainCard {
     background: white;
     padding: 40px;
     border-radius: 8px;
@@ -10,102 +10,113 @@
     border: 1px solid #e8e8e8;
 }
 
-.main-title {
+.mainTitle {
     color: #1E3A8A;
     font-size: 26px;
     font-weight: 700;
     margin-bottom: 30px;
 }
 
-.section-title {
+.sectionTitle {
     color: #0F172A;
     font-size: 20px;
     font-weight: 700;
     margin-bottom: 20px !important;
-    /* REMOVED: padding-bottom: 8px; */
-    /* REMOVED: border-bottom: 1px solid #3498db; */
 }
-.editable-table input[type="text"]{
-    border:none !important;
+
+.editableTable input[type="text"] {
+    border: none !important;
     font-size: 14px !important;
     font-weight: 700 !important;
     font-family: Inter !important;
     background: #fff !important;
-    color:#374151 !important;
+    color: #374151 !important;
 }
-.editable-table input[type="text"]:focus{
+
+.editableTable input[type="text"]:focus {
     outline: none !important;
 }
-.table-container {
+
+.tableContainer {
     margin-bottom: 25px;
 }
-th{
-    color:#0F172A !important;
+
+.editableTable th {
+    color: #0F172A !important;
     font-weight: 700;
 }
-.editable-table {
+
+.editableTable {
     width: 100%;
     border-collapse: collapse;
     margin-bottom: 15px;
 }
 
-.editable-table th {
+.editableTable th {
     background-color: #F1F5F9;
     padding: 20px;
     font-style: normal;
     text-align: left;
-    font-weight: 600;
-    color: #2c3e50;
+    font-weight: 700;
+    font-size: 14px;
     border: 1px solid #dee2e6;
 }
 
-.editable-table td {
+.editableTable td {
     padding: 10px 15px;
     border: 1px solid #dee2e6;
+    color: #374151;
+    font-weight: 700;
+    font-size: 14px;
+
 }
 
-.editable-table select,
-.editable-table input[type="date"],
-.editable-table input[type="text"] {
+.editableTable select,
+.editableTable input[type="date"],
+.editableTable input[type="text"] {
     width: 100%;
     padding: 8px 10px;
     border: 1px solid #ced4da;
     font-size: 14px;
 }
 
-.checkbox-cell {
+.checkboxCell {
     display: flex;
     align-items: center;
     gap: 8px;
 }
 
-.checkbox-cell input[type="checkbox"] {
+.checkboxCell input[type="checkbox"] {
     width: 16px;
     height: 16px;
 }
 
-.add-button {
-    background-color: #3498db;
-    color: white;
+.addButton {
+    background-color: #3B82F6;
+    color: #FFFFFF;
     border: none;
-    padding: 8px 16px;
-    border-radius: 4px;
-    font-size: 14px;
+    width: 240px;
+    height: 40px;
+    border-radius: 12px;
+    font-size: 18px;
+    font-weight: 700;
     cursor: pointer;
-    transition: background-color 0.3s;
-}
-tr:hover{
-    background: transparent !important;
-}
-.add-button:hover {
-    background-color: #2980b9;
+    border: 1px solid #3B82F6;
 }
 
-.images-section {
+.editableTable tr:hover {
+    background: transparent !important;
+}
+
+.addButton:hover {
+    background-color:#2563EB;
+}
+
+.imagesSection {
     margin: 25px 0;
 }
 
-.note-section {
+.noteSection {
     margin-top: 25px;
     padding: 20px;
     background-color: #f8f9fa;
@@ -116,36 +127,36 @@ tr:hover{
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
 
-.note-label {
+.noteLabel {
     color: #c0392b;
 }
 
 /* Responsive adjustments */
 @media (max-width: 768px) {
-    .main-card {
+    .mainCard {
         padding: 20px;
     }
 
-    .main-title {
+    .mainTitle {
         font-size: 22px;
     }
 
-    .section-title {
+    .sectionTitle {
         font-size: 16px;
     }
 }
 
 @media (max-width: 480px) {
-    .main-card {
+    .mainCard {
         padding: 15px;
     }
 
-    .main-title {
+    .mainTitle {
         font-size: 20px;
     }
 
-    .editable-table th,
-    .editable-table td {
+    .editableTable th,
+    .editableTable td {
         padding: 8px 10px;
     }
 }
