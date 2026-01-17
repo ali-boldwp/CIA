@@ -10,7 +10,7 @@ const Navigation = () => {
                     Salveaza sectiunea
                 </button>
                 <button className={styles.nextButton}>
-                    Mergi la 1.2. „Istoric societate“
+                    ➡️  Mergi la I.2. „Istoric societate”
                     <span className={styles.arrowIcon}>→</span>
                 </button>
             </div>

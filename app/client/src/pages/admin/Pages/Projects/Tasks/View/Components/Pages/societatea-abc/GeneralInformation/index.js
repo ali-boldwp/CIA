@@ -125,11 +125,11 @@ const Index = () => {
                         ))}
                         </tbody>
                     </table>
-                    <button className={styles.addButton}>➕ Adauga rand</button>
+                    <button className={styles.addButton}>Adaugă nouă</button>
                 </div>
 
                 {/* Section Title */}
-                <h3 className={styles.sectionTitle}>STRUCTURA ACTIONARIATULUI</h3>
+                <h3 className={styles.sectionTitle}>📊 STRUCTURA ACTIONARIATULUI</h3>
 
                 {/* Shareholder Structure Table */}
                 <div className={styles.tableContainer}>
@@ -143,23 +143,34 @@ const Index = () => {
                         </thead>
                         <tbody>
                         <tr>
-                            <td>[nume actionar]</td>
                             <td>
-                                <select>
-                                    <option value="">Selectează</option>
-                                    <option value="actionar">Acționar</option>
-                                    <option value="admin">Administrator</option>
-                                </select>
+                                <input
+                                    type="text"
+                                    placeholder="[nume actionar]"
+                                />
                             </td>
-                            <td>[%]</td>
+
+                            <td>
+                                <input
+                                    type="text"
+                                    placeholder="Selectează"
+                                />
+                            </td>
+
+                            <td>
+                                <input
+                                    type="text"
+                                    placeholder="[ % ]"
+                                />
+                            </td>
                         </tr>
                         </tbody>
                     </table>
-                    <button className={styles.addButton}>➕ Adauga rand</button>
+                    <button className={styles.addButton}>Adaugă nouă</button>
                 </div>
 
                 {/* Section Title */}
-                <h3 className={styles.sectionTitle}>CONDUCERE / ADMINISTRATORI</h3>
+                <h3 className={styles.sectionTitle}>👥 CONDUCERE / ADMINISTRATORI</h3>
 
                 {/* Management/Administrators Table */}
                 <div className={styles.tableContainer}>
@@ -173,25 +184,34 @@ const Index = () => {
                         </thead>
                         <tbody>
                         <tr>
-                            <td>[nume]</td>
                             <td>
-                                <select>
-                                    <option value="">Selectează</option>
-                                    <option value="director">Director</option>
-                                    <option value="manager">Manager</option>
-                                </select>
+                                <input
+                                    type="text"
+                                    placeholder="[nume]"
+                                />
                             </td>
+
                             <td>
-                                <input type="date" />
+                                <input
+                                    type="text"
+                                    placeholder="Selectează"
+                                />
+                            </td>
+
+                            <td>
+                                <input
+                                    type="text"
+                                    placeholder="[ data ]"
+                                />
                             </td>
                         </tr>
                         </tbody>
                     </table>
-                    <button className={styles.addButton}>➕ Adauga rand</button>
+                    <button className={styles.addButton}>Adaugă nouă</button>
                 </div>
 
                 {/* Section Title */}
-                <h3 className={styles.sectionTitle}>CONSILIU DE ADMINISTRATIE</h3>
+                <h3 className={styles.sectionTitle}>️🏛️ CONSILIU DE ADMINISTRATIE</h3>
 
                 {/* Board of Directors Table */}
                 <div className={styles.tableContainer}>
@@ -206,28 +226,41 @@ const Index = () => {
                         </thead>
                         <tbody>
                         <tr>
-                            <td>[nume]</td>
                             <td>
-                                <select>
-                                    <option value="">Selectează</option>
-                                    <option value="presedinte">Președinte</option>
-                                    <option value="membru">Membru</option>
-                                </select>
+                                <input
+                                    type="text"
+                                    placeholder="[nume]"
+                                />
+                            </td>
+
+                            <td>
+                                <input
+                                    type="text"
+                                    placeholder="Selectează"
+                                />
+                            </td>
+
+                            <td>
+                                <input
+                                    type="text"
+                                    placeholder="[ data ]"
+                                />
                             </td>
                             <td>
-                                <input type="date" />
-                            </td>
-                            <td>
-                                <input type="date" />
+                                <input
+                                    type="text"
+                                    placeholder="[ data ]"
+                                />
                             </td>
                         </tr>
                         </tbody>
+
                     </table>
-                    <button className={styles.addButton}>➕ Adauga rand</button>
+                    <button className={styles.addButton}>Adaugă nouă</button>
                 </div>
 
                 {/* Section Title */}
-                <h3 className={styles.sectionTitle}>LOCATII / PUNCTE DE LUCRU</h3>
+                <h3 className={styles.sectionTitle}>📍 LOCATII / PUNCTE DE LUCRU</h3>
 
                 {/* Locations/Workpoints Table */}
                 <div className={styles.tableContainer}>
@@ -242,14 +275,37 @@ const Index = () => {
                         </thead>
                         <tbody>
                         <tr>
-                            <td>Punct de lucru permanent</td>
-                            <td>[text editabil]</td>
-                            <td>[text editabil]</td>
-                            <td>[perioada]</td>
+                            <td>
+                                <input
+                                    type="text"
+                                    placeholder="[nume actionar]"
+                                />
+                            </td>
+
+                            <td>
+                                <input
+                                    type="text"
+                                    placeholder="Selectează"
+                                />
+                            </td>
+
+                            <td>
+                                <input
+                                    type="text"
+                                    placeholder="[text editabil]"
+                                />
+                            </td>
+                            <td>
+                                <input
+                                    type="text"
+                                    placeholder="[perioada]"
+                                />
+                            </td>
                         </tr>
                         </tbody>
+
                     </table>
-                    <button className={styles.addButton}>➕ Adauga rand</button>
+                    <button className={styles.addButton}>Adaugă nouă</button>
                 </div>
 
                 {/* Images/Graphics Section */}
@@ -260,13 +316,6 @@ const Index = () => {
 
                 {/* Navigation Buttons */}
                 <Navigation />
-
-                {/* Note Section */}
-                <div className={styles.noteSection}>
-                    <p>
-                        <strong className={styles.noteLabel}>Nota:</strong> Tabelele 'Conducere/Administratori' si 'Consiliu de Administratie' pot fi eliminate daca nu se aplica.
-                    </p>
-                </div>
 
             </div>
         </div>
