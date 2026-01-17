@@ -25,7 +25,7 @@
     cursor: pointer;
     transition: all 0.3s;
     flex: 1;
-    min-width: 200px;
+    width: 200px !important;
     justify-content: center;
 }
 
