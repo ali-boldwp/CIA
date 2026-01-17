@@ -9,6 +9,10 @@ const Navigation = () => {
                     <span className={styles.saveIcon}>💾</span>
                     Salveaza sectiunea
                 </button>
+                <button className={styles.middleButton}>
+                    ❌  Exclude acest capitol
+                    <span className={styles.arrowIcon}>→</span>
+                </button>
                 <button className={styles.nextButton}>
                     ➡️  Mergi la I.2. „Istoric societate”
                     <span className={styles.arrowIcon}>→</span>

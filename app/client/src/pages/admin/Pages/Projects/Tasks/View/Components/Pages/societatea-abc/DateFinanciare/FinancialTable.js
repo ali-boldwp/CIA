@@ -1,5 +1,5 @@
 import styles from "./FinancialTable.module.css";
-import {useState} from "react";
+import { useState } from "react";
 
 const FinancialTable = () => {
     const rows = [
@@ -20,7 +20,7 @@ const FinancialTable = () => {
         "Numar mediu angajati",
     ];
 
-        return (
+    return (
         <div className={styles.container}>
             <h3 className={styles.title}>
                 📊 Tabel date financiare pe ultimii 3 ani
@@ -45,9 +45,18 @@ const FinancialTable = () => {
                 {rows.map((label, index) => (
                     <tr key={index}>
                         <td className={styles.label}>{label}</td>
-                        <td className={styles.value}><inpt type="text" placeholder="[ ]" /></td>
-                        <td className={styles.value}><inpt type="text" placeholder="[ ]" /></td>
-                        <td className={styles.value}><inpt type="text" placeholder="[ ]" /> </td>
+
+                        <td className={styles.value}>
+                            <input type="text" placeholder="[ ]" />
+                        </td>
+
+                        <td className={styles.value}>
+                            <input type="text" placeholder="[ ]" />
+                        </td>
+
+                        <td className={styles.value}>
+                            <input type="text" placeholder="[ ]" />
+                        </td>
                     </tr>
                 ))}
                 </tbody>

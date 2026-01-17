@@ -14,6 +14,7 @@ import ProprietateIntelectuala from "./Components/Pages/societatea-abc/Proprieta
 import LitigiiSocietate from "./Components/Pages/societatea-abc/LitigiiSocietate";
 import ParticipatiiSocietate from "./Components/Pages/societatea-abc/ParticipatiiSocietate";
 import Controversesi from "./Components/Pages/societatea-abc/Controversesi";
+import DateFinanciare from "./Components/Pages/societatea-abc/DateFinanciare";
 
 const ViewTask = () => {
 
@@ -51,6 +52,8 @@ const ViewTask = () => {
                     <ParticipatiiSocietate/>
                 ):taskName === "Controversesi" ? (
                     <Controversesi/>
+                ):taskName === "DateFinanciare" ? (
+                    <DateFinanciare/>
                 ):null
 
 

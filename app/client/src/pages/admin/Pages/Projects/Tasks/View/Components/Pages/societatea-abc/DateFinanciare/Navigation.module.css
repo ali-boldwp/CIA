@@ -10,7 +10,7 @@
     display: flex;
     gap: 20px;
     flex-wrap: wrap;
-    width: 800px;
+
 }
 
 .saveButton {
@@ -47,12 +47,27 @@
     flex: 1;
     font-style: italic;
     width: 282px;
-    height: 44px;
     justify-content: center;
 }
 
 
-
+.middleButton{
+    display: inline-flex;
+    align-items: center;
+    padding: 18px 0px;
+    background-color: #FFFFFF;
+    color: #64748B;
+    border: 1px solid #E5E7EB;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s;
+    flex: 1;
+    font-style: italic;
+    width: 282px;
+    justify-content: center;
+}
 .saveIcon {
     font-size: 20px;
     margin-right: 12px;
