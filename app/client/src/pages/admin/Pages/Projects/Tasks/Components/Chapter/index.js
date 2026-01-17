@@ -243,7 +243,7 @@ const Chapter = ({
                                             <>
                                                   
 
-                                                        <Link to={`${task._id}/progress`}
+                                                        <Link to={`${task._id}/progress/${task.slug}`}
                                                              className="btn view"
 
                                                           >

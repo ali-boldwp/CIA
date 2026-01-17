@@ -6,10 +6,12 @@ import TaskView from "./Components/TaskView";
 import Header from "../../../../Components/Header";
 import ProjectHeader from "../../../../../Components/Project/Components/HeaderTask"
 import GeneralInformation from "./Components/Pages/societatea-abc/GeneralInformation";
+import IstoricSocietate from "./Components/Pages/societatea-abc/IstoricSocietate";
+import ParteneriContractuali from "./Components/Pages/societatea-abc/ParteneriContractuali";
 
 const ViewTask = () => {
 
-    const { id: projectId } = useParams();
+    const { id: projectId ,taskName} = useParams();
 
     const { data: projectData, isLoading, isError } = useGetCreateProjectByIdQuery( projectId );
     console.log(projectData?.data)
@@ -25,8 +27,15 @@ const ViewTask = () => {
                 }
             }
             content={
+                taskName === "GeneralInformation" ? (
+                    <GeneralInformation />
+                ) : taskName === "IstoricSocietate" ? (
+                    <IstoricSocietate />
+                ):taskName === "ParteneriContractuali" ? (
+                    <ParteneriContractuali/>
+                ) : null
 
-            <GeneralInformation/>
+
                 // <TaskView/>
 
             }
