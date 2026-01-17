@@ -20,6 +20,8 @@ router.get("/:id/view", auth, taskController.getTask);
 
 router.put("/:id", auth, taskController.updateTask);
 
+router.put("/:id/data", auth ,taskController.updateTaskData);
+
 router.delete("/:id" , auth , taskController.deleteTask);
 
 // ⭐ START TASK

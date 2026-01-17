@@ -43,6 +43,28 @@ export const updateTask = async (
     }
 };
 
+export const updateTaskData = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { data } = req.body; // dynamic data object
+
+        if (!data) return res.status(400).json({ success: false, message: "Data is required" });
+
+        const task = await Task.findById(id);
+        if (!task) return res.status(404).json({ success: false, message: "Task not found" });
+
+        // Merge old data with new
+        task.data = { ...task.data, ...data };
+
+        await task.save();
+
+        res.json({ success: true, task });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ success: false, message: "Server error" });
+    }
+};
+
 
 
 export const deleteTask = async (

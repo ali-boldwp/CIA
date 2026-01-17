@@ -6,7 +6,7 @@ export interface ITask extends Document {
     completed:Boolean,
     analyst: Types.ObjectId;
     isPaused: boolean;
-
+    slug: string;
     totalSeconds: number;
     lastStartTimestamp?: number;
     data: Record<string, any>;
@@ -19,6 +19,7 @@ const taskSchema = new Schema<ITask>(
             required: true,
             trim: true
         },
+        slug: { type: String, required: false },
 
         chapterId: {
             type: Schema.Types.ObjectId,

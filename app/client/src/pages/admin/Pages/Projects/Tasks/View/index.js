@@ -25,8 +25,10 @@ const ViewTask = () => {
                 }
             }
             content={
+
             <GeneralInformation/>
                 // <TaskView/>
+
             }
         />
     );
