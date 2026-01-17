@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import styles from "./styles.module.css";
-import ImagePlaceholder from "./ImagePlaceholder";
+import ImagePlaceholder from "./ImagePlaceholder.js";
 
 const Index = () => {
     const [rows, setRows] = useState([
@@ -22,30 +22,32 @@ const Index = () => {
             <div className={styles.mainCard}>
 
                 <h1 className={styles.mainTitle}>
-                    I. Societatea ABC | 2. Istoric societate
+                    I. Societatea ABC |  5. Datorii si inscrieri mobiliare
                 </h1>
 
                 {/* Istoric */}
-                <h3 className={styles.sectionTitle}>✏️ Istoricul societății</h3>
+                <h3 className={styles.sectionTitle}>Situatia inscrierilor active existente in RNPM (AEGRM)</h3>
 
                 <div className={styles.textAreaWrapper}>
+                    <h3 className={styles.sectionTitle}>💬 Introducere</h3>
           <textarea
               className={styles.textarea}
-              placeholder="[Scrie aici textul narativ – multiline]"
+              placeholder="In urma verificarilor efectuate in registrele publice, inclusiv in Arhiva Electronica de Garantii Reale Mobiliare (AEGRM), a rezultat ca Societatea [denumire societate] are inregistrate un numar de __ ipoteci mobiliare in favoarea  creditorilor, printre care mentionam: "
           />
                     <button className={styles.deleteBox}>Șterge căsuța</button>
                 </div>
 
                 {/* Cronologie */}
                 <h3 className={styles.sectionTitle}>
-                    📜 Cronologia mențiunilor publicate în Monitorul Oficial
+                    📋 Tabel datorii si inscrieri mobiliare
                 </h3>
 
                 <table className={styles.table}>
                     <thead>
                     <tr>
-                        <th>DATA</th>
-                        <th>MENȚIUNI</th>
+                        <th>ACT JURIDIC / DATA</th>
+                        <th>CREDITOR</th>
+                        <th>DETALII</th>
                         <th></th>
                     </tr>
                     </thead>
@@ -55,13 +57,19 @@ const Index = () => {
                             <td>
                                 <input
                                     type="text"
-                                    placeholder="[zz.ll.aaaa]"
+                                    placeholder="[Act juridic / Data]"
                                 />
                             </td>
                             <td>
                                 <input
                                     type="text"
-                                    placeholder="descriere editabilă – ex.: Schimbare sediu social"
+                                    placeholder="[Creditor]"
+                                />
+                            </td>
+                            <td>
+                                <input
+                                    type="text"
+                                    placeholder="[Detalii - Valoare, obiect, termen etc.]"
                                 />
                             </td>
                             <td>
@@ -96,7 +104,7 @@ const Index = () => {
                             <span className={styles.arrowIcon}>→</span>
                         </button>
                         <button className={styles.nextButton}>
-                            ➡️  Mergi la I.3. „Date fianciare”
+                            ➡️  Mergi la I.6. „Achizitii SEAP”
                             <span className={styles.arrowIcon}>→</span>
                         </button>
                     </div>

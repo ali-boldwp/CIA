@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import styles from "./styles.module.css";
-import ImagePlaceholder from "./ImagePlaceholder";
+import ImagePlaceholder from "./ImagePlaceholder.js";
 
 const Index = () => {
     const [rows, setRows] = useState([
@@ -22,30 +22,31 @@ const Index = () => {
             <div className={styles.mainCard}>
 
                 <h1 className={styles.mainTitle}>
-                    I. Societatea ABC | 2. Istoric societate
+                    I. Societatea ABC |   7. Proprietate intelectuala / Marci OSIM
                 </h1>
 
                 {/* Istoric */}
-                <h3 className={styles.sectionTitle}>✏️ Istoricul societății</h3>
+                <h3 className={styles.sectionTitle}>Informatii privind marcile inregistrate (OSIM) ale societatii si afiliatilor</h3>
 
                 <div className={styles.textAreaWrapper}>
-          <textarea
-              className={styles.textarea}
-              placeholder="[Scrie aici textul narativ – multiline]"
-          />
+                    <h3 className={styles.sectionTitle}>💬 Introducere</h3>
+                    <textarea
+                        className={styles.textarea}
+                        placeholder="Potrivit verificarilor efectuate, de-a lungul timpului, Societatea [denumire societate] a inregistrat la Oficiul de Stat pentru Inventii si Marci (OSIM) urmatoarele marci:  "
+                    />
                     <button className={styles.deleteBox}>Șterge căsuța</button>
                 </div>
 
                 {/* Cronologie */}
                 <h3 className={styles.sectionTitle}>
-                    📜 Cronologia mențiunilor publicate în Monitorul Oficial
+                    ® Tabel marci inregistrate la OSIM
                 </h3>
 
                 <table className={styles.table}>
                     <thead>
                     <tr>
-                        <th>DATA</th>
-                        <th>MENȚIUNI</th>
+                        <th>DENUMIRE MARCA</th>
+                        <th>DETALII </th>
                         <th></th>
                     </tr>
                     </thead>
@@ -55,15 +56,16 @@ const Index = () => {
                             <td>
                                 <input
                                     type="text"
-                                    placeholder="[zz.ll.aaaa]"
+                                    placeholder="[Denumire marca]"
                                 />
                             </td>
                             <td>
                                 <input
                                     type="text"
-                                    placeholder="descriere editabilă – ex.: Schimbare sediu social"
+                                    placeholder="[Detalii marca – an inregistrare, valabilitate, titular, observatii]"
                                 />
                             </td>
+
                             <td>
                                 <button
                                     className={styles.trash}
@@ -81,7 +83,7 @@ const Index = () => {
                     + Adaugă rând
                 </button>
                 <div className={styles.imagesSection}>
-                    <h3 className={styles.sectionTitle}>🖼️ Imagini / grafice</h3>
+                    <h3 className={styles.sectionTitle}>📷 Anexe OSIM (imagini / printscreen)</h3>
                     <ImagePlaceholder />
                 </div>
 
@@ -96,7 +98,7 @@ const Index = () => {
                             <span className={styles.arrowIcon}>→</span>
                         </button>
                         <button className={styles.nextButton}>
-                            ➡️  Mergi la I.3. „Date fianciare”
+                            ➡️  Mergi la I.8. „Litigii societate”
                             <span className={styles.arrowIcon}>→</span>
                         </button>
                     </div>
