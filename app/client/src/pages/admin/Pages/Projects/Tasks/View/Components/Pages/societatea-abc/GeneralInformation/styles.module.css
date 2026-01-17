@@ -68,7 +68,6 @@
     color: #374151;
     font-weight: 700;
     font-size: 14px;
-
 }
 
 .editableTable select,
@@ -116,6 +115,40 @@
     margin: 25px 0;
 }
 
+.imagesSection {
+    margin: 25px 0;
+}
+
+.imagesSection,
+.navigation {
+    width: 100%;
+}
+
+/* Button Container for side-by-side layout */
+.buttonContainer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 15px;
+}
+
+.deleteTableButton {
+    background-color: #9CA3AF;
+    color: #FFFFFF;
+    border: none;
+    width: 220px;
+    height: 33px;
+    border-radius: 12px;
+    font-size: 18px;
+    font-weight: 700;
+    cursor: pointer;
+    border: 1px solid #9CA3AF;
+}
+
+.deleteTableButton:hover {
+    background-color: #6B7280;
+}
+
 /* Responsive adjustments */
 @media (max-width: 768px) {
     .mainCard {
@@ -128,6 +161,15 @@
 
     .sectionTitle {
         font-size: 16px;
+    }
+
+    .buttonContainer {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .addButton, .deleteTableButton {
+        width: 100%;
     }
 }
 
@@ -143,5 +185,37 @@
     .editableTable th,
     .editableTable td {
         padding: 8px 10px;
+    }
+}
+
+/* Note Section Styles */
+.noteSection {
+    margin-top: 30px;
+    display: flex;
+    border-radius: 8px;
+    justify-content: flex-start;
+
+}
+
+.noteText {
+    color: #6B7280;
+    font-size: 14px;
+    font-weight: 700;
+    margin: 0;
+}
+
+.noteText strong {
+    color: #1F2937;
+}
+
+/* Responsive adjustments for note */
+@media (max-width: 768px) {
+    .noteSection {
+        padding: 15px;
+        margin-top: 30px;
+    }
+
+    .noteText {
+        font-size: 14px;
     }
 }
