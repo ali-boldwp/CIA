@@ -3,6 +3,53 @@ body{
     letter-spacing: 0.55px;
      overflow-x:hidden;
 }
+
+input,
+select,
+textarea {
+    padding: 10px 13px !important;
+    border-radius: 4px !important;
+    font-size: 15px !important;
+}
+
+.floating-chat-footer {
+    position: fixed;
+    right: 24px;
+    bottom: 24px;
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    background: #2563eb;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
+    text-decoration: none;
+    z-index: 999;
+}
+
+.floating-chat-footer svg {
+    width: 26px;
+    height: 26px;
+}
+
+.floating-chat-badge {
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: #ef4444;
+    color: #fff;
+    font-size: 12px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+}
 .App {
    text-align: center;
 }

@@ -1,12 +1,13 @@
 import HeaderLayout from "./Component/Header"
-import {useEffect} from "react";
+import {useEffect, useMemo} from "react";
 import socket from "../socket";
 import { toast } from "react-toastify";
 import {useSelector} from "react-redux";
 import {Link} from "react-router-dom";
 import store from "../store";
 import {notificationApi} from "../services/notificationApi";
-import {chatApi} from "../services/chatApi";
+import {chatApi, useGetMyChatsQuery} from "../services/chatApi";
+import {FiMessageCircle} from "react-icons/fi";
 
 const Layout = ({
         loading = true,
@@ -15,6 +16,15 @@ const Layout = ({
     }) => {
 
     const user = useSelector((state) => state.auth.user);
+
+    const {data: chatsData, refetch: refetchChats} = useGetMyChatsQuery(undefined, {
+        skip: !user?._id
+    });
+
+    const unreadCount = useMemo(() => {
+        const chats = chatsData?.data || [];
+        return chats.reduce((total, chat) => total + (chat?.unreadCount || 0), 0);
+    }, [chatsData]);
 
     useEffect(() => {
 
@@ -60,13 +70,19 @@ const Layout = ({
 
         socket.on("notification", handler);
 
+        const handleNewMessage = () => {
+            refetchChats();
+        };
+
+        socket.on("new_message", handleNewMessage);
 
         return () => {
             socket.off("notification", handler);
             socket.off("connect", joinNotifications);
+            socket.off("new_message", handleNewMessage);
         };
 
-    }, [ user?._id ]);
+    }, [ user?._id, refetchChats ]);
 
     const {
         title = null,
@@ -111,6 +127,16 @@ const Layout = ({
             }}>
                 { content }
             </div>
+            <Link
+                to="/messenger"
+                className="floating-chat-footer"
+                aria-label="Open chat"
+            >
+                <FiMessageCircle />
+                {unreadCount > 0 && (
+                    <span className="floating-chat-badge">!</span>
+                )}
+            </Link>
         </div>
     );
 
