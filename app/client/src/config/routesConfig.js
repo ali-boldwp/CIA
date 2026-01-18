@@ -1,5 +1,6 @@
 // src/config/routesConfig.js
 import React from "react";
+import { Navigate } from "react-router-dom";
 import Utils from "@libs/utils";
 
 import LoginConfig from "../pages/auth/Login/LoginConfig";
@@ -37,6 +38,7 @@ export const getRoutesForRole = (role) => {
     const allowedConfigs = filterConfigsByRole(role);
 
     const generatedRoutes = Utils.generateRoutesFromConfigs(allowedConfigs);
+    const fallbackElement = role ? <NotFound /> : <Navigate to="/login" replace />;
 
     const routes = [
         ...generatedRoutes,
@@ -54,7 +56,7 @@ export const getRoutesForRole = (role) => {
         },
         {
             path: "*",
-            element: <NotFound />,
+            element: fallbackElement,
         },
     ];
 
