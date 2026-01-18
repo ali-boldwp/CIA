@@ -26,7 +26,8 @@ const ViewTask = () => {
     const { data: projectData, isLoading } =
         useGetCreateProjectByIdQuery(projectId)
     const { data: taskData } = useGetTaskQuery(taskId);
-    console.log(taskData);
+    const task = taskData?.data;
+    const isStarted = !!task?.analyst;
     const taskComponents = {
         GeneralInformation,
         IstoricSocietate,
@@ -63,7 +64,7 @@ const ViewTask = () => {
                     />
 
                     {/* ✅ SLUG BASED PAGE */}
-                    {  SelectedComponent ? (
+                    {  SelectedComponent && isStarted ? (
                         <SelectedComponent
                             taskId={taskId}
                             formValues={formValues}

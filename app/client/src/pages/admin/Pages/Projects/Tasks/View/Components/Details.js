@@ -8,6 +8,7 @@ import {
 import "./Detail.css";
 
 const Details = ({ projectId, taskId, formValues }) => {
+
     const { data: projectData } = useGetCreateProjectByIdQuery(projectId, {
         skip: !projectId
     });

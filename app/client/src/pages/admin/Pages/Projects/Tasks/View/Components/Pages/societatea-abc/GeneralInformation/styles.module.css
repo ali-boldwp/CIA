@@ -74,6 +74,10 @@
     font-size: 14px;
 }
 
+.editableTable td:first-child {
+    width: 500px;
+}
+
 .editableTable select,
 .editableTable input[type="date"],
 .editableTable input[type="text"] {
