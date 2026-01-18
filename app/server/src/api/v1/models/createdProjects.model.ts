@@ -2,7 +2,7 @@ import { Schema, model, Document, Types } from "mongoose";
 
 export interface ICreatedProject extends Document {
     projectName: string;
-    projectSubject: string;
+    projectSubject?: string;
     reportType: string;
     entityType: string;
     deadline: Date;
@@ -40,7 +40,7 @@ export interface ICreatedProject extends Document {
 const createdProjectSchema = new Schema<ICreatedProject>(
     {
         projectName: { type: String, required: true },
-        projectSubject: { type: String, required: true },
+        projectSubject: { type: String, required: false },
         reportType: { type: String, required: true },
         entityType: { type: String, required: true },
         deadline: { type: Date, required: true },

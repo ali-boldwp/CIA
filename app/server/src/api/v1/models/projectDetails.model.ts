@@ -23,7 +23,7 @@ export interface IHumintCostItem {
 
 export interface IProjectDetails extends Document {
     projectName: string;
-    projectSubject: string;
+    projectSubject?: string;
     reportType: string;
     entityType: string;
     priority: string;
@@ -105,7 +105,7 @@ const humintCostItemSchema = new Schema<IHumintCostItem>(
 const projectDetailsSchema = new Schema<IProjectDetails>(
     {
         projectName: { type: String, required: true },
-        projectSubject: { type: String, required: true },
+        projectSubject: { type: String, required: false },
         reportType: { type: String, required: true },
         entityType: { type: String, required: true },
         priority: { type: String, default: "Normal" },
