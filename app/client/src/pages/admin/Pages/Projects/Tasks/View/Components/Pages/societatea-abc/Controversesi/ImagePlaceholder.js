@@ -16,12 +16,7 @@ const ImagePlaceholder = () => {
 
     return (
         <>
-            <span>Adauga imagini sau grafice (optional).</span>
             <div className={styles.imageSection}>
-                <button className={styles.addImageButton} onClick={handleAdd}>
-                    <span className={styles.addIcon}>+</span>
-                    Adaugă poza/grafic
-                </button>
                 <div className={styles.imageGrid}>
                     {images.map((img, index) => (
                         <label key={index} className={styles.imagePlaceholder}>

@@ -3,18 +3,58 @@ import styles from "./styles.module.css";
 import ImagePlaceholder from "./ImagePlaceholder";
 
 const Index = () => {
+
+    // ===== TEXTAREA =====
+    const [historyText, setHistoryText] = useState("");
+
+    // ===== TABLE ROWS =====
     const [rows, setRows] = useState([
         { date: "[zz.ll.aaaa]", note: "Schimbare sediu social" },
         { date: "[zz.ll.aaaa]", note: "Majorare capital social" },
         { date: "[zz.ll.aaaa]", note: "Numire/Revocare administrator" }
     ]);
 
+    // ===== IMAGES =====
+    const [images, setImages] = useState([]);
+
+    // ===== ADD ROW =====
     const addRow = () => {
-        setRows([...rows, { date: "[zz.ll.aaaa]", note: "" }]);
+        setRows([...rows, { date: "", note: "" }]);
     };
 
+    // ===== DELETE ROW =====
     const deleteRow = (index) => {
         setRows(rows.filter((_, i) => i !== index));
+    };
+
+    // ===== UPDATE TABLE INPUT =====
+    const handleRowChange = (index, field, value) => {
+        const updatedRows = [...rows];
+        updatedRows[index][field] = value;
+        setRows(updatedRows);
+    };
+
+    // ===== IMAGE HANDLER =====
+    const handleImagesChange = (files) => {
+        setImages(files);
+    };
+
+    // ===== SAVE ALL DATA =====
+    const handleSave = () => {
+        const finalData = {
+            historyText,
+            chronology: rows,
+            images
+        };
+
+        console.log("FINAL DATA:", finalData);
+
+        // yahan backend API call bhi kar sakte ho
+        // example:
+        // const formData = new FormData();
+        // formData.append("historyText", historyText);
+        // formData.append("chronology", JSON.stringify(rows));
+        // images.forEach(img => formData.append("images", img));
     };
 
     return (
@@ -25,18 +65,25 @@ const Index = () => {
                     I. Societatea ABC | 2. Istoric societate
                 </h1>
 
-                {/* Istoric */}
+                {/* ===== ISTORIC ===== */}
                 <h3 className={styles.sectionTitle}>✏️ Istoricul societății</h3>
 
                 <div className={styles.textAreaWrapper}>
-          <textarea
-              className={styles.textarea}
-              placeholder="[Scrie aici textul narativ – multiline]"
-          />
-                    <button className={styles.deleteBox}>Șterge căsuța</button>
+                    <textarea
+                        className={styles.textarea}
+                        placeholder="[Scrie aici textul narativ – multiline]"
+                        value={historyText}
+                        onChange={(e) => setHistoryText(e.target.value)}
+                    />
+                    <button
+                        className={styles.deleteBox}
+                        onClick={() => setHistoryText("")}
+                    >
+                        Șterge căsuța
+                    </button>
                 </div>
 
-                {/* Cronologie */}
+                {/* ===== CRONOLOGIE ===== */}
                 <h3 className={styles.sectionTitle}>
                     📜 Cronologia mențiunilor publicate în Monitorul Oficial
                 </h3>
@@ -55,13 +102,21 @@ const Index = () => {
                             <td>
                                 <input
                                     type="text"
+                                    value={row.date}
                                     placeholder="[zz.ll.aaaa]"
+                                    onChange={(e) =>
+                                        handleRowChange(index, "date", e.target.value)
+                                    }
                                 />
                             </td>
                             <td>
                                 <input
                                     type="text"
+                                    value={row.note}
                                     placeholder="descriere editabilă – ex.: Schimbare sediu social"
+                                    onChange={(e) =>
+                                        handleRowChange(index, "note", e.target.value)
+                                    }
                                 />
                             </td>
                             <td>
@@ -80,30 +135,37 @@ const Index = () => {
                 <button className={styles.addRow} onClick={addRow}>
                     + Adaugă rând
                 </button>
+
+                {/* ===== IMAGES ===== */}
                 <div className={styles.imagesSection}>
                     <h3 className={styles.sectionTitle}>🖼️ Imagini / grafice</h3>
-                    <ImagePlaceholder />
+                    <ImagePlaceholder onChange={handleImagesChange} />
                 </div>
 
+                {/* ===== NAVIGATION ===== */}
                 <div className={styles.navigation}>
                     <div className={styles.navButtons}>
-                        <button className={styles.saveButton}>
+                        <button
+                            className={styles.saveButton}
+                            onClick={handleSave}
+                        >
                             <span className={styles.saveIcon}>💾</span>
                             Salveaza sectiunea
                         </button>
+
                         <button className={styles.middleButton}>
-                            ❌  Exclude acest capitol
+                            ❌ Exclude acest capitol
                             <span className={styles.arrowIcon}>→</span>
                         </button>
+
                         <button className={styles.nextButton}>
-                            ➡️  Mergi la I.3. „Date fianciare”
+                            ➡️ Mergi la I.3. „Date fianciare”
                             <span className={styles.arrowIcon}>→</span>
                         </button>
                     </div>
                 </div>
 
             </div>
-
         </div>
     );
 };

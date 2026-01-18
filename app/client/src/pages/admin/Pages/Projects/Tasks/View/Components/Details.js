@@ -3,7 +3,7 @@ import {toast} from "react-toastify";
 import { useGetCreateProjectByIdQuery } from "../../../../../../../services/projectApi";
 import {
     useGetTaskQuery,
-    useGetChapterByIdQuery,useUpdateTaskMutation, useStartTaskMutation, usePauseTaskMutation, useResumeTaskMutation, useCompleteTaskMutation
+    useGetChapterByIdQuery,useUpdateTaskDataMutation, useStartTaskMutation, usePauseTaskMutation, useResumeTaskMutation, useCompleteTaskMutation
 } from "../../../../../../../services/taskApi";
 import "./Detail.css";
 
@@ -24,7 +24,7 @@ const Details = ({ projectId, taskId, formValues }) => {
     const [startTask] = useStartTaskMutation();
     const [pauseTask] = usePauseTaskMutation();
     const [resumeTask] = useResumeTaskMutation();
-    const [updateTask] = useUpdateTaskMutation();
+    const [updateTaskData] = useUpdateTaskDataMutation();
     const [completeTask] = useCompleteTaskMutation();
 
     const project = projectData?.data;
@@ -82,7 +82,7 @@ const Details = ({ projectId, taskId, formValues }) => {
 
         try {
             // ✅ STEP 1: SAVE FORM DATA
-            await updateTask({
+            await updateTaskData({
                 id: taskId,
                 data: formValues,   // 🔥 YAHI FORM DATA JAYEGA
             }).unwrap();
