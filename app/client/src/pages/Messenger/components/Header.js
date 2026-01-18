@@ -586,7 +586,7 @@ const MessengerPage = ({
                                         <div className="bubble-text">{msg.text}</div>
 
                                         <div className="bubble-footer">
-                    <span className="bubble-name">
+                    <span className="bubble-name" style={{ color: msg.sender?.color }}>
                         {isMe ? "Me" : msg.sender?.name}
                     </span>
 

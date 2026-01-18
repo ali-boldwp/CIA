@@ -393,7 +393,7 @@ const CreateProject = ({ data, main }) => {
                     {/* ROW 1 */}
                     <div className="row-two">
                         <div className="form-field">
-                            <label>Denumire proiect</label>
+                            <label>Denumire Proiect <small>(Nume Companie/Persoana/Tinta )</small></label>
                             <input
                                 className="input-box"
                                 placeholder="ex: Due Diligence: Societatea ABC"
