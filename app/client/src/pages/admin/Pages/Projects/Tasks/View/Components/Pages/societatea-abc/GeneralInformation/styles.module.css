@@ -1,13 +1,14 @@
 .container {
     padding: 20px;
+    max-width: 1200px;
 }
 
 .mainCard {
-    background: white;
-    padding: 40px;
-    border-radius: 8px;
-    box-shadow: 0 3px 15px rgba(0, 0, 0, 0.05);
-    border: 1px solid #e8e8e8;
+    /*background: white;*/
+    /*padding: 40px;*/
+    /*border-radius: 8px;*/
+    /*box-shadow: 0 3px 15px rgba(0, 0, 0, 0.05);*/
+    /*border: 1px solid #e8e8e8;*/
 }
 
 .mainTitle {
@@ -22,6 +23,9 @@
     font-size: 20px;
     font-weight: 700;
     margin-bottom: 20px !important;
+    background: #FFF;
+    border-radius: 4px;
+    padding: 14px 18px;
 }
 
 .editableTable input[type="text"] {
