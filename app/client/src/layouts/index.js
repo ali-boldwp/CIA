@@ -17,7 +17,7 @@ const Layout = ({
 
     const user = useSelector((state) => state.auth.user);
 
-    const {data: chatsData} = useGetMyChatsQuery(undefined, {
+    const {data: chatsData, refetch: refetchChats} = useGetMyChatsQuery(undefined, {
         skip: !user?._id
     });
 
@@ -70,13 +70,19 @@ const Layout = ({
 
         socket.on("notification", handler);
 
+        const handleNewMessage = () => {
+            refetchChats();
+        };
+
+        socket.on("new_message", handleNewMessage);
 
         return () => {
             socket.off("notification", handler);
             socket.off("connect", joinNotifications);
+            socket.off("new_message", handleNewMessage);
         };
 
-    }, [ user?._id ]);
+    }, [ user?._id, refetchChats ]);
 
     const {
         title = null,
