@@ -88,7 +88,7 @@ export const getMessages = async (
 
         // ✅ get messages
         const messages = await Message.find(filter)
-            .populate("sender", "name role")
+            .populate("sender", "name role color")
             .sort({ _id: -1 })     // newest first
             .limit(limit);
 

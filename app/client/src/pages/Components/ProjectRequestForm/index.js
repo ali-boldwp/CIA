@@ -25,7 +25,6 @@ const Index = () => {
     const [annexNumber, setAnnexNumber] = useState("");
     const [annexDone, setAnnexDone] = useState(false);
 
-    const [projectSubject, setProjectSubject] = useState("");
     const [additionalInfo, setAdditionalInfo] = useState("");
 
     const [entityType, setEntityType] = useState("");
@@ -183,11 +182,6 @@ const Index = () => {
             newErrors.annexNumber = "Numărul anexei este obligatoriu dacă este bifat";
         }
 
-        // Project subject validation
-        if (!projectSubject.trim()) {
-            newErrors.projectSubject = "Subiectul proiectului este obligatoriu";
-        }
-
         // Entity type validation
         if (!entityType.trim()) {
             newErrors.entityType = "Tipul entității este obligatoriu";
@@ -259,7 +253,6 @@ const Index = () => {
 
         // REQUIRED FIELDS → match backend EXACTLY
         formData.append("projectName", name);
-        formData.append("projectSubject", projectSubject);
         formData.append("reportType", category);
         formData.append("entityType", entityType);
         formData.append("priority", priority);
@@ -345,7 +338,6 @@ const Index = () => {
             setContractDone(false);
             setAnnexNumber("");
             setAnnexDone(false);
-            setProjectSubject("");
             setAdditionalInfo("");
             setEntityType("");
             setDeadline("");
@@ -381,7 +373,6 @@ const Index = () => {
 
         // ⚠️ Doar câmpurile care există (fără validation strict)
         if (name) formData.append("projectName", name);
-        if (projectSubject) formData.append("projectSubject", projectSubject);
         if (category) formData.append("reportType", category);
         if (entityType) formData.append("entityType", entityType);
         if (priority) formData.append("priority", priority);
@@ -658,28 +649,6 @@ const Index = () => {
                                     {errors.annexNumber && (
                                         <div className={styles.errorMessage}>
                                             {errors.annexNumber}
-                                        </div>
-                                    )}
-                                </div>
-
-                                {/* SUBJECT */}
-                                <div
-                                    className={`${styles.gridItem} ${styles.span2Left}`}
-                                >
-                                    <label className={styles.label}>
-                                        Subiect proiect
-                                        <textarea
-                                            className={`${styles.textarea} ${styles.textareaTall} ${errors.projectSubject ? styles.inputError : ''}`}
-                                            value={projectSubject}
-                                            onChange={(e) =>
-                                                setProjectSubject(e.target.value)
-                                            }
-                                            placeholder="persoană de interes, societate/societăți (nume complet / denumire)..."
-                                        />
-                                    </label>
-                                    {errors.projectSubject && (
-                                        <div className={styles.errorMessage}>
-                                            {errors.projectSubject}
                                         </div>
                                     )}
                                 </div>
