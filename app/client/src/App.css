@@ -3,6 +3,14 @@ body{
     letter-spacing: 0.55px;
      overflow-x:hidden;
 }
+
+input,
+select,
+textarea {
+    padding: 10px 13px !important;
+    border-radius: 4px !important;
+    font-size: 15px !important;
+}
 .App {
    text-align: center;
 }
