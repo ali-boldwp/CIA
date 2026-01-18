@@ -1,11 +1,7 @@
-import React, { useState } from "react";
+import React, { useEffect } from "react";
 import styles from "./styles.module.css";
 
-const Index = () => {
-    const [rows, setRows] = useState([
-        { denumire: "", descriere: "" }
-    ]);
-
+const Index = ({ rows, setRows }) => {
     // Add new row
     const handleAddRow = () => {
         setRows([...rows, { denumire: "", descriere: "" }]);
@@ -34,6 +30,7 @@ const Index = () => {
                     <tr>
                         <th className={styles.colDenumire}>DENUMIRE</th>
                         <th className={styles.colDescriere}>DESCRIERE</th>
+                        <th></th>
                     </tr>
                     </thead>
                     <tbody>
@@ -80,4 +77,4 @@ const Index = () => {
     );
 };
 
-export default Index;
+export default  Index;

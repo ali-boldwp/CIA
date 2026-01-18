@@ -1,29 +1,29 @@
-import React, { useState } from "react";
+import React from "react";
 import styles from "./ImagePlaceholder.module.css";
 
-const ImagePlaceholder = () => {
-    const [images, setImages] = useState([null]); // start with 1 uploader
+const ImagePlaceholder = ({ value = [], onChange }) => {
 
     const handleAdd = () => {
-        setImages([...images, null]);
+        onChange([...value, null]);
     };
 
     const handleImageChange = (index, file) => {
-        const updated = [...images];
-        updated[index] = URL.createObjectURL(file);
-        setImages(updated);
+        const updated = [...value];
+        updated[index] = file; // 🔥 REAL FILE STORE
+        onChange(updated);
     };
 
     return (
         <>
             <span>Adauga imagini sau grafice (optional).</span>
+
             <div className={styles.imageSection}>
                 <button className={styles.addImageButton} onClick={handleAdd}>
-                    <span className={styles.addIcon}>+</span>
-                    Adaugă poza/grafic
+                    + Adaugă poza/grafic
                 </button>
+
                 <div className={styles.imageGrid}>
-                    {images.map((img, index) => (
+                    {value.map((img, index) => (
                         <label key={index} className={styles.imagePlaceholder}>
                             <input
                                 type="file"
@@ -35,7 +35,11 @@ const ImagePlaceholder = () => {
                             />
 
                             {img ? (
-                                <img src={img} alt="preview" className={styles.previewImage} />
+                                <img
+                                    src={URL.createObjectURL(img)}
+                                    alt="preview"
+                                    className={styles.previewImage}
+                                />
                             ) : (
                                 <>
                                     <div className={styles.placeholderIcon}>🖼️</div>
@@ -47,8 +51,6 @@ const ImagePlaceholder = () => {
                         </label>
                     ))}
                 </div>
-
-
             </div>
         </>
     );

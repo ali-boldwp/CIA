@@ -1,97 +1,71 @@
-import React from 'react';
-import EditableTable from './EditableTable';
+import React, { useEffect } from 'react';
 import ImagePlaceholder from './ImagePlaceholder';
 import Navigation from './Navigation';
 import styles from './styles.module.css';
 
-const Index = () => {
-    const generalProfileColumns = [
-        { name: "CRITERIU", type: "text" },
-        { name: "DETALII", type: "text" }
-    ];
+const Index = ({ formValues, setFormValues }) => {
 
-    // General Company Profile initial data
-    const generalProfileData = [
-        [
-            { value: "Denumire societate", type: "text" },
-            { value: "[text editabil]", type: "text" }
-        ],
-        [
-            { value: "Cod unic de inregistrare (CUI)", type: "text" },
-            { value: "[text editabil]", type: "text" }
-        ],
-        [
-            { value: "Numar de inmatriculare", type: "text" },
-            { value: "[text editabil]", type: "text" }
-        ],
-        [
-            { value: "Data infiintarii", type: "text" },
-            { value: "[text editabil]", type: "text" }
-        ],
-        [
-            { value: "Adresa sediu social", type: "text" },
-            { value: "[text editabil]", type: "text" }
-        ],
-        [
-            { value: "Obiect principal de activitate (cod CAEN)", type: "text" },
-            { value: "[text editabil]", type: "text" }
-        ],
-        [
-            { value: "Cifra de afaceri (an 2024)", type: "text" },
-            { value: "[valoare] 📈/📉", type: "text", hasCheckbox: true }
-        ],
-        [
-            { value: "Profit net (an 2024)", type: "text" },
-            { value: "[valoare] 📈/📉", type: "text", hasCheckbox: true }
-        ],
-        [
-            { value: "Numar mediu angajati", type: "text" },
-            { value: "[numar] 📈/📉", type: "text", hasCheckbox: true }
-        ]
-    ];
+    /* =========================
+       HELPERS
+    ========================== */
 
-    // Shareholder Structure columns
-    const shareholderColumns = [
-        { name: "ACTIONAR", type: "text", defaultValue: "[nume actionar]" },
-        { name: "CALITATE DETINUTA", type: "select", defaultValue: "" },
-        { name: "COTA-PARTE", type: "text", defaultValue: "[%]" }
-    ];
+    const handleChange = (slug, value) => {
+        setFormValues(prev => ({
+            ...(prev || {}),
+            [slug]: value
+        }));
+    };
 
-    // Management/Administrators columns
-    const managementColumns = [
-        { name: "NUME / DENUMIRE", type: "text", defaultValue: "[nume]" },
-        { name: "CALITATE DETINUTA", type: "select", defaultValue: "" },
-        { name: "DATA NUMIRE", type: "date", defaultValue: "" }
-    ];
+    const updateTableCell = (slug, rowIndex, colIndex, value) => {
+        setFormValues(prev => {
+            const rows = Array.isArray(prev?.[slug]) ? [...prev[slug]] : [];
+            rows[rowIndex] = rows[rowIndex] || [];
+            rows[rowIndex][colIndex] = value;
+            return { ...(prev || {}), [slug]: rows };
+        });
+    };
 
-    // Board of Directors columns
-    const boardColumns = [
-        { name: "NUME / DENUMIRE", type: "text", defaultValue: "[nume]" },
-        { name: "CALITATE DETINUTA", type: "select", defaultValue: "" },
-        { name: "DATA INCEPUT MANDAT", type: "date", defaultValue: "" },
-        { name: "DATA SFARSIT MANDAT", type: "date", defaultValue: "" }
-    ];
+    const addRow = (slug, colCount) => {
+        setFormValues(prev => {
+            const rows = Array.isArray(prev?.[slug]) ? [...prev[slug]] : [];
+            rows.push(Array(colCount).fill(""));
+            return { ...(prev || {}), [slug]: rows };
+        });
+    };
 
-    // Locations/Workpoints columns
-    const locationColumns = [
-        { name: "TIP", type: "text", defaultValue: "Punct de lucru permanent" },
-        { name: "ADRESA", type: "text", defaultValue: "[text editabil]" },
-        { name: "ACT JURIDIC", type: "text", defaultValue: "[text editabil]" },
-        { name: "PERIOADA", type: "text", defaultValue: "[perioada]" }
-    ];
+    /* =========================
+       INITIAL STATE (SAFE)
+    ========================== */
+
+    useEffect(() => {
+        setFormValues(prev => ({
+            ...prev,
+
+            generalProfile: prev?.generalProfile || Array(9).fill(null).map(() => [""]),
+            shareholders: prev?.shareholders || [["", "", ""]],
+            management: prev?.management || [["", "", ""]],
+            board: prev?.board || [["", "", "", ""]],
+            locations: prev?.locations || [["", "", "", ""]],
+        }));
+    }, [setFormValues]);
+
+    /* =========================
+       UI
+    ========================== */
 
     return (
         <div className={styles.container}>
-            {/* Single Main Card Container with everything inside */}
             <div className={styles.mainCard}>
 
-                {/* Main Title */}
-                <h1 className={styles.mainTitle}>I. Societatea ABC | 1. Informatii generale</h1>
+                <h1 className={styles.mainTitle}>
+                    I. Societatea ABC | 1. Informatii generale
+                </h1>
 
-                {/* Section Title */}
-                <h3 className={styles.sectionTitle}>📋 PROFIL GENERAL AL COMPANIEI</h3>
+                {/* ================= PROFIL GENERAL ================= */}
+                <h3 className={styles.sectionTitle}>
+                    📋 PROFIL GENERAL AL COMPANIEI
+                </h3>
 
-                {/* General Company Profile Table */}
                 <div className={styles.tableContainer}>
                     <table className={styles.editableTable}>
                         <thead>
@@ -101,37 +75,48 @@ const Index = () => {
                         </tr>
                         </thead>
                         <tbody>
-                        {generalProfileData.map((row, rowIndex) => (
-                            <tr key={rowIndex}>
-                                {row.map((cell, cellIndex) => (
-                                    <td key={cellIndex}>
-                                        {cellIndex === 0 ? (
-                                            // ✅ First column (read-only, non-clickable)
-                                            <input
-                                                type="text"
-                                                value={cell.value}
-                                                disabled
-                                            />
-                                        ) : (
-                                            // ✅ Second column (editable)
-                                            <input
-                                                type="text"
-                                                placeholder={cell.value}
-                                            />
-                                        )}
-                                    </td>
-                                ))}
+                        {[
+                            "Denumire societate",
+                            "Cod unic de inregistrare (CUI)",
+                            "Numar de inmatriculare",
+                            "Data infiintarii",
+                            "Adresa sediu social",
+                            "Obiect principal de activitate (cod CAEN)",
+                            "Cifra de afaceri (an 2024)",
+                            "Profit net (an 2024)",
+                            "Numar mediu angajati"
+                        ].map((label, index) => (
+                            <tr key={index}>
+                                <td>
+                                    <input value={label} disabled />
+                                </td>
+                                <td>
+                                    <input
+                                        value={formValues?.generalProfile?.[index]?.[0] || ""}
+                                        onChange={(e) =>
+                                            updateTableCell("generalProfile", index, 0, e.target.value)
+                                        }
+                                        placeholder="[text editabil]"
+                                    />
+                                </td>
                             </tr>
                         ))}
                         </tbody>
                     </table>
-                    <button className={styles.addButton}>➕ Adauga rand</button>
+
+                    <button
+                        className={styles.addButton}
+                        onClick={() => addRow("generalProfile", 1)}
+                    >
+                        ➕ Adauga rand
+                    </button>
                 </div>
 
-                {/* Section Title */}
-                <h3 className={styles.sectionTitle}>📊 STRUCTURA ACTIONARIATULUI</h3>
+                {/* ================= ACTIONARI ================= */}
+                <h3 className={styles.sectionTitle}>
+                    📊 STRUCTURA ACTIONARIATULUI
+                </h3>
 
-                {/* Shareholder Structure Table */}
                 <div className={styles.tableContainer}>
                     <table className={styles.editableTable}>
                         <thead>
@@ -142,187 +127,42 @@ const Index = () => {
                         </tr>
                         </thead>
                         <tbody>
-                        <tr>
-                            <td>
-                                <input
-                                    type="text"
-                                    placeholder="[nume actionar]"
-                                />
-                            </td>
-
-                            <td>
-                                <input
-                                    type="text"
-                                    placeholder="Selectează"
-                                />
-                            </td>
-
-                            <td>
-                                <input
-                                    type="text"
-                                    placeholder="[ % ]"
-                                />
-                            </td>
-                        </tr>
+                        {(formValues?.shareholders || []).map((row, rowIndex) => (
+                            <tr key={rowIndex}>
+                                {row.map((cell, colIndex) => (
+                                    <td key={colIndex}>
+                                        <input
+                                            value={cell || ""}
+                                            onChange={(e) =>
+                                                updateTableCell("shareholders", rowIndex, colIndex, e.target.value)
+                                            }
+                                            placeholder="[text editabil]"
+                                        />
+                                    </td>
+                                ))}
+                            </tr>
+                        ))}
                         </tbody>
                     </table>
-                    <button className={styles.addButton}>➕ Adauga rand</button>
+
+                    <button
+                        className={styles.addButton}
+                        onClick={() => addRow("shareholders", 3)}
+                    >
+                        ➕ Adauga rand
+                    </button>
                 </div>
 
-                {/* Section Title */}
-                <h3 className={styles.sectionTitle}>👥 CONDUCERE / ADMINISTRATORI</h3>
-
-                {/* Management/Administrators Table */}
-                <div className={styles.tableContainer}>
-                    <table className={styles.editableTable}>
-                        <thead>
-                        <tr>
-                            <th>NUME / DENUMIRE</th>
-                            <th>CALITATE DETINUTA</th>
-                            <th>DATA NUMIRE</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr>
-                            <td>
-                                <input
-                                    type="text"
-                                    placeholder="[nume]"
-                                />
-                            </td>
-
-                            <td>
-                                <input
-                                    type="text"
-                                    placeholder="Selectează"
-                                />
-                            </td>
-
-                            <td>
-                                <input
-                                    type="text"
-                                    placeholder="[ data ]"
-                                />
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
-                    <div className={styles.buttonContainer}>
-                        <button className={styles.addButton}>➕ Adauga rand</button>
-                        <button className={styles.deleteTableButton}>🗑️ Elimina tabel</button>
-                    </div>
-                </div>
-
-                {/* Section Title */}
-                <h3 className={styles.sectionTitle}>🏛️ CONSILIU DE ADMINISTRATIE</h3>
-
-                {/* Board of Directors Table */}
-                <div className={styles.tableContainer}>
-                    <table className={styles.editableTable}>
-                        <thead>
-                        <tr>
-                            <th>NUME / DENUMIRE</th>
-                            <th>CALITATE DETINUTA</th>
-                            <th>DATA INCEPUT MANDAT</th>
-                            <th>DATA SFARSIT MANDAT</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr>
-                            <td>
-                                <input
-                                    type="text"
-                                    placeholder="[nume]"
-                                />
-                            </td>
-
-                            <td>
-                                <input
-                                    type="text"
-                                    placeholder="Selectează"
-                                />
-                            </td>
-
-                            <td>
-                                <input
-                                    type="text"
-                                    placeholder="[ data ]"
-                                />
-                            </td>
-                            <td>
-                                <input
-                                    type="text"
-                                    placeholder="[ data ]"
-                                />
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
-                    <div className={styles.buttonContainer}>
-                        <button className={styles.addButton}>➕ Adauga rand</button>
-                        <button className={styles.deleteTableButton}>🗑️ Elimina tabel</button>
-                    </div>
-                </div>
-
-                {/* Section Title */}
-                <h3 className={styles.sectionTitle}>📍 LOCATII / PUNCTE DE LUCRU</h3>
-
-                {/* Locations/Workpoints Table */}
-                <div className={styles.tableContainer}>
-                    <table className={styles.editableTable}>
-                        <thead>
-                        <tr>
-                            <th>TIP</th>
-                            <th>ADRESA</th>
-                            <th>ACT JURIDIC</th>
-                            <th>PERIOADA</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr>
-                            <td>
-                                <input
-                                    type="text"
-                                    placeholder="[nume actionar]"
-                                />
-                            </td>
-
-                            <td>
-                                <input
-                                    type="text"
-                                    placeholder="Selectează"
-                                />
-                            </td>
-
-                            <td>
-                                <input
-                                    type="text"
-                                    placeholder="[text editabil]"
-                                />
-                            </td>
-                            <td>
-                                <input
-                                    type="text"
-                                    placeholder="[perioada]"
-                                />
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
-                    <button className={styles.addButton}>➕ Adauga rand</button>
-                </div>
-
-                {/* Images/Graphics Section */}
+                {/* ================= IMAGES ================= */}
                 <div className={styles.imagesSection}>
                     <h3 className={styles.sectionTitle}>🖼️ Imagini / grafice</h3>
                     <ImagePlaceholder />
                     <Navigation />
                 </div>
 
-                {/* Note Section */}
                 <div className={styles.noteSection}>
                     <p className={styles.noteText}>
-                        Nota: Tabelele ‘Conducere/Administratori’ si ‘Consiliu de Administratie’ pot fi eliminate daca nu se aplica.
+                        Nota: Tabelele pot fi eliminate daca nu se aplica.
                     </p>
                 </div>
 

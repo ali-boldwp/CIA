@@ -1,9 +1,7 @@
-import React, { useState } from "react";
+import React from "react";
 import styles from "./styles.module.css";
 
-const ImagePlaceholder = () => {
-    const [images, setImages] = useState([null]); // start with 1 uploader
-
+const ImagePlaceholder = ({ images, setImages }) => {
     const handleAdd = () => {
         setImages([...images, null]);
     };
@@ -16,7 +14,7 @@ const ImagePlaceholder = () => {
 
     return (
         <>
-            <h3 className={styles.mainTitle} >🖼️ Imagini / grafice</h3>
+            <h3 className={styles.mainTitle}>🖼️ Imagini / grafice</h3>
             <div className={styles.imageSection}>
                 <button className={styles.addImageButton} onClick={handleAdd}>
                     <span className={styles.addIcon}>+</span>
@@ -33,7 +31,6 @@ const ImagePlaceholder = () => {
                                     handleImageChange(index, e.target.files[0])
                                 }
                             />
-
                             {img ? (
                                 <img src={img} alt="preview" className={styles.previewImage} />
                             ) : (
@@ -47,8 +44,6 @@ const ImagePlaceholder = () => {
                         </label>
                     ))}
                 </div>
-
-
             </div>
         </>
     );
