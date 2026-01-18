@@ -8,15 +8,16 @@
 
 
 .saveButton {
-    padding: 12px 30px;
+    height: 30px;
+    padding: 0px 30px;
     background-color: #10B981;
     color: white;
     border: 1px solid #10B981;
-    border-radius: 8px;
-    font-size: 16px;
-    font-weight: 700;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: 400;
     cursor: pointer;
-    min-width: 200px;
+    min-width: 180px;
 }
 
 .saveButton:hover {
@@ -24,15 +25,16 @@
 }
 
 .nextButton {
-    padding: 12px 30px;
+    padding: 0px 30px;
+    height: 30px;
     background-color: #FFFFFF;
     color: #2563EB;
     border: 1px solid #2563EB;
-    border-radius: 8px;
-    font-size: 16px;
-    font-weight: 700;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: 400;
     cursor: pointer;
-    min-width: 250px;
+    min-width: 180px;
 }
 
 .nextButton:hover {

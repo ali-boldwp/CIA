@@ -22,11 +22,11 @@
     background-color: #3B82F6;
     color: #FFFFFF;
     border: none;
-    width: 240px; /* desktop size */
-    height: 40px;
-    border-radius: 12px;
-    font-size: 18px;
-    font-weight: 700;
+    width: 180px; /* desktop size */
+    height: 30px;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: 400;
     cursor: pointer;
     border: 1px solid #3B82F6;
     display: inline-flex;
@@ -57,7 +57,7 @@
 .imagePlaceholder {
     background-color: #f8f9fa;
     border: 2px dashed #bdc3c7;
-    border-radius: 10px;
+    border-radius: 4px;
     min-height: 140px;
     width: 100%; /* grid cell ke width ke hisaab se */
     display: flex;
