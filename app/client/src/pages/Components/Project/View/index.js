@@ -254,7 +254,7 @@ const ProjectView = ({ data }) => {
                     {/* ================= ROW 1 ================= */}
                     <div className={styles.detailTop}>
                         <div className={styles.nameBlock}>
-                            <span className={styles.label}>Denumire proiect</span>
+                            <span className={styles.label}>Denumire Proiect <small>(Nume Companie/Persoana/Tinta )</small></span>
                             <input
                                 type="text"
                                 className={styles.nameValueBox}

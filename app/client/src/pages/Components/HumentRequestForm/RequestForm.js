@@ -255,7 +255,7 @@ const RequestForm = forwardRef((props, ref) => {
                     <div className={styles.contextGrid}>
                         {/* Denumire proiect */}
                         <div className={`${styles.field} ${styles.span2}`}>
-                            <label className={styles.label}>Denumire proiect</label>
+                            <label className={styles.label}>Denumire Proiect <small>(Nume Companie/Persoana/Tinta )</small></label>
                             <div className={styles.inline}>
                                 <input
                                     type="text"

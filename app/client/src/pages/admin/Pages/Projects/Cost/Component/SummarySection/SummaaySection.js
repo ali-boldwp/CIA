@@ -27,7 +27,7 @@ const SummarySection = ({ employeeTotalCost = 0 }) => {
                 <div className={styles.projectBlock}>
                     <ul>
                         <li>
-                            <b>Denumire proiect</b>
+                            <b>Denumire Proiect <small>(Nume Companie/Persoana/Tinta )</small></b>
                             <span>{project.projectName || "—"}</span>
                         </li>
 
