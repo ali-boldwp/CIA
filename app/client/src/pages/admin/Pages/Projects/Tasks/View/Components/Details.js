@@ -99,6 +99,22 @@ const Details = ({ projectId, taskId, formValues }) => {
     };
 
 
+    const handleSaveSection = async () => {
+        try {
+            // ✅ Only save formValues, do NOT complete task
+            await updateTaskData({
+                id: taskId,
+                data: formValues,  // current section data
+            }).unwrap();
+
+            toast.success("Sectiunea salvata cu succes!");
+            refetch(); // refresh task data if needed
+        } catch (err) {
+            toast.error("Eroare la salvarea sectiunii");
+        }
+    };
+
+
 
     const isCompleted = task?.completed;
     const isPaused = task?.isPaused;

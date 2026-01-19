@@ -1,7 +1,7 @@
 import Layout from "../../../../../../layouts"
 import {useParams} from "react-router-dom";
 import {useGetCreateProjectByIdQuery} from "../../../../../../services/projectApi";
-
+import {toast} from "react-toastify";
 import Header from "../../../../Components/Header";
 import ProjectHeader from "../../../../../Components/Project/Components/HeaderTask"
 import GeneralInformation from "./Components/Pages/societatea-abc/GeneralInformation";
@@ -15,15 +15,16 @@ import LitigiiSocietate from "./Components/Pages/societatea-abc/LitigiiSocietate
 import ParticipatiiSocietate from "./Components/Pages/societatea-abc/ParticipatiiSocietate";
 import Controversesi from "./Components/Pages/societatea-abc/Controversesi";
 import DateFinanciare from "./Components/Pages/societatea-abc/DateFinanciare";
-import {useGetTaskQuery} from "../../../../../../services/taskApi";
+import {useGetTaskQuery,useUpdateTaskDataMutation} from "../../../../../../services/taskApi";
 import {useEffect, useRef, useState} from "react";
 
 const ViewTask = () => {
 
     const { id: projectId, taskId, taskName } = useParams();
-
+    const [updateTaskData] = useUpdateTaskDataMutation();
     const { data: projectData, isLoading } =
         useGetCreateProjectByIdQuery(projectId)
+
     const { data: taskData } = useGetTaskQuery(taskId);
     const task = taskData?.data;
     const isStarted = !!task?.analyst;
@@ -57,6 +58,21 @@ const ViewTask = () => {
         hasLoadedTaskData.current = true;
     }, [task?.data]);
 
+
+    const handleSaveSection = async () => {
+        try {
+            // update task API
+            await updateTaskData({
+                id: taskId,      // make sure taskId is available in Index
+                data: formValues
+            }).unwrap();
+
+            toast.success("Sectiunea salvata cu succes!");
+        } catch (err) {
+            toast.error("Eroare la salvarea sectiunii");
+        }
+    };
+
     return (
         <Layout
             loading={isLoading}
@@ -81,6 +97,7 @@ const ViewTask = () => {
                             taskId={taskId}
                             formValues={formValues}
                             setFormValues={setFormValues}
+                            onSaveSection={handleSaveSection}
                         />
                     ) : null}
                 </>

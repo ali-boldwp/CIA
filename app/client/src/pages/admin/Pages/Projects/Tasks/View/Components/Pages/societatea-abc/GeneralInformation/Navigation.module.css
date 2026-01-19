@@ -6,7 +6,35 @@
 }
 
 
+.saveButton:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
 
+/* Loader inside button */
+.loader {
+    display: inline-block;
+    width: 18px;
+    height: 18px;
+    border: 3px solid rgba(255, 255, 255, 0.5); /* soft outer circle */
+    border-top-color: #ffffff; /* white spinning part */
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    vertical-align: middle;
+    margin: 0 auto;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+.saveButton.loading span {
+    visibility: hidden;
+}
+
+.saveButton.loading .loader {
+    display: inline-block;
+}
 .saveButton {
     height: 30px;
     padding: 0px 30px;

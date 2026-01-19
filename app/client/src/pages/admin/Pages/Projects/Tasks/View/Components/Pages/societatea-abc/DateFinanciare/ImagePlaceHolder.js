@@ -1,29 +1,36 @@
-import React from "react";
+import React, { useEffect } from "react";
 import styles from "./ImagePlaceholder.module.css";
 
-const ImagePlaceholder = ({ value = [], onChange }) => {
+const ImagePlaceholder = ({ images = [], setImages }) => {
+    // Ensure at least 1 uploader always visible
+    useEffect(() => {
+        if (images.length === 0) {
+            setImages([null]);
+        }
+    }, [images, setImages]);
 
+    // Add new uploader
     const handleAdd = () => {
-        onChange([...value, null]);
+        setImages([...images, null]);
     };
 
+    // Update selected image
     const handleImageChange = (index, file) => {
-        const updated = [...value];
-        updated[index] = file; // 🔥 REAL FILE STORE
-        onChange(updated);
+        const updated = [...images];
+        updated[index] = URL.createObjectURL(file);
+        setImages(updated);
     };
 
     return (
         <>
             <span>Adauga imagini sau grafice (optional).</span>
-
             <div className={styles.imageSection}>
                 <button className={styles.addImageButton} onClick={handleAdd}>
-                    + Adaugă poza/grafic
+                    <span className={styles.addIcon}>+</span>
+                    Adaugă poza/grafic
                 </button>
-
                 <div className={styles.imageGrid}>
-                    {value.map((img, index) => (
+                    {images.map((img, index) => (
                         <label key={index} className={styles.imagePlaceholder}>
                             <input
                                 type="file"
@@ -33,10 +40,9 @@ const ImagePlaceholder = ({ value = [], onChange }) => {
                                     handleImageChange(index, e.target.files[0])
                                 }
                             />
-
                             {img ? (
                                 <img
-                                    src={URL.createObjectURL(img)}
+                                    src={img}
                                     alt="preview"
                                     className={styles.previewImage}
                                 />

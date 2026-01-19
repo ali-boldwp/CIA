@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import styles from "../GeneralInformation/styles.module.css";
 import SectionHeader from "./SectionHeader";
 import FinancialTable from "./FinancialTable";
@@ -7,31 +7,47 @@ import Navigation from "./Navigation";
 
 const Index = ({ formValues, setFormValues }) => {
 
-    const [analysisText, setAnalysisText] = useState("");
-    const [financialTable, setFinancialTable] = useState({});
-    const [images, setImages] = useState([]);
+    // 1️⃣ Safe state: fallback if empty
+    const analysisText = formValues?.dateFinanciare?.analysisText || "";
+    const financialTable = formValues?.dateFinanciare?.financialTable || {};
+    const images = formValues?.dateFinanciare?.images || [];
 
-    // 🧠 load existing data (edit mode)
-    useEffect(() => {
-        if (formValues?.dateFinanciare) {
-            const d = formValues.dateFinanciare;
-            setAnalysisText(d.analysisText || "");
-            setFinancialTable(d.financialTable || {});
-            setImages(d.images || []);
-        }
-    }, []);
-
-    // 🔄 sync to parent (auto)
-    useEffect(() => {
+    // 2️⃣ Setters that update formValues directly
+    const setAnalysisText = (text) => {
         setFormValues(prev => ({
             ...prev,
             dateFinanciare: {
-                analysisText,
+                ...prev.dateFinanciare,
+                analysisText: text,
                 financialTable,
                 images
             }
         }));
-    }, [analysisText, financialTable, images]);
+    };
+
+    const setFinancialTable = (table) => {
+        setFormValues(prev => ({
+            ...prev,
+            dateFinanciare: {
+                ...prev.dateFinanciare,
+                analysisText,
+                financialTable: table,
+                images
+            }
+        }));
+    };
+
+    const setImages = (imgs) => {
+        setFormValues(prev => ({
+            ...prev,
+            dateFinanciare: {
+                ...prev.dateFinanciare,
+                analysisText,
+                financialTable,
+                images: imgs
+            }
+        }));
+    };
 
     return (
         <div className={styles.container}>
@@ -47,10 +63,10 @@ const Index = ({ formValues, setFormValues }) => {
                     onChange={setFinancialTable}
                 />
 
-                <ImagePlaceHolder
-                    value={images}
-                    onChange={setImages}
-                />
+                <div className={styles.imagesSection}>
+                    <h3 className={styles.sectionTitle}>🖼️ Imagini / grafice</h3>
+                    <ImagePlaceHolder images={images} setImages={setImages} />
+                </div>
 
                 <Navigation />
 
