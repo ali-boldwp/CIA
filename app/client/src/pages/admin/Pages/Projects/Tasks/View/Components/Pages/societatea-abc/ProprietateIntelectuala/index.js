@@ -91,6 +91,7 @@ const Index = ({ formValues, setFormValues }) => {
                         <th>ACTIUNI</th>
                     </tr>
                     </thead>
+
                     <tbody>
                     {rows.map((row, index) => (
                         <tr key={index}>
