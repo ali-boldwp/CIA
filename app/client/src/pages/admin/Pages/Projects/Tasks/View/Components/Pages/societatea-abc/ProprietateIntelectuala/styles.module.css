@@ -1,12 +1,6 @@
-.container {
-    padding: 20px;
-}
-
 .mainCard {
-    background: #fff;
     padding: 35px;
     border-radius: 8px;
-    border: 1px solid #e5e7eb;
 }
 
 .mainTitle {
@@ -14,18 +8,20 @@
     font-weight: 700;
     color: #1e3a8a;
     margin-bottom: 25px;
+
 }
 
 .sectionTitle {
     font-size: 18px;
     font-weight: 700;
     margin: 20px 0 15px;
+    background: #FFFFFF;
+    padding: 10px;
 }
 
 /* Textarea section */
 .textAreaWrapper {
     position: relative;
-    margin-bottom: 35px;
 }
 
 .textarea {
@@ -39,10 +35,14 @@
 font-size: 16px;
 }
 
+.deleteBoxContainer {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 5px;
+    margin-bottom: 10px;
+}
+
 .deleteBox {
-    position: absolute;
-    right: 0;
-    bottom: -38px;
     background: #9CA3AF;
     color: white;
     border: none;
@@ -53,11 +53,73 @@ font-size: 15px;
     cursor: pointer;
 }
 
+
+
 /* Table */
-.table {
+.editableTable input[type="text"] {
+    border: none !important;
+    font-size: 15px !important;
+    font-weight: 400 !important;
+    font-family: Inter !important;
+    background: #fff !important;
+    color: #374151 !important;
+}
+
+.editableTable input[type="text"]:focus {
+    outline: none !important;
+}
+
+.tableContainer {
+    margin-bottom: 25px;
+}
+
+.editableTable th {
+    color: #0F172A !important;
+    font-weight: 700;
+
+}
+.editableTable th:first-child ,td:first-child {
+    text-align: start !important;
+}
+.editableTable {
     width: 100%;
     border-collapse: collapse;
-    margin-top: 10px;
+    margin-bottom: 15px;
+    background: #FFF;
+    border-radius: 4px;
+}
+
+.editableTable th {
+    background-color: #F1F5F9;
+    font-style: normal;
+    text-align: left;
+    font-weight: 700;
+
+    font-size: 16px;
+    border: 1px solid #dee2e6;
+}
+
+.editableTable td {
+    padding: 0px;
+    border: 1px solid #dee2e6;
+    color: #374151;
+    font-weight: 700;
+
+    font-size: 16px;
+}
+
+.editableTable td:first-child {
+    width: 500px;
+}
+
+.editableTable select,
+.editableTable input[type="date"],
+.editableTable input[type="text"] {
+    width: 100%;
+    padding: 8px 10px;
+    border: 1px solid #ced4da;
+
+    font-size: 16px;
 }
 .table tr{
     border: 1px solid #e5e7eb;
