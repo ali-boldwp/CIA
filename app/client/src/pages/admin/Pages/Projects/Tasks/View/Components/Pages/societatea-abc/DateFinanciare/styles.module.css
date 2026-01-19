@@ -1,0 +1,13 @@
+.mainCard {
+    padding: 40px;
+}
+
+.sectionTitle{
+    color: #0F172A;
+    font-weight: 700;
+    margin-bottom: 10px !important;
+    background: #FFF;
+    border-radius: 4px;
+    padding: 14px 18px;
+    font-size: 16px;
+}

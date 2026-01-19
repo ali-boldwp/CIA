@@ -25,12 +25,14 @@ const SectionHeader = ({ value, onChange }) => {
                         onChange={(e) => onChange(e.target.value)}
                         placeholder="[Introdu textul narativ aici]"
                     />
+                    <div className={styles.deleteBoxContainer}>
                     <button
                         className={styles.deleteBox}
                         onClick={() => onChange("")}
                     >
                         Șterge căsuța
                     </button>
+                    </div>
                 </div>
 
             </div>

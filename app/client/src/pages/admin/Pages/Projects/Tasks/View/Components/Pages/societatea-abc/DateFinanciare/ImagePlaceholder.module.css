@@ -15,11 +15,6 @@
     margin-bottom: 25px;
 }
 
-@media (max-width: 768px) {
-    .imageGrid {
-        grid-template-columns: 1fr;
-    }
-}
 
 .imagePlaceholder {
     background-color: #f8f9fa;
@@ -75,4 +70,11 @@ font-size: 15px;
 .addIcon {
     font-size: 20px;
     margin-right: 8px;
+}
+
+
+@media (max-width: 768px) {
+    .imageGrid {
+        grid-template-columns: 1fr;
+    }
 }

@@ -36,7 +36,7 @@ const FinancialTable = ({ value = {}, onChange }) => {
                 📊 Tabel date financiare pe ultimii 3 ani
             </h3>
 
-            <table className={styles.table}>
+            <table className={styles.finTable}>
                 <thead>
                 <tr>
                     <th>Bilanț (valori în RON)</th>

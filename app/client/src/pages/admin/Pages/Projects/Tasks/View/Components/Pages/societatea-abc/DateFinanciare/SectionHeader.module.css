@@ -23,6 +23,8 @@
     font-weight: 700;
     margin-top: 10px;
     margin-bottom: 20px !important;
+    background: #FFFFFF;
+    padding: 10px;
 }
 
 .secondhalf{
@@ -50,11 +52,14 @@
 
 font-size: 16px;
 }
+.deleteBoxContainer {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 5px;
+    margin-bottom: 10px;
+}
 
 .deleteBox {
-    position: absolute;
-    right: 0;
-    bottom: -38px;
     background: #9CA3AF;
     color: white;
     border: none;

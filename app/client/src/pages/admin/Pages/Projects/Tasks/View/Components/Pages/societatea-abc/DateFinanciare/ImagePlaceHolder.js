@@ -23,7 +23,7 @@ const ImagePlaceholder = ({ images = [], setImages }) => {
 
     return (
         <>
-            <span>Adauga imagini sau grafice (optional).</span>
+            <span >Adauga imagini sau grafice (optional).</span>
             <div className={styles.imageSection}>
                 <button className={styles.addImageButton} onClick={handleAdd}>
                     <span className={styles.addIcon}>+</span>
