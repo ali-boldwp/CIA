@@ -21,7 +21,6 @@ const HUMINT_STATUS_UI = {
             color: "#92400E",
             backgroundColor: "#FFFBEB",
             border: "1px solid #F59E0B",
-            fontStyle: "italic",
             fontWeight: 700,
             fontSize: "12px",
         },
@@ -32,7 +31,6 @@ const HUMINT_STATUS_UI = {
             color: "#075985",
             backgroundColor: "#E0F2FE",
             border: "1px solid #0EA5E9",
-            fontStyle: "italic",
             fontWeight: 700,
             fontSize: "12px",
         },
@@ -43,7 +41,6 @@ const HUMINT_STATUS_UI = {
             color: "#166534",
             backgroundColor: "#ECFDF5",
             border: "1px solid #22C55E",
-            fontStyle: "italic",
             fontWeight: 700,
             fontSize: "12px",
         },
@@ -56,7 +53,6 @@ const HUMINT_DEFAULT_UI = {
         color: "#334155",
         backgroundColor: "#F8FAFC",
         border: "1px solid #CBD5E1",
-        fontStyle: "italic",
         fontWeight: 700,
         fontSize: "12px",
     },
@@ -326,7 +322,7 @@ const Item = ({ data, refetchProjects }) => {
                             HUMINT ▾
                         </button>
                     ):(
-                        <Link  to={`/humint/new/${data?._id}`} className="action-btn">Solicitare HUMINT</Link>
+                        <Link  to={`/humint/new/${data?._id}`} className="action-btn"> HUMINT</Link>
                     )
                 }
 
