@@ -157,8 +157,10 @@
 .light { font-weight: 300; }
 
 .fs-12 {
-font-size: 14px; }
-.fs-14 { font-size: 14px; }
+
+font-size: 16px; }
+.fs-14 {
+font-size: 16px; }
 .fs-16 { font-size: 16px; }
 .fs-18 { font-size: 18px; }
 .fs-20 { font-size: 20px; }
@@ -323,7 +325,8 @@ font-size: 14px; }
     padding: 5px 12px;
     border-radius: 8px;
 
-font-size: 14px;
+
+font-size: 16px;
     font-weight: bold;
     color: white;
 }
@@ -337,7 +340,8 @@ font-size: 14px;
     padding: 4px 10px;
     border-radius: 6px;
 
-font-size: 14px;
+
+font-size: 16px;
     color: white;
 }
 
@@ -387,7 +391,8 @@ font-size: 14px;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    font-size: 14px;
+
+font-size: 16px;
     color: #0d9c57;
     font-weight: bold;
     pointer-events: none;
@@ -406,7 +411,8 @@ font-size: 14px;
     border: none;
     padding: 6px 14px;
     border-radius: 6px;
-    font-size: 13px;
+
+font-size: 15px;
     cursor: pointer;
 }
 .task-btn.italic {
@@ -446,7 +452,8 @@ font-size: 14px;
     flex: 1;
     border: 1px solid #ccc;
     border-radius: 8px;
-    font-size: 14px;
+
+font-size: 16px;
 }
 
 .submit-chapter-btn {
@@ -538,7 +545,8 @@ font-size: 14px;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    font-size: 13px;
+
+font-size: 15px;
     color: #2563eb;
     font-weight: bold;
 }
@@ -548,7 +556,8 @@ font-size: 14px;
     padding: 5px 12px;
     border-radius: 20px;
 
-font-size: 14px;
+
+font-size: 16px;
     font-weight: 600;
 }
 
@@ -575,7 +584,8 @@ font-size: 14px;
     background: #e0e7ff;
     color: #4b54d2;
 
-font-size: 14px;
+
+font-size: 16px;
     font-weight: 600;
 }
 
@@ -617,7 +627,8 @@ font-size: 14px;
     padding: 8px 14px;
     border-radius: 18px;
     border: none;
-    font-size: 14px;
+
+font-size: 16px;
     color: white;
     cursor: pointer;
     font-weight: 600;
@@ -636,7 +647,8 @@ font-size: 14px;
 
 /* status */
 .status-text {
-    font-size: 13px;
+
+font-size: 15px;
     margin-bottom: 12px;
 }
 
@@ -685,7 +697,8 @@ font-size: 14px;
     align-items: center;
     padding: 10px 0;
     border-bottom: 1px solid #f0f0f0;
-    font-size: 14px;
+
+font-size: 16px;
 }
 
 .col-number {
@@ -711,7 +724,8 @@ font-size: 14px;
     padding: 6px 14px;
     border-radius: 20px;
 
-font-size: 14px;
+
+font-size: 16px;
     font-weight: 600;
 }
 
@@ -731,7 +745,8 @@ font-size: 14px;
     gap: 8px;
     padding:4px 10px;
 
-font-size: 14px;
+
+font-size: 16px;
     color:#0F172A;
     background: #F8FAFC;
     border-radius: 15px;
@@ -767,7 +782,8 @@ font-size: 14px;
     border: none;
     cursor: pointer;
 
-font-size: 14px;
+
+font-size: 16px;
 }
 
 .btn.start {
@@ -841,7 +857,8 @@ font-size: 14px;
     border-radius: 6px;
     border: none;
     cursor: pointer;
-    font-size: 13px;
+
+font-size: 15px;
     font-weight: 500;
 }
 
@@ -866,7 +883,8 @@ font-size: 14px;
 }
 
 .progress-title {
-    font-size: 13px;
+
+font-size: 15px;
     font-weight: 600;
 }
 
@@ -885,7 +903,8 @@ font-size: 14px;
 }
 
 .progress-info {
-    font-size: 11px;
+
+font-size: 15px;
     color: #777;
 }
 
@@ -909,7 +928,8 @@ font-size: 14px;
 }
 
 .time-title {
-    font-size: 11px;
+
+font-size: 15px;
     font-weight: 600;
     color: #7a7a7a;
     text-transform: uppercase;
@@ -917,13 +937,15 @@ font-size: 14px;
 }
 
 .time-info {
-    font-size: 13px;
+
+font-size: 15px;
     margin-bottom: 5px;
 }
 
 .analyst-times {
 
-font-size: 14px;
+
+font-size: 16px;
     color: #555;
 }
 
@@ -936,7 +958,8 @@ font-size: 14px;
 }
 
 .edit-label {
-    font-size: 13px;
+
+font-size: 15px;
     color: #444;
 }
 
@@ -945,7 +968,8 @@ font-size: 14px;
     align-items: center;
     gap: 6px;
 
-font-size: 14px;
+
+font-size: 16px;
 }
 
 .toggle-on {
@@ -995,7 +1019,8 @@ font-size: 14px;
     display: flex;
     align-items: center;
     gap: 6px;
-    font-size: 13px;
+
+font-size: 15px;
 }
 
 .doted{
@@ -1035,7 +1060,8 @@ font-size: 14px;
 
 .btn {
     padding: 7px 18px;
-    font-size: 13px;
+
+font-size: 15px;
     font-weight: 500;
     border-radius: 10px;
     border: 1px solid #dcdcdc;
@@ -1093,7 +1119,8 @@ font-size: 14px;
     border: 1px solid #d1d5db;
     padding: 7px 16px;
     border-radius: 10px;
-    font-size: 13px;
+
+font-size: 15px;
     font-weight: 600;
     cursor: pointer;
     transition: all 0.2s ease;
@@ -1123,7 +1150,8 @@ font-size: 14px;
 .dropdown-item {
     width: 100%;
     padding: 10px 14px;
-    font-size: 13px;
+
+font-size: 15px;
     border: none;
     background: transparent;
     text-align: left;
@@ -1195,7 +1223,8 @@ font-size: 14px;
 }
 
 .chapter-label {
-    font-size: 11px;
+
+font-size: 15px;
     font-weight: 600;
     color: #8f8f8f;
     margin-bottom: 5px;
@@ -1210,7 +1239,8 @@ font-size: 14px;
 .edit-title-btn {
     margin-left: 10px;
 
-font-size: 14px;
+
+font-size: 16px;
     padding: 3px 10px;
     border-radius: 6px;
     border: 1px solid #ddd;
@@ -1220,7 +1250,8 @@ font-size: 14px;
 
 .export-btn {
 
-font-size: 14px;
+
+font-size: 16px;
     padding: 6px 15px;
     border-radius: 6px;
     background: white;
@@ -1233,7 +1264,8 @@ font-size: 14px;
     margin-top: 20px;
     display: grid;
     grid-template-columns: 3% 50% 13% 17% 20%;
-    font-size: 11px;
+
+font-size: 15px;
     font-weight: 600;
     color: #8b8b8b;
 
@@ -1260,7 +1292,8 @@ font-size: 14px;
 }
 
 .number {
-    font-size: 13px;
+
+font-size: 15px;
     opacity: 0.7;
 }
 
@@ -1275,7 +1308,8 @@ font-size: 14px;
 .status-pill {
     padding: 4px 14px;
     border-radius: 12px;
-    font-size: 11px;
+
+font-size: 15px;
     font-weight: 600;
     width:100px;
 }
@@ -1303,7 +1337,8 @@ font-size: 14px;
 .analyst-pill {
     padding: 4px 12px;
     border-radius: 12px;
-    font-size: 11px;
+
+font-size: 15px;
     font-weight: 600;
 }
 
@@ -1335,7 +1370,8 @@ font-size: 14px;
     background: #2563EB;
     color: #fff;
     cursor: pointer;
-    font-size: 14px;
+
+font-size: 16px;
 }
 /* Hide ALL action buttons by default */
 .task-row .col-actions .start
