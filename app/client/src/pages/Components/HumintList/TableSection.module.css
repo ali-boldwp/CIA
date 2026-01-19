@@ -61,7 +61,8 @@
     padding: 6px 14px;
     border-radius: 12px;
     border: 1px solid transparent;
-    font-size: 12px;
+
+font-size: 14px;
     font-weight: 500;
     cursor: pointer;
 }
@@ -119,7 +120,8 @@ thead tr {
 th {
     font-weight: 600;
     color: #6b7280;
-    font-size: 12px;
+
+font-size: 14px;
 }
 
 th:first-child,
@@ -216,7 +218,8 @@ tbody tr:hover {
     border: none;
     background: transparent;
     color: #4f46e5;
-    font-size: 12px;
+
+font-size: 14px;
     font-weight: 600;
     cursor: pointer;
 }
@@ -236,7 +239,8 @@ tbody tr:hover {
     display: flex;
     justify-content: end;
     align-items: center;
-    font-size: 12px;
+
+font-size: 14px;
     color: #6b7280;
 
     margin-bottom: 32px; /* ⬅ yahan se body ke bottom se gap aa jayega */
@@ -252,7 +256,8 @@ tbody tr:hover {
     border-radius: 12px;
     border: 1px solid #e5e7eb;
     padding: 4px 10px;
-    font-size: 12px;
+
+font-size: 14px;
     background-color: #ffffff;
 }
 

@@ -106,12 +106,14 @@
 
 .active {
     color: green;
-    font-size: 12px;
+
+font-size: 14px;
 }
 
 .inactive {
     color: red;
-    font-size: 12px;
+
+font-size: 14px;
 }
 
 

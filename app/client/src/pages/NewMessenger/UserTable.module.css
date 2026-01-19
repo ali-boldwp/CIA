@@ -150,7 +150,8 @@
 
     background: linear-gradient(90deg, #4f46e5 0%, #14b8a6 100%);
     color: #ffffff;
-    font-size: 12px;
+
+font-size: 14px;
     font-weight: 600;
     font-style: italic;
     box-shadow: 0 3px 10px rgba(79, 70, 229, 0.25);
@@ -229,7 +230,8 @@
     .table th,
     .table td {
         padding: 8px 10px;
-        font-size: 12px;
+
+font-size: 14px;
     }
 
     .actionBtn {
