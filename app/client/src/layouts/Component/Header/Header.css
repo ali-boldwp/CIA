@@ -21,7 +21,7 @@
     background: #FFF;
     padding: 8px 14px;
     border-radius: 50px;
-    font-size: 12px;
+    font-size: 14px;
     align-items: center;
 }
 
@@ -152,7 +152,7 @@
 .icon-btn .text {
     font-weight: normal; /* only text italic */
     letter-spacing: 0.5px;
-    font-size: 12px;
+    font-size: 14px;
 }
 
 .icon-btn.new .text {
