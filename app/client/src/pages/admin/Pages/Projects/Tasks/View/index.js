@@ -17,7 +17,7 @@ import ParticipatiiSocietate from "./Components/Pages/societatea-abc/Participati
 import Controversesi from "./Components/Pages/societatea-abc/Controversesi";
 import DateFinanciare from "./Components/Pages/societatea-abc/DateFinanciare";
 import {useGetTaskQuery} from "../../../../../../services/taskApi";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 
 const ViewTask = () => {
 
@@ -44,6 +44,17 @@ const ViewTask = () => {
     const [formValues, setFormValues] = useState({});
 
     const SelectedComponent = taskComponents[taskName];
+
+    useEffect(() => {
+        if (!task?.data) return;
+
+        setFormValues((prev) => {
+            if (prev && Object.keys(prev).length > 0) {
+                return prev;
+            }
+            return task.data || {};
+        });
+    }, [task?.data]);
 
     return (
         <Layout
