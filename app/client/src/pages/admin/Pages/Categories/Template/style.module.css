@@ -19,3 +19,84 @@
     border-radius: 4px;
     overflow-y: auto;
 }
+
+.editorSection {
+    padding: 24px;
+    border-top: 1px solid #E6E6E6;
+}
+
+.editorHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+    gap: 16px;
+}
+
+.editorTitle {
+    margin: 0;
+    font-size: 20px;
+    font-weight: 600;
+    color: #1F2937;
+}
+
+.editorSaveBtn {
+    background: #1D4ED8;
+    color: #FFF;
+    border: none;
+    padding: 10px 18px;
+    border-radius: 6px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.editorSaveBtn:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+.editorWrap {
+    border-radius: 8px;
+    border: 1px solid #E5E7EB;
+    padding: 12px;
+    background: #FFF;
+}
+
+.editorHolder :global(.codex-editor__redactor) {
+    padding-bottom: 40px;
+}
+
+.editorHolder :global(.ce-toolbar__content),
+.editorHolder :global(.ce-block__content) {
+    max-width: 100%;
+}
+
+.editorHolder :global(.shortcodeBlock) {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 12px;
+    border: 1px dashed #CBD5F5;
+    border-radius: 8px;
+    background: #F8FAFF;
+}
+
+.editorHolder :global(.shortcodeLabel) {
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.editorHolder :global(.shortcodeInput) {
+    border: 1px solid #D1D5DB;
+    border-radius: 6px;
+    padding: 8px 10px;
+    font-size: 14px;
+    font-family: "Inter", sans-serif;
+}
+
+.editorHolder :global(.shortcodeInput):focus {
+    outline: 2px solid #1D4ED8;
+    outline-offset: 2px;
+}
