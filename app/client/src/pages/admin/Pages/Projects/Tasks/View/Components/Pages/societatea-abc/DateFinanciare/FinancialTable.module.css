@@ -1,71 +1,60 @@
 .container {
-    width: 100%;
-    margin-top: 20px;
-}
+    background: #ffffff;
+    padding: 16px;
+    border-radius: 10px;
+    width:1360px !important;
+    margin-top:20px;
 
-.title {
-    font-size: 16px;
-    margin-bottom: 10px;
-    font-weight: 600;
-    background: #FFFFFF;
-    padding:  10px;
 }
-
-/* TABLE */
-.table {
-    width: 100%;
-    border-collapse: separate;     /* 🔥 IMPORTANT */
-    border-spacing: 0 6px;         /* rows ke darmiyan gap */
-    font-size: 13px;
-    background: #FFFFFF;
-    padding:0 10px;
-}
-
-/* HEADER */
-.table thead th {
-    background-color: #F1F5F9;
-    padding: 10px;
-    font-weight: 800;
-    color: #0F172A;
-    font-size: 16px;
-    text-align: center;
-}
-
-.table thead th:first-child {
-    text-align: left;
-}
-
-/* BODY ROW = BOX */
-.table tbody tr {
-    border: 1px solid #e5e7eb;
-}
-
-/* BODY CELLS */
-.table tbody td {
-    font-size: 16px;
-    font-weight: 800;
-}
-
-/* LEFT COLUMN TEXT FIX */
-.table tbody td:first-child {
-    text-align: left;
-    font-weight: 500;
-    color: #111827;
-}
-
-/* VALUE COLUMNS */
-.value {
-    width: 15%;
-    text-align: center;
-    padding: 0;
-}
-
-/* INPUT */
-.value input {
-    width: 100%;
-    text-align: center;
+input{
     border: none;
     outline: none;
     background: transparent;
-    font-size: 15px;
+}
+.title {
+    font-size: 16px;
+    margin-bottom: 4px;
+
+}
+
+.subtitle {
+
+font-size: 15px;
+    color: #6b7280;
+    margin-bottom: 12px;
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+
+font-size: 15px;
+
+
+}
+
+.table th {
+    background-color: #F1F5F9 !important;
+    text-align: left;
+    padding: 8px;
+    border-bottom: 1px solid #e5e7eb;
+    font-weight: 700;
+    style: bold;
+    color: #0F172A;
+
+font-size: 16px;
+    border:10px;
+}
+
+.table td {
+    padding: 6px 8px;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.label {
+    color: #111827;
+}
+
+.value {
+    color: #374151;
 }

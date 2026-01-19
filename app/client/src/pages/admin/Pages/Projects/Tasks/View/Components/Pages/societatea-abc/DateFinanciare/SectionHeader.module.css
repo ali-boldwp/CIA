@@ -19,13 +19,10 @@
 
 .sectionTitle {
     color: #0F172A;
+    font-size: 20px;
     font-weight: 700;
-    margin-bottom: 10px !important;
-    background: #FFF;
-    border-radius: 4px;
-    padding: 14px 18px;
-    font-size: 16px;
     margin-top: 10px;
+    margin-bottom: 20px !important;
 }
 
 .secondhalf{
@@ -37,6 +34,11 @@
     border-radius:5px ;
 }
 
+/* Textarea section */
+.textAreaWrapper {
+    position: relative;
+    margin-bottom: 35px;
+}
 
 .textarea {
     width: 100%;
@@ -49,21 +51,16 @@
 font-size: 16px;
 }
 
-.deleteBoxContainer{
-    display: flex;
-    justify-content: end;
-    margin-top: 5px;
-    margin-bottom: 10px;
-
-}
-
 .deleteBox {
+    position: absolute;
+    right: 0;
+    bottom: -38px;
     background: #9CA3AF;
     color: white;
     border: none;
     padding: 6px 14px;
     border-radius: 6px;
 
-    font-size: 15px;
+font-size: 15px;
     cursor: pointer;
 }
