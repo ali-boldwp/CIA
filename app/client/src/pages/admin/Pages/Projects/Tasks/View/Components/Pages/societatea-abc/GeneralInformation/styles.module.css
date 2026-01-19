@@ -52,6 +52,9 @@
 .editableTable th:first-child ,td:first-child {
     text-align: start !important;
 }
+.editableTable th:last-child ,td:last-child {
+    text-align: start !important;
+}
 .editableTable {
     width: 100%;
     border-collapse: collapse;

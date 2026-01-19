@@ -23,11 +23,10 @@ const ImagePlaceholder = ({ images = [], setImages }) => {
 
     return (
         <>
-            <span>Adauga imagini sau grafice (optional).</span>
+            <span>Adauga Imagini Sau Grafice (optional).</span>
             <div className={styles.imageSection}>
-                <button className={styles.addImageButton} onClick={handleAdd}>
-                    <span className={styles.addIcon}>+</span>
-                    Adaugă poza/grafic
+                <button className={styles.addRow} onClick={handleAdd}>
+                    ➕ Adauga poza/grafic
                 </button>
                 <div className={styles.imageGrid}>
                     {images.map((img, index) => (

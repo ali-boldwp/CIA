@@ -86,21 +86,23 @@ const Index = ({ formValues, setFormValues }) => {
                         value={introducere}
                         onChange={(e) => setIntroducere(e.target.value)}
                     />
+                    <div className={styles.deleteBoxContainer}>
                     <button className={styles.deleteBox} onClick={() => setIntroducere("")}>
                         Șterge căsuța
                     </button>
+                    </div>
                 </div>
 
                 {/* Tabel participatii */}
                 <h3 className={styles.sectionTitle}>📋 Tabel participatii in alte societati</h3>
 
-                <table className={styles.participationTable}>
+                <table className={styles.editableTableIstoric2}>
                     <thead>
                     <tr>
                         <th>DENUMIRE SOCIETATE</th>
                         <th>DETALII SOCIETATE</th>
                         <th>STRUCTURA ACTIONARIAT</th>
-                        <th></th>
+                        <th>ACTIUNI</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -157,6 +159,28 @@ const Index = ({ formValues, setFormValues }) => {
                 <div className={styles.imagesSection}>
                     <h3 className={styles.sectionTitle}>🖼️ Imagini / grafice</h3>
                     <ImagePlaceholder images={images} setImages={setImages} />
+                </div>
+
+                <div className={styles.navigation}>
+                    <div className={styles.navButtons}>
+                        <button
+                            className={styles.saveButton}
+
+                        >
+                            <span className={styles.saveIcon}>💾</span>
+                            Salveaza sectiunea
+                        </button>
+
+                        <button className={styles.middleButton}>
+                            ❌ Exclude acest capitol
+                            <span className={styles.arrowIcon}>→</span>
+                        </button>
+
+                        <button className={styles.nextButton}>
+                            ➡️ Mergi la I.3. „Date fianciare”
+                            <span className={styles.arrowIcon}>→</span>
+                        </button>
+                    </div>
                 </div>
 
             </div>

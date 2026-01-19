@@ -7,12 +7,22 @@
     height:50px;
     background: #3B82F6;
 }
+.addRow {
+    height: 10px !important;
+    margin-top: 15px;
+    background: #2563eb;
+    color: white;
+    border: none;
+    padding: 8px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 16px;
+}
 .imageGrid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 20px;
     max-width: 900px;
-    margin-bottom: 25px;
 }
 
 @media (max-width: 768px) {
