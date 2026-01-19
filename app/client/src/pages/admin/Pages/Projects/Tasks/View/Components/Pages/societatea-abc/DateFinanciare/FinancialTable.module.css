@@ -1,10 +1,5 @@
 .container {
-    background: #ffffff;
-    padding: 16px;
-    border-radius: 10px;
-    width:1360px !important;
-    margin-top:20px;
-
+    width:100%!important;
 }
 input{
     border: none;
@@ -13,46 +8,49 @@ input{
 }
 .title {
     font-size: 16px;
-    margin-bottom: 4px;
+    margin-bottom: 20px;
+    background: #FFFFFF;
+    padding: 10px;
 
 }
 
 .subtitle {
 
-font-size: 15px;
+    font-size: 15px;
     color: #6b7280;
     margin-bottom: 12px;
 }
 
-.table {
+.finTable {
     width: 100%;
     border-collapse: collapse;
-
-font-size: 15px;
-
-
+    font-size: 15px;
+    background: #FFFFFF;
+    padding: 10px !important;
+    margin-bottom: 20px;
 }
 
-.table th {
+.finTable th {
     background-color: #F1F5F9 !important;
     text-align: left;
-    padding: 8px;
     border-bottom: 1px solid #e5e7eb;
     font-weight: 700;
     style: bold;
     color: #0F172A;
 
 font-size: 16px;
-    border:10px;
+    width: 100%;
+    padding: 10px;
 }
 
-.table td {
-    padding: 6px 8px;
+.finTable td {
+    padding:10px ;
     border-bottom: 1px solid #e5e7eb;
 }
 
 .label {
     color: #111827;
+
 }
 
 .value {

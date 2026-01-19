@@ -1,5 +1,5 @@
 import React from "react";
-import styles from "../GeneralInformation/styles.module.css";
+import styles from "./styles.module.css";
 import SectionHeader from "./SectionHeader";
 import FinancialTable from "./FinancialTable";
 import ImagePlaceHolder from "./ImagePlaceHolder";
