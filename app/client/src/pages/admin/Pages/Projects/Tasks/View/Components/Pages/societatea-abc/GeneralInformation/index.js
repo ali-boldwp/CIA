@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import ImagePlaceholder from './ImagePlaceholder';
 import Navigation from './Navigation';
 import styles from './styles.module.css';
-import { useUpdateTaskDataMutation } from "../../../../../../../../services/taskApi";
+import { useUpdateTaskDataMutation } from "../../../../../../../../../../services/taskApi";
 
 const Index = ({ formValues, setFormValues, taskId }) => {
 
