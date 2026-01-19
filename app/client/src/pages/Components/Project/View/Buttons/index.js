@@ -8,11 +8,14 @@ const Buttons = ({
                                  onGoToTask,
                                  onViewCosts,
                                  id,
+                     userRole,
                      isLoading = false,
                              }) => {
     return (
         <div className={styles.wrapper}>
             <div className={styles.buttonRow}>
+                {userRole !== "analyst" && (
+                    <>
                 <button
                     type="button"
                     className={styles.saveBtn}
@@ -21,6 +24,8 @@ const Buttons = ({
                 >
                     {isLoading ? "Se salvează..." : "Salvează modificările"}
                 </button>
+                    </>
+                )}
 
                 <Link  to={`/project/view/${id}/tasks`}
                        type="button"
@@ -30,6 +35,9 @@ const Buttons = ({
                     Mergi la Task Proiect
                 </Link>
 
+                {userRole !== "analyst" && (
+                    <>
+
                 <Link to={`/project/view/${id}/cost`}
                       type="button"
                       className={styles.costBtn}
@@ -37,6 +45,8 @@ const Buttons = ({
                 >
                     Vezi Costuri
                 </Link>
+                    </>
+                )}
             </div>
         </div>
     );

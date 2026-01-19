@@ -1,5 +1,6 @@
 import {Link, useNavigate, useParams} from "react-router-dom";
-import {useGetAnalystsQuery} from "../../../../../../services/userApi";
+import { useLocation } from "react-router-dom";
+import {useGetAnalystsQuery, useGetMeQuery} from "../../../../../../services/userApi";
 import { useGetCategoriesQuery } from "../../../../../../services/categoryApi";
 
 import styles from "./NewProjectstyle.css";
@@ -13,6 +14,10 @@ import {
 const CreateProject = ({ data, main }) => {
 
     const {id} = useParams();
+
+    const location = useLocation();
+
+    const isNewProjectPath = location.pathname === "/project/new";
 
     // API sometimes returns: { data: [...] } — so we normalize it
     const dataAnalyst = Array.isArray(data?.data) ? data.data : [];
@@ -386,8 +391,7 @@ const CreateProject = ({ data, main }) => {
         <div className="page-wrapper1">
             <div className="page-container">
 
-                {/* PROJECT DETAILS */}
-                <div className="form-card">
+       <div className="form-card">
                     <h2 className="form-title">Detalii proiect</h2>
 
                     {/* ROW 1 */}
@@ -409,24 +413,28 @@ const CreateProject = ({ data, main }) => {
                             )}
                         </div>
 
-                        <div className="form-field">
-                            <label>Subiect proiect</label>
-                            <div className="input-wrapper">
-                                <input
-                                    className="input-box"
-                                    placeholder="Societatea ABC"
-                                    value={projectSubject}
-                                    onChange={(e) =>
-                                        setProjectSubject(e.target.value)
-                                    }
-                                />
-                                {errors.projectSubject && (
-                                    <p className={styles.errorText}>
-                                        {errors.projectSubject}
-                                    </p>
-                                )}
-                            </div>
-                        </div>
+                        <>
+                            {!isNewProjectPath && (
+                                <div className="form-field">
+                                    <label>Subiect proiect</label>
+                                    <div className="input-wrapper">
+                                        <input
+                                            className="input-box"
+                                            placeholder="Societatea ABC"
+                                            value={projectSubject}
+                                            onChange={(e) =>
+                                                setProjectSubject(e.target.value)
+                                            }
+                                        />
+                                        {errors.projectSubject && (
+                                            <p className={styles.errorText}>
+                                                {errors.projectSubject}
+                                            </p>
+                                        )}
+                                    </div>
+                                </div>
+                            )}
+                        </>
                     </div>
 
                     {/* ROW 2 */}
