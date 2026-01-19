@@ -10,7 +10,8 @@
 }
 
 .label {
-    font-size: 13px;
+
+font-size: 15px;
     font-weight: 700;
     color: #0f172a;
 }
@@ -21,7 +22,8 @@
     border-radius: 6px;
     padding: 0 12px;
     outline: none;
-    font-size: 14px;
+
+font-size: 16px;
     font-family: inherit;
 }
 
@@ -36,7 +38,8 @@
     border-radius: 8px;
     border: 1px solid #e5e7eb;
     background: #f9fafb;
-    font-size: 13px;
+
+font-size: 15px;
     color: #374151;
 }
 

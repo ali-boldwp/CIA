@@ -59,7 +59,9 @@
 }
 
 .badge {
-    font-size: 12px;
+
+
+font-size: 16px;
     padding: 4px 10px;
     border-radius: 999px;
     background: #f3f4f6;
@@ -78,7 +80,9 @@
 }
 
 .infoText {
-    font-size: 12px;
+
+
+font-size: 16px;
     color: #6b7280;
     margin-bottom: 16px;
     font-weight: 600; /* 🔥 now bold */
@@ -91,7 +95,8 @@
 }
 
 .sectionLabel {
-    font-size: 13px;
+
+font-size: 15px;
     font-weight: 700;
     color: #111827;
     margin-bottom: 8px;
@@ -109,7 +114,8 @@
 .actionBtn {
     border-radius: 12px;
     padding: 10px 22px;
-    font-size: 13px;
+
+font-size: 15px;
     font-weight: 700; /* 🔥 now bold */
     border: 1px solid transparent;
     cursor: pointer;
@@ -149,7 +155,8 @@
     border: 1px solid #d1d5db;
     border-radius: 12px;
     padding: 12px 14px;
-    font-size: 13px;
+
+font-size: 15px;
     background: #ffffff;
     outline: none;
     resize: vertical;
@@ -176,7 +183,8 @@
     background: #ffffff;
     color: #2563eb;
     padding: 8px 18px;
-    font-size: 13px;
+
+font-size: 15px;
     font-weight: 700;
     cursor: pointer;
     transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;

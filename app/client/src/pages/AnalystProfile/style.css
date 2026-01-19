@@ -26,7 +26,8 @@
     color: white;
     font-weight: 500;
     cursor: pointer;
-    font-size: 14px;
+
+font-size: 16px;
     box-shadow: 0 4px 12px rgba(123, 82, 255, 0.3);
 }
 
@@ -55,7 +56,8 @@
     background: white;
     border-radius: 999px;
     border: 1px solid #ddd;
-    font-size: 14px;
+
+font-size: 16px;
     cursor: pointer;
     font-weight: 500;
     color: #333;
@@ -69,7 +71,8 @@
     color: white;
     font-weight: 600;
     cursor: pointer;
-    font-size: 14px;
+
+font-size: 16px;
     box-shadow: 0 4px 12px rgba(123, 82, 255, 0.3);
 }
 .info-wrapper {
@@ -98,7 +101,8 @@
 }
 
 .label {
-    font-size: 13px;
+
+font-size: 15px;
     color: #5f5f5f;
 }
 
@@ -125,7 +129,8 @@
 }
 
 .stat-label {
-    font-size: 13px;
+
+font-size: 15px;
     color: #5f5f5f;
     margin-bottom: 4px;
 }
@@ -160,7 +165,8 @@
 .projects-table {
     width: 100%;
     border-collapse: collapse;
-    font-size: 14px;
+
+font-size: 16px;
 }
 
 .projects-table thead {
@@ -171,7 +177,8 @@
     padding: 12px;
     text-align: left;
     color: #666;
-    font-size: 13px;
+
+font-size: 15px;
     font-weight: 600;
 }
 
@@ -185,7 +192,9 @@
 .status-pill {
     padding: 6px 12px;
     border-radius: 12px;
-    font-size: 12px;
+
+
+font-size: 16px;
     font-weight: 600;
 }
 
@@ -264,7 +273,8 @@
 }
 
 .eval-label {
-    font-size: 13px;
+
+font-size: 15px;
     color: #444;
     margin-bottom: 6px;
     font-weight: 600;
@@ -280,12 +290,14 @@
     display: flex;
     align-items: center;
     gap: 6px;
-    font-size: 13px;
+
+font-size: 15px;
 }
 
 /* OBSERVATIONS AREA */
 .obs-label {
-    font-size: 13px;
+
+font-size: 15px;
     color: #444;
     margin-bottom: 6px;
     display: block;
@@ -298,7 +310,8 @@
     border: 1px solid #ddd;
     padding: 12px;
     resize: none;
-    font-size: 14px;
+
+font-size: 16px;
 }
 
 /* FOOTER BUTTONS */
@@ -321,7 +334,8 @@
     background: white;
     border: 1px solid #ddd;
     border-radius: 999px;
-    font-size: 14px;
+
+font-size: 16px;
     cursor: pointer;
     font-weight: 500;
 }
@@ -332,7 +346,8 @@
     color: white;
     border-radius: 999px;
     border: none;
-    font-size: 14px;
+
+font-size: 16px;
     cursor: pointer;
     font-weight: 600;
     box-shadow: 0 4px 12px rgba(123, 82, 255, 0.35);

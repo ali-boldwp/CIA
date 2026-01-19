@@ -94,7 +94,9 @@
 }
 
 .popup-user-date {
-    font-size: 12px;
+
+
+font-size: 16px;
     color: gray;
 }
 
@@ -104,7 +106,9 @@
     color: #2f9e44;
     padding: 4px 10px;
     border-radius: 12px;
-    font-size: 12px;
+
+
+font-size: 16px;
 }
 
 .status-rejected {
@@ -112,7 +116,9 @@
     color: #c92a2a;
     padding: 4px 10px;
     border-radius: 12px;
-    font-size: 12px;
+
+
+font-size: 16px;
 }
 
 /* CHECKBOX */
@@ -163,7 +169,8 @@
     padding: 10px 12px 10px 40px; /* space for icon */
     border: 1px solid #dcdcdc;
     border-radius: 10px;
-    font-size: 14px;
+
+font-size: 16px;
     outline: none;
     transition: 0.3s;
     background: #f9f9f9;
@@ -175,7 +182,8 @@
     background: white;
 }
 .bubble-seen {
-    font-size: 11px;
+
+font-size: 15px;
     margin-left: 8px;
     color: #4a9eff;
 }
@@ -184,7 +192,9 @@
     padding: 4px 10px;
     border-radius: 20px;
     color: white;
-    font-size: 12px;
+
+
+font-size: 16px;
     font-weight: bold;
 }
 

@@ -22,7 +22,8 @@
     width: 100%;
     min-height: 120px;
     padding: 20px;
-    font-size: 14px;
+
+font-size: 16px;
     font-weight: 400;
     line-height: 1.6;
     color: #374151;
@@ -83,7 +84,8 @@
 
     .introTextarea {
         padding: 15px;
-        font-size: 13px;
+
+font-size: 15px;
     }
 
     .clearButton {
@@ -99,7 +101,9 @@
 
     .introTextarea {
         padding: 12px;
-        font-size: 12px;
+
+
+font-size: 16px;
     }
 
     .clearButton {

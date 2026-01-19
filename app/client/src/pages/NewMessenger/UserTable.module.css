@@ -36,7 +36,8 @@
 
     background: linear-gradient(90deg, #6d28d9 0%, #14b8a6 100%);
     color: #ffffff;
-    font-size: 13px;
+
+font-size: 15px;
     font-weight: 600;
     font-style: italic;
     box-shadow: 0 4px 12px rgba(109, 40, 217, 0.25);
@@ -53,7 +54,8 @@
 .table {
     width: 100%;
     border-collapse: collapse;
-    font-size: 13px;
+
+font-size: 15px;
     table-layout: fixed;
 }
 
@@ -150,7 +152,9 @@
 
     background: linear-gradient(90deg, #4f46e5 0%, #14b8a6 100%);
     color: #ffffff;
-    font-size: 12px;
+
+
+font-size: 16px;
     font-weight: 600;
     font-style: italic;
     box-shadow: 0 3px 10px rgba(79, 70, 229, 0.25);
@@ -196,7 +200,8 @@
 }
 
 .popupCancel {
-    font-size: 13px;
+
+font-size: 15px;
     font-weight: 600;
     background: #e5e7eb;
     border: none;
@@ -229,11 +234,14 @@
     .table th,
     .table td {
         padding: 8px 10px;
-        font-size: 12px;
+
+
+font-size: 16px;
     }
 
     .actionBtn {
         padding: 5px 10px;
-        font-size: 11px;
+
+font-size: 15px;
     }
 }

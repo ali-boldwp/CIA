@@ -50,7 +50,8 @@
     padding: 8px 14px;
     border-radius: 8px;
     border: none;
-    font-size: 14px;
+
+font-size: 16px;
     color: white;
     cursor: pointer;
     font-weight: 600;
@@ -62,7 +63,8 @@
     padding: 8px 14px;
     border-radius: 8px;
     border: none;
-    font-size: 14px;
+
+font-size: 16px;
     color: white;
     cursor: pointer;
     font-weight: 600;
@@ -116,7 +118,8 @@
 
 .summary-sub {
     margin-top: 12px;
-    font-size: 14px;
+
+font-size: 16px;
     color: #6b7280;
 }
 
@@ -197,7 +200,9 @@
     border-radius: 999px;
     background: #E2E8F0;
     color: #000000;
-    font-size: 12px;
+
+
+font-size: 16px;
     font-weight: 700;
 }
 
@@ -207,7 +212,8 @@
     justify-content: center;
     flex-direction: row-reverse;
     gap: 4px;
-    font-size: 11px;
+
+font-size: 15px;
     margin-right: 8px;
     color: #6b7280;
 }
@@ -218,7 +224,8 @@
     justify-content: center;
     flex-direction: row;
     gap: 4px;
-    font-size: 11px;
+
+font-size: 15px;
     color: #6b7280;
 
 }
@@ -246,7 +253,8 @@
 }
 
 .status-text-analyst {
-    font-size: 13px;
+
+font-size: 15px;
     margin-right: 8px;
 }
 
@@ -276,7 +284,8 @@
 }
 .project-info {
     margin-top: 12px;
-    font-size: 13px;
+
+font-size: 15px;
     color: #64748B;
     font-weight: 700;
 }
@@ -291,7 +300,8 @@
 }
 
 .progress-header {
-    font-size: 13px;
+
+font-size: 15px;
     color: #64748B;
     font-weight: 700;
 }
@@ -322,7 +332,9 @@
 
 .progress-footer {
     margin-top: 6px;
-    font-size: 12px;
+
+
+font-size: 16px;
     color: #64748B;
     font-weight: 700;
 }
@@ -331,7 +343,9 @@
 .sales-btn {
     border: none;
     cursor: pointer;
-    font-size: 12px;
+
+
+font-size: 16px;
     font-weight: 600;
     border-radius: 99px;
 }
@@ -369,7 +383,8 @@
 
 .sales-btn.small {
     padding: 6px 12px;
-    font-size: 11px;
+
+font-size: 15px;
 }
 
 /* PROJECT ACTIONS */
@@ -391,7 +406,8 @@
 .humint-table {
     width: 100%;
     border-collapse: collapse;
-    font-size: 13px;
+
+font-size: 15px;
     table-layout: fixed; /* This ensures equal column width */
 }
 
@@ -433,7 +449,8 @@
 .status-badge {
     padding: 4px 20px;
     border-radius: 999px;
-    font-size: 11px;
+
+font-size: 15px;
     font-weight: 700;
 }
 
@@ -473,7 +490,8 @@
     list-style: none;
     margin: 16px 0 0;
     padding: 0;
-    font-size: 13px;
+
+font-size: 15px;
     font-weight: 700;
 }
 
@@ -496,7 +514,8 @@
     align-items: center;
     gap: 8px;
     padding: 7px 10px;
-    font-size: 13px;
+
+font-size: 15px;
     cursor: pointer;
 }
 
@@ -516,7 +535,8 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 11px;
+
+font-size: 15px;
     color: #ffffff;
     font-weight: 600;
 }
@@ -535,13 +555,15 @@
 }
 
 .conv-title {
-    font-size: 11px;
+
+font-size: 15px;
     color: #9ca3af;
     font-weight: 600;
 }
 
 .conv-subtitle {
-    font-size: 13px;
+
+font-size: 15px;
     font-weight: 600;
     margin-top: 2px;
 }
@@ -564,7 +586,9 @@
     border-radius: 12px;
     border: 1px solid #e5e7eb;
     padding: 8px 10px;
-    font-size: 12px;
+
+
+font-size: 16px;
     resize: none;
 }
 
@@ -620,7 +644,9 @@
     }
 
     .calendar-list li {
-        font-size: 12px;
+
+
+font-size: 16px;
         flex-wrap: wrap;
     }
 
@@ -645,7 +671,9 @@
     }
 
     .calendar-list {
-        font-size: 12px;
+
+
+font-size: 16px;
     }
 
     .calendar-list li span {

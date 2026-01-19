@@ -29,7 +29,8 @@
     top: 50%;
     transform: translateY(-50%);
     color: #9ca3af;
-    font-size: 14px;
+
+font-size: 16px;
 }
 
 .input {
@@ -41,7 +42,8 @@
     border-radius: 14px;      /* 🔄 999px se 16px => div ke barabar  */
     border: 1px solid #e2e8f0;
 
-    font-size: 14px;
+
+font-size: 16px;
     color: #111827;
 
     outline: none;

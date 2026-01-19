@@ -25,7 +25,9 @@
     display: flex;
     align-items: center;
     gap: 8px;
-    font-size: 12px;
+
+
+font-size: 16px;
     color: #6b7280;
 }
 
@@ -34,7 +36,8 @@
     padding: 6px 8px;
     border-radius: 999px;
     border: 1px solid #e5e7eb;
-    font-size: 13px;
+
+font-size: 15px;
     text-align: center;
 }
 
@@ -51,7 +54,9 @@
     padding: 10px 12px;
     border-radius: 14px;
     background: #f5f7ff;
-    font-size: 12px;
+
+
+font-size: 16px;
     font-weight: 600;
     color: #6b7280;
 }
@@ -64,7 +69,8 @@
     border-radius: 14px;
     border: 1px solid #edf2ff;
     background: #ffffff;
-    font-size: 13px;
+
+font-size: 15px;
     color: #1e293b;
     align-items: center;
     transition: background 0.15s ease, box-shadow 0.15s ease,
@@ -97,7 +103,9 @@
 .empEmptyRow {
     margin-top: 10px;
     padding: 10px 12px;
-    font-size: 12px;
+
+
+font-size: 16px;
     color: #6b7280;
     font-style: italic;
 }
@@ -109,7 +117,9 @@
     padding: 4px 2px 0;
     display: flex;
     justify-content: space-between;
-    font-size: 12px;
+
+
+font-size: 16px;
     color: #6b7280;
     font-style: italic;
 }
@@ -123,7 +133,8 @@
     border: none;
     background: #4f46e5;
     color: #ffffff;
-    font-size: 14px;
+
+font-size: 16px;
     font-weight: 500;
     cursor: pointer;
 }
@@ -166,7 +177,9 @@
 }
 
 .summaryLabel {
-    font-size: 12px;
+
+
+font-size: 16px;
     color: #6b7280;
     margin-bottom: 4px;
 }
@@ -235,7 +248,9 @@
     display: flex;
     flex-direction: column;
     gap: 4px;
-    font-size: 12px;
+
+
+font-size: 16px;
     color: #4b5563;
 }
 
@@ -248,7 +263,8 @@
     padding: 8px 10px;
     border-radius: 10px;
     border: 1px solid #e5e7eb;
-    font-size: 13px;
+
+font-size: 15px;
     outline: none;
 }
 
@@ -270,7 +286,8 @@
     border: none;
     background: #10b981;
     color: #ffffff;
-    font-size: 14px;
+
+font-size: 16px;
     font-weight: 500;
     cursor: pointer;
 }
@@ -285,7 +302,8 @@
     border: none;
     background: #111827;
     color: #ffffff;
-    font-size: 14px;
+
+font-size: 16px;
     font-weight: 500;
     cursor: pointer;
 }

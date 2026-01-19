@@ -19,7 +19,8 @@
 .teamHeader {
     display: grid;
     grid-template-columns: 30% 10% 15% 30% 15%;
-    font-size: 14px;
+
+font-size: 16px;
     opacity: 0.7;
     margin-bottom: 10px;
     border: 1px solid lightgray;
@@ -43,7 +44,8 @@
 
 /* Generic col */
 .col {
-    font-size: 14px;
+
+font-size: 16px;
 }
 
 /* Name section */
@@ -70,12 +72,14 @@
 .name {
     display: flex;
     align-items: center;
-    font-size: 14px;
+
+font-size: 16px;
 }
 
 /* Score */
 .score {
-    font-size: 14px;
+
+font-size: 16px;
     font-weight: 600;
 }
 
@@ -83,7 +87,8 @@
 .stateBadge {
     padding: 6px 12px;
     border-radius: 12px;
-    font-size: 13px;
+
+font-size: 15px;
 }
 
 .work {
@@ -112,7 +117,8 @@
 }
 
 .progressNumber {
-    font-size: 13px;
+
+font-size: 15px;
     opacity: 0.8;
 }
 
@@ -123,7 +129,8 @@
     border-radius: 10px;
     border: 1px solid #dddddd;
     background: #ffffff;
-    font-size: 13px;
+
+font-size: 15px;
     cursor: pointer;
 }
 
@@ -143,7 +150,8 @@
     width: 230px;
     height: 40px;
     border-radius: 8px;
-    font-size: 14px;
+
+font-size: 16px;
     font-weight: 600;
     cursor: pointer;
     display: flex;

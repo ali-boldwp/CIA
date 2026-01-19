@@ -18,7 +18,8 @@ input{
 }
 
 .subtitle {
-    font-size: 13px;
+
+font-size: 15px;
     color: #6b7280;
     margin-bottom: 12px;
 }
@@ -26,7 +27,8 @@ input{
 .table {
     width: 100%;
     border-collapse: collapse;
-    font-size: 13px;
+
+font-size: 15px;
 
 
 }
@@ -39,7 +41,8 @@ input{
     font-weight: 700;
     style: bold;
     color: #0F172A;
-    font-size: 14px;
+
+font-size: 16px;
     border:10px;
 }
 

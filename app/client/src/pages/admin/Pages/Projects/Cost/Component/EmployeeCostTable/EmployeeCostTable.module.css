@@ -21,7 +21,8 @@
 .costTable {
     width: 100%;
     border-collapse: collapse;
-    font-size: 14px;
+
+font-size: 16px;
     margin-top: 12px;
 
     background: #ffffff;
@@ -40,14 +41,16 @@
     border-bottom: 1px solid #e5e7eb;
     text-align: left;
     vertical-align: middle;
-    font-size: 14px;
+
+font-size: 16px;
     font-weight: 700;
     color: #0F172A;
 }
 
 /* HEADER SPECIFIC STYLES */
 .costTable th {
-    font-size: 12px !important;
+
+font-size: 16px !important;
     font-weight: 700 !important;
     color: #334155 !important;
 }
@@ -74,7 +77,8 @@
     background: none;
     border: none;
     cursor: pointer;
-    font-size: 13px;
+
+font-size: 15px;
     padding: 4px 8px;
     margin: 0 2px;
     border-radius: 4px;
@@ -148,7 +152,8 @@
     padding: 14px 20px;
     border-radius: 4px;
     border: none;
-    font-size: 14px; /* Added explicitly */
+
+font-size: 16px; /* Added explicitly */
     font-weight: 700; /* Added explicitly */
     font-style: italic; /* Added */
     cursor: pointer;
@@ -177,13 +182,15 @@
     .costTable th,
     .costTable td {
         padding: 8px 10px;
-        font-size: 14px;
+
+font-size: 16px;
         font-weight: 700;
     }
 
     /* HEADER SPECIFIC STYLES FOR MOBILE */
     .costTable th {
-        font-size: 12px !important;
+
+font-size: 16px !important;
         font-weight: 700 !important;
         color: #334155 !important;
     }
@@ -191,7 +198,8 @@
     .inputCell {
         width: 60px;
         padding: 5px 6px;
-        font-size: 14px;
+
+font-size: 16px;
         font-weight: 700;
     }
 
@@ -215,7 +223,8 @@
     .btnGreen {
         width: 100%;
         min-width: auto;
-        font-size: 14px; /* Added for mobile */
+
+font-size: 16px; /* Added for mobile */
         font-weight: 700; /* Added for mobile */
         font-style: italic; /* Added for mobile */
     }
@@ -245,13 +254,15 @@
 
     .costTable th,
     .costTable td {
-        font-size: 14px;
+
+font-size: 16px;
         font-weight: 700;
     }
 
     /* HEADER SPECIFIC STYLES FOR SMALL MOBILE */
     .costTable th {
-        font-size: 12px !important;
+
+font-size: 16px !important;
         font-weight: 700 !important;
         color: #334155 !important;
     }
@@ -261,7 +272,8 @@
     }
 
     .btnGreen {
-        font-size: 14px; /* Added for small mobile */
+
+font-size: 16px; /* Added for small mobile */
         font-weight: 700; /* Added for small mobile */
         font-style: italic; /* Added for small mobile */
     }

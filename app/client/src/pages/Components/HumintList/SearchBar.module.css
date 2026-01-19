@@ -39,7 +39,8 @@
     border: 1px solid #e5e7eb;
     background-color: #f9fafb;
 
-    font-size: 13px;
+
+font-size: 15px;
     color: #111827;
     outline: none;
     transition: 0.15s ease;
@@ -70,7 +71,8 @@
 }
 
 .filterLabel {
-    font-size: 11px;
+
+font-size: 15px;
     font-weight: 500;
     color: #6b7280;
 }
@@ -82,7 +84,9 @@
     border: 1px solid #e5e7eb;
     background-color: #ffffff;
 
-    font-size: 12px;
+
+
+font-size: 16px;
     font-weight: 500;
     cursor: pointer;
 
@@ -103,7 +107,8 @@
 
     background-color: #22c55e;
     color: #ffffff;
-    font-size: 13px;
+
+font-size: 15px;
     font-weight: 600;
 
     cursor: pointer;

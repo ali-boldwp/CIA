@@ -108,8 +108,11 @@
 .semibold { font-weight: 600; }
 .light { font-weight: 300; }
 
-.fs-12 { font-size: 12px; }
-.fs-14 { font-size: 14px; }
+.fs-12 {
+
+font-size: 16px; }
+.fs-14 {
+font-size: 16px; }
 .fs-16 { font-size: 16px; }
 .fs-18 { font-size: 18px; }
 .fs-20 { font-size: 20px; }
@@ -273,7 +276,9 @@
 .status-badge {
     padding: 5px 12px;
     border-radius: 8px;
-    font-size: 12px;
+
+
+font-size: 16px;
     font-weight: bold;
     color: white;
 }
@@ -286,7 +291,9 @@
 .priority {
     padding: 4px 10px;
     border-radius: 6px;
-    font-size: 12px;
+
+
+font-size: 16px;
     color: white;
 }
 
@@ -336,7 +343,8 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%); /* center both vertically and horizontally */
-    font-size: 14px; /* slightly smaller than box for perfect fit */
+
+font-size: 16px; /* slightly smaller than box for perfect fit */
     color: #0d9c57;
     font-weight: bold;
     pointer-events: none; /* ensure clicks go to checkbox */
@@ -388,7 +396,8 @@
     flex: 1;
     border: 1px solid #ccc;
     border-radius: 8px;
-    font-size: 14px;
+
+font-size: 16px;
 }
 
 .submit-chapter-btn {
@@ -480,7 +489,8 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    font-size: 13px;
+
+font-size: 15px;
     color: #2563eb;
     font-weight: bold;
 }
@@ -489,7 +499,9 @@
 .status-badge {
     padding: 5px 12px;
     border-radius: 20px;
-    font-size: 12px;
+
+
+font-size: 16px;
     font-weight: 600;
 }
 
@@ -515,7 +527,9 @@
     border-radius: 14px;
     background: #e0e7ff;
     color: #4b54d2;
-    font-size: 12px;
+
+
+font-size: 16px;
     font-weight: 600;
 }
 
@@ -557,7 +571,8 @@
     padding: 8px 14px;
     border-radius: 18px;
     border: none;
-    font-size: 14px;
+
+font-size: 16px;
     color: white;
     cursor: pointer;
     font-weight: 600;
@@ -576,7 +591,8 @@
 
 /* status */
 .status-text {
-    font-size: 13px;
+
+font-size: 15px;
     margin-bottom: 12px;
 }
 
@@ -662,7 +678,8 @@
     border-radius: 6px;
     border: none;
     cursor: pointer;
-    font-size: 13px;
+
+font-size: 15px;
     font-weight: 500;
 }
 
@@ -687,7 +704,8 @@
 }
 
 .progress-title {
-    font-size: 13px;
+
+font-size: 15px;
     font-weight: 600;
 }
 
@@ -706,7 +724,8 @@
 }
 
 .progress-info {
-    font-size: 11px;
+
+font-size: 15px;
     color: #777;
 }
 
@@ -730,7 +749,8 @@
 }
 
 .time-title {
-    font-size: 11px;
+
+font-size: 15px;
     font-weight: 600;
     color: #7a7a7a;
     text-transform: uppercase;
@@ -738,12 +758,15 @@
 }
 
 .time-info {
-    font-size: 13px;
+
+font-size: 15px;
     margin-bottom: 5px;
 }
 
 .analyst-times {
-    font-size: 12px;
+
+
+font-size: 16px;
     color: #555;
 }
 
@@ -756,7 +779,8 @@
 }
 
 .edit-label {
-    font-size: 13px;
+
+font-size: 15px;
     color: #444;
 }
 
@@ -764,7 +788,9 @@
     display: flex;
     align-items: center;
     gap: 6px;
-    font-size: 12px;
+
+
+font-size: 16px;
 }
 
 .toggle-on {
@@ -812,7 +838,8 @@
     display: flex;
     align-items: center;
     gap: 6px;
-    font-size: 13px;
+
+font-size: 15px;
 }
 
 .doted{
@@ -852,7 +879,8 @@
 
 .btn {
     padding: 7px 18px;
-    font-size: 13px;
+
+font-size: 15px;
     font-weight: 500;
     border-radius: 10px;
     border: 1px solid #dcdcdc;
@@ -927,7 +955,8 @@
     background: transparent;
     border: none;
     padding: 8px 12px;
-    font-size: 13px;
+
+font-size: 15px;
     text-align: left;
     cursor: pointer;
 }
@@ -948,7 +977,8 @@
 }
 
 .chapter-label {
-    font-size: 11px;
+
+font-size: 15px;
     font-weight: 600;
     color: #8f8f8f;
 }
@@ -962,7 +992,9 @@
 
 .edit-title-btn {
     margin-left: 10px;
-    font-size: 12px;
+
+
+font-size: 16px;
     padding: 3px 10px;
     border-radius: 6px;
     border: 1px solid #ddd;
@@ -971,7 +1003,9 @@
 }
 
 .export-btn {
-    font-size: 12px;
+
+
+font-size: 16px;
     padding: 6px 15px;
     border-radius: 6px;
     background: white;
@@ -984,7 +1018,8 @@
     margin-top: 20px;
     display: grid;
     grid-template-columns: 60px 1.5fr 140px 160px 100px;
-    font-size: 11px;
+
+font-size: 15px;
     font-weight: 600;
     color: #8b8b8b;
     padding-left: 10px !important;
@@ -1005,7 +1040,8 @@
 }
 
 .number {
-    font-size: 13px;
+
+font-size: 15px;
     opacity: 0.7;
 }
 
@@ -1020,7 +1056,8 @@
 .status-pill {
     padding: 4px 14px;
     border-radius: 12px;
-    font-size: 11px;
+
+font-size: 15px;
     font-weight: 600;
 }
 
@@ -1047,7 +1084,8 @@
 .analyst-pill {
     padding: 4px 12px;
     border-radius: 12px;
-    font-size: 11px;
+
+font-size: 15px;
     font-weight: 600;
 }
 
@@ -1079,5 +1117,6 @@
     background: #2563EB;
     color: #fff;
     cursor: pointer;
-    font-size: 14px;
+
+font-size: 16px;
 }

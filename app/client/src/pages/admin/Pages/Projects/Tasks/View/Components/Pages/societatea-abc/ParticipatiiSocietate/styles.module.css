@@ -34,20 +34,23 @@
     padding: 14px;
     border-radius: 6px;
     box-sizing: border-box;
-    font-size: 14px;
+
+font-size: 16px;
 }
 .participationTable th {
     background: #f1f5f9;
     text-align: left;
     padding: 10px;
-    font-size: 13px;
+
+font-size: 15px;
     border: 1px solid #e5e7eb;
 }
 
 .participationTable td {
     border: 1px solid #e5e7eb;
     padding: 10px;
-    font-size: 13px;
+
+font-size: 15px;
 }
 .deleteBox {
     position: absolute;
@@ -58,7 +61,8 @@
     border: none;
     padding: 6px 14px;
     border-radius: 6px;
-    font-size: 13px;
+
+font-size: 15px;
     cursor: pointer;
 }
 
@@ -106,12 +110,16 @@
 
 .active {
     color: green;
-    font-size: 12px;
+
+
+font-size: 16px;
 }
 
 .inactive {
     color: red;
-    font-size: 12px;
+
+
+font-size: 16px;
 }
 
 
@@ -131,7 +139,8 @@
     padding: 8px 14px;
     border-radius: 6px;
     cursor: pointer;
-    font-size: 14px;
+
+font-size: 16px;
 }
 .navigation {
     margin: 40px 0;

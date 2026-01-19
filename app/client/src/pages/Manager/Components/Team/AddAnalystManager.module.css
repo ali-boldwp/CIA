@@ -42,7 +42,8 @@
 }
 
 .formSubtitle {
-    font-size: 13px;
+
+font-size: 15px;
     color: #6b7280;
     margin-bottom: 16px;
 }
@@ -107,7 +108,9 @@
     display: block;
     margin-bottom: 6px;
     font-weight: 600;
-    font-size: 12px;
+
+
+font-size: 16px;
     color: #4b5563;
 }
 
@@ -121,7 +124,8 @@
     border: 1px solid #ddd;
     border-radius: 12px;
     outline: none;
-    font-size: 14px;
+
+font-size: 16px;
     color: #111827;
 }
 
@@ -144,7 +148,8 @@
 /* helper text */
 .helperText {
     margin-top: 6px;
-    font-size: 11px;
+
+font-size: 15px;
     color: #9ca3af;
 }
 
@@ -154,7 +159,8 @@
     align-items: center;
     gap: 8px;
     cursor: pointer;
-    font-size: 14px !important;
+
+font-size: 16px !important;
     font-weight: 540 !important;
     color: #374151;
 }
@@ -190,7 +196,8 @@
     background: #f9fafb;
     border: 1px solid #ddd;
     border-radius: 12px;
-    font-size: 14px;
+
+font-size: 16px;
     color: #111827;
 }
 
@@ -210,7 +217,9 @@
     display: block;
     margin-bottom: 6px;
     font-weight: 600;
-    font-size: 12px;
+
+
+font-size: 16px;
     color: #4b5563;
 }
 
@@ -221,7 +230,8 @@
     border: 1px solid #ddd;
     border-radius: 12px;
     resize: none;
-    font-size: 14px;
+
+font-size: 16px;
     outline: none;
 }
 
@@ -245,7 +255,8 @@
     border-radius: 8px;
     border: none;
     cursor: pointer;
-    font-size: 14px;
+
+font-size: 16px;
 }
 
 .cancelBtn {
@@ -255,7 +266,8 @@
     border-radius: 8px;
     border: none;
     cursor: pointer;
-    font-size: 14px;
+
+font-size: 16px;
 }
 
 .saveBtn {
@@ -265,6 +277,7 @@
     border-radius: 8px;
     border: none;
     cursor: pointer;
-    font-size: 14px;
+
+font-size: 16px;
     font-weight: 600;
 }

@@ -35,7 +35,8 @@
 
 /* 🔢 Count text (same style jaisa screenshot) */
 .countText {
-    font-size: 14px;
+
+font-size: 16px;
     font-weight: 700;
     font-style: italic;
     color: #64748b;
@@ -57,7 +58,8 @@
 .tableHeader {
     display: grid;
     grid-template-columns: 30% 15% 15% 20% 20%;
-    font-size: 14px;
+
+font-size: 16px;
     opacity: 0.7;
     border-bottom: 1px solid lightgray;
     padding: 24px;
@@ -74,14 +76,16 @@
 }
 
 .col {
-    font-size: 14px;
+
+font-size: 16px;
 }
 
 /* ================= Status ================= */
 .stateBadge {
     padding: 6px 12px;
     border-radius: 12px;
-    font-size: 13px;
+
+font-size: 15px;
 }
 
 .active {
@@ -108,7 +112,9 @@
     min-width: 90px !important;
     height: 32px !important;
     padding: 6px 10px !important;
-    font-size: 12px !important;
+
+
+font-size: 16px !important;
     border-radius: 8px !important;
     border: 1px solid #ddd !important;
     background: white !important;
@@ -144,7 +150,8 @@
 }
 
 .addCategoryText {
-    font-size: 14px;
+
+font-size: 16px;
     font-weight: 600;
     color: #2563eb;
     cursor: pointer;

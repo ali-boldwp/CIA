@@ -25,7 +25,8 @@
     width: 180px; /* desktop size */
     height: 30px;
     border-radius: 4px;
-    font-size: 14px;
+
+font-size: 16px;
     font-weight: 400;
     cursor: pointer;
     border: 1px solid #3B82F6;
@@ -80,7 +81,8 @@
 }
 
 .placeholderText {
-    font-size: 13px;
+
+font-size: 15px;
     color: #7f8c8d;
     font-style: italic;
     text-align: center;

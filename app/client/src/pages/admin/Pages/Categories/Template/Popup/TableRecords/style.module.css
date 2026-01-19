@@ -88,7 +88,8 @@
 
 .table th {
     text-align: left;
-    font-size: 13px;
+
+font-size: 15px;
     font-weight: 700;
     color: #0f172a;
     padding: 10px 12px;
@@ -116,7 +117,8 @@
     border-radius: 6px;
     padding: 0 12px;
     outline: none;
-    font-size: 14px;
+
+font-size: 16px;
     font-family: inherit;
     background: #fff;
 }

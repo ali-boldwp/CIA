@@ -44,7 +44,9 @@
 .btn-outline {
     border-radius: 4px;
     padding: 2px 18px;
-    font-size: 12px;
+
+
+font-size: 16px;
     font-weight: bold;
     font-style: italic;
     cursor: pointer;
@@ -74,7 +76,8 @@
 }
 
 .btn-icon {
-    font-size: 14px;
+
+font-size: 16px;
 }
 
 
@@ -83,7 +86,9 @@
     border-radius: 4px;
     border: 1px solid #e5e7eb;
     padding: 12px 14px;
-    font-size: 12px;
+
+
+font-size: 16px;
     outline: none;
     background: #f9fafb;
 }
@@ -128,7 +133,8 @@
     left: 10px;
     top: 50%;
     transform: translateY(-50%);
-    font-size: 14px;
+
+font-size: 16px;
     color: #9ca3af;
 }
 
@@ -208,7 +214,8 @@
 }
 
 .pill-icon {
-    font-size: 13px;
+
+font-size: 15px;
 }
 
 .pill-unique {
@@ -267,13 +274,15 @@
 }
 
 .label-muted {
-    font-size: 13px;
+
+font-size: 15px;
     font-weight: 700;
     color: #6B7280;
 }
 
 .label-small {
-    font-size: 11px;
+
+font-size: 15px;
     color: #9ca3af;
 }
 
@@ -329,7 +338,8 @@
 }
 
 .conversation-name {
-    font-size: 13px;
+
+font-size: 15px;
     font-weight: 500;
     color: #111827;
     display: flex;
@@ -347,7 +357,8 @@
 }
 
 .conversation-sub {
-    font-size: 11px;
+
+font-size: 15px;
     color: #9ca3af;
 }
 
@@ -398,7 +409,8 @@
 }
 
 .chat-title {
-    font-size: 14px;
+
+font-size: 16px;
     font-weight: 700;
     font-style: italic;
 }
@@ -410,7 +422,8 @@
 }
 
 .tag {
-    font-size: 11px;
+
+font-size: 15px;
     padding: 4px 10px;
     border-radius: 999px;
     display: inline-flex;
@@ -436,7 +449,9 @@
 }
 
 .tag-icon {
-    font-size: 12px;
+
+
+font-size: 16px;
 }
 
 .chat-search-wrapper {
@@ -465,7 +480,9 @@
 }
 
 .attachment-name {
-    font-size: 12px;
+
+
+font-size: 16px;
     font-weight: 500;
     display: flex;
     align-items: center;
@@ -473,11 +490,13 @@
 }
 
 .attachment-icon {
-    font-size: 14px;
+
+font-size: 16px;
 }
 
 .attachment-sub {
-    font-size: 11px;
+
+font-size: 15px;
     color: #9ca3af;
 }
 
@@ -504,7 +523,8 @@
 
 .message {
     max-width: 70%;
-    font-size: 13px;
+
+font-size: 15px;
     padding: 8px 12px;
     border-radius: 16px;
 }
@@ -535,7 +555,8 @@
 }
 
 .composer-send {
-    font-size: 13px;
+
+font-size: 15px;
 }
 
 /* right sidebar */
@@ -545,7 +566,8 @@
 }
 
 .section-title {
-    font-size: 13px;
+
+font-size: 15px;
     font-weight: 600;
     margin-bottom: 4px;
     color: gray;
@@ -634,7 +656,9 @@
 
 
 .member-name {
-    font-size: 12px;
+
+
+font-size: 16px;
     flex: 1;
 }
 
@@ -649,7 +673,9 @@
     border-radius: 999px;
     border: 1px solid #e5e7eb;
     background: #f9fafb;
-    font-size: 12px;
+
+
+font-size: 16px;
     padding: 0;
     cursor: pointer;
 }
@@ -708,7 +734,8 @@
     display: flex;
     align-items: center;
     gap: 6px;
-    font-size: 11px;
+
+font-size: 15px;
     color: gray;
 }
 
@@ -718,7 +745,8 @@
 }
 
 .bubble-time {
-    font-size: 11px;
+
+font-size: 15px;
     color: #666;
 }
 
@@ -731,7 +759,8 @@
     list-style: none;
     padding-left: 0;
     margin: 0;
-    font-size: 11px;
+
+font-size: 15px;
     height:23vh;
     overflow-y:auto;
     font-weight: 600;
@@ -773,7 +802,9 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 12px;
+
+
+font-size: 16px;
     font-weight: 400;
     padding: 12px 14px;
 }
@@ -790,7 +821,9 @@
     color: #ffffff;
     padding: 6px 14px;
     border-radius: 999px;
-    font-size: 12px;
+
+
+font-size: 16px;
     font-weight: 500;
     box-shadow: 0 10px 25px rgba(124, 58, 237, 0.45);
 }
@@ -804,7 +837,8 @@
 
 .sidebar-pin-icon {
     margin-left: 6px;
-    font-size: 14px;
+
+font-size: 16px;
     color: gray;
     position: absolute;
     right:-40px;

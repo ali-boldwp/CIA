@@ -51,7 +51,8 @@
     color: #9f1239;
     padding: 10px 12px;
     border-radius: 6px;
-    font-size: 13px;
+
+font-size: 15px;
     font-weight: 700;
 }
 
@@ -62,7 +63,8 @@
 }
 
 .label {
-    font-size: 13px;
+
+font-size: 15px;
     font-weight: 700;
     color: #0f172a;
 }
@@ -74,7 +76,8 @@
     border-radius: 6px;
     padding: 0 12px;
     outline: none;
-    font-size: 14px;
+
+font-size: 16px;
     font-family: inherit;
 }
 

@@ -13,14 +13,17 @@
 }
 
 .control-title {
-    font-size: 12px;
+
+
+font-size: 16px;
     text-transform: uppercase;
     color: #64748b;
     margin-bottom: 4px;
 }
 
 .status-line {
-    font-size: 14px;
+
+font-size: 16px;
     margin-bottom: 10px;
 }
 
@@ -35,7 +38,8 @@
     border: none;
     padding: 6px 14px;
     border-radius: 6px;
-    font-size: 13px;
+
+font-size: 15px;
     cursor: pointer;
     margin-bottom: 14px;
 }
@@ -46,7 +50,8 @@
 }
 .meta-info p {
     margin: 4px 0;
-    font-size: 14px;
+
+font-size: 16px;
     color: #0f172a;
 }
 
@@ -59,7 +64,9 @@
 }
 
 .time-title {
-    font-size: 12px;
+
+
+font-size: 16px;
     font-weight: 600;
     color: #334155;
     margin-bottom: 8px;
@@ -67,13 +74,15 @@
 }
 
 .time-info {
-    font-size: 14px;
+
+font-size: 16px;
     color: #0f172a;
     margin-bottom: 6px;
 }
 
 .analyst-times {
-    font-size: 13px;
+
+font-size: 15px;
     color: #64748b;
 }
 .task-actions2{
