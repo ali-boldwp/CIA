@@ -22,7 +22,7 @@ const HUMINT_STATUS_UI = {
             backgroundColor: "#FFFBEB",
             border: "1px solid #F59E0B",
             fontWeight: 700,
-            fontSize: "12px",
+            fontSize: "16px",
         },
     },
     Sent: {
@@ -32,7 +32,7 @@ const HUMINT_STATUS_UI = {
             backgroundColor: "#E0F2FE",
             border: "1px solid #0EA5E9",
             fontWeight: 700,
-            fontSize: "12px",
+            fontSize: "16px",
         },
     },
     Approved: {
@@ -42,7 +42,7 @@ const HUMINT_STATUS_UI = {
             backgroundColor: "#ECFDF5",
             border: "1px solid #22C55E",
             fontWeight: 700,
-            fontSize: "12px",
+            fontSize: "16px",
         },
     },
 };
@@ -54,7 +54,7 @@ const HUMINT_DEFAULT_UI = {
         backgroundColor: "#F8FAFC",
         border: "1px solid #CBD5E1",
         fontWeight: 700,
-        fontSize: "12px",
+        fontSize: "16px",
     },
 };
 
@@ -278,7 +278,7 @@ const Item = ({ data, refetchProjects }) => {
       className="status-badge-approved"
       style={{
           ...humintUI.style,
-          padding: "4px 10px",
+          padding: "9px 13px",
           borderRadius: "999px",
           display: "inline-block",
       }}
