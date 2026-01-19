@@ -227,7 +227,8 @@ font-size: 15px;
 
 .profitPercentage {
 
-font-size: 14px !important;
+
+font-size: 16px !important;
     font-weight: 700 !important;
     font-style: italic !important;
     color: #15803d;
@@ -243,7 +244,8 @@ font-size: 14px !important;
 
 /* All summary box labels - UPDATED */
 .sLabel {
-    font-size: 14px !important;
+
+font-size: 16px !important;
     font-weight: 700 !important;
     font-style: italic !important;
     margin-bottom: 10px; /* Increased from 6px to 10px */
@@ -251,7 +253,8 @@ font-size: 14px !important;
 }
 
 .sLabelGreen {
-    font-size: 14px !important;
+
+font-size: 16px !important;
     font-weight: 700 !important;
     font-style: italic !important;
     color: #15803d;
@@ -260,7 +263,8 @@ font-size: 14px !important;
 }
 
 .sLabelDuration {
-    font-size: 14px !important;
+
+font-size: 16px !important;
     font-weight: 700 !important;
     font-style: italic !important;
     color: #6b7280;
@@ -423,11 +427,13 @@ font-size: 14px !important;
     }
 
     .projectBlock li {
-        font-size: 14px;
+
+font-size: 16px;
     }
 
     .projectBlock li b {
-        font-size: 14px;
+
+font-size: 16px;
         font-weight: 700;
     }
 
@@ -440,7 +446,8 @@ font-size: 14px !important;
     .sLabel,
     .sLabelGreen,
     .sLabelDuration {
-        font-size: 14px !important;
+
+font-size: 16px !important;
         font-weight: 700 !important;
         font-style: italic !important;
         margin-bottom: 8px; /* Adjusted for mobile */
@@ -485,12 +492,14 @@ font-size: 15px;
 
     .projectBlock li b {
 
-font-size: 14px;
+
+font-size: 16px;
         font-weight: 700;
     }
 
     .projectBlock li span {
-        font-size: 14px;
+
+font-size: 16px;
         font-weight: 700;
     }
 
@@ -498,7 +507,8 @@ font-size: 14px;
     .sLabel,
     .sLabelGreen,
     .sLabelDuration {
-        font-size: 14px !important;
+
+font-size: 16px !important;
         font-weight: 700 !important;
         font-style: italic !important;
         margin-bottom: 8px; /* Adjusted for mobile */
@@ -547,7 +557,8 @@ font-size: 15px;
 
     .projectBlock li b {
 
-font-size: 14px;
+
+font-size: 16px;
         font-weight: 700;
     }
 
@@ -570,7 +581,8 @@ font-size: 15px;
     }
 
     .profitPercentage {
-        font-size: 14px !important;
+
+font-size: 16px !important;
         text-align: left;
         width: 100%;
     }
@@ -586,7 +598,8 @@ font-size: 15px;
     .sLabel,
     .sLabelGreen,
     .sLabelDuration {
-        font-size: 14px !important;
+
+font-size: 16px !important;
         font-weight: 700 !important;
         font-style: italic !important;
         margin-bottom: 6px; /* Adjusted for small mobile */

@@ -48,7 +48,8 @@
 }
 
 .day-box span {
-    font-size: 14px;
+
+font-size: 16px;
 }
 
 .empty {
@@ -86,7 +87,8 @@
 
 .deadline-date {
 
-font-size: 14px;
+
+font-size: 16px;
     opacity: 0.6;
 }
 

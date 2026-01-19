@@ -48,7 +48,8 @@
     min-width: 12rem;
     border-radius: 16px;
     border: none;
-    font-size: 14px;
+
+font-size: 16px;
     color: white;
     cursor: pointer;
     font-weight: 600;
@@ -150,7 +151,8 @@
     border-radius: 4px;
     border: 1px solid #e3e7f5;
     background: #F8FAFC;
-    font-size: 14px;
+
+font-size: 16px;
     font-weight: 500;
     outline: none;
     box-sizing: border-box;
@@ -250,7 +252,8 @@
     border: 1px solid #d7ddf5;
     padding: 0.45rem 1.15rem;
     background: #F1F5F9;
-    font-size: 14px;
+
+font-size: 16px;
     font-style: italic;
     font-weight: 700;
     cursor: pointer;
@@ -276,7 +279,8 @@
 /* Selects */
 .selectAnalyst {
     cursor: pointer;
-    font-size: 14px;
+
+font-size: 16px;
     font-weight: 600;
     color: #374151;
 }
@@ -431,7 +435,8 @@
 .actionBtn {
     border: none;
     border-radius: 4px;
-    font-size: 14px;
+
+font-size: 16px;
     font-weight: 700;
     font-style: italic;
     cursor: pointer;
@@ -481,7 +486,8 @@
 .errorText {
     color: red;
 
-font-size: 14px;
+
+font-size: 16px;
     margin-top: 3px;
 }
 
@@ -499,7 +505,8 @@ font-size: 14px;
 .errorMessage {
     color: #ff4444;
 
-font-size: 14px;
+
+font-size: 16px;
     margin-top: 4px;
     display: block;
 }
@@ -545,7 +552,8 @@ font-size: 14px;
     border-radius: 4px;
     border: 1px solid #e3e7f5;
     background: #F8FAFC;
-    font-size: 14px;
+
+font-size: 16px;
     font-weight: 600;
     color: #374151;
     cursor: pointer;
@@ -586,7 +594,8 @@ font-size: 14px;
     gap: 8px;
     padding: 8px 14px;
     cursor: pointer;
-    font-size: 14px;
+
+font-size: 16px;
     font-weight: 600;
     color: #374151;
 }

@@ -89,7 +89,8 @@
 
 .formSubtitle {
 
-font-size: 14px;
+
+font-size: 16px;
     color: #6b7280;
     margin-bottom: 18px;
     font-style: italic;
@@ -145,7 +146,8 @@ font-size: 14px;
     margin-bottom: 6px;
     font-weight: 600;
 
-font-size: 14px;
+
+font-size: 16px;
     color: #4b5563;
 }
 
@@ -159,7 +161,8 @@ font-size: 14px;
     border: 1px solid #ddd;
     border-radius: 12px;
     outline: none;
-    font-size: 14px;
+
+font-size: 16px;
     color: #111827;
 }
 
@@ -184,7 +187,8 @@ font-size: 14px;
     background: #f9fafb;
     border: 1px solid #ddd;
     border-radius: 12px;
-    font-size: 14px;
+
+font-size: 16px;
     color: #111827;
 }
 
@@ -217,7 +221,8 @@ font-size: 14px;
     display: flex;
     align-items: center;
     gap: 8px;
-    font-size: 14px;
+
+font-size: 16px;
     font-weight: 600;
     font-style: italic;
     color: #6B7280;
@@ -246,7 +251,8 @@ font-size: 14px;
 .error {
     color: #dc2626;
 
-font-size: 14px;
+
+font-size: 16px;
     margin-top: 4px;
     font-style: italic;
 }
@@ -266,7 +272,8 @@ font-size: 14px;
     border-radius: 8px;
     border: none;
     cursor: pointer;
-    font-size: 14px;
+
+font-size: 16px;
     font-weight: 700;
     font-style: italic;
     transition: 0.2s ease-in-out;
@@ -284,7 +291,8 @@ font-size: 14px;
     border-radius: 8px;
     border: none;
     cursor: pointer;
-    font-size: 14px;
+
+font-size: 16px;
     font-weight: 600;
     font-style: italic;
 }

@@ -25,7 +25,8 @@
     display: flex;
     align-items: center;
     gap: 8px;
-    font-size: 14px;
+
+font-size: 16px;
     color: #6b7280;
 }
 
@@ -52,7 +53,8 @@ font-size: 15px;
     padding: 10px 12px;
     border-radius: 14px;
     background: #f5f7ff;
-    font-size: 14px;
+
+font-size: 16px;
     font-weight: 600;
     color: #6b7280;
 }
@@ -99,7 +101,8 @@ font-size: 15px;
 .empEmptyRow {
     margin-top: 10px;
     padding: 10px 12px;
-    font-size: 14px;
+
+font-size: 16px;
     color: #6b7280;
     font-style: italic;
 }
@@ -111,7 +114,8 @@ font-size: 15px;
     padding: 4px 2px 0;
     display: flex;
     justify-content: space-between;
-    font-size: 14px;
+
+font-size: 16px;
     color: #6b7280;
     font-style: italic;
 }
@@ -125,7 +129,8 @@ font-size: 15px;
     border: none;
     background: #4f46e5;
     color: #ffffff;
-    font-size: 14px;
+
+font-size: 16px;
     font-weight: 500;
     cursor: pointer;
 }
@@ -168,7 +173,8 @@ font-size: 15px;
 }
 
 .summaryLabel {
-    font-size: 14px;
+
+font-size: 16px;
     color: #6b7280;
     margin-bottom: 4px;
 }
@@ -237,7 +243,8 @@ font-size: 15px;
     display: flex;
     flex-direction: column;
     gap: 4px;
-    font-size: 14px;
+
+font-size: 16px;
     color: #4b5563;
 }
 
@@ -273,7 +280,8 @@ font-size: 15px;
     border: none;
     background: #10b981;
     color: #ffffff;
-    font-size: 14px;
+
+font-size: 16px;
     font-weight: 500;
     cursor: pointer;
 }
@@ -288,7 +296,8 @@ font-size: 15px;
     border: none;
     background: #111827;
     color: #ffffff;
-    font-size: 14px;
+
+font-size: 16px;
     font-weight: 500;
     cursor: pointer;
 }

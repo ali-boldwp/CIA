@@ -26,7 +26,8 @@ font-size: 15px;
 .select {
     width: 100%;
     padding: 6px 8px;
-    font-size: 14px;
+
+font-size: 16px;
     border-radius: 8px;
     border: 1px solid #e5e7eb;
     margin-bottom: 10px;
@@ -43,7 +44,8 @@ font-size: 15px;
     justify-content: space-between;
     align-items: center;
     padding: 6px 0;
-    font-size: 14px;
+
+font-size: 16px;
 }
 
 .name {
@@ -79,7 +81,8 @@ font-size: 15px;
     border: none;
     border-radius: 8px;
 
-font-size: 14px;
+
+font-size: 16px;
     padding: 6px;
     cursor: pointer;
 }
@@ -96,7 +99,8 @@ font-size: 14px;
     color: #dc2626;
     border-radius: 8px;
 
-font-size: 14px;
+
+font-size: 16px;
     padding: 6px;
     cursor: pointer;
 }
@@ -140,7 +144,8 @@ font-size: 15px;
 .empty {
     padding: 10px;
 
-font-size: 14px;
+
+font-size: 16px;
     color: #9ca3af;
     text-align: center;
 }

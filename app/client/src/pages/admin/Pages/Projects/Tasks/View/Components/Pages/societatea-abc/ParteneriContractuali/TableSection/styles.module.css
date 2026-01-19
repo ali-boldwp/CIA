@@ -25,7 +25,8 @@
     padding: 20px;
     text-align: left;
     font-weight: 700;
-    font-size: 14px;
+
+font-size: 16px;
     border: 1px solid #dee2e6;
     color: #0f172a;
 }
@@ -35,7 +36,8 @@
     border: 1px solid #dee2e6;
     color: #374151;
     font-weight: 700;
-    font-size: 14px;
+
+font-size: 16px;
     background-color: #fff; /* Always white */
 }
 .editableTable td:last-child{
@@ -51,7 +53,8 @@
 /* Input fields inside table */
 .editableTable input[type="text"] {
     border: none;
-    font-size: 14px;
+
+font-size: 16px;
     font-weight: 700;
     font-family: Inter;
     background: #fff;  /* Always white */

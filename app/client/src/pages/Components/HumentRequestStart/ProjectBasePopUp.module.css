@@ -42,7 +42,8 @@
 
 .label {
 
-font-size: 14px;
+
+font-size: 16px;
     color: #94a3b8;
 }
 
@@ -159,7 +160,8 @@ font-size: 15px;
     text-align: left;
     padding: 10px 14px;
 
-font-size: 14px;
+
+font-size: 16px;
     font-weight: 600;
     color: #94a3b8;
 }
@@ -193,7 +195,8 @@ font-size: 15px;
     border-radius: 999px;
     background: #f1f5f9;
 
-font-size: 14px;
+
+font-size: 16px;
     color: #475569;
 }
 
@@ -204,7 +207,8 @@ font-size: 14px;
 
 .contextTitle {
 
-font-size: 14px;
+
+font-size: 16px;
     color: #94a3b8;
     margin-bottom: 8px;
 }
@@ -217,7 +221,8 @@ font-size: 14px;
     background: #f8fafc;
     border-radius: 4px;
 
-font-size: 14px;
+
+font-size: 16px;
 }
 
 .contextTag {
@@ -242,7 +247,8 @@ font-size: 14px;
     border: none;
     background: #6366f1;
     color: #ffffff;
-    font-size: 14px;
+
+font-size: 16px;
     font-weight: 600;
     cursor: pointer;
 }

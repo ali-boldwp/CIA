@@ -62,7 +62,8 @@
     font-style: normal;
     text-align: left;
     font-weight: 700;
-    font-size: 14px;
+
+font-size: 16px;
     border: 1px solid #dee2e6;
 }
 
@@ -71,7 +72,8 @@
     border: 1px solid #dee2e6;
     color: #374151;
     font-weight: 700;
-    font-size: 14px;
+
+font-size: 16px;
 }
 
 .editableTable td:first-child {
@@ -84,7 +86,8 @@
     width: 100%;
     padding: 8px 10px;
     border: 1px solid #ced4da;
-    font-size: 14px;
+
+font-size: 16px;
 }
 
 .checkboxCell {
@@ -105,7 +108,8 @@
     width: 150px;
     height: 30px;
     border-radius: 4px;
-    font-size: 14px;
+
+font-size: 16px;
     font-weight: 400;
     cursor: pointer;
     border: 1px solid #3B82F6;
@@ -146,7 +150,8 @@
     width: 150px;
     height: 30px;
     border-radius: 4px;
-    font-size: 14px;
+
+font-size: 16px;
     font-weight: 400;
     cursor: pointer;
     border: 1px solid #9CA3AF;
@@ -206,7 +211,8 @@
 
 .noteText {
     color: #6B7280;
-    font-size: 14px;
+
+font-size: 16px;
     font-weight: 700;
     margin: 0;
 }
@@ -223,6 +229,7 @@
     }
 
     .noteText {
-        font-size: 14px;
+
+font-size: 16px;
     }
 }

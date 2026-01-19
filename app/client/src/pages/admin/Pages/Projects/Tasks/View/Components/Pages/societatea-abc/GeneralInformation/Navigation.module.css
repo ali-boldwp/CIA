@@ -14,7 +14,8 @@
     color: white;
     border: 1px solid #10B981;
     border-radius: 4px;
-    font-size: 14px;
+
+font-size: 16px;
     font-weight: 400;
     cursor: pointer;
     min-width: 180px;
@@ -31,7 +32,8 @@
     color: #2563EB;
     border: 1px solid #2563EB;
     border-radius: 4px;
-    font-size: 14px;
+
+font-size: 16px;
     font-weight: 400;
     cursor: pointer;
     min-width: 180px;
