@@ -82,7 +82,8 @@
     padding: 10px 12px;
     border-radius: 14px;
     background: #f5f7ff;
-    font-size: 12px;
+
+font-size: 14px;
     font-weight: 600;
     color: #6b7280;
 }
@@ -139,7 +140,8 @@
     padding: 4px 2px 0;
     display: flex;
     justify-content: space-between;
-    font-size: 12px;
+
+font-size: 14px;
     color: #6b7280;
     font-style: italic;
 }

@@ -156,7 +156,8 @@
 .semibold { font-weight: 600; }
 .light { font-weight: 300; }
 
-.fs-12 { font-size: 12px; }
+.fs-12 {
+font-size: 14px; }
 .fs-14 { font-size: 14px; }
 .fs-16 { font-size: 16px; }
 .fs-18 { font-size: 18px; }
@@ -321,7 +322,8 @@
 .status-badge {
     padding: 5px 12px;
     border-radius: 8px;
-    font-size: 12px;
+
+font-size: 14px;
     font-weight: bold;
     color: white;
 }
@@ -334,7 +336,8 @@
 .priority {
     padding: 4px 10px;
     border-radius: 6px;
-    font-size: 12px;
+
+font-size: 14px;
     color: white;
 }
 
@@ -544,7 +547,8 @@
 .status-badge {
     padding: 5px 12px;
     border-radius: 20px;
-    font-size: 12px;
+
+font-size: 14px;
     font-weight: 600;
 }
 
@@ -570,7 +574,8 @@
     border-radius: 14px;
     background: #e0e7ff;
     color: #4b54d2;
-    font-size: 12px;
+
+font-size: 14px;
     font-weight: 600;
 }
 
@@ -705,7 +710,8 @@
 .status-pill {
     padding: 6px 14px;
     border-radius: 20px;
-    font-size: 12px;
+
+font-size: 14px;
     font-weight: 600;
 }
 
@@ -724,7 +730,8 @@
     align-items: center;
     gap: 8px;
     padding:4px 10px;
-    font-size: 12px;
+
+font-size: 14px;
     color:#0F172A;
     background: #F8FAFC;
     border-radius: 15px;
@@ -759,7 +766,8 @@
     border-radius: 6px;
     border: none;
     cursor: pointer;
-    font-size: 12px;
+
+font-size: 14px;
 }
 
 .btn.start {
@@ -914,7 +922,8 @@
 }
 
 .analyst-times {
-    font-size: 12px;
+
+font-size: 14px;
     color: #555;
 }
 
@@ -935,7 +944,8 @@
     display: flex;
     align-items: center;
     gap: 6px;
-    font-size: 12px;
+
+font-size: 14px;
 }
 
 .toggle-on {
@@ -1199,7 +1209,8 @@
 
 .edit-title-btn {
     margin-left: 10px;
-    font-size: 12px;
+
+font-size: 14px;
     padding: 3px 10px;
     border-radius: 6px;
     border: 1px solid #ddd;
@@ -1208,7 +1219,8 @@
 }
 
 .export-btn {
-    font-size: 12px;
+
+font-size: 14px;
     padding: 6px 15px;
     border-radius: 6px;
     background: white;

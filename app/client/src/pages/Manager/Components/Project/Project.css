@@ -133,7 +133,8 @@
 }
 
 .progress-text {
-    font-size: 12px;
+
+font-size: 14px;
 }
 
 /* Status */
@@ -273,7 +274,8 @@ a {
 .deadline-badge .deadline-status {
     font-weight: 500;
     display: block;
-    font-size: 12px;
+
+font-size: 14px;
     opacity: 0.9;
     margin-top: 2px;
 }
@@ -340,7 +342,8 @@ a {
     .action-btn,
     .dropdown-btn {
         padding: 5px 8px;
-        font-size: 12px;
+
+font-size: 14px;
         margin-right: 3px;
     }
 
@@ -351,7 +354,8 @@ a {
     }
 
     .deadline-badge .deadline-date {
-        font-size: 12px;
+
+font-size: 14px;
     }
 
     .deadline-badge .deadline-status {
@@ -389,13 +393,15 @@ a {
     }
 
     .col p {
-        font-size: 12px;
+
+font-size: 14px;
     }
 
     .deadline-badge {
         padding: 6px 8px;
         min-height: 40px;
-        font-size: 12px;
+
+font-size: 14px;
     }
 
     .deadline-badge .deadline-date {

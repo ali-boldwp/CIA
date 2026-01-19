@@ -13,7 +13,8 @@
 }
 
 .control-title {
-    font-size: 12px;
+
+font-size: 14px;
     text-transform: uppercase;
     color: #64748b;
     margin-bottom: 4px;
@@ -59,7 +60,8 @@
 }
 
 .time-title {
-    font-size: 12px;
+
+font-size: 14px;
     font-weight: 600;
     color: #334155;
     margin-bottom: 8px;

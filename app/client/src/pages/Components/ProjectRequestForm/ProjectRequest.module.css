@@ -480,7 +480,8 @@
 
 .errorText {
     color: red;
-    font-size: 12px;
+
+font-size: 14px;
     margin-top: 3px;
 }
 
@@ -497,7 +498,8 @@
 
 .errorMessage {
     color: #ff4444;
-    font-size: 12px;
+
+font-size: 14px;
     margin-top: 4px;
     display: block;
 }

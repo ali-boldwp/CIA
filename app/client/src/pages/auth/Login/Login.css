@@ -167,7 +167,8 @@
 /* Errors */
 .error {
     color: red;
-    font-size: 12px;
+
+font-size: 14px;
     margin-top: 3px;
     margin-bottom: 8px;
     pointer-events: none;
@@ -236,7 +237,8 @@
     }
 
     .login-subtitle {
-        font-size: 12px !important;
+
+font-size: 14px !important;
         margin-bottom: 15px;
     }
 
@@ -298,7 +300,8 @@
 
     .remember-me,
     .forgot-password {
-        font-size: 12px;
+
+font-size: 14px;
     }
 
     .login-btn {
@@ -311,12 +314,14 @@
     }
 
     .footer-text {
-        font-size: 12px !important;
+
+font-size: 14px !important;
         margin-top: 15px;
     }
 
     .bottom-footer {
-        font-size: 12px;
+
+font-size: 14px;
         margin-top: 15px;
     }
 }
@@ -342,12 +347,14 @@
     }
 
     .login-label {
-        font-size: 12px;
+
+font-size: 14px;
     }
 
     .login-input {
         height: 38px;
-        font-size: 12px;
+
+font-size: 14px;
         padding-right: 34px !important;
     }
 
@@ -398,7 +405,8 @@
 
     .login-btn {
         height: 36px;
-        font-size: 12px;
+
+font-size: 14px;
     }
 
     .bottom-footer {

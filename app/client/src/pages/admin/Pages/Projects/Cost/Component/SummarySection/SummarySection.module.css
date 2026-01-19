@@ -223,7 +223,8 @@
 }
 
 .profitPercentage {
-    font-size: 12px !important;
+
+font-size: 14px !important;
     font-weight: 700 !important;
     font-style: italic !important;
     color: #15803d;
@@ -479,7 +480,8 @@
     }
 
     .projectBlock li b {
-        font-size: 12px;
+
+font-size: 14px;
         font-weight: 700;
     }
 
@@ -539,7 +541,8 @@
     }
 
     .projectBlock li b {
-        font-size: 12px;
+
+font-size: 14px;
         font-weight: 700;
     }
 

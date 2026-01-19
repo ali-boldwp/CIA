@@ -263,7 +263,8 @@
 
 
 .formSubtitle {
-    font-size: 12px;
+
+font-size: 14px;
     color: #6b7280;
     margin-bottom: 16px;
 }
@@ -365,7 +366,8 @@
     display: block;
     margin-bottom: 6px;
     font-weight: 600;
-    font-size: 12px;
+
+font-size: 14px;
     color: #4b5563;
 }
 
@@ -415,7 +417,8 @@
     display: block;
     margin-bottom: 6px;
     font-weight: 600;
-    font-size: 12px;
+
+font-size: 14px;
     color: #4b5563;
 }
 

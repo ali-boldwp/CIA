@@ -173,7 +173,8 @@
     border-radius: 999px;
     background: #E2E8F0;
     color: #000000;
-    font-size: 12px;
+
+font-size: 14px;
     font-weight: 700;
 }
 
@@ -290,7 +291,8 @@
 
 .progress-footer {
     margin-top: 6px;
-    font-size: 12px;
+
+font-size: 14px;
     color: #64748B;
     font-weight: 700;
 }
@@ -299,7 +301,8 @@
 .sales-btn {
     border: none;
     cursor: pointer;
-    font-size: 12px;
+
+font-size: 14px;
     font-weight: 600;
     border-radius: 99px;
 }
@@ -531,7 +534,8 @@
     border-radius: 12px;
     border: 1px solid #e5e7eb;
     padding: 8px 10px;
-    font-size: 12px;
+
+font-size: 14px;
     resize: none;
 }
 
@@ -587,7 +591,8 @@
     }
 
     .calendar-list li {
-        font-size: 12px;
+
+font-size: 14px;
         flex-wrap: wrap;
     }
 
@@ -612,7 +617,8 @@
     }
 
     .calendar-list {
-        font-size: 12px;
+
+font-size: 14px;
     }
 
     .calendar-list li span {

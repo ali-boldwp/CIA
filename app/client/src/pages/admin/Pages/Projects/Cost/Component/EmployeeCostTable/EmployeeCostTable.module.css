@@ -47,7 +47,7 @@
 
 /* HEADER SPECIFIC STYLES */
 .costTable th {
-    font-size: 12px !important;
+    font-size: 14px !important;
     font-weight: 700 !important;
     color: #334155 !important;
 }
@@ -183,7 +183,7 @@
 
     /* HEADER SPECIFIC STYLES FOR MOBILE */
     .costTable th {
-        font-size: 12px !important;
+        font-size: 14px !important;
         font-weight: 700 !important;
         color: #334155 !important;
     }
@@ -251,7 +251,7 @@
 
     /* HEADER SPECIFIC STYLES FOR SMALL MOBILE */
     .costTable th {
-        font-size: 12px !important;
+        font-size: 14px !important;
         font-weight: 700 !important;
         color: #334155 !important;
     }

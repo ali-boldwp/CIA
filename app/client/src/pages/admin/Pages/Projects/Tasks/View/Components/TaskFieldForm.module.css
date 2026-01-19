@@ -235,7 +235,8 @@
 
 .tableHeadCell {
     padding: 10px 12px;
-    font-size: 12px;
+
+font-size: 14px;
     font-weight: 700;
     color: #0f172a;
     text-transform: uppercase;

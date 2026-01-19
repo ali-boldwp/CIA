@@ -161,7 +161,8 @@
 }
 
 .solicitant {
-    font-size: 12px;
+
+font-size: 14px;
     color: #8c8f96;
     margin: 0;
 }
@@ -401,7 +402,8 @@
 }
 
 .analyst-times {
-    font-size: 12px;
+
+font-size: 14px;
     color: #555;
 }
 
@@ -422,7 +424,8 @@
     display: flex;
     align-items: center;
     gap: 6px;
-    font-size: 12px;
+
+font-size: 14px;
 }
 
 .toggle-on {
