@@ -18,6 +18,7 @@ const Index = () => {
     const [position, setPosition] = useState("");
     const [email, setEmail] = useState("");
     const [phone, setPhone] = useState("");
+    const [projectSubject, setProjectSubject] = useState("");
 
     const [contractNumber, setContractNumber] = useState("");
     const [contractDone, setContractDone] = useState(false);
@@ -172,6 +173,10 @@ const Index = () => {
             newErrors.phone = "Formatul telefonului este incorect. Exemplu: +40 712 345 678";
         }
 
+        if (!projectSubject.trim()) {
+            newErrors.projectSubject = "Subiectul proiectului este obligatoriu";
+        }
+
         // Contract number validation (only if contractDone is true)
         if (contractDone && !contractNumber.trim()) {
             newErrors.contractNumber = "Numărul contractului este obligatoriu dacă este bifat";
@@ -270,6 +275,7 @@ const Index = () => {
         formData.append("clientContactPerson", contactPerson);
         formData.append("clientEmail", email);
         formData.append("clientPhone", phone);
+        formData.append("projectSubject", projectSubject);
         formData.append("clientPosition", position);
 
         // PRICE
@@ -334,6 +340,7 @@ const Index = () => {
             setPosition("");
             setEmail("");
             setPhone("");
+            setProjectSubject("")
             setContractNumber("");
             setContractDone(false);
             setAnnexNumber("");
@@ -391,6 +398,7 @@ const Index = () => {
         if (contactPerson) formData.append("clientContactPerson", contactPerson);
         if (email) formData.append("clientEmail", email);
         if (phone) formData.append("clientPhone", phone);
+        if (projectSubject) formData.append("projectSubject", projectSubject);
         if (position) formData.append("clientPosition", position);
 
         if (projectPrice) {
@@ -649,6 +657,28 @@ const Index = () => {
                                     {errors.annexNumber && (
                                         <div className={styles.errorMessage}>
                                             {errors.annexNumber}
+                                        </div>
+                                    )}
+                                </div>
+
+
+                                <div
+                                    className={`${styles.gridItem} ${styles.span2Left}`}
+                                >
+                                    <label className={styles.label}>
+                                        Subiect proiect
+                                        <input
+                                            className={`${styles.input} ${errors.projectSubject ? styles.inputError : ''}`}
+                                            value={projectSubject}
+                                            onChange={(e) =>
+                                                setProjectSubject(e.target.value)
+                                            }
+                                            placeholder="ex: Societatea ABC "
+                                        />
+                                    </label>
+                                    {errors.projectSubject && (
+                                        <div className={styles.errorMessage}>
+                                            {errors.projectSubject}
                                         </div>
                                     )}
                                 </div>
