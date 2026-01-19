@@ -7,8 +7,6 @@ import http from "http";
 import { initSocket } from "./socket";   // ⬅️ IMPORT SOCKET INITIALIZER
 
 const start = async () => {
-    await connectDB();
-
     // 🔥 Create HTTP server manually
     const server = http.createServer(app);
 
@@ -19,6 +17,8 @@ const start = async () => {
         logger.info(`Server running on http://localhost:${env.port}`);
         logger.info(`Socket.IO active on same server`);
     });
+
+    void connectDB();
 };
 
 start().catch((err) => {
