@@ -98,7 +98,8 @@
 }
 
 .label {
-    font-size: 13px;
+
+font-size: 15px;
     color: #5f5f5f;
 }
 
@@ -125,7 +126,8 @@
 }
 
 .stat-label {
-    font-size: 13px;
+
+font-size: 15px;
     color: #5f5f5f;
     margin-bottom: 4px;
 }
@@ -171,7 +173,8 @@
     padding: 12px;
     text-align: left;
     color: #666;
-    font-size: 13px;
+
+font-size: 15px;
     font-weight: 600;
 }
 
@@ -265,7 +268,8 @@ font-size: 14px;
 }
 
 .eval-label {
-    font-size: 13px;
+
+font-size: 15px;
     color: #444;
     margin-bottom: 6px;
     font-weight: 600;
@@ -281,12 +285,14 @@ font-size: 14px;
     display: flex;
     align-items: center;
     gap: 6px;
-    font-size: 13px;
+
+font-size: 15px;
 }
 
 /* OBSERVATIONS AREA */
 .obs-label {
-    font-size: 13px;
+
+font-size: 15px;
     color: #444;
     margin-bottom: 6px;
     display: block;

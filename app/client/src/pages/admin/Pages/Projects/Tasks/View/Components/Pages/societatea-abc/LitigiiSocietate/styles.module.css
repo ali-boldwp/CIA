@@ -47,7 +47,8 @@
     border: none;
     padding: 6px 14px;
     border-radius: 6px;
-    font-size: 13px;
+
+font-size: 15px;
     cursor: pointer;
 }
 
@@ -80,7 +81,8 @@ font-size: 14px;
     border-radius: 6px;
     border: 1px solid #e5e7eb;
     padding: 6px 10px;
-    font-size: 13px;
+
+font-size: 15px;
     background: #f9fafb;
 }
 
@@ -92,7 +94,8 @@ font-size: 14px;
     border: none;
     padding: 8px 14px;
     border-radius: 6px;
-    font-size: 13px;
+
+font-size: 15px;
     cursor: pointer;
 }
 
@@ -103,20 +106,23 @@ font-size: 14px;
     background: #f1f5f9;
     text-align: left;
     padding: 10px;
-    font-size: 13px;
+
+font-size: 15px;
     border: 1px solid #e5e7eb;
 }
 
 .table td {
     border: 1px solid #e5e7eb;
     padding: 10px;
-    font-size: 13px;
+
+font-size: 15px;
 }
 
 .table input {
     width: 100%;
     padding: 6px 8px;
-    font-size: 13px;
+
+font-size: 15px;
     border:none;
     background: transparent;
     outline: none;

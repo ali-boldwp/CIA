@@ -107,7 +107,8 @@ font-size: 14px;
 }
 
 .sectionTitle {
-    font-size: 13px;
+
+font-size: 15px;
     font-weight: 700;
     color: #111827;
 }
@@ -135,7 +136,8 @@ font-size: 14px;
     border-radius: 12px;
     border: 1px solid #d1d5db;
     padding: 10px 12px;
-    font-size: 13px;
+
+font-size: 15px;
     font-family: inherit;
     resize: vertical;
     outline: none;
@@ -167,7 +169,8 @@ font-size: 14px;
 .secondaryBtn,
 .outlineBtn,
 .primaryBtn {
-    font-size: 13px; /* 🔥 bigger than before (12px → 13px) */
+
+font-size: 15px; /* 🔥 bigger than before (12px → 13px) */
     font-weight: 700;
     padding: 8px 16px;
     border-radius: 12px;

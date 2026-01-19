@@ -36,7 +36,8 @@ font-size: 14px;
     border: none;
     padding: 6px 14px;
     border-radius: 6px;
-    font-size: 13px;
+
+font-size: 15px;
     cursor: pointer;
     margin-bottom: 14px;
 }
@@ -75,7 +76,8 @@ font-size: 14px;
 }
 
 .analyst-times {
-    font-size: 13px;
+
+font-size: 15px;
     color: #64748b;
 }
 .task-actions2{

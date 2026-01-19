@@ -34,7 +34,8 @@
     padding: 6px 8px;
     border-radius: 999px;
     border: 1px solid #e5e7eb;
-    font-size: 13px;
+
+font-size: 15px;
     text-align: center;
 }
 
@@ -64,7 +65,8 @@
     border-radius: 14px;
     border: 1px solid #edf2ff;
     background: #ffffff;
-    font-size: 13px;
+
+font-size: 15px;
     color: #1e293b;
     align-items: center;
     transition: background 0.15s ease, box-shadow 0.15s ease,
@@ -248,7 +250,8 @@
     padding: 8px 10px;
     border-radius: 10px;
     border: 1px solid #e5e7eb;
-    font-size: 13px;
+
+font-size: 15px;
     outline: none;
 }
 

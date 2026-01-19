@@ -47,7 +47,8 @@
     border: none;
     padding: 6px 14px;
     border-radius: 6px;
-    font-size: 13px;
+
+font-size: 15px;
     cursor: pointer;
 }
 
@@ -67,7 +68,8 @@
     border: none;
     padding: 6px 12px;
     border-radius: 6px;
-    font-size: 13px;
+
+font-size: 15px;
     cursor: pointer;
     margin-bottom: 10px;
 }
@@ -79,7 +81,8 @@
     text-align: center;
     color: #64748b;
     margin-bottom: 10px;
-    font-size: 13px;
+
+font-size: 15px;
 }
 
 .addSubpoint {

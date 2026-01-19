@@ -47,7 +47,8 @@
     border: none;
     padding: 6px 14px;
     border-radius: 6px;
-    font-size: 13px;
+
+font-size: 15px;
     cursor: pointer;
 }
 
@@ -67,20 +68,23 @@
     background: #f1f5f9;
     text-align: left;
     padding: 10px;
-    font-size: 13px;
+
+font-size: 15px;
     border: none !important;
 }
 
 .table td {
     border: none !important;
     padding: 10px;
-    font-size: 13px;
+
+font-size: 15px;
 }
 
 .table input {
     width: 100%;
     padding: 6px 8px;
-    font-size: 13px;
+
+font-size: 15px;
     border:none;
     background: transparent;
     outline: none;

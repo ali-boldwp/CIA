@@ -148,7 +148,8 @@
     .editableTable th,
     .editableTable td {
         padding: 8px 6px;
-        font-size: 13px;
+
+font-size: 15px;
     }
 
     .addButton {
