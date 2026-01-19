@@ -86,25 +86,27 @@ const Index = ({ formValues, setFormValues }) => {
                         value={historyText}
                         onChange={(e) => setHistoryText(e.target.value)}
                     />
+                    <div className={styles.deleteBoxContainer}>
                     <button
                         className={styles.deleteBox}
                         onClick={() => setHistoryText("")}
                     >
                         Șterge căsuța
                     </button>
+                    </div>
                 </div>
 
                 {/* ===== CRONOLOGIE ===== */}
                 <h3 className={styles.sectionTitle}>
-                    📜 Cronologia mențiunilor publicate în Monitorul Oficial
+                    📜 Cronologia Mențiunilor Publicate In Monitorul Oficial
                 </h3>
 
-                <table className={styles.table}>
+                <table className={styles.editableTableIstoric}>
                     <thead>
                     <tr>
                         <th>DATA</th>
                         <th>MENȚIUNI</th>
-                        <th></th>
+                        <th>ACTIUNI</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -149,7 +151,7 @@ const Index = ({ formValues, setFormValues }) => {
 
                 {/* ===== IMAGES ===== */}
                 <div className={styles.imagesSection}>
-                    <h3 className={styles.sectionTitle}>🖼️ Imagini / grafice</h3>
+                    <h3 className={styles.sectionTitle}>🖼️ Imagini / Grafice</h3>
                     <ImagePlaceholder images={images} setImages={setImages} />
                 </div>
 

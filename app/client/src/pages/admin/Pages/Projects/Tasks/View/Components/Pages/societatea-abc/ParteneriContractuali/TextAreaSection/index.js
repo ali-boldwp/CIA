@@ -10,7 +10,7 @@ const Index = ({ value, onChange, onClear }) => {
 
     return (
         <div className={styles.introductionSection}>
-            <h3 className={styles.introTitle}>💬 Introducere</h3>
+            <h3 className={styles.sectionTitle}>💬 Introducere</h3>
             <div className={styles.textareaContainer}>
                 <textarea
                     value={value}
@@ -19,9 +19,9 @@ const Index = ({ value, onChange, onClear }) => {
                     placeholder="Scrie introducerea aici..."
                     rows={4}
                 />
-                <div className={styles.clearButtonContainer}>
+                <div className={styles.deleteBoxContainer}>
                     <button
-                        className={styles.clearButton}
+                        className={styles.deleteBox}
                         onClick={onClear}
                         type="button"
                     >

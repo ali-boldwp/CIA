@@ -65,6 +65,9 @@ const Index = ({ formValues, setFormValues }) => {
                 <h1 className={styles.mainTitle}>
                     I. Societatea ABC | 6. Achizitii SEAP
                 </h1>
+                <h4 className={styles.secondhalf}>
+                    Analiza evolutiei financiare, tabel pe ultimii 3 ani si anexe grafice
+                </h4>
 
                 {/* Introducere */}
                 <div className={styles.textAreaWrapper}>
@@ -75,17 +78,19 @@ const Index = ({ formValues, setFormValues }) => {
                         value={introducere}
                         onChange={(e) => setIntroducere(e.target.value)}
                     />
+                    <div className={styles.deleteBoxContainer}>
                     <button
                         className={styles.deleteBox}
                         onClick={() => setIntroducere("")}
                     >
                         Șterge căsuța
                     </button>
+                    </div>
                 </div>
 
                 {/* Tabel Achizitii */}
-                <h3 className={styles.sectionTitle}>📋 Tabel achizitii SEAP</h3>
-                <table className={styles.table}>
+                <h3 className={styles.sectionTitle}>📋 Tabel Achizitii SEAP</h3>
+                <table className={styles.editableTableIstoric}>
                     <thead>
                     <tr>
                         <th>TIP ACHIZITIE</th>
@@ -93,7 +98,7 @@ const Index = ({ formValues, setFormValues }) => {
                         <th>OBIECT CONTRACT</th>
                         <th>VALOARE CONTRACT (RON)</th>
                         <th>DATA</th>
-                        <th></th>
+                        <th>ACTIUNI</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -129,7 +134,27 @@ const Index = ({ formValues, setFormValues }) => {
                     <h3 className={styles.sectionTitle}>🖼️ Imagini / grafice</h3>
                     <ImagePlaceholder images={images} setImages={setImages} />
                 </div>
+                <div className={styles.navigation}>
+                    <div className={styles.navButtons}>
+                        <button
+                            className={styles.saveButton}
 
+                        >
+                            <span className={styles.saveIcon}>💾</span>
+                            Salveaza sectiunea
+                        </button>
+
+                        <button className={styles.middleButton}>
+                            ❌ Exclude acest capitol
+                            <span className={styles.arrowIcon}>→</span>
+                        </button>
+
+                        <button className={styles.nextButton}>
+                            ➡️ Mergi la I.3. „Date fianciare”
+                            <span className={styles.arrowIcon}>→</span>
+                        </button>
+                    </div>
+                </div>
             </div>
         </div>
     );

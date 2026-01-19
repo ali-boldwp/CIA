@@ -8,7 +8,7 @@ const Index = () => {
             <h1 className={styles.mainTitle}>I. Societatea ABC | 4. Parteneri contractuali</h1>
 
             {/* Section Title */}
-            <h3 className={styles.sectionTitle}>Lista principalilor clienți și furnizori ai societatii</h3>
+            <h3 className={styles.sectionTitle}>Lista Principalilor Clienți Si Furnizori Ai Societatii</h3>
         </div>
     );
 };

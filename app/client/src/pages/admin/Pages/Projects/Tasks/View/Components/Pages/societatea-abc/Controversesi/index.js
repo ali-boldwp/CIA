@@ -90,12 +90,14 @@ const ControversyIndex = ({ formValues, setFormValues }) => {
                             value={sp.text}
                             onChange={(e) => handleSubpointChange(i, e.target.value)}
                         />
+                        <div className={styles.deleteBoxContainer}>
                         <button
                             className={styles.deleteBox}
                             onClick={() => setSubpoints(subpoints.filter((_, idx) => idx !== i))}
                         >
                             Șterge căsuța
                         </button>
+                        </div>
                     </div>
                 ))}
 
@@ -123,33 +125,27 @@ const ControversyIndex = ({ formValues, setFormValues }) => {
                     </div>
 
                     {/* IMAGES */}
-                    <div className={styles.box}>
-                        <button className={styles.addBtn} onClick={addImage}>
-                            ➕ Adauga imagine / printscreen
+                    <ImagePlaceholder images={images} setImages={setImages} />
+                </div>
+                <div className={styles.navigation}>
+                    <div className={styles.navButtons}>
+                        <button
+                            className={styles.saveButton}
+
+                        >
+                            <span className={styles.saveIcon}>💾</span>
+                            Salveaza sectiunea
                         </button>
-                        <div className={styles.imageGrid}>
-                            {images.map((img, i) => (
-                                <label key={i} className={styles.dashedBox}>
-                                    <input
-                                        type="file"
-                                        accept="image/*"
-                                        hidden
-                                        onChange={(e) => handleImageChange(i, e.target.files[0])}
-                                    />
-                                    {img ? (
-                                        <img
-                                            src={typeof img === "string" ? img : URL.createObjectURL(img)}
-                                            alt="preview"
-                                            className={styles.previewImage}
-                                        />
-                                    ) : (
-                                        <div style={{ textAlign: "center", padding: "1rem" }}>
-                                            🖼️ Zona pentru imagine / printscreen
-                                        </div>
-                                    )}
-                                </label>
-                            ))}
-                        </div>
+
+                        <button className={styles.middleButton}>
+                            ❌ Exclude acest capitol
+                            <span className={styles.arrowIcon}>→</span>
+                        </button>
+
+                        <button className={styles.nextButton}>
+                            ➡️ Mergi la I.3. „Date fianciare”
+                            <span className={styles.arrowIcon}>→</span>
+                        </button>
                     </div>
                 </div>
             </div>

@@ -1,28 +1,20 @@
-.tableSection {
-    margin-bottom: 25px;
-}
 
 .sectionTitle {
-    color: #0f172a;
-    font-size: 20px;
+    color: #0F172A;
     font-weight: 700;
-    margin-bottom: 15px;
+    margin-bottom: 10px !important;
+    background: #FFF;
+    border-radius: 4px;
+    padding: 14px 18px;
+    font-size: 16px;
 }
-
-/* Table */
-.tableContainer {
-    margin-bottom: 25px;
-}
-
-.editableTable {
+.editableTables {
     width: 100%;
     border-collapse: collapse;
-    margin-bottom: 15px;
 }
 
-.editableTable th {
+.editableTables th {
     background-color: #f1f5f9;
-    padding: 20px;
     text-align: left;
     font-weight: 700;
 
@@ -31,8 +23,8 @@ font-size: 16px;
     color: #0f172a;
 }
 
-.editableTable td {
-    padding: 10px 15px;
+.editableTables td {
+
     border: 1px solid #dee2e6;
     color: #374151;
     font-weight: 700;
@@ -40,18 +32,19 @@ font-size: 16px;
 font-size: 16px;
     background-color: #fff; /* Always white */
 }
-.editableTable td:last-child{
-    border: none;
+.editableTables td:last-child{
+
+    text-align: center !important;
 }
 
 /* Remove hover & focus effects for td */
-.editableTable td:hover,
-.editableTable td:focus {
+.editableTables td:hover,
+.editableTables td:focus {
     background-color: #fff !important;
 }
 
 /* Input fields inside table */
-.editableTable input[type="text"] {
+.editableTables input[type="text"] {
     border: none;
 
 font-size: 16px;
@@ -61,10 +54,12 @@ font-size: 16px;
     color: #374151;
     width: 100%;
 }
-
+.editableTables input[type="text"]{
+    padding: 0 !important;
+}
 /* Remove hover & focus effects for inputs */
-.editableTable input[type="text"]:hover,
-.editableTable input[type="text"]:focus {
+.editableTables input[type="text"]:hover,
+.editableTables input[type="text"]:focus {
     background-color: #fff !important;
     border-color: #dee2e6 !important;
     outline: none !important;
@@ -72,8 +67,8 @@ font-size: 16px;
 }
 
 /* Column widths */
-.colDenumire {
-    width: 20%;
+.colDenumire4 {
+    width: 40% !important;
 }
 
 .colDescriere {
@@ -112,22 +107,19 @@ font-size: 16px;
 }
 
 /* Add Button */
-.addButton {
-    background-color: #3b82f6;
-    color: #fff;
-    width: 240px;
-    height: 40px;
-    border-radius: 12px;
-    font-size: 18px;
-    font-weight: 700;
+.addRow {
+    margin-top:10px;
+    margin-bottom:15px;
+    height: 30px;
+    padding: 0px 30px;
+    background-color: #3B82F6;
+    color: white;
+    border: 1px solid #3B82F6;
+    border-radius: 4px;
+    font-size: 16px;
+    font-weight: 400;
     cursor: pointer;
-    border: 1px solid #3b82f6;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 6px;
-    margin-top: 15px;
-    transition: all 0.3s ease;
+    min-width: 180px;
 }
 
 .addButton:hover {
@@ -136,10 +128,8 @@ font-size: 16px;
 
 /* Responsive adjustments */
 @media (max-width: 768px) {
-    .editableTable th,
-    .editableTable td {
-        padding: 12px 10px;
-    }
+    .editableTables th,
+
 
     .addButton {
         width: 100%;
@@ -148,8 +138,8 @@ font-size: 16px;
 }
 
 @media (max-width: 480px) {
-    .editableTable th,
-    .editableTable td {
+    .editableTables th,
+    .editableTables td {
         padding: 8px 6px;
 
 font-size: 15px;

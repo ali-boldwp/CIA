@@ -22,15 +22,15 @@ const Index = ({ rows, setRows }) => {
 
     return (
         <div className={styles.tableSection}>
-            <h3 className={styles.sectionTitle}>📑 Tabel parteneri contractuali</h3>
+            <h3 className={styles.sectionTitle}>📑 Tabel Parteneri Contractuali</h3>
 
             <div className={styles.tableContainer}>
-                <table className={styles.editableTable}>
+                <table className={styles.editableTables}>
                     <thead>
                     <tr>
-                        <th className={styles.colDenumire}>DENUMIRE</th>
+                        <th className={styles.colDenumire4}>DENUMIRE</th>
                         <th className={styles.colDescriere}>DESCRIERE</th>
-                        <th></th>
+                        <th>ACTIUNI</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -69,7 +69,7 @@ const Index = ({ rows, setRows }) => {
                     </tbody>
                 </table>
 
-                <button className={styles.addButton} onClick={handleAddRow}>
+                <button className={styles.addRow} onClick={handleAddRow}>
                     ➕ Adauga rand
                 </button>
             </div>
