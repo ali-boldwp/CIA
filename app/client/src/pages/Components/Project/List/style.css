@@ -65,7 +65,8 @@
 
 .projects-header h3 .count {
     opacity: 0.7;
-    font-size: 14px;
+
+font-size: 16px;
 }
 
 /* Table Headings */
@@ -75,7 +76,8 @@
     /* last column (Actiuni) ko thora kam kiya */
     grid-template-columns: 22% 15% 18% 18% 27%;
     padding: 10px 5px;
-    font-size: 14px;   /* 13px se 1px zyada */
+
+font-size: 16px;   /* 13px se 1px zyada */
     font-weight: 700;  /* bold */
     opacity: 0.7;
     padding: 20px;
@@ -108,18 +110,21 @@
 /* ✅ Progres column text smaller */
 .colProgress,
 .colProgress span {
-    font-size: 11px; /* 12px se kam */
+
+font-size: 15px; /* 12px se kam */
 }
 
 .col h4 {
     margin: 0;
-    font-size: 14px; /* 15px se kam */
+
+font-size: 16px; /* 15px se kam */
     font-weight: 700;
 }
 
 .col p {
     margin: 4px 0;
-    font-size: 14px; /* 13px se kam */
+
+font-size: 16px; /* 13px se kam */
 }
 
 .team-badge-approved:first-child {
@@ -163,7 +168,8 @@
 }
 
 .progress-text {
-    font-size: 11px; /* 12px se kam */
+
+font-size: 15px; /* 12px se kam */
 }
 
 /* Status */
@@ -171,7 +177,8 @@
 .status-badge-approved {
     padding: 8px 9px;
     border-radius: 100px;
-    font-size: 14px; /* 12px se kam */
+
+font-size: 16px; /* 12px se kam */
     font-weight: 600;
 }
 
@@ -201,7 +208,8 @@
     display: inline-flex !important;
     justify-content: center !important;
     align-items: center !important;
-    font-size: 14px !important;
+
+font-size: 16px !important;
     border-radius: 8px !important;
     border: 1px solid #ddd !important;
     background: white !important;
@@ -216,7 +224,8 @@
     border: 1px solid #ddd;
     background: white;
     border-radius: 999px;
-    font-size: 14px;
+
+font-size: 16px;
     cursor: pointer;
     margin-right: 5px;
     text-decoration: none;
@@ -310,7 +319,8 @@ a {
     padding: 8px 12px;
     border: none;
     background: transparent;
-    font-size: 14px; /* 13px se kam */
+
+font-size: 16px; /* 13px se kam */
     cursor: pointer;
 }
 
@@ -328,7 +338,8 @@ a {
 .deadline-badge {
     padding: 5px 9px;
     border-radius: 20px;
-    font-size: 13px; /* 14px se kam */
+
+font-size: 15px; /* 14px se kam */
     font-weight: 600;
     display: flex;
     flex-direction: column;
@@ -346,13 +357,15 @@ a {
     padding: 0;
     background: transparent;
     border-radius: 0;
-    font-size: 14px; /* 13px se kam */
+
+font-size: 16px; /* 13px se kam */
 }
 
 .deadline-badge .deadline-status {
     font-weight: 500;
     display: block;
-    font-size: 11px; /* 12px se kam */
+
+font-size: 15px; /* 12px se kam */
     opacity: 0.9;
     margin-top: 2px;
 }
@@ -392,7 +405,8 @@ a {
     }
 
     .deadline-badge .deadline-date {
-        font-size: 13px;
+
+font-size: 15px;
     }
 }
 
@@ -419,7 +433,8 @@ a {
     .action-btn,
     .dropdown-btn {
         padding: 5px 8px;
-        font-size: 14px;
+
+font-size: 16px;
         margin-right: 3px;
         min-width: 100px;
         height: 30px;
@@ -432,11 +447,13 @@ a {
     }
 
     .deadline-badge .deadline-date {
-        font-size: 14px;
+
+font-size: 16px;
     }
 
     .deadline-badge .deadline-status {
-        font-size: 11px;
+
+font-size: 15px;
     }
 }
 
@@ -466,21 +483,25 @@ a {
     }
 
     .col h4 {
-        font-size: 14px;
+
+font-size: 16px;
     }
 
     .col p {
-        font-size: 14px;
+
+font-size: 16px;
     }
 
     .deadline-badge {
         padding: 6px 8px;
         min-height: 40px;
-        font-size: 14px;
+
+font-size: 16px;
     }
 
     .deadline-badge .deadline-date {
-        font-size: 11px;
+
+font-size: 15px;
     }
 
     .deadline-badge .deadline-status {
@@ -489,7 +510,8 @@ a {
 
     .status-badge-approved {
         padding: 4px 8px;
-        font-size: 11px;
+
+font-size: 15px;
     }
 
     .actions {
@@ -501,7 +523,8 @@ a {
     .action-btn,
     .dropdown-btn {
         padding: 4px 6px;
-        font-size: 11px;
+
+font-size: 15px;
         margin-right: 2px;
         flex: 1;
         min-width: 70px;
@@ -542,7 +565,8 @@ a {
     }
 
     .progress-text {
-        font-size: 11px;
+
+font-size: 15px;
     }
 
     .action-btn,

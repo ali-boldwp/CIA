@@ -45,7 +45,8 @@
 
 
 .taxLabel {
-    font-size: 11px;
+
+font-size: 15px;
     color: #6b7280;
     margin-bottom: 3px;
     font-weight: 600;
@@ -61,7 +62,8 @@
     border: 1px solid #e5e7eb;
 
     border-radius: 4px;    /* 🔥 your requested radius */
-    font-size: 14px;
+
+font-size: 16px;
     color: #111827;
 
     outline: none;
@@ -81,7 +83,8 @@
     padding: 10px 12px;
     border-radius: 4px;
     background: #f5f7ff;
-    font-size: 14px;
+
+font-size: 16px;
     font-weight: 600;
     color: #6b7280;
 }
@@ -100,7 +103,8 @@
     border-radius: 4px;
     border: 1px solid #edf2ff;
     background: #ffffff;
-    font-size: 13px;
+
+font-size: 15px;
     color: #1e293b;
     align-items: center;
     transition: background 0.15s ease, box-shadow 0.15s ease,
@@ -138,7 +142,8 @@
     padding: 4px 2px 0;
     display: flex;
     justify-content: space-between;
-    font-size: 14px;
+
+font-size: 16px;
     color: #6b7280;
     font-style: italic;
 }
@@ -158,7 +163,8 @@
     border: none;
     background: #6C63FF;
     color: #ffffff;
-    font-size: 14px;
+
+font-size: 16px;
     font-weight: 700;
     font-style: italic;
     cursor: pointer;

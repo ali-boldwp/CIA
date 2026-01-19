@@ -62,7 +62,8 @@
     border-radius: 12px;
     border: 1px solid transparent;
 
-font-size: 14px;
+
+font-size: 16px;
     font-weight: 500;
     cursor: pointer;
 }
@@ -103,7 +104,8 @@ font-size: 14px;
 .table {
     width: 100%;
     border-collapse: collapse;
-    font-size: 13px;
+
+font-size: 15px;
 }
 
 th,
@@ -121,7 +123,8 @@ th {
     font-weight: 600;
     color: #6b7280;
 
-font-size: 14px;
+
+font-size: 16px;
 }
 
 th:first-child,
@@ -162,7 +165,8 @@ tbody tr:hover {
 }
 
 .projectSubtitle {
-    font-size: 11px;
+
+font-size: 15px;
     color: #9ca3af;
 }
 
@@ -174,7 +178,8 @@ tbody tr:hover {
     justify-content: center;
     padding: 4px 10px;
     border-radius: 999px;
-    font-size: 11px;
+
+font-size: 15px;
     font-weight: 600;
 }
 
@@ -198,7 +203,8 @@ tbody tr:hover {
 .statusPill {
     padding: 4px 10px;
     border-radius: 999px;
-    font-size: 11px;
+
+font-size: 15px;
     font-weight: 600;
 }
 
@@ -219,7 +225,8 @@ tbody tr:hover {
     background: transparent;
     color: #4f46e5;
 
-font-size: 14px;
+
+font-size: 16px;
     font-weight: 600;
     cursor: pointer;
 }
@@ -240,7 +247,8 @@ font-size: 14px;
     justify-content: end;
     align-items: center;
 
-font-size: 14px;
+
+font-size: 16px;
     color: #6b7280;
 
     margin-bottom: 32px; /* ⬅ yahan se body ke bottom se gap aa jayega */
@@ -257,7 +265,8 @@ font-size: 14px;
     border: 1px solid #e5e7eb;
     padding: 4px 10px;
 
-font-size: 14px;
+
+font-size: 16px;
     background-color: #ffffff;
 }
 

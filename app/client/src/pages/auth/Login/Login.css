@@ -47,7 +47,8 @@
 
 /* Subtitle updated */
 .login-subtitle {
-    font-size: 13px !important;
+
+font-size: 15px !important;
     font-weight: 700 !important;
     font-style: italic !important;
     color: #6B7280 !important;
@@ -62,7 +63,8 @@
 
 /* Labels */
 .login-label {
-    font-size: 14px;
+
+font-size: 16px;
     font-weight: 600 !important;
     color: #1a1a1a !important;
     margin-bottom: 4px;
@@ -84,7 +86,8 @@
     border: 1px solid #dcdcdc;
     padding-left: 12px;
     padding-right: 40px !important; /* Right icon space */
-    font-size: 14px;
+
+font-size: 16px;
     position: relative;
     z-index: 1;
     transition: all 0.2s ease-in-out;
@@ -116,7 +119,8 @@
     display: flex;
     justify-content: space-between;
     margin-bottom: 20px;
-    font-size: 13px;
+
+font-size: 15px;
 }
 
 /* Remember Me (updated) */
@@ -124,7 +128,8 @@
     display: flex;
     gap: 5px;
     align-items: center;
-    font-size: 13px;
+
+font-size: 15px;
     font-weight: 600;
     font-style: italic;
     color: #6B7280;
@@ -133,7 +138,8 @@
 /* Forgot password (updated) */
 .forgot-password {
     color: #2a66ff;
-    font-size: 13px;
+
+font-size: 15px;
     font-weight: 600;
     text-decoration: none;
 }
@@ -168,7 +174,8 @@
 .error {
     color: red;
 
-font-size: 14px;
+
+font-size: 16px;
     margin-top: 3px;
     margin-bottom: 8px;
     pointer-events: none;
@@ -178,7 +185,8 @@ font-size: 14px;
 /* Footer */
 .footer-text {
     margin-top: 20px;
-    font-size: 13px !important;
+
+font-size: 15px !important;
     font-weight: 600 !important;
     font-style: italic !important;
     color: #6B7280 !important;
@@ -188,7 +196,8 @@ font-size: 14px;
 
 .bottom-footer {
     margin-top: 20px;
-    font-size: 14px;
+
+font-size: 16px;
     font-weight: bold;
     color: #000;
     text-align: center;
@@ -238,7 +247,8 @@ font-size: 14px;
 
     .login-subtitle {
 
-font-size: 14px !important;
+
+font-size: 16px !important;
         margin-bottom: 15px;
     }
 
@@ -270,18 +280,21 @@ font-size: 14px !important;
     }
 
     .login-subtitle {
-        font-size: 11px !important;
+
+font-size: 15px !important;
         margin-bottom: 12px;
     }
 
     .login-label {
-        font-size: 13px;
+
+font-size: 15px;
         margin-bottom: 3px;
     }
 
     .login-input {
         height: 40px;
-        font-size: 13px;
+
+font-size: 15px;
         padding-right: 36px !important;
         margin-bottom: 12px;
     }
@@ -301,12 +314,14 @@ font-size: 14px !important;
     .remember-me,
     .forgot-password {
 
-font-size: 14px;
+
+font-size: 16px;
     }
 
     .login-btn {
         height: 40px;
-        font-size: 14px;
+
+font-size: 16px;
     }
 
     .login-divider {
@@ -315,13 +330,15 @@ font-size: 14px;
 
     .footer-text {
 
-font-size: 14px !important;
+
+font-size: 16px !important;
         margin-top: 15px;
     }
 
     .bottom-footer {
 
-font-size: 14px;
+
+font-size: 16px;
         margin-top: 15px;
     }
 }
@@ -348,33 +365,39 @@ font-size: 14px;
 
     .login-label {
 
-font-size: 14px;
+
+font-size: 16px;
     }
 
     .login-input {
         height: 38px;
 
-font-size: 14px;
+
+font-size: 16px;
         padding-right: 34px !important;
     }
 
     .input-icon {
-        font-size: 14px;
+
+font-size: 16px;
         right: 10px !important;
     }
 
     .login-btn {
         height: 38px;
-        font-size: 13px;
+
+font-size: 15px;
     }
 
     .footer-text {
-        font-size: 11px !important;
+
+font-size: 15px !important;
         margin-top: 12px;
     }
 
     .bottom-footer {
-        font-size: 11px;
+
+font-size: 15px;
         margin-top: 12px;
     }
 }
@@ -406,7 +429,8 @@ font-size: 14px;
     .login-btn {
         height: 36px;
 
-font-size: 14px;
+
+font-size: 16px;
     }
 
     .bottom-footer {
