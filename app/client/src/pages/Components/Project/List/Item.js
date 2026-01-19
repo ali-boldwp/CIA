@@ -279,7 +279,7 @@ const Item = ({ data, refetchProjects }) => {
       style={{
           ...humintUI.style,
           padding: "9px 13px",
-          borderRadius: "999px",
+          borderRadius: "4px",
           display: "inline-block",
       }}
   >
