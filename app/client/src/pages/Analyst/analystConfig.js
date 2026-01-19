@@ -9,6 +9,7 @@ import Projects from "../admin/Pages/Projects";
 import ProjectSearch from "../admin/Pages/Projects/Search";
 import ProjectTasks from "../admin/Pages/Projects/Tasks";
 import ViewTask from "../admin/Pages/Projects/Tasks/View";
+import ProjectView from "../admin/Pages/Projects/View";
 
 
 const analystConfig = {
@@ -34,6 +35,10 @@ const analystConfig = {
                         {
                             path: 'search/:keyword',
                             element: <ProjectSearch />
+                        },
+                        {
+                            path: 'view/:id',
+                            element: <ProjectView/>
                         },
 
                         {

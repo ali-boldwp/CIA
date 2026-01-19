@@ -242,7 +242,7 @@ const Dashboard = ({ analyst, projectData, humintData, analystProgressBar }) => 
 
                                     <div className="project-actions">
                                         <Link
-                                            to={`/project/view/${project._id}/tasks`}
+                                            to={`/project/view/${project._id}`}
                                             className="pill-analyst blue"
                                         >
                                             Deschide

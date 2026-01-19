@@ -7,12 +7,11 @@ import { useGetProjectFinancialStatesQuery }
 import { BsThreeDots } from "react-icons/bs";
 import {
     useCreateProjectMutation,
-
     useUpdateProjectMutation
 } from "../../../../services/projectApi";
 import { useGetCategoriesQuery } from "../../../../services/categoryApi";
 
-import { useGetAnalystsQuery } from "../../../../services/userApi";
+import {useGetAnalystsQuery, useGetMeQuery} from "../../../../services/userApi";
 import React, {useEffect, useState} from "react";
 import styles from "./style.module.css";
 import Header from "./Header";
@@ -55,7 +54,10 @@ const defaultData = {
 const ProjectView = ({ data }) => {
 
     const { id: projectId } = useParams();
+    const { data: userData, isLoading: loadingUser } = useGetMeQuery();
+    const userRole = userData?.data?.role
 
+    console.log(userData)
 
 
 
@@ -403,6 +405,8 @@ const ProjectView = ({ data }) => {
                                 ))}
                             </div>
                         </div>
+                        {userRole !== "analyst" && (
+                            <>
 
                         <div className={styles.itemFull}>
                             <span className={styles.label}>Echipă proiect</span>
@@ -413,6 +417,8 @@ const ProjectView = ({ data }) => {
                                 <span className={styles.chipPrimary}>{project.responsible} <span className={styles.moreDots}  ><BsThreeDots /></span></span>
                                 </div>
                             </div>
+
+
 
                             <div className={styles.chipMainPrimary2}>
                                 <span className={styles.chipLabel}>Analiști alocați:</span>
@@ -444,10 +450,19 @@ const ProjectView = ({ data }) => {
 
 
                             </div>
+
                         </div>
+                            </>
+                        )}
                     </div>
 
+
+                    {userRole !== "analyst" && (
+                        <>
+
                     <div className={styles.sectionDivider} />
+
+
 
                     {/* ================= CLIENT + CONTRACT ================= */}
                     <h2 className={styles.subSectionTitle}>Detalii client & contract</h2>
@@ -570,132 +585,135 @@ const ProjectView = ({ data }) => {
                             />
                         </div>
                     </div>
+
+                    {showPopup && (
+                        <ReplaceResponsiblePopup
+                            analysts={analyst}
+                            currentResponsibleId={project.responsibleId}
+                            onReplace={(newId) => {
+
+                                const selected = analyst.find(a => a._id === newId);
+
+                                if (!selected) return;
+
+                                // ✅ UI UPDATE IMMEDIATELY
+                                setProject(prev => ({
+                                    ...prev,
+                                    responsibleId: selected._id,
+                                    responsible: selected.name
+                                }));
+
+                                // 🔌 BACKEND UPDATE (recommended)
+                                updateProject({
+                                    id: project._id,
+                                    data: {
+                                        responsibleAnalyst: selected._id
+                                    }
+                                });
+
+                                setShowPopup(false);
+                            }}
+                            onRemove={() => {
+                                setProject(prev => ({
+                                    ...prev,
+                                    responsibleId: "",
+                                    responsible: "—"
+                                }));
+
+                                updateProject({
+                                    id: project._id,
+                                    data: {
+                                        responsibleAnalyst: null
+                                    }
+                                });
+
+                                setShowPopup(false);
+                            }}
+                            onClose={() => setShowPopup(false)}
+                        />
+                    )}
+
+
+                    {showMemberPopup && (
+                        <AnalystOptionsPopup
+                            analysts={
+                                selectedMember
+                                    ? analyst // EDIT → sab analysts
+                                    : analyst.filter(a =>
+                                        !project.team.some(m => m._id === a._id)
+                                    ) // ADD → sirf unassigned
+                            }
+
+                            mode={selectedMember ? "edit" : "add"} // 👈 OPTIONAL (nice)
+
+                            onReplace={(newId) => {
+                                const selected = analyst.find(a => a._id === newId);
+                                if (!selected) return;
+
+                                setProject(prev => ({
+                                    ...prev,
+                                    team: selectedMember
+                                        ? prev.team.map(m =>
+                                            m._id === selectedMember._id ? selected : m
+                                        )
+                                        : [...prev.team, selected] // 👈 ADD MODE
+                                }));
+
+                                setShowMemberPopup(false);
+                                setSelectedMember(null);
+                            }}
+
+                            onRemove={() => {
+                                if (!selectedMember) return;
+
+                                setProject(prev => ({
+                                    ...prev,
+                                    team: prev.team.filter(m => m._id !== selectedMember._id)
+                                }));
+
+                                setShowMemberPopup(false);
+                                setSelectedMember(null);
+                            }}
+
+                            onClose={() => {
+                                setShowMemberPopup(false);
+                                setSelectedMember(null);
+                            }}
+                        />
+                    )}
+
+                    {/* Billing Component */}
+                    {isBillingLoading && (
+                        <div className={styles.card}>Se încarcă datele financiare…</div>
+                    )}
+
+                    {billingError && (
+                        <div className={styles.card}>
+                            Eroare la încărcarea datelor financiare
+                        </div>
+                    )}
+
+                    {billingData && !isBillingLoading && (
+                        <Billing billing={billingData} />
+                    )}
+
+                        </>
+                    )}
                 </div>
 
-                {showPopup && (
-                    <ReplaceResponsiblePopup
-                        analysts={analyst}
-                        currentResponsibleId={project.responsibleId}
-                        onReplace={(newId) => {
-
-                            const selected = analyst.find(a => a._id === newId);
-
-                            if (!selected) return;
-
-                            // ✅ UI UPDATE IMMEDIATELY
-                            setProject(prev => ({
-                                ...prev,
-                                responsibleId: selected._id,
-                                responsible: selected.name
-                            }));
-
-                            // 🔌 BACKEND UPDATE (recommended)
-                            updateProject({
-                                id: project._id,
-                                data: {
-                                    responsibleAnalyst: selected._id
-                                }
-                            });
-
-                            setShowPopup(false);
-                        }}
-                        onRemove={() => {
-                            setProject(prev => ({
-                                ...prev,
-                                responsibleId: "",
-                                responsible: "—"
-                            }));
-
-                            updateProject({
-                                id: project._id,
-                                data: {
-                                    responsibleAnalyst: null
-                                }
-                            });
-
-                            setShowPopup(false);
-                        }}
-                        onClose={() => setShowPopup(false)}
-                    />
-                )}
-
-
-                {showMemberPopup && (
-                    <AnalystOptionsPopup
-                        analysts={
-                            selectedMember
-                                ? analyst // EDIT → sab analysts
-                                : analyst.filter(a =>
-                                    !project.team.some(m => m._id === a._id)
-                                ) // ADD → sirf unassigned
-                        }
-
-                        mode={selectedMember ? "edit" : "add"} // 👈 OPTIONAL (nice)
-
-                        onReplace={(newId) => {
-                            const selected = analyst.find(a => a._id === newId);
-                            if (!selected) return;
-
-                            setProject(prev => ({
-                                ...prev,
-                                team: selectedMember
-                                    ? prev.team.map(m =>
-                                        m._id === selectedMember._id ? selected : m
-                                    )
-                                    : [...prev.team, selected] // 👈 ADD MODE
-                            }));
-
-                            setShowMemberPopup(false);
-                            setSelectedMember(null);
-                        }}
-
-                        onRemove={() => {
-                            if (!selectedMember) return;
-
-                            setProject(prev => ({
-                                ...prev,
-                                team: prev.team.filter(m => m._id !== selectedMember._id)
-                            }));
-
-                            setShowMemberPopup(false);
-                            setSelectedMember(null);
-                        }}
-
-                        onClose={() => {
-                            setShowMemberPopup(false);
-                            setSelectedMember(null);
-                        }}
-                    />
-                )}
-
-
-
-
-                {/* Billing Component */}
-                {isBillingLoading && (
-                    <div className={styles.card}>Se încarcă datele financiare…</div>
-                )}
-
-                {billingError && (
-                    <div className={styles.card}>
-                        Eroare la încărcarea datelor financiare
-                    </div>
-                )}
-
-                {billingData && !isBillingLoading && (
-                    <Billing billing={billingData} />
-                )}
 
                 {/* Save Button */}
                 <Buttons
                     onSave={handleSave}
                     id={project._id}
                     isLoading={submitting}
+                    userRole={ userRole }
                     onGoToTask={() => console.log("go to task clicked")}
                     onViewCosts={() => console.log("view costs clicked")}
                 />
 
             </div>
+
         </div>
     );
 
