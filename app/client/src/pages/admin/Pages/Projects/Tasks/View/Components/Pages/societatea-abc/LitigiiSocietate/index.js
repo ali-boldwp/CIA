@@ -1,8 +1,9 @@
 import React from "react";
 import styles from "./styles.module.css";
 import ImagePlaceholder from "./ImagePlaceholder";
+import Navigation from "./Navigation";
 
-const Index = ({ formValues, setFormValues }) => {
+const Index = ({ formValues, setFormValues , onSaveSection}) => {
 
     // 1️⃣ Rows (litigii) always from formValues, at least 1
     const rows = (formValues?.litigii?.rows && formValues.litigii.rows.length > 0)
@@ -68,6 +69,7 @@ const Index = ({ formValues, setFormValues }) => {
 
                 {/* Introducere */}
                 <div className={styles.textAreaWrapper}>
+                    <div className={styles.mainCard2}>
                     <h3 className={styles.sectionTitle}>💬 Introducere</h3>
                     <textarea
                         className={styles.textarea}
@@ -75,6 +77,7 @@ const Index = ({ formValues, setFormValues }) => {
                         value={introducere}
                         onChange={(e) => setIntroducere(e.target.value)}
                     />
+                    </div>
                     <button className={styles.deleteBox} onClick={() => setIntroducere("")}>Șterge căsuța</button>
                 </div>
 
@@ -103,6 +106,11 @@ const Index = ({ formValues, setFormValues }) => {
                 <div className={styles.imagesSection}>
                     <h3 className={styles.sectionTitle}>🖼️ Imagini / grafice</h3>
                     <ImagePlaceholder images={images} setImages={setImages} />
+                    <Navigation
+                        onSave={onSaveSection}
+                        nextLabel="➡️ Mergi la I.2. Istoric societate"
+                        onNext={() => console.log("Navigate to next section")}
+                    />
                 </div>
             </div>
         </div>
