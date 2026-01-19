@@ -117,7 +117,8 @@ font-size: 15px;
     border-radius: 6px;
     padding: 0 12px;
     outline: none;
-    font-size: 14px;
+
+font-size: 16px;
     font-family: inherit;
     background: #fff;
 }

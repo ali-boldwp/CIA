@@ -7,7 +7,8 @@
 }
 
 .wrapper ul {
-    font-size: 14px;
+
+font-size: 16px;
     font-style: normal;
     list-style: none;
     color: #42413e;
@@ -76,7 +77,8 @@
 
 .nestedList li {
 
-font-size: 14px;
+
+font-size: 16px;
     margin-bottom: 3px;
     cursor: pointer;
 }
@@ -84,7 +86,8 @@ font-size: 14px;
 
 .addNewItem {
 
-font-size: 14px;
+
+font-size: 16px;
     font-weight: bold;
     color: #9e9c96;
     cursor: pointer;

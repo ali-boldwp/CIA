@@ -24,7 +24,8 @@
 
 .form-row label {
     display: block;
-    font-size: 14px;
+
+font-size: 16px;
     font-weight: 600;
     margin-bottom: 6px;
 }
@@ -34,7 +35,8 @@
     padding: 14px 16px;
     border: 1px solid #e3e6ef;
     border-radius: 10px;
-    font-size: 14px;
+
+font-size: 16px;
     background: #F8FAFC;
     transition: 0.2s;
 }
@@ -50,7 +52,8 @@
     color: #ffffff;
     border: none;
     padding: 10px 16px;
-    font-size: 14px;
+
+font-size: 16px;
     border-radius: 4px;
     cursor: pointer;
 }

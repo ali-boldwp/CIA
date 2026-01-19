@@ -21,7 +21,8 @@
 .costTable {
     width: 100%;
     border-collapse: collapse;
-    font-size: 14px;
+
+font-size: 16px;
     margin-top: 6px;
     background: #ffffff;
     border-radius: 4px;
@@ -44,7 +45,8 @@
 
 /* TABLE HEADERS */
 .costTable th {
-    font-size: 14px !important;
+
+font-size: 16px !important;
     font-weight: 700 !important;
     font-style: italic !important;
     color: #334155 !important;
@@ -52,7 +54,8 @@
 
 /* ALL ROW DATA */
 .costTable td {
-    font-size: 14px !important;
+
+font-size: 16px !important;
     font-weight: 700 !important;
     font-style: italic !important;
     color: #0F172A !important;
@@ -106,7 +109,8 @@
 /* DATA COLUMN */
 .costTable td:nth-child(1) {
 
-    font-size: 14px !important;
+
+font-size: 16px !important;
     font-weight: 700 !important;
     font-style: italic !important;
     color: #0F172A !important;
@@ -116,7 +120,8 @@
 
 /* DESCRIERE COLUMN */
 .costTable td:nth-child(2) {
-    font-size: 14px !important;
+
+font-size: 16px !important;
     font-weight: 700 !important;
     font-style: italic !important;
     color: #0F172A !important;
@@ -137,7 +142,8 @@
 
 /* Utility value styling */
 .utilityValue {
-    font-size: 14px !important;
+
+font-size: 16px !important;
     font-weight: 700 !important;
     font-style: italic !important;
     color: #0F172A !important;
@@ -148,7 +154,8 @@
 .costAmount {
     color: #0F172A !important;
     font-weight: 700 !important;
-    font-size: 14px !important;
+
+font-size: 16px !important;
     font-style: italic !important;
     display: block;
     text-align: right;
@@ -158,7 +165,8 @@
 .taxAmount {
     color: #0F172A !important;
     font-weight: 700 !important;
-    font-size: 14px !important;
+
+font-size: 16px !important;
     font-style: italic !important;
     display: block;
     text-align: right;
@@ -168,7 +176,8 @@
 .totalAmount {
     color: #0F172A !important;
     font-weight: 700 !important;
-    font-size: 14px !important;
+
+font-size: 16px !important;
     font-style: italic !important;
     display: block;
     text-align: right;
@@ -221,7 +230,8 @@
     padding: 14px 20px;
     border-radius: 4px;
     border: none;
-    font-size: 14px;
+
+font-size: 16px;
     font-weight: 700;
     font-style: italic;
     cursor: pointer;
@@ -249,7 +259,8 @@ font-size: 15px;
 
     /* TABLE HEADERS FOR 1199px */
     .costTable th {
-        font-size: 14px !important;
+
+font-size: 16px !important;
         font-weight: 700 !important;
         font-style: italic !important;
         color: #334155 !important;
@@ -257,7 +268,8 @@ font-size: 15px;
 
     /* ALL ROW DATA FOR 1199px */
     .costTable td {
-        font-size: 14px !important;
+
+font-size: 16px !important;
         font-weight: 700 !important;
         font-style: italic !important;
         color: #0F172A !important;
@@ -272,7 +284,8 @@ font-size: 15px;
 
     /* Data column on mobile */
     .costTable td:nth-child(1) {
-        font-size: 14px !important;
+
+font-size: 16px !important;
         font-weight: 700 !important;
         font-style: italic !important;
         color: #0F172A !important;
@@ -280,14 +293,16 @@ font-size: 15px;
 
     /* Descriere on mobile */
     .costTable td:nth-child(2) {
-        font-size: 14px !important;
+
+font-size: 16px !important;
         font-weight: 700 !important;
         font-style: italic !important;
         color: #0F172A !important;
     }
 
     .utilityValue {
-        font-size: 14px !important;
+
+font-size: 16px !important;
         font-style: italic !important;
     }
 }
@@ -305,7 +320,8 @@ font-size: 15px;
 
     /* TABLE HEADERS FOR 991px */
     .costTable th {
-        font-size: 14px !important;
+
+font-size: 16px !important;
         font-weight: 700 !important;
         font-style: italic !important;
         color: #334155 !important;
@@ -313,7 +329,8 @@ font-size: 15px;
 
     /* ALL ROW DATA FOR 991px */
     .costTable td {
-        font-size: 14px !important;
+
+font-size: 16px !important;
         font-weight: 700 !important;
         font-style: italic !important;
         color: #0F172A !important;
@@ -334,7 +351,8 @@ font-size: 15px;
 
     /* TABLE HEADERS FOR MOBILE */
     .costTable th {
-        font-size: 14px !important;
+
+font-size: 16px !important;
         font-weight: 700 !important;
         font-style: italic !important;
         color: #334155 !important;
@@ -342,7 +360,8 @@ font-size: 15px;
 
     /* ALL ROW DATA FOR MOBILE */
     .costTable td {
-        font-size: 14px !important;
+
+font-size: 16px !important;
         font-weight: 700 !important;
         font-style: italic !important;
         color: #0F172A !important;
@@ -376,7 +395,8 @@ font-size: 15px;
 
     /* Data column on small mobile */
     .costTable td:nth-child(1) {
-        font-size: 14px !important;
+
+font-size: 16px !important;
         font-weight: 700 !important;
         font-style: italic !important;
         color: #0F172A !important;
@@ -384,7 +404,8 @@ font-size: 15px;
 
     /* Descriere on small mobile */
     .costTable td:nth-child(2) {
-        font-size: 14px !important;
+
+font-size: 16px !important;
         font-weight: 700 !important;
         font-style: italic !important;
         color: #0F172A !important;
@@ -429,7 +450,8 @@ font-size: 15px;
 
     /* TABLE HEADERS FOR SMALL MOBILE */
     .costTable th {
-        font-size: 14px !important;
+
+font-size: 16px !important;
         font-weight: 700 !important;
         font-style: italic !important;
         color: #334155 !important;
@@ -437,7 +459,8 @@ font-size: 15px;
 
     /* ALL ROW DATA FOR SMALL MOBILE */
     .costTable td {
-        font-size: 14px !important;
+
+font-size: 16px !important;
         font-weight: 700 !important;
         font-style: italic !important;
         color: #0F172A !important;
@@ -456,7 +479,8 @@ font-size: 15px;
 
     /* Extra small screens */
     .costTable td:nth-child(1) {
-        font-size: 14px !important;
+
+font-size: 16px !important;
         font-weight: 700 !important;
         font-style: italic !important;
         color: #0F172A !important;

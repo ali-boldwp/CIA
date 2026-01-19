@@ -34,7 +34,8 @@
     padding: 14px;
     border-radius: 6px;
     box-sizing: border-box;
-    font-size: 14px;
+
+font-size: 16px;
 }
 .participationTable th {
     background: #f1f5f9;
@@ -110,13 +111,15 @@ font-size: 15px;
 .active {
     color: green;
 
-font-size: 14px;
+
+font-size: 16px;
 }
 
 .inactive {
     color: red;
 
-font-size: 14px;
+
+font-size: 16px;
 }
 
 
@@ -136,7 +139,8 @@ font-size: 14px;
     padding: 8px 14px;
     border-radius: 6px;
     cursor: pointer;
-    font-size: 14px;
+
+font-size: 16px;
 }
 .navigation {
     margin: 40px 0;

@@ -35,7 +35,8 @@
     padding: 16px 28px;
     border-radius: 4px;
     border: none;
-    font-size: 14px;
+
+font-size: 16px;
     font-weight: 700;
     font-style: italic;
     cursor: pointer;
@@ -73,7 +74,8 @@
     padding: 16px 28px;
     border-radius: 4px;
     border: 2px solid #2563EB !important; /* Blue border */
-    font-size: 14px;
+
+font-size: 16px;
     font-weight: 700;
     font-style: italic;
     cursor: pointer;
@@ -131,7 +133,8 @@
     .btnSecondary {
         min-width: 180px;
         padding: 14px 20px;
-        font-size: 14px;
+
+font-size: 16px;
     }
 
     .buttonRow {
@@ -190,6 +193,7 @@ font-size: 15px;
     .btnSecondary {
         padding: 10px 15px;
 
-font-size: 14px;
+
+font-size: 16px;
     }
 }

@@ -53,13 +53,15 @@
 .notif-text {
     margin: 0;
     color: #1f1f34;
-    font-size: 14px;
+
+font-size: 16px;
 }
 
 .notif-time {
     color: #8a8aa0;
 
-font-size: 14px;
+
+font-size: 16px;
 }
 
 .notif-dot {

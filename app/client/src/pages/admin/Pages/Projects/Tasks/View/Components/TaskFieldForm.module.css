@@ -16,7 +16,8 @@
     height: 44px;
     background: #f1f5f9;
     border-bottom: 1px solid #e5e7eb;
-    font-size: 14px;
+
+font-size: 16px;
     font-weight: 600;
     border-radius: 4px;
     color: #0f172a;
@@ -80,7 +81,8 @@ font-size: 15px;
     height: 36px;
     margin: 6px 12px;
     padding: 6px 10px;
-    font-size: 14px;
+
+font-size: 16px;
     border: none;
     outline: none;
     background: transparent;
@@ -239,7 +241,8 @@ font-size: 15px;
 .tableHeadCell {
     padding: 10px 12px;
 
-font-size: 14px;
+
+font-size: 16px;
     font-weight: 700;
     color: #0f172a;
     text-transform: uppercase;
@@ -281,7 +284,8 @@ font-size: 14px;
     border: none;
     outline: none;
     background: transparent;
-    font-size: 14px;
+
+font-size: 16px;
 }
 .btnAddRow {
     margin-top: 10px;
