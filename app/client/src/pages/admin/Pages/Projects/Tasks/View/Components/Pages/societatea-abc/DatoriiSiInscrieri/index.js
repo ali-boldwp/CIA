@@ -70,6 +70,8 @@ const Index = ({ formValues, setFormValues }) => {
                 <h3 className={styles.sectionTitle}>Situatia inscrierilor active existente in RNPM (AEGRM)</h3>
 
                 <div className={styles.textAreaWrapper}>
+                    <div className={styles.mainCard2}>
+
                     <h3 className={styles.sectionTitle}>💬 Introducere</h3>
                     <textarea
                         className={styles.textarea}
@@ -77,6 +79,8 @@ const Index = ({ formValues, setFormValues }) => {
                         value={introducere}
                         onChange={(e) => setIntroducere(e.target.value)}
                     />
+
+                    </div>
                     <button
                         className={styles.deleteBox}
                         onClick={() => setIntroducere("")}
@@ -162,22 +166,23 @@ const Index = ({ formValues, setFormValues }) => {
                 </div>
 
                 {/* Navigation */}
-                <div className={styles.navigation}>
-                    <div className={styles.navButtons}>
-                        <button className={styles.saveButton}>
-                            <span className={styles.saveIcon}>💾</span>
-                            Salveaza sectiunea
-                        </button>
-                        <button className={styles.middleButton}>
-                            ❌ Exclude acest capitol
-                            <span className={styles.arrowIcon}>→</span>
-                        </button>
-                        <button className={styles.nextButton}>
-                            ➡️ Mergi la I.6. „Achizitii SEAP”
-                            <span className={styles.arrowIcon}>→</span>
-                        </button>
-                    </div>
+                <div className={styles.navButtons}>
+                    <button className={styles.saveButton}>
+                        <span className={styles.saveIcon}>💾</span>
+                        Salveaza sectiunea
+                    </button>
+
+                    <button className={styles.middleButton}>
+                        ❌ Exclude acest capitol
+                        <span className={styles.arrowIcon}>→</span>
+                    </button>
+
+                    <button className={styles.nextButton}>
+                        ➡️ Mergi la I.6. „Achizitii SEAP”
+                        <span className={styles.arrowIcon}>→</span>
+                    </button>
                 </div>
+
 
             </div>
         </div>
