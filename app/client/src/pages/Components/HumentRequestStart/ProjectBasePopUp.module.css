@@ -115,7 +115,8 @@ font-size: 14px;
     border-radius: 4px;        /* ✅ 12px radius */
     border: 1px solid #e2e8f0;
     padding: 12px 16px;
-    font-size: 13px;
+
+font-size: 15px;
     background: #f8fafc;
 }
 
@@ -130,7 +131,8 @@ font-size: 14px;
     border-radius: 4px;        /* ✅ pill se 12px corners */
     border: 1px solid #e2e8f0;
     background: #f8fafc;
-    font-size: 13px;
+
+font-size: 15px;
     cursor: pointer;
 }
 
@@ -168,7 +170,8 @@ font-size: 14px;
 
 .row td {
     padding: 10px 14px;
-    font-size: 13px;
+
+font-size: 15px;
     color: #0f172a;
     border-top: 1px solid #e2e8f0;
 }

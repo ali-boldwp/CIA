@@ -237,7 +237,8 @@
 /* Responsive */
 @media (max-width: 1199px) {
     .costTable {
-        font-size: 13px;
+
+font-size: 15px;
     }
 
     .costTable th,

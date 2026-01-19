@@ -83,7 +83,8 @@
 .stateBadge {
     padding: 6px 12px;
     border-radius: 12px;
-    font-size: 13px;
+
+font-size: 15px;
 }
 
 .work {
@@ -112,7 +113,8 @@
 }
 
 .progressNumber {
-    font-size: 13px;
+
+font-size: 15px;
     opacity: 0.8;
 }
 
@@ -123,7 +125,8 @@
     border-radius: 10px;
     border: 1px solid #dddddd;
     background: #ffffff;
-    font-size: 13px;
+
+font-size: 15px;
     cursor: pointer;
 }
 

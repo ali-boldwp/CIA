@@ -90,7 +90,8 @@
     padding: 8px 16px;
     border-radius: 4px;
     border: 1px solid #c7d2fe;
-    font-size: 13px;
+
+font-size: 15px;
     font-weight: 700;
     cursor: pointer;
     white-space: nowrap;
@@ -114,7 +115,8 @@
 
 .currencyUpdateBtn::before {
     content: "€";
-    font-size: 13px;
+
+font-size: 15px;
     font-weight: 700;
     color: #059669; /* Green euro symbol */
     margin-right: 4px;
@@ -122,7 +124,8 @@
 
 .currencyUpdateBtn::after {
     content: "↻";
-    font-size: 13px;
+
+font-size: 15px;
     font-weight: 700;
     color: #2563eb; /* Blue refresh symbol */
     margin-left: 4px;
@@ -474,7 +477,8 @@ font-size: 14px !important;
     }
 
     .projectBlock li {
-        font-size: 13px;
+
+font-size: 15px;
         margin-bottom: 15px;
         padding-left: 15px;
     }
@@ -537,7 +541,8 @@ font-size: 14px;
     }
 
     .projectBlock li {
-        font-size: 13px;
+
+font-size: 15px;
     }
 
     .projectBlock li b {
@@ -547,7 +552,8 @@ font-size: 14px;
     }
 
     .projectBlock li span {
-        font-size: 13px;
+
+font-size: 15px;
         font-weight: 700;
     }
 

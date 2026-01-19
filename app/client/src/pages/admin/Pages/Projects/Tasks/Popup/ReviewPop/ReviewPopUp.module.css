@@ -93,7 +93,8 @@ font-size: 14px;
 }
 
 .sectionLabel {
-    font-size: 13px;
+
+font-size: 15px;
     font-weight: 700;
     color: #111827;
     margin-bottom: 8px;
@@ -111,7 +112,8 @@ font-size: 14px;
 .actionBtn {
     border-radius: 12px;
     padding: 10px 22px;
-    font-size: 13px;
+
+font-size: 15px;
     font-weight: 700; /* 🔥 now bold */
     border: 1px solid transparent;
     cursor: pointer;
@@ -151,7 +153,8 @@ font-size: 14px;
     border: 1px solid #d1d5db;
     border-radius: 12px;
     padding: 12px 14px;
-    font-size: 13px;
+
+font-size: 15px;
     background: #ffffff;
     outline: none;
     resize: vertical;
@@ -178,7 +181,8 @@ font-size: 14px;
     background: #ffffff;
     color: #2563eb;
     padding: 8px 18px;
-    font-size: 13px;
+
+font-size: 15px;
     font-weight: 700;
     cursor: pointer;
     transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;

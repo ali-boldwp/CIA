@@ -171,7 +171,8 @@
     .btnPrimary,
     .btnSecondary {
         padding: 12px 18px;
-        font-size: 13px;
+
+font-size: 15px;
         border-radius: 8px;
     }
 
