@@ -1,20 +1,17 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import ImagePlaceholder from './ImagePlaceholder';
 import Navigation from './Navigation';
 import styles from './styles.module.css';
+import { useUpdateTaskDataMutation } from "../../../../../../../../services/taskApi";
 
-const Index = ({ formValues, setFormValues }) => {
+const Index = ({ formValues, setFormValues, taskId }) => {
+
+    const latestFormValuesRef = useRef(formValues);
+    const [updateTaskData] = useUpdateTaskDataMutation();
 
     /* =========================
        HELPERS
     ========================== */
-
-    const handleChange = (slug, value) => {
-        setFormValues(prev => ({
-            ...(prev || {}),
-            [slug]: value
-        }));
-    };
 
     const updateTableCell = (slug, rowIndex, colIndex, value) => {
         setFormValues(prev => {
@@ -31,6 +28,23 @@ const Index = ({ formValues, setFormValues }) => {
             rows.push(Array(colCount).fill(""));
             return { ...(prev || {}), [slug]: rows };
         });
+    };
+
+    useEffect(() => {
+        latestFormValuesRef.current = formValues;
+    }, [formValues]);
+
+    const handleAutoSave = async (nextValues) => {
+        if (!taskId) return;
+
+        try {
+            await updateTaskData({
+                id: taskId,
+                data: nextValues || latestFormValuesRef.current
+            }).unwrap();
+        } catch (error) {
+            console.error("Auto-save failed", error);
+        }
     };
 
     /* =========================
@@ -96,6 +110,7 @@ const Index = ({ formValues, setFormValues }) => {
                                         onChange={(e) =>
                                             updateTableCell("generalProfile", index, 0, e.target.value)
                                         }
+                                        onBlur={() => handleAutoSave()}
                                         placeholder="[text editabil]"
                                     />
                                 </td>
@@ -136,6 +151,7 @@ const Index = ({ formValues, setFormValues }) => {
                                             onChange={(e) =>
                                                 updateTableCell("shareholders", rowIndex, colIndex, e.target.value)
                                             }
+                                            onBlur={() => handleAutoSave()}
                                             placeholder="[text editabil]"
                                         />
                                     </td>
