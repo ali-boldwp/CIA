@@ -15,6 +15,9 @@ const CreateProject = ({ data, main }) => {
 
     const {id} = useParams();
 
+    const location = useLocation();
+
+    const isNewProjectPath = location.pathname === "/project/new";
 
     // API sometimes returns: { data: [...] } — so we normalize it
     const dataAnalyst = Array.isArray(data?.data) ? data.data : [];
@@ -410,7 +413,8 @@ const CreateProject = ({ data, main }) => {
                             )}
                         </div>
 
-
+                        <>
+                            {!isNewProjectPath && (
                                 <div className="form-field">
                                     <label>Subiect proiect</label>
                                     <div className="input-wrapper">
@@ -429,6 +433,8 @@ const CreateProject = ({ data, main }) => {
                                         )}
                                     </div>
                                 </div>
+                            )}
+                        </>
                     </div>
 
                     {/* ROW 2 */}
