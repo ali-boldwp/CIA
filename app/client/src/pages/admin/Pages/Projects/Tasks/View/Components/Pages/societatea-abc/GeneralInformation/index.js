@@ -15,12 +15,23 @@ const Index = ({ formValues, setFormValues, taskId }) => {
 
     const updateTableCell = (slug, rowIndex, colIndex, value) => {
         setFormValues(prev => {
-            const rows = Array.isArray(prev?.[slug]) ? [...prev[slug]] : [];
-            rows[rowIndex] = rows[rowIndex] || [];
+            const rows = Array.isArray(prev?.[slug])
+                ? prev[slug].map(row => [...row]) // ✅ deep copy
+                : [];
+
+            if (!rows[rowIndex]) {
+                rows[rowIndex] = [];
+            }
+
             rows[rowIndex][colIndex] = value;
-            return { ...(prev || {}), [slug]: rows };
+
+            return {
+                ...(prev || {}),
+                [slug]: rows
+            };
         });
     };
+
 
     const addRow = (slug, colCount) => {
         setFormValues(prev => {

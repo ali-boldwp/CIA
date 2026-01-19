@@ -206,6 +206,7 @@
     border: 1px solid #ddd !important;
     background: white !important;
     white-space: nowrap !important;
+    font-weight: 600;
 }
 
 /* HUMINT button */
