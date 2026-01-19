@@ -2,7 +2,6 @@ import Layout from "../../../../../../layouts"
 import {useParams} from "react-router-dom";
 import {useGetCreateProjectByIdQuery} from "../../../../../../services/projectApi";
 
-import TaskView from "./Components/TaskView";
 import Header from "../../../../Components/Header";
 import ProjectHeader from "../../../../../Components/Project/Components/HeaderTask"
 import GeneralInformation from "./Components/Pages/societatea-abc/GeneralInformation";
@@ -17,7 +16,7 @@ import ParticipatiiSocietate from "./Components/Pages/societatea-abc/Participati
 import Controversesi from "./Components/Pages/societatea-abc/Controversesi";
 import DateFinanciare from "./Components/Pages/societatea-abc/DateFinanciare";
 import {useGetTaskQuery} from "../../../../../../services/taskApi";
-import {useState} from "react";
+import {useEffect, useRef, useState} from "react";
 
 const ViewTask = () => {
 
@@ -42,8 +41,21 @@ const ViewTask = () => {
     };
 
     const [formValues, setFormValues] = useState({});
+    const hasLoadedTaskData = useRef(false);
 
     const SelectedComponent = taskComponents[taskName];
+
+    useEffect(() => {
+        hasLoadedTaskData.current = false;
+        setFormValues({});
+    }, [taskId]);
+
+    useEffect(() => {
+        if (!task?.data || hasLoadedTaskData.current) return;
+
+        setFormValues(task.data || {});
+        hasLoadedTaskData.current = true;
+    }, [task?.data]);
 
     return (
         <Layout
