@@ -12,6 +12,7 @@ import { notFoundHandler, errorHandler } from './middlewares/error.middleware';
 const app: Application = express();
 
 const allowedOrigins = [
+    'http://localhost:60940',
     'http://localhost:3000',
     'https://cia.devregion.com'
 ];
