@@ -18,6 +18,7 @@ const Index = () => {
     const [position, setPosition] = useState("");
     const [email, setEmail] = useState("");
     const [phone, setPhone] = useState("");
+    const [projectSubject, setProjectSubject] = useState("");
 
     const [contractNumber, setContractNumber] = useState("");
     const [contractDone, setContractDone] = useState(false);
@@ -204,6 +205,9 @@ const Index = () => {
         if (!category.trim()) {
             newErrors.category = "Categoria proiectului este obligatorie";
         }
+        if (!projectSubject.trim()) {
+            newErrors.projectSubject = "Subiectul proiectului este obligatoriu";
+        }
 
         // Project price validation
         if (!projectPrice) {
@@ -271,6 +275,7 @@ const Index = () => {
         formData.append("clientEmail", email);
         formData.append("clientPhone", phone);
         formData.append("clientPosition", position);
+        formData.append("projectSubject", projectSubject);
 
         // PRICE
         formData.append("projectPrice", Number(projectPrice));
@@ -333,6 +338,7 @@ const Index = () => {
             setContactPerson("");
             setPosition("");
             setEmail("");
+            setProjectSubject("")
             setPhone("");
             setContractNumber("");
             setContractDone(false);
@@ -392,6 +398,7 @@ const Index = () => {
         if (email) formData.append("clientEmail", email);
         if (phone) formData.append("clientPhone", phone);
         if (position) formData.append("clientPosition", position);
+        if (projectSubject) formData.append("projectSubject", projectSubject);
 
         if (projectPrice) {
             formData.append("projectPrice", Number(projectPrice));
@@ -653,6 +660,27 @@ const Index = () => {
                                     )}
                                 </div>
 
+                                <div
+                                    className={`${styles.gridItem} ${styles.span2Left}`}
+                                >
+                                    <label className={styles.label}>
+                                        Subiect proiect
+                                        <input
+                                            className={`${styles.input} ${errors.projectSubject ? styles.inputError : ''}`}
+                                            value={projectSubject}
+                                            onChange={(e) =>
+                                                setProjectSubject(e.target.value)
+                                            }
+                                            placeholder="ex: Societatea ABC"
+                                        />
+                                    </label>
+                                    {errors.projectSubject && (
+                                        <div className={styles.errorMessage}>
+                                            {errors.projectSubject}
+                                        </div>
+                                    )}
+                                </div>
+
                                 {/* ADDITIONAL INFO */}
                                 <div
                                     className={`${styles.gridItem} ${styles.span2Right}`}
@@ -669,6 +697,7 @@ const Index = () => {
                                         />
                                     </label>
                                 </div>
+
 
                                 {/* ENTITY TYPE (Dropdown) */}
 
@@ -1022,6 +1051,8 @@ const Index = () => {
 
 
                             {/* PROJECT DESCRIPTION */}
+
+                            <div className={styles.requestTextarea}>
                             <div className={styles.fullWidthBlock}>
                                 <label className={styles.label}>
                                     Descriere proiect
@@ -1059,6 +1090,8 @@ const Index = () => {
                                         {errors.internalNotes}
                                     </div>
                                 )}
+                            </div>
+
                             </div>
 
 

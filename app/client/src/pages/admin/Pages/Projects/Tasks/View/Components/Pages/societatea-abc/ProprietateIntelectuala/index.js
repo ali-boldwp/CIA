@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React  from "react";
 import styles from "./styles.module.css";
 import ImagePlaceholder from "./ImagePlaceholder";
 
@@ -68,12 +68,14 @@ const Index = ({ formValues, setFormValues }) => {
                         value={introducere}
                         onChange={(e) => setIntroducere(e.target.value)}
                     />
+                    <div className={styles.deleteBoxContainer}>
                     <button
                         className={styles.deleteBox}
                         onClick={() => setIntroducere("")}
                     >
                         Șterge căsuța
                     </button>
+                    </div>
                 </div>
 
                 {/* Tabel Marci */}
@@ -81,14 +83,15 @@ const Index = ({ formValues, setFormValues }) => {
                     ® Tabel marci inregistrate la OSIM
                 </h3>
 
-                <table className={styles.table}>
+                <table className={styles.editableTable}>
                     <thead>
                     <tr>
                         <th>DENUMIRE MARCA</th>
                         <th>DETALII</th>
-                        <th></th>
+                        <th>ACTIUNI</th>
                     </tr>
                     </thead>
+
                     <tbody>
                     {rows.map((row, index) => (
                         <tr key={index}>
