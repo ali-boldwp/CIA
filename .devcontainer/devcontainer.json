@@ -1,0 +1,8 @@
+{
+  "name": "CIA DevPod Workspace",
+  "build": { "dockerfile": "Dockerfile" },
+  "workspaceFolder": "/workspaces/CIA",
+  "postCreateCommand": "npm run install:all",
+  "forwardPorts": [3000, 4000],
+  "remoteUser": "root"
+}
