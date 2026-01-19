@@ -1,198 +1,263 @@
-import React, { useEffect, useRef } from 'react';
-import ImagePlaceholder from './ImagePlaceholder';
-import Navigation from './Navigation';
-import styles from './styles.module.css';
-import { useUpdateTaskDataMutation } from "../../../../../../../../../../services/taskApi";
+import React from "react";
+import ImagePlaceholder from "./ImagePlaceholder";
+import Navigation from "./Navigation";
+import styles from "./styles.module.css";
 
-const Index = ({ formValues, setFormValues, taskId }) => {
-
-    const latestFormValuesRef = useRef(formValues);
-    const [updateTaskData] = useUpdateTaskDataMutation();
+const Index = ({ formValues, setFormValues, onSaveSection }) => {
 
     /* =========================
-       HELPERS
+       SAFE STATE
     ========================== */
+    const generalProfile =
+        formValues?.generalInfo?.generalProfile?.length > 0
+            ? formValues.generalInfo.generalProfile
+            : [
+                ["Denumire societate", ""],
+                ["Cod unic de inregistrare (CUI)", ""],
+                ["Numar de inmatriculare", ""],
+                ["Data infiintarii", ""],
+                ["Adresa sediu social", ""],
+                ["Obiect principal de activitate (cod CAEN)", ""],
+                ["Cifra de afaceri (an 2024)", ""],
+                ["Profit net (an 2024)", ""],
+                ["Numar mediu angajati", ""]
+            ];
 
-    const updateTableCell = (slug, rowIndex, colIndex, value) => {
-        setFormValues(prev => {
-            const rows = Array.isArray(prev?.[slug])
-                ? prev[slug].map(row => [...row]) // ✅ deep copy
-                : [];
+    const shareholders =
+        formValues?.generalInfo?.shareholders?.length > 0
+            ? formValues.generalInfo.shareholders
+            : [["", "", ""]];
 
-            if (!rows[rowIndex]) {
-                rows[rowIndex] = [];
-            }
+    const management =
+        formValues?.generalInfo?.management?.length > 0
+            ? formValues.generalInfo.management
+            : [["", "", ""]];
 
-            rows[rowIndex][colIndex] = value;
+    const board =
+        formValues?.generalInfo?.board?.length > 0
+            ? formValues.generalInfo.board
+            : [["", "", "", ""]];
 
-            return {
-                ...(prev || {}),
-                [slug]: rows
-            };
-        });
-    };
+    const locations =
+        formValues?.generalInfo?.locations?.length > 0
+            ? formValues.generalInfo.locations
+            : [["", "", "", ""]];
 
-
-    const addRow = (slug, colCount) => {
-        setFormValues(prev => {
-            const rows = Array.isArray(prev?.[slug]) ? [...prev[slug]] : [];
-            rows.push(Array(colCount).fill(""));
-            return { ...(prev || {}), [slug]: rows };
-        });
-    };
-
-    useEffect(() => {
-        latestFormValuesRef.current = formValues;
-    }, [formValues]);
-
-    const handleAutoSave = async (nextValues) => {
-        if (!taskId) return;
-
-        try {
-            await updateTaskData({
-                id: taskId,
-                data: nextValues || latestFormValuesRef.current
-            }).unwrap();
-        } catch (error) {
-            console.error("Auto-save failed", error);
-        }
-    };
+    const images = formValues?.generalInfo?.images?.length > 0
+        ? formValues.generalInfo.images
+        : [null];
 
     /* =========================
-       INITIAL STATE (SAFE)
+       SETTER
     ========================== */
-
-    useEffect(() => {
+    const updateSection = (key, value) => {
         setFormValues(prev => ({
             ...prev,
-
-            generalProfile: prev?.generalProfile || Array(9).fill(null).map(() => [""]),
-            shareholders: prev?.shareholders || [["", "", ""]],
-            management: prev?.management || [["", "", ""]],
-            board: prev?.board || [["", "", "", ""]],
-            locations: prev?.locations || [["", "", "", ""]],
+            generalInfo: {
+                ...prev.generalInfo,
+                generalProfile,
+                shareholders,
+                management,
+                board,
+                locations,
+                images,
+                [key]: value
+            }
         }));
-    }, [setFormValues]);
+    };
+
+    const setImages = (imgs) => {
+        setFormValues(prev => ({
+            ...prev,
+            generalInfo: {
+                ...prev.generalInfo,
+                images: imgs,
+                generalProfile,
+                shareholders,
+                management,
+                board,
+                locations
+            }
+        }));
+    };
 
     /* =========================
        UI
     ========================== */
-
     return (
         <div className={styles.container}>
             <div className={styles.mainCard}>
-
                 <h1 className={styles.mainTitle}>
                     I. Societatea ABC | 1. Informatii generale
                 </h1>
 
                 {/* ================= PROFIL GENERAL ================= */}
-                <h3 className={styles.sectionTitle}>
-                    📋 PROFIL GENERAL AL COMPANIEI
-                </h3>
-
-                <div className={styles.tableContainer}>
-                    <table className={styles.editableTable}>
-                        <thead>
-                        <tr>
-                            <th>CRITERIU</th>
-                            <th>DETALII</th>
+                <h3 className={styles.sectionTitle}>📋 Profil General Al Companiei</h3>
+                <table className={styles.editableTable}>
+                    <thead>
+                    <tr>
+                        <th>CRITERIU</th>
+                        <th>DETALII</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {generalProfile.map((row, i) => (
+                        <tr key={i}>
+                            <td>
+                                <input value={row[0]} disabled />
+                            </td>
+                            <td>
+                                <input
+                                    placeholder="[text editabil]"
+                                    value={row[1]}
+                                    onChange={(e) => {
+                                        const updated = generalProfile.map(r => [...r]); // deep clone inner arrays
+                                        updated[i][1] = e.target.value;
+                                        updateSection("generalProfile", updated);
+                                    }}
+                                />
+                            </td>
                         </tr>
-                        </thead>
-                        <tbody>
-                        {[
-                            "Denumire societate",
-                            "Cod unic de inregistrare (CUI)",
-                            "Numar de inmatriculare",
-                            "Data infiintarii",
-                            "Adresa sediu social",
-                            "Obiect principal de activitate (cod CAEN)",
-                            "Cifra de afaceri (an 2024)",
-                            "Profit net (an 2024)",
-                            "Numar mediu angajati"
-                        ].map((label, index) => (
-                            <tr key={index}>
-                                <td>
-                                    <input value={label} disabled />
-                                </td>
-                                <td>
-                                    <input
-                                        value={formValues?.generalProfile?.[index]?.[0] || ""}
-                                        onChange={(e) =>
-                                            updateTableCell("generalProfile", index, 0, e.target.value)
-                                        }
-                                        onBlur={() => handleAutoSave()}
-                                        placeholder="[text editabil]"
-                                    />
-                                </td>
-                            </tr>
-                        ))}
-                        </tbody>
-                    </table>
-
-                    <button
-                        className={styles.addButton}
-                        onClick={() => addRow("generalProfile", 1)}
-                    >
-                        ➕ Adauga rand
-                    </button>
-                </div>
+                    ))}
+                    </tbody>
+                </table>
 
                 {/* ================= ACTIONARI ================= */}
-                <h3 className={styles.sectionTitle}>
-                    📊 STRUCTURA ACTIONARIATULUI
-                </h3>
-
-                <div className={styles.tableContainer}>
-                    <table className={styles.editableTable}>
-                        <thead>
-                        <tr>
-                            <th>ACTIONAR</th>
-                            <th>CALITATE DETINUTA</th>
-                            <th>COTA-PARTE</th>
+                <h3 className={styles.sectionTitle}>📊 Structura Actionariatului</h3>
+                <table className={styles.editableTable}>
+                    <thead>
+                    <tr>
+                        <th>ACTIONAR</th>
+                        <th>CALITATE DETINUTA</th>
+                        <th>COTA-PARTE</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {shareholders.map((row, i) => (
+                        <tr key={i}>
+                            {row.map((cell, j) => (
+                                <td key={j}>
+                                    <input
+                                        placeholder={["[nume actionar]", "Selectează", "[ % ]"][j]}
+                                        value={cell}
+                                        onChange={(e) => {
+                                            const updated = shareholders.map(r => [...r]);
+                                            updated[i][j] = e.target.value;
+                                            updateSection("shareholders", updated);
+                                        }}
+                                    />
+                                </td>
+                            ))}
                         </tr>
-                        </thead>
-                        <tbody>
-                        {(formValues?.shareholders || []).map((row, rowIndex) => (
-                            <tr key={rowIndex}>
-                                {row.map((cell, colIndex) => (
-                                    <td key={colIndex}>
-                                        <input
-                                            value={cell || ""}
-                                            onChange={(e) =>
-                                                updateTableCell("shareholders", rowIndex, colIndex, e.target.value)
-                                            }
-                                            onBlur={() => handleAutoSave()}
-                                            placeholder="[text editabil]"
-                                        />
-                                    </td>
-                                ))}
-                            </tr>
-                        ))}
-                        </tbody>
-                    </table>
+                    ))}
+                    </tbody>
+                </table>
 
-                    <button
-                        className={styles.addButton}
-                        onClick={() => addRow("shareholders", 3)}
-                    >
-                        ➕ Adauga rand
-                    </button>
-                </div>
+                {/* ================= MANAGEMENT ================= */}
+                <h3 className={styles.sectionTitle}>👥 Conducere / Administratori </h3>
+                <table className={styles.editableTable}>
+                    <thead>
+                    <tr>
+                        <th>NUME</th>
+                        <th>CALITATE</th>
+                        <th>DATA NUMIRE</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {management.map((row, i) => (
+                        <tr key={i}>
+                            {row.map((cell, j) => (
+                                <td key={j}>
+                                    <input
+                                        placeholder={["[nume]", "Selectează", "[ data ]"][j]}
+                                        value={cell}
+                                        onChange={(e) => {
+                                            const updated = management.map(r => [...r]);
+                                            updated[i][j] = e.target.value;
+                                            updateSection("management", updated);
+                                        }}
+                                    />
+                                </td>
+                            ))}
+                        </tr>
+                    ))}
+                    </tbody>
+                </table>
+
+                {/* ================= BOARD ================= */}
+                <h3 className={styles.sectionTitle}>🏛️ Consiliu De Administratie</h3>
+                <table className={styles.editableTable}>
+                    <thead>
+                    <tr>
+                        <th>NUME</th>
+                        <th>CALITATE</th>
+                        <th>DATA START</th>
+                        <th>DATA END</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {board.map((row, i) => (
+                        <tr key={i}>
+                            {row.map((cell, j) => (
+                                <td key={j}>
+                                    <input
+                                        placeholder={["[nume]", "Selectează", "[ data ]", "[ data ]"][j]}
+                                        value={cell}
+                                        onChange={(e) => {
+                                            const updated = board.map(r => [...r]);
+                                            updated[i][j] = e.target.value;
+                                            updateSection("board", updated);
+                                        }}
+                                    />
+                                </td>
+                            ))}
+                        </tr>
+                    ))}
+                    </tbody>
+                </table>
+
+                {/* ================= LOCATIONS ================= */}
+                <h3 className={styles.sectionTitle}>📍 Locatii / Puncte De Lucru</h3>
+                <table className={styles.editableTable}>
+                    <thead>
+                    <tr>
+                        <th>TIP</th>
+                        <th>ADRESA</th>
+                        <th>ACT JURIDIC</th>
+                        <th>PERIOADA</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {locations.map((row, i) => (
+                        <tr key={i}>
+                            {row.map((cell, j) => (
+                                <td key={j}>
+                                    <input
+                                        placeholder={["Punct de lucru", "[text editabil]", "[text editabil]", "[perioada]"][j]}
+                                        value={cell}
+                                        onChange={(e) => {
+                                            const updated = locations.map(r => [...r]);
+                                            updated[i][j] = e.target.value;
+                                            updateSection("locations", updated);
+                                        }}
+                                    />
+                                </td>
+                            ))}
+                        </tr>
+                    ))}
+                    </tbody>
+                </table>
 
                 {/* ================= IMAGES ================= */}
                 <div className={styles.imagesSection}>
-                    <h3 className={styles.sectionTitle}>🖼️ Imagini / grafice</h3>
-                    <ImagePlaceholder />
-                    <Navigation />
+                    <h3 className={styles.sectionTitle}>🖼️ Imagini / Grafice</h3>
+                    <ImagePlaceholder images={images} setImages={setImages} />
+                    <Navigation
+                        onSave={onSaveSection}
+                        nextLabel="➡️ Mergi la I.2. Istoric societate"
+                        onNext={() => console.log("Navigate to next section")}
+                    />
                 </div>
-
-                <div className={styles.noteSection}>
-                    <p className={styles.noteText}>
-                        Nota: Tabelele pot fi eliminate daca nu se aplica.
-                    </p>
-                </div>
-
             </div>
         </div>
     );

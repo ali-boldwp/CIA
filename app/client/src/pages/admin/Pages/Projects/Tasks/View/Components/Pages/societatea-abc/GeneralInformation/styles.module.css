@@ -47,8 +47,11 @@
 .editableTable th {
     color: #0F172A !important;
     font-weight: 700;
-}
 
+}
+.editableTable th:first-child ,td:first-child {
+    text-align: start !important;
+}
 .editableTable {
     width: 100%;
     border-collapse: collapse;

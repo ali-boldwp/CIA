@@ -1,60 +1,71 @@
-import React, { useState } from "react";
+import React from "react";
 import styles from "./styles.module.css";
 import ImagePlaceholder from "./ImagePlaceholder";
 
-const Index = () => {
+const Index = ({ formValues, setFormValues }) => {
+    // ===== SAFE STATE =====
+    const historyText = formValues?.istoric?.historyText || "";
 
-    // ===== TEXTAREA =====
-    const [historyText, setHistoryText] = useState("");
+    const rows = (formValues?.istoric?.chronology && formValues.istoric.chronology.length > 0)
+        ? formValues.istoric.chronology
+        : [
+            { date: "[zz.ll.aaaa]", note: "Schimbare sediu social" },
+            { date: "[zz.ll.aaaa]", note: "Majorare capital social" },
+            { date: "[zz.ll.aaaa]", note: "Numire/Revocare administrator" }
+        ];
 
-    // ===== TABLE ROWS =====
-    const [rows, setRows] = useState([
-        { date: "[zz.ll.aaaa]", note: "Schimbare sediu social" },
-        { date: "[zz.ll.aaaa]", note: "Majorare capital social" },
-        { date: "[zz.ll.aaaa]", note: "Numire/Revocare administrator" }
-    ]);
+    const images = formValues?.istoric?.images || [];
 
-    // ===== IMAGES =====
-    const [images, setImages] = useState([]);
-
-    // ===== ADD ROW =====
-    const addRow = () => {
-        setRows([...rows, { date: "", note: "" }]);
+    // ===== SETTERS =====
+    const setHistoryText = (text) => {
+        setFormValues(prev => ({
+            ...prev,
+            istoric: {
+                ...prev.istoric,
+                historyText: text,
+                chronology: rows,
+                images
+            }
+        }));
     };
 
-    // ===== DELETE ROW =====
-    const deleteRow = (index) => {
-        setRows(rows.filter((_, i) => i !== index));
+    const setRows = (newRows) => {
+        setFormValues(prev => ({
+            ...prev,
+            istoric: {
+                ...prev.istoric,
+                historyText,
+                chronology: newRows,
+                images
+            }
+        }));
     };
 
-    // ===== UPDATE TABLE INPUT =====
+    const setImages = (imgs) => {
+        setFormValues(prev => ({
+            ...prev,
+            istoric: {
+                ...prev.istoric,
+                historyText,
+                chronology: rows,
+                images: imgs
+            }
+        }));
+    };
+
+    // ===== HANDLERS =====
+    const addRow = () => setRows([...rows, { date: "", note: "" }]);
+    const deleteRow = (index) => setRows(rows.filter((_, i) => i !== index));
     const handleRowChange = (index, field, value) => {
         const updatedRows = [...rows];
         updatedRows[index][field] = value;
         setRows(updatedRows);
     };
 
-    // ===== IMAGE HANDLER =====
-    const handleImagesChange = (files) => {
-        setImages(files);
-    };
-
-    // ===== SAVE ALL DATA =====
+    // ===== SAVE DATA (example) =====
     const handleSave = () => {
-        const finalData = {
-            historyText,
-            chronology: rows,
-            images
-        };
-
-        console.log("FINAL DATA:", finalData);
-
-        // yahan backend API call bhi kar sakte ho
-        // example:
-        // const formData = new FormData();
-        // formData.append("historyText", historyText);
-        // formData.append("chronology", JSON.stringify(rows));
-        // images.forEach(img => formData.append("images", img));
+        console.log("FINAL DATA:", formValues.istoric);
+        // You can call backend API here
     };
 
     return (
@@ -139,7 +150,7 @@ const Index = () => {
                 {/* ===== IMAGES ===== */}
                 <div className={styles.imagesSection}>
                     <h3 className={styles.sectionTitle}>🖼️ Imagini / grafice</h3>
-                    <ImagePlaceholder onChange={handleImagesChange} />
+                    <ImagePlaceholder images={images} setImages={setImages} />
                 </div>
 
                 {/* ===== NAVIGATION ===== */}

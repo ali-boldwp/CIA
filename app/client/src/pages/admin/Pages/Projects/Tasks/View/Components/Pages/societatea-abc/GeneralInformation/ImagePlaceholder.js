@@ -1,8 +1,7 @@
-import React, { useState } from "react";
+import React from "react";
 import styles from "./ImagePlaceholder.module.css";
 
-const ImagePlaceholder = () => {
-    const [images, setImages] = useState([null]); // start with 1 uploader
+const ImagePlaceholder = ({ images, setImages }) => {
 
     const handleAdd = () => {
         setImages([...images, null]);
@@ -10,7 +9,7 @@ const ImagePlaceholder = () => {
 
     const handleImageChange = (index, file) => {
         const updated = [...images];
-        updated[index] = URL.createObjectURL(file);
+        updated[index] = URL.createObjectURL(file); // keep preview
         setImages(updated);
     };
 
@@ -29,9 +28,7 @@ const ImagePlaceholder = () => {
                                 type="file"
                                 accept="image/*"
                                 hidden
-                                onChange={(e) =>
-                                    handleImageChange(index, e.target.files[0])
-                                }
+                                onChange={(e) => handleImageChange(index, e.target.files[0])}
                             />
 
                             {img ? (
@@ -47,8 +44,6 @@ const ImagePlaceholder = () => {
                         </label>
                     ))}
                 </div>
-
-
             </div>
         </>
     );
