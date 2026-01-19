@@ -37,7 +37,7 @@
 }
 .deadline-date {
     color:#0C4A6E;
-    border-radius: 30px;
+    border-radius: 4px;
     background: #BFE2FF;
     font-weight: 800;
     padding: 6px 10px;
@@ -177,6 +177,8 @@ font-size: 15px; /* 12px se kam */
 .status-badge-approved {
     padding: 8px 9px;
     border-radius: 100px;
+    font-style: normal;
+    font-weight: 400 !important;
 
 font-size: 16px; /* 12px se kam */
     font-weight: 600;
@@ -210,11 +212,11 @@ font-size: 16px; /* 12px se kam */
     align-items: center !important;
 
 font-size: 16px !important;
-    border-radius: 8px !important;
+    border-radius: 4px !important;
     border: 1px solid #ddd !important;
     background: white !important;
     white-space: nowrap !important;
-    font-weight: 600;
+    font-weight: 400;
     font-style: normal;
 }
 

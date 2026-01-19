@@ -88,9 +88,10 @@ font-size: 16px;
 /* Status */
 .stateBadge {
     padding: 6px 12px;
-    border-radius: 12px;
+    border-radius: 4px;
 
 font-size: 15px;
+    text-transform: capitalize;
 }
 
 .work {
@@ -134,7 +135,7 @@ font-size: 15px;
     padding: 6px 10px !important;
 
 font-size: 16px !important;
-    border-radius: 8px !important;
+    border-radius: 4px !important;
     border: 1px solid #ddd !important;
     background: white !important;
     white-space: nowrap !important;
