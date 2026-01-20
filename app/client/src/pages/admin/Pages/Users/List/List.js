@@ -27,22 +27,21 @@ const List = ({ isLoading, usersData, deleteUser }) => {
                 : [];
 
     // Global search
-    const currentUser = JSON.parse(localStorage.getItem("user"));
-    const currentUserId = currentUser?._id;
+    // const currentUser = JSON.parse(localStorage.getItem("user"));
+    // const currentUserId = currentUser?._id;
 
-// current user ko list se hata do
-    const usersWithoutMe = users.filter(u => u._id !== currentUserId);
 
 
 
     // Global search
     const filteredUsers = useMemo(() => {
-        if (!searchTerm.trim()) return usersWithoutMe;
+        if (!searchTerm.trim()) return users;
         const q = searchTerm.toLowerCase();
-        return usersWithoutMe.filter((u) =>
+        return users.filter((u) =>
             `${u.name} ${u.email} ${u.role}`.toLowerCase().includes(q)
         );
-    }, [searchTerm, usersWithoutMe]);
+    }, [searchTerm, users]);
+
 
     // ---- ROLE GROUPS (sirf layout ke liye) ----
     const ROLE_TO_SECTION = {
