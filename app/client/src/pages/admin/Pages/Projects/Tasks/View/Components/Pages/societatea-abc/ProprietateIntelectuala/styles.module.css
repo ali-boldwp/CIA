@@ -2,14 +2,15 @@
     padding: 20px;
 }
 
-.mainCard {
-    background: #fff;
-    padding: 35px;
-    border-radius: 8px;
-    border: 1px solid #e5e7eb;
-}
+/*.mainCard {*/
+/*    background: #fff;*/
+/*    padding: 35px;*/
+/*    border-radius: 8px;*/
+/*    border: 1px solid #e5e7eb;*/
+/*}*/
 
 .mainTitle {
+
     font-size: 22px;
     font-weight: 700;
     color: #1e3a8a;
@@ -17,9 +18,22 @@
 }
 
 .sectionTitle {
+    background: #fff;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #e5e7eb;
     font-size: 18px;
     font-weight: 700;
     margin: 20px 0 15px;
+}
+.sectionTitle1 {
+    background: #fff;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #e5e7eb;
+    font-size: 18px;
+    font-weight: 700;
+    margin: 49px 0 15px;
 }
 
 /* Textarea section */
@@ -54,41 +68,79 @@ font-size: 15px;
 }
 
 /* Table */
+
+
+.table input[type="text"] {
+    border: none !important;
+    font-size: 15px !important;
+    font-weight: 400 !important;
+    font-family: Inter !important;
+    background: #fff !important;
+    color: #374151 !important;
+}
+
+.table input[type="text"]:focus {
+    outline: none !important;
+}
+
+.table th {
+    color: #0F172A !important;
+    font-weight: 700;
+
+}
+.table th:first-child ,td:first-child {
+    text-align: start !important;
+}
+.table th:last-child ,td:last-child {
+    text-align: start !important;
+}
+
 .table {
     width: 100%;
     border-collapse: collapse;
-    margin-top: 10px;
+    margin-bottom: 15px;
+    background: #FFF;
+    border-radius: 4px;
 }
-.table tr{
-    border: 1px solid #e5e7eb;
-}
-.imagesSection {
-    margin: 25px 0;
-}
-.table th {
-    background: #f1f5f9;
-    text-align: left;
-    padding: 10px;
 
-font-size: 15px;
-    border: 1px solid #e5e7eb;
+.table th {
+    background-color: #F1F5F9;
+    font-style: normal;
+    text-align: left;
+    font-weight: 700;
+
+    font-size: 16px;
+    border: 1px solid #dee2e6;
 }
 
 .table td {
-    border: 1px solid #e5e7eb;
-    padding: 10px;
+    padding: 0px;
+    border: 1px solid #dee2e6;
+    color: #374151;
+    font-weight: 700;
 
-font-size: 15px;
+    font-size: 16px;
 }
 
-.table input {
-    width: 100%;
-    padding: 6px 8px;
+.table td:first-child {
+    width: 500px;
+}
 
-font-size: 15px;
-    border:none;
-    background: transparent;
-    outline: none;
+.table select,
+.table input[type="date"],
+.table input[type="text"] {
+    width: 100%;
+    padding: 8px 10px;
+    border: 1px solid #ced4da;
+
+    font-size: 16px;
+}
+
+.table tr:hover {
+    background: transparent !important;
+}
+.imagesSection {
+    margin: 25px 0;
 }
 
 .trash {
@@ -113,7 +165,7 @@ font-size: 16px;
 .navigation {
     margin: 40px 0;
     padding: 25px;
-    background-color: white;
+
     border-radius: 10px;
 
 }
@@ -122,7 +174,50 @@ font-size: 16px;
     display: flex;
     gap: 20px;
     flex-wrap: wrap;
+    width: 1100px;
+
 }
+
+.saveButton {
+    display: inline-flex;
+    align-items: center;
+    padding: 14px 30px;
+    background-color: #10B981;
+    color: white;
+    border: 1px solid #10B981;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+    flex: 1;
+    width: 240px ;
+    height: 40px;
+    justify-content: center;
+}
+
+
+
+.nextButton {
+    display: inline-flex;
+    align-items: center;
+    padding: 14px 30px;
+    background-color: #FFFFFF;
+    color: #2563EB;
+    border: 1px solid #2563EB;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s;
+    flex: 1;
+    font-style: italic;
+    width: 240px;
+    height: 40px;
+    justify-content: center;
+}
+
+
 .middleButton{
     display: inline-flex;
     align-items: center;
@@ -137,48 +232,10 @@ font-size: 16px;
     transition: all 0.3s;
     flex: 1;
     font-style: italic;
-    width: 282px;
+    width: 240px !important;
+    height: 40px;
     justify-content: center;
 }
-.saveButton {
-    display: inline-flex;
-    align-items: center;
-    padding: 14px 0px;
-    background-color: #10B981;
-    color: white;
-    border: 1px solid #10B981;
-    border-radius: 8px;
-    font-size: 16px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s;
-    flex: 1;
-    width: 197px !important;
-    justify-content: center;
-}
-
-
-
-.nextButton {
-    display: inline-flex;
-    align-items: center;
-    padding: 18px 0px;
-    background-color: #FFFFFF;
-    color: #2563EB;
-    border: 1px solid #2563EB;
-    border-radius: 8px;
-    font-size: 16px;
-    font-weight: 700;
-    cursor: pointer;
-    transition: all 0.3s;
-    flex: 1;
-    font-style: italic;
-    width: 282px;
-    justify-content: center;
-}
-
-
-
 .saveIcon {
     font-size: 20px;
     margin-right: 12px;
