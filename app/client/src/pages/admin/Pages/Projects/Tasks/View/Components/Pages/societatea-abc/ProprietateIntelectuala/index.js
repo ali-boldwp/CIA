@@ -77,7 +77,7 @@ const Index = ({ formValues, setFormValues }) => {
                 </div>
 
                 {/* Tabel Marci */}
-                <h3 className={styles.sectionTitle}>
+                <h3 className={styles.sectionTitle1}>
                     ® Tabel marci inregistrate la OSIM
                 </h3>
 
@@ -86,7 +86,7 @@ const Index = ({ formValues, setFormValues }) => {
                     <tr>
                         <th>DENUMIRE MARCA</th>
                         <th>DETALII</th>
-                        <th></th>
+                        <th>ACTIUNI</th>
                     </tr>
                     </thead>
                     <tbody>
