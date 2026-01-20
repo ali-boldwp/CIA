@@ -190,7 +190,7 @@ font-size: 16px;
 .grid-item .label {
     display: block;
 
-font-size: 16px;
+font-size: 18px;
     color: #334155;
     margin-bottom: 2px;
 }
@@ -314,7 +314,7 @@ font-size: 15px;
 
 /* labels */
 .label {
-    font-size: 10px;
+    font-size: 18px;
     font-weight: 600;
     color: #8c8c8c;
     text-transform: uppercase;
