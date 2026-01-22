@@ -432,11 +432,16 @@ export const getAnalystsProgress = async (req: Request, res: Response, next: Nex
                 result.push({
                     analystId: analyst._id,
                     name: analyst.name,
+                    monthlySalary:analyst.monthlySalary,
+                    hoursPerMonth:analyst.hoursPerMonth,
+                    hoursPerDay:analyst.hoursPerDay,
                     status: "liber",
                     progress: 0,
                     totalTasks: 0,
                     completedTasks: 0,
-                    assignedProjects: 0
+                    assignedProjects: 0,
+
+
                 });
                 continue;
             }
@@ -462,6 +467,9 @@ export const getAnalystsProgress = async (req: Request, res: Response, next: Nex
             result.push({
                 analystId: analyst._id,
                 name: analyst.name,
+                monthlySalary:analyst.monthlySalary,
+                hoursPerMonth:analyst.hoursPerMonth,
+                hoursPerDay:analyst.hoursPerDay,
                 assignedProjects: assignedProjects.length,
                 status: assignedProjects.length > 0 ? "în lucru" : "liber",
                 progress,
