@@ -397,8 +397,8 @@ const CreateProject = ({ data, main }) => {
                             <label>Denumire Proiect <small>(Nume Companie/Persoana/Tinta )</small></label>
                             <input
                                 className="input-box"
-                                placeholder="ex: Due Diligence: Societatea ABC"
-                                value={projectName}
+                                placeholder="Societatea ABC"
+                                value={projectSubject}
                                 onChange={(e) =>
                                     setProjectName(e.target.value)
                                 }
@@ -411,24 +411,24 @@ const CreateProject = ({ data, main }) => {
                         </div>
 
 
-                                <div className="form-field">
-                                    <label>Subiect proiect</label>
-                                    <div className="input-wrapper">
-                                        <input
-                                            className="input-box"
-                                            placeholder="Societatea ABC"
-                                            value={projectSubject}
-                                            onChange={(e) =>
-                                                setProjectSubject(e.target.value)
-                                            }
-                                        />
-                                        {errors.projectSubject && (
-                                            <p className={styles.errorText}>
-                                                {errors.projectSubject}
-                                            </p>
-                                        )}
-                                    </div>
-                                </div>
+                                {/*<div className="form-field">*/}
+                                {/*    <label>Subiect proiect</label>*/}
+                                {/*    <div className="input-wrapper">*/}
+                                {/*        <input*/}
+                                {/*            className="input-box"*/}
+                                {/*            placeholder="Societatea ABC"*/}
+                                {/*            value={projectSubject}*/}
+                                {/*            onChange={(e) =>*/}
+                                {/*                setProjectSubject(e.target.value)*/}
+                                {/*            }*/}
+                                {/*        />*/}
+                                {/*        {errors.projectSubject && (*/}
+                                {/*            <p className={styles.errorText}>*/}
+                                {/*                {errors.projectSubject}*/}
+                                {/*            </p>*/}
+                                {/*        )}*/}
+                                {/*    </div>*/}
+                                {/*</div>*/}
                     </div>
 
                     {/* ROW 2 */}
