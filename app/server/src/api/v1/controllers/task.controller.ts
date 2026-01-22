@@ -203,4 +203,57 @@ export const completeTask = async (req, res) => {
 };
 
 
+export const fetchShortcode = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const { id } = req.params; // task id
+        const { keys } = req.body;  // array of keys, e.g., ["Denumire societate", "management"]
+
+        if (!keys || !Array.isArray(keys))
+            return res.status(400).json({ message: "Keys array is required" });
+
+        const task = await Task.findById(id);
+        if (!task) return res.status(404).json({ message: "Task not found" });
+
+        const data: Record<string, any> = {};
+
+        for (const key of keys) {
+            let value: any = null;
+
+            // 1️⃣ Top-level field
+            if (task[key] !== undefined) value = task[key];
+
+            // 2️⃣ Inside data.generalInfo
+            else if (task.data && task.data.generalInfo) {
+                const generalInfo = task.data.generalInfo;
+
+                // If key matches a full table
+                if (generalInfo[key] !== undefined) {
+                    value = generalInfo[key];
+                } else {
+                    // Search inside all tables for single cell match
+                    for (const tableKey of Object.keys(generalInfo)) {
+                        const table = generalInfo[tableKey];
+                        if (Array.isArray(table)) {
+                            for (const row of table) {
+                                if (Array.isArray(row) && row[0] === key) {
+                                    value = row[1] !== undefined ? row[1] : null;
+                                    break;
+                                }
+                            }
+                        }
+                        if (value !== null) break;
+                    }
+                }
+            }
+
+            data[key] = value ?? null;
+        }
+
+        return res.json({ data });
+
+    } catch (err) {
+        next(err);
+    }
+};
+
 

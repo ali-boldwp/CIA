@@ -167,6 +167,20 @@ font-size: 16px;
     background-color: #6B7280;
 }
 
+.addRowButton {
+   font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    background: linear-gradient(90deg, #2563EB 0%, #4F46E5 100%);;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 5px 10px;
+    margin-bottom: 10px;
+
+}
+
+
 /* Responsive adjustments */
 @media (max-width: 768px) {
     .mainCard {
