@@ -120,6 +120,9 @@ td {
     text-align: left;
     border-bottom: 1px solid #e5e7eb;
 }
+td{
+    font-size: 16px;
+}
 
 thead tr {
     background-color: #f3f4f6;
@@ -185,7 +188,7 @@ font-size: 15px;
     padding: 4px 10px;
     border-radius: 999px;
 
-font-size: 15px;
+font-size: 16px;
     font-weight: 600;
 }
 
@@ -210,7 +213,7 @@ font-size: 15px;
     padding: 4px 10px;
     border-radius: 999px;
 
-font-size: 15px;
+font-size: 16px;
     font-weight: 600;
 }
 
