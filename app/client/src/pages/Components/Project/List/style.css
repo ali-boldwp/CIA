@@ -77,7 +77,7 @@ font-size: 16px;
     grid-template-columns: 22% 15% 18% 18% 27%;
     padding: 10px 5px;
 
-font-size: 16px;   /* 13px se 1px zyada */
+font-size: 18px;   /* 13px se 1px zyada */
     font-weight: 700;  /* bold */
     opacity: 0.7;
     padding: 20px;
@@ -450,7 +450,7 @@ font-size: 16px;
 
     .deadline-badge .deadline-date {
 
-font-size: 16px;
+font-size: 16px !important;
     }
 
     .deadline-badge .deadline-status {
@@ -503,7 +503,7 @@ font-size: 16px;
 
     .deadline-badge .deadline-date {
 
-font-size: 15px;
+font-size: 15px !important;
     }
 
     .deadline-badge .deadline-status {

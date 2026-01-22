@@ -324,7 +324,7 @@ const Item = ({ data, refetchProjects }) => {
                             HUMINT ▾
                         </button>
                     ):(
-                        <Link  to={`/humint/new/${data?._id}`} className="action-btn" style = {{fontWeight:"600"}}> HUMINT</Link>
+                        <Link  to={`/humint/new/${data?._id}`} className="action-btn" style = {{fontWeight:"600"}}>HUMINT ▾</Link>
                     )
                 }
 
