@@ -56,9 +56,8 @@ font-size: 16px;
     display: flex;
     align-items: center;
     gap: 8px;
-    background: #f7f9fc;
-    border: 1px solid #E5E8EC;
-    padding: 10px 14px;
+    background-color: #f9fafb;
+    border: 1px solid #e5e7eb;
     border-radius: 4px;
 
     width:60% !important;
@@ -66,17 +65,21 @@ font-size: 16px;
 
 .search-icon {
 
-font-size: 16px;
     opacity: 0.6;
+    font-size: 16px;
+    color: #9ca3af;
+    pointer-events: none;
 }
 
 .search-input1 {
+    height: 39px !important;
     border: none;
-    outline: none;
-
-font-size: 16px;
-    background: transparent;
+    outline:  none;
+    color: #111827 !important;;
+    font-size: 16px;
+    background-color: #f9fafb !important;
     width: 100%;
+
 }
 
 /* FILTER DROPDOWNS */
@@ -110,7 +113,7 @@ font-size: 16px;
 
 /* SECTION TITLE */
 .section-title1{
-    font-size: 16px;
+    font-size: 18px;
     font-weight: 600;
     margin-bottom: 20px;
     color: #1a1a1a;
@@ -152,17 +155,18 @@ font-size: 16px;
 }
 
 .project-title {
-    font-size: 15px;
+    font-size: 18px;
     font-weight: 700;
-    color: #000;
-    margin: 0;
+    color:  #334155;
+    margin-top: 0;
 }
 
 .project-subject {
     color: #6d7580;
 
-font-size: 15px;
+font-size: 16px;
     margin: 2px 0 6px 0;
+    font-weight: 600;
 }
 
 .solicitant {
@@ -171,6 +175,7 @@ font-size: 15px;
 font-size: 16px;
     color: #8c8f96;
     margin: 0;
+    font-weight: 600;
 }
 
 /* MIDDLE GRID */
@@ -197,7 +202,7 @@ font-size: 18px;
 
 .grid-item .value {
 
-font-size: 15px;
+font-size: 16px;
     font-weight: 600;
     color: #2d2d2d;
 }
@@ -235,7 +240,7 @@ font-size: 15px;
     padding: 4px 12px;
     border-radius: 12px;
 
-font-size: 15px;
+font-size: 16px;
     font-weight: 600;
     display: inline-block;
 }
@@ -266,7 +271,7 @@ font-size: 15px;
     font-weight: 600;
     color: #0074d9;
 
-font-size: 15px;
+font-size: 16px;
     background: #DBEAFE;
     padding:4px 7px;
     border-radius: 10px;
@@ -282,18 +287,20 @@ font-size: 15px;
 }
 
 .open-btn {
-    padding: 11px 30px;
-    border-radius: 4px;
-    border: none;
+    height: 39px !important;
+    text-align: center;
     background: linear-gradient(90deg, #2563EB 0%, #4F46E5 100%);
-    color: #ffffff;
+    padding: 10px 15px;
+    border-radius: 4px;
+    color: #fff !important;
+
     font-size: 16px;
     font-weight: 600;
-    cursor: pointer;
+    text-decoration: none;
+    transition: 0.2s ease;
 }
 
 .open-btn:hover {
-    opacity: 0.9;
     transform: translateY(-1px);
 }
 
@@ -309,6 +316,9 @@ font-size: 15px;
 /* LEFT SIDE */
 .left-sideList {
     width: 15%;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
 }
 
 /* labels */
@@ -466,6 +476,86 @@ font-size: 16px;
     background: white;
     border-radius: 4px;
     padding-right: 20px;
+    margin-top: 20px;
+}
+
+
+.footerCard {
+    padding: 10px 18px;
+    display: flex;
+    justify-content: end;
+    align-items: center;
+
+
+    font-size: 16px;
+    color: #6b7280;
+
+    margin-bottom: 32px; /* ⬅ yahan se body ke bottom se gap aa jayega */
+}
+
+.footerLeft {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.footerSelect {
+    border-radius: 12px;
+    border: 1px solid #e5e7eb;
+    padding: 4px 10px;
+
+
+    font-size: 16px;
+    background-color: #ffffff;
+}
+
+.footerRight strong {
+    color: #111827;
+}
+
+
+
+.pageBtn {
+    padding: 6px 14px;
+    margin: 0 6px;
+    border-radius: 4px;
+    border: 1px solid #d1d8ee;
+    background: linear-gradient(90deg, #2563EB 0%, #4F46E5 100%);
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 600;
+    color: #ffffff;
+}
+
+.pageBtn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+    background: white;
+    color: #111827;
+}
+
+
+.span{
+    font-size: 16px !important;
+    font-weight: 600;
+}
+
+/*Table bullsts*/
+
+.bullet-list {
+    margin: 0;
+    padding-left: 18px;
+}
+
+.bullet-list li {
+    font-size: 16px;
+    font-weight: 600;
+    color: #2d2d2d;
+    line-height: 1.4;
+}
+
+.bullet-list li::marker {
+    color: #4F46E5;
 }
 
 /* RESPONSIVE FIXES */
