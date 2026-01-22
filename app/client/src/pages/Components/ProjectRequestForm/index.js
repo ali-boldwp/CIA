@@ -1052,6 +1052,8 @@ const Index = () => {
 
 
                             {/* PROJECT DESCRIPTION */}
+
+                            <div className={styles.inline}>
                             <div className={styles.fullWidthBlock}>
                                 <label className={styles.label}>
                                     Descriere proiect
@@ -1089,6 +1091,8 @@ const Index = () => {
                                         {errors.internalNotes}
                                     </div>
                                 )}
+                            </div>
+
                             </div>
 
 

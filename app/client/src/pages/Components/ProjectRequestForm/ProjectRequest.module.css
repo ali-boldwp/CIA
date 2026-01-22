@@ -297,7 +297,10 @@ font-size: 16px;
 .largeTextarea {
     min-height: 130px;
 }
-
+.inline{
+    display: flex;
+    gap: 30px;
+}
 /* ===== File upload (half width + height similar to textarea) ===== */
 
 .fileUploadHalf {
