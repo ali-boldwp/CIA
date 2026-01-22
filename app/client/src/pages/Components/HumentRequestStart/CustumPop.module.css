@@ -114,12 +114,11 @@ font-size: 15px;
 
 .continueBtn {
     padding: 11px 30px;
-    border-radius: 999px;
+    border-radius: 4px;
     border: none;
-    background: #6366f1;
+    background: linear-gradient(90deg, #2563EB 0%, #4F46E5 100%);
     color: #ffffff;
-
-font-size: 16px;
+    font-size: 16px;
     font-weight: 600;
     cursor: pointer;
 }

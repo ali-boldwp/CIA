@@ -11,7 +11,6 @@ const Team = () => {
     // Fetch analysts progress (backend-calculated)
     const { data: analystsData } = useGetAnalystsProgressQuery();
     const analysts = analystsData?.data || [];
-
     const [openAddModal, setOpenAddModal] = useState(false);
 
 
@@ -45,6 +44,9 @@ const Team = () => {
                     <div className={styles.teamHeader}>
                         <span>Nume</span>
                         <span>Scor</span>
+                        <span>Salariu pe lună</span>
+                        <span>Salariu pe zi</span>
+                        <span>Salariu pe oră</span>
                         <span>Stare</span>
                         <span>Progres</span>
                         <span style={{ textAlign: "right" }}>Acțiuni</span>
@@ -66,12 +68,8 @@ const Team = () => {
                                     <span>{a.name}</span>
                                 </div>
 
-                                <div className={`${styles.col} ${styles.score}`}>
-                                    {a.score || 0}
-                                </div>
-
                                 <div className={`${styles.col} ${styles.state}`}>
-                                    <span
+                                    <div
                                         className={`${styles.stateBadge} ${
                                             a.status === "liber"
                                                 ? styles.free
@@ -79,7 +77,7 @@ const Team = () => {
                                         }`}
                                     >
                                         {a.status}
-                                    </span>
+                                    </div>
                                 </div>
 
                                 {/* PROGRESS BAR FROM BACKEND */}
@@ -99,6 +97,20 @@ const Team = () => {
                                     >
                                         {a.progress}%
                                     </span>
+                                </div>
+
+                                <div className={`${styles.col} ${styles.score}`}>
+                                    {a.score || 0}
+                                </div>
+
+                                <div className={`${styles.col} ${styles.score}`}>
+                                    {a.monthlySalary || 0}
+                                </div>
+                                <div className={`${styles.col} ${styles.score}`}>
+                                    {a.hoursPerMonth || 0}
+                                </div>
+                                <div className={`${styles.col} ${styles.score}`}>
+                                    {a.hoursPerDay || 0}
                                 </div>
 
                                 <div className={`${styles.col} ${styles.actions}`} style={{ textAlign: "right" }}>
@@ -140,7 +152,7 @@ const Team = () => {
                     <span>Vezi lista angajați</span>
                 </button>
 
-                <button className={`${styles.pillBtn} ${styles.listBtn}`}
+                <button className={` ${styles.AddAnalyst} `}
                         onClick={() => setOpenAddModal(true)}>
                     + Adaugă analist
                 </button>
