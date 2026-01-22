@@ -280,6 +280,8 @@ const Item = ({ data, refetchProjects }) => {
           ...humintUI.style,
           padding: "9px 13px",
           borderRadius: "4px",
+          width:"230px",
+          textAlign:"center",
           display: "inline-block",
       }}
   >
