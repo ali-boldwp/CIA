@@ -294,6 +294,30 @@ font-size: 16px;
     gap: 8px;
     font-weight: 600;
 }
+.flexSec{
+    display: flex;
+    flex-direction: column;
+    gap:20px;
+
+}
+.flexSec .firstField{
+    display: flex;
+    gap:20px;
+}
+.flexSec .secField{
+    display: flex;
+    gap:20px;
+}
+.textField{
+    display: flex;
+    gap:20px;
+}
+.textField .form-field{
+    width: 50%;
+}
+.flexSec .form-field{
+    width:49%;
+}
 
 
 .button-row {

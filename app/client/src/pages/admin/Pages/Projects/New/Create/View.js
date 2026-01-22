@@ -395,13 +395,13 @@ const CreateProject = ({ data, main }) => {
                     <div className="row-two">
                         <div className="form-field">
                             <label>Denumire Proiect <small>(Nume Companie/Persoana/Tinta )</small></label>
-                            <input
-                                className="input-box"
-                                placeholder="Societatea ABC"
+                            <textarea
+                                className="textarea-box"
                                 value={projectSubject}
                                 onChange={(e) =>
                                     setProjectName(e.target.value)
                                 }
+                                placeholder="Societatea ABC"
                             />
                             {errors.projectName && (
                                 <p className={styles.errorText}>
@@ -429,10 +429,8 @@ const CreateProject = ({ data, main }) => {
                                 {/*        )}*/}
                                 {/*    </div>*/}
                                 {/*</div>*/}
-                    </div>
-
-                    {/* ROW 2 */}
-                    <div className="row-four">
+                        <div className="flexSec">
+                            <div className="firstField">
                         <div className="form-field">
                             <label>Tip raport</label>
                             <select
@@ -475,76 +473,85 @@ const CreateProject = ({ data, main }) => {
                                 <p className={styles.errorText}>{errors.reportType}</p>
                             )}
                         </div>
+                                <div className="form-field">
+                                    <label>Tip entitate</label>
 
-                        <div className="form-field">
-                            <label>Tip entitate</label>
+                                    <select
+                                        className={`${styles.input} input-box ${styles.selectAnalyst}`}
+                                        value={entityType}
+                                        onChange={(e) => {
+                                            const selectedId = e.target.value;
 
-                            <select
-                                className={`${styles.input} input-box ${styles.selectAnalyst}`}
-                                value={entityType}
-                                onChange={(e) => {
-                                    const selectedId = e.target.value;
+                                            setEntityType(selectedId);      // state me _id save
+                                            console.log("Selected category Mongo ID:", selectedId);
+                                        }}
+                                    >
+                                        <option value="">Selectați tipul entității</option>
 
-                                    setEntityType(selectedId);      // state me _id save
-                                    console.log("Selected category Mongo ID:", selectedId);
-                                }}
-                            >
-                                <option value="">Selectați tipul entității</option>
-
-                                {categoryOptions.map((c) => (
-                                    <option key={c.id} value={c.id}>
-                                        {c.name}
-                                    </option>
-                                ))}
-                            </select>
-
-
-                            {catsError && (
-                                <p className={styles.errorText}>
-                                    Nu s-au putut încărca categoriile.
-                                </p>
-                            )}
-
-                            {errors.entityType && (
-                                <p className={styles.errorText}>{errors.entityType}</p>
-                            )}
-                        </div>
+                                        {categoryOptions.map((c) => (
+                                            <option key={c.id} value={c.id}>
+                                                {c.name}
+                                            </option>
+                                        ))}
+                                    </select>
 
 
-                        <div className="form-field">
-                            <label>Termen limită</label>
-                            <input
-                                type="date"
-                                className="input-box"
-                                value={deadline}
-                                onChange={(e) => setDeadline(e.target.value)}
-                            />
-                            {errors.deadline && (
-                                <p className={styles.errorText}>
-                                    {errors.deadline}
-                                </p>
-                            )}
-                        </div>
+                                    {catsError && (
+                                        <p className={styles.errorText}>
+                                            Nu s-au putut încărca categoriile.
+                                        </p>
+                                    )}
 
-                        <div className="form-field">
-                            <label>Prioritate</label>
-                            <select
-                                className={`${styles.input} input-box ${errors.priority ? styles.inputError : ""}`}
-                                value={priority}
-                                onChange={(e) => setPriority(e.target.value)}
-                            >
-                                <option value="">Selectează...</option>
-                                <option value="Normal">Normal</option>
-                                <option value="Urgentă">Urgentă</option>
-                                <option value="Confidențial">Confidențial</option>
-                            </select>
+                                    {errors.entityType && (
+                                        <p className={styles.errorText}>{errors.entityType}</p>
+                                    )}
+                                </div>
 
-                            {errors.priority && (
-                                <p className={styles.errorText}>{errors.priority}</p>
-                            )}
+                            </div>
+
+                            <div className="secField">
+                                <div className="form-field">
+                                    <label>Termen limită</label>
+                                    <input
+                                        type="date"
+                                        className="input-box"
+                                        value={deadline}
+                                        onChange={(e) => setDeadline(e.target.value)}
+                                    />
+                                    {errors.deadline && (
+                                        <p className={styles.errorText}>
+                                            {errors.deadline}
+                                        </p>
+                                    )}
+                                </div>
+
+                                <div className="form-field">
+                                    <label>Prioritate</label>
+                                    <select
+                                        className={`${styles.input} input-box ${errors.priority ? styles.inputError : ""}`}
+                                        value={priority}
+                                        onChange={(e) => setPriority(e.target.value)}
+                                    >
+                                        <option value="">Selectează...</option>
+                                        <option value="Normal">Normal</option>
+                                        <option value="Urgentă">Urgentă</option>
+                                        <option value="Confidențial">Confidențial</option>
+                                    </select>
+
+                                    {errors.priority && (
+                                        <p className={styles.errorText}>{errors.priority}</p>
+                                    )}
+                                </div>
+                            </div>
                         </div>
 
                     </div>
+
+
+
+
+
+
 
                     {/* ROW 3 */}
                     <div className="row-two">
@@ -611,8 +618,8 @@ const CreateProject = ({ data, main }) => {
                             ))}
                         </div>
                     </div>
-
-                    <div className="form-field full-width">
+                    <div className="textField">
+                    <div className="form-field">
                         <label>Descriere proiect</label>
                         <textarea
                             className="textarea-box"
@@ -627,6 +634,23 @@ const CreateProject = ({ data, main }) => {
                                 {errors.projectDescription}
                             </p>
                         )}
+                    </div>
+           <div className="form-field">
+               <label>Note interne</label>
+               <textarea
+                   className="textarea-box"
+                   value={internalNotes}
+                   onChange={(e) =>
+                       setInternalNotes(e.target.value)
+                   }
+                   placeholder="Alte informatii confidentiale despre proiect, recomandari etc"
+               />
+               {errors.internalNotes && (
+                   <p className={styles.errorText}>
+                       {errors.internalNotes}
+                   </p>
+               )}
+           </div>
                     </div>
                 </div>
 
@@ -960,22 +984,7 @@ const CreateProject = ({ data, main }) => {
                     </div>
 
                     {/* ROW 6 */}
-                    <div className="form-field full-width">
-                        <label>Note interne</label>
-                        <textarea
-                            className="textarea-box"
-                            value={internalNotes}
-                            onChange={(e) =>
-                                setInternalNotes(e.target.value)
-                            }
-                            placeholder="Alte informatii confidentiale despre proiect, recomandari etc"
-                        />
-                        {errors.internalNotes && (
-                            <p className={styles.errorText}>
-                                {errors.internalNotes}
-                            </p>
-                        )}
-                    </div>
+
 
                     {/* SAVE BUTTON */}
                     <div className="button-row">
