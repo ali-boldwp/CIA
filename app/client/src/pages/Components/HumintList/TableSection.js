@@ -236,7 +236,7 @@ const TableSection = ({
                         ← Precedent
                     </button>
 
-                    <span>
+                    <span className={styles.span}>
                         Pagina <strong>{page}</strong> din <strong>{totalPages}</strong>
                     </span>
 
