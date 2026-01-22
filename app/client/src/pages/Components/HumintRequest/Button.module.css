@@ -18,7 +18,7 @@
 /* title "Acțiuni" */
 .title {
 
-font-size: 15px;
+font-size: 18px !important;
     font-weight: 600;
     color: #64748b;
     margin-bottom: 10px;
@@ -34,11 +34,11 @@ font-size: 15px;
 /* base button style */
 .btn {
     border: none;
-    border-radius: 999px;
+    border-radius: 4px !important;
     padding: 9px 22px;
 
 
-font-size: 15px;
+font-size: 16px !important;
     font-weight: 600;
     color: #ffffff;
 

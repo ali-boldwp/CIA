@@ -24,13 +24,7 @@ const ProjectList = ({ data, header = false, refetchProjects }) => {
                     <select
                         value={uiStatus}
                         onChange={handleStatusChange}
-                        style={{
-                            padding: "6px 10px",
-                            borderRadius: "8px",
-                            border: "1px solid #ddd",
-                            fontSize: "13px",
-                            fontWeight: 600,
-                        }}
+                        className="status-select"
                     >
                         <option value="Active">Active</option>
                         <option value="Finished">Finished</option>

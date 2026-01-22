@@ -219,6 +219,13 @@ font-size: 16px !important;
     font-weight: 400;
     font-style: normal;
 }
+.status-select {
+    font-size: 18px !important;
+    font-weight: 600;
+    padding: 6px 10px !important;
+    border-radius: 4px !important;
+    border: 1px solid #ddd;
+}
 
 /* HUMINT button */
 .dropdown-btn {
