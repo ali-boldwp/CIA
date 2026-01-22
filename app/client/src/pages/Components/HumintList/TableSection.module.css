@@ -34,10 +34,11 @@
 .pageBtn {
     padding: 6px 14px;
     margin: 0 6px;
-    border-radius: 8px;
+    border-radius: 4px;
     border: 1px solid #d1d8ee;
     background: white;
     cursor: pointer;
+    font-size: 16px;
 }
 
 .pageBtn:disabled {
@@ -69,9 +70,10 @@ font-size: 16px;
 }
 
 .tabActive {
-    background: linear-gradient(90deg, #4f46e5 0%, #06b6d4 100%);
+    background: linear-gradient(90deg, #2563EB 0%, #4F46E5 100%);;
     color: #ffffff;
-    box-shadow: 0 6px 16px rgba(79, 70, 229, 0.4);
+    box-shadow: 0 6px 14px rgba(79, 70, 229, 0.3);
+    font-weight: 600;
 }
 
 .tabGhost {
@@ -87,7 +89,7 @@ font-size: 16px;
 }
 
 .title {
-    font-size: 16px;
+    font-size: 18px;
     font-weight: 700;
     color: #0f172a;
     margin-bottom: 10px;
@@ -105,7 +107,7 @@ font-size: 16px;
     width: 100%;
     border-collapse: collapse;
 
-font-size: 15px;
+font-size: 16px;
 }
 
 th,
@@ -124,7 +126,7 @@ th {
     color: #6b7280;
 
 
-font-size: 16px;
+font-size: 18px;
 }
 
 th:first-child,
@@ -272,6 +274,11 @@ font-size: 16px;
 
 .footerRight strong {
     color: #111827;
+}
+
+.span{
+    font-size: 16px !important;
+    font-weight: 600;
 }
 
 /* RESPONSIVE */
