@@ -181,4 +181,8 @@ font-size: 16px;
     align-items: center;
     color: #FFF;
 }
-
+.logout-btn{
+    color: #FFF;
+    font-size: 40px;
+    cursor: pointer;
+}

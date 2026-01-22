@@ -1,6 +1,7 @@
 import Notification from "../Notification";
 import { useState } from 'react'
 import "./Header.css"
+import { FiLogOut } from "react-icons/fi";
 import {Link, useLocation, useNavigate} from "react-router-dom";
 import { useGetUnseenCountQuery } from "../../../../services/notificationApi";
 
@@ -50,6 +51,7 @@ const Header = ({
                 </span>
                 <span className="text">Calendar</span>
             </button> }
+
         </>
     )
 

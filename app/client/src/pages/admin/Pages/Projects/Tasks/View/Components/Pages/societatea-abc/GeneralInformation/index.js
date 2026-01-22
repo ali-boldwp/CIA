@@ -6,8 +6,23 @@ import styles from "./styles.module.css";
 const Index = ({ formValues, setFormValues, onSaveSection }) => {
 
     /* =========================
-       SAFE STATE
+       DEFAULT TABLE STRUCTURE
     ========================== */
+    const tableColumns = {
+        shareholders: ["ACTIONAR", "CALITATE DETINUTA", "COTA-PARTE"],
+        management: ["NUME", "CALITATE", "DATA NUMIRE"],
+        board: ["NUME", "CALITATE", "DATA START", "DATA END"],
+        locations: ["TIP", "ADRESA", "ACT JURIDIC", "PERIOADA"]
+    };
+
+    const safeTable = (key, defaultRows = [[]]) => {
+        const table = formValues?.generalInfo?.[key];
+        return {
+            rows: table?.rows?.length > 0 ? table.rows : defaultRows,
+            columns: table?.columns?.length > 0 ? table.columns : tableColumns[key]
+        };
+    };
+
     const generalProfile =
         formValues?.generalInfo?.generalProfile?.length > 0
             ? formValues.generalInfo.generalProfile
@@ -23,34 +38,19 @@ const Index = ({ formValues, setFormValues, onSaveSection }) => {
                 ["Numar mediu angajati", ""]
             ];
 
-    const shareholders =
-        formValues?.generalInfo?.shareholders?.length > 0
-            ? formValues.generalInfo.shareholders
-            : [["", "", ""]];
-
-    const management =
-        formValues?.generalInfo?.management?.length > 0
-            ? formValues.generalInfo.management
-            : [["", "", ""]];
-
-    const board =
-        formValues?.generalInfo?.board?.length > 0
-            ? formValues.generalInfo.board
-            : [["", "", "", ""]];
-
-    const locations =
-        formValues?.generalInfo?.locations?.length > 0
-            ? formValues.generalInfo.locations
-            : [["", "", "", ""]];
+    const shareholders = safeTable("shareholders", [["", "", ""]]);
+    const management = safeTable("management", [["", "", ""]]);
+    const board = safeTable("board", [["", "", "", ""]]);
+    const locations = safeTable("locations", [["", "", "", ""]]);
 
     const images = formValues?.generalInfo?.images?.length > 0
         ? formValues.generalInfo.images
         : [null];
 
     /* =========================
-       SETTER
+       UPDATE SECTION
     ========================== */
-    const updateSection = (key, value) => {
+    const updateSection = (key, newRows, newColumns = null) => {
         setFormValues(prev => ({
             ...prev,
             generalInfo: {
@@ -61,7 +61,10 @@ const Index = ({ formValues, setFormValues, onSaveSection }) => {
                 board,
                 locations,
                 images,
-                [key]: value
+                [key]: {
+                    rows: newRows,
+                    columns: newColumns || prev.generalInfo[key]?.columns || tableColumns[key]
+                }
             }
         }));
     };
@@ -79,6 +82,71 @@ const Index = ({ formValues, setFormValues, onSaveSection }) => {
                 locations
             }
         }));
+    };
+
+    /* =========================
+       ADD ROW TO TABLE
+    ========================== */
+    const addRowToTable = (tableKey) => {
+        setFormValues(prev => {
+            const table = prev.generalInfo[tableKey] || { rows: [], columns: tableColumns[tableKey] };
+            const newRow = table.columns.map(() => "");
+            return {
+                ...prev,
+                generalInfo: {
+                    ...prev.generalInfo,
+                    [tableKey]: {
+                        rows: [...table.rows, newRow],
+                        columns: table.columns
+                    }
+                }
+            };
+        });
+    };
+
+    /* =========================
+       RENDER TABLE
+    ========================== */
+    const renderTable = (tableKey, tableData) => {
+        return (
+            <>
+                <table className={styles.editableTable}>
+                    <thead>
+                    <tr>
+                        {tableData.columns.map((col, i) => (
+                            <th key={i}>{col}</th>
+                        ))}
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {tableData.rows.map((row, i) => (
+                        <tr key={i}>
+                            {row.map((cell, j) => (
+                                <td key={j}>
+                                    <input
+                                        value={cell}
+                                        placeholder={`[${tableData.columns[j]}]`}
+                                        onChange={(e) => {
+                                            const updated = tableData.rows.map(r => [...r]);
+                                            updated[i][j] = e.target.value;
+                                            updateSection(tableKey, updated);
+                                        }}
+                                    />
+                                </td>
+                            ))}
+                        </tr>
+                    ))}
+                    </tbody>
+                </table>
+                <button
+                    className={styles.addRowButton}
+                    type="button"
+                    onClick={() => addRowToTable(tableKey)}
+                >
+                    + Add Row
+                </button>
+            </>
+        );
     };
 
     /* =========================
@@ -111,7 +179,7 @@ const Index = ({ formValues, setFormValues, onSaveSection }) => {
                                     placeholder="[text editabil]"
                                     value={row[1]}
                                     onChange={(e) => {
-                                        const updated = generalProfile.map(r => [...r]); // deep clone inner arrays
+                                        const updated = generalProfile.map(r => [...r]);
                                         updated[i][1] = e.target.value;
                                         updateSection("generalProfile", updated);
                                     }}
@@ -122,131 +190,18 @@ const Index = ({ formValues, setFormValues, onSaveSection }) => {
                     </tbody>
                 </table>
 
-                {/* ================= ACTIONARI ================= */}
+                {/* ================= TABLES ================= */}
                 <h3 className={styles.sectionTitle}>📊 Structura Actionariatului</h3>
-                <table className={styles.editableTable}>
-                    <thead>
-                    <tr>
-                        <th>ACTIONAR</th>
-                        <th>CALITATE DETINUTA</th>
-                        <th>COTA-PARTE</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {shareholders.map((row, i) => (
-                        <tr key={i}>
-                            {row.map((cell, j) => (
-                                <td key={j}>
-                                    <input
-                                        placeholder={["[nume actionar]", "Selectează", "[ % ]"][j]}
-                                        value={cell}
-                                        onChange={(e) => {
-                                            const updated = shareholders.map(r => [...r]);
-                                            updated[i][j] = e.target.value;
-                                            updateSection("shareholders", updated);
-                                        }}
-                                    />
-                                </td>
-                            ))}
-                        </tr>
-                    ))}
-                    </tbody>
-                </table>
+                {renderTable("shareholders", shareholders)}
 
-                {/* ================= MANAGEMENT ================= */}
-                <h3 className={styles.sectionTitle}>👥 Conducere / Administratori </h3>
-                <table className={styles.editableTable}>
-                    <thead>
-                    <tr>
-                        <th>NUME</th>
-                        <th>CALITATE</th>
-                        <th>DATA NUMIRE</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {management.map((row, i) => (
-                        <tr key={i}>
-                            {row.map((cell, j) => (
-                                <td key={j}>
-                                    <input
-                                        placeholder={["[nume]", "Selectează", "[ data ]"][j]}
-                                        value={cell}
-                                        onChange={(e) => {
-                                            const updated = management.map(r => [...r]);
-                                            updated[i][j] = e.target.value;
-                                            updateSection("management", updated);
-                                        }}
-                                    />
-                                </td>
-                            ))}
-                        </tr>
-                    ))}
-                    </tbody>
-                </table>
+                <h3 className={styles.sectionTitle}>👥 Conducere / Administratori</h3>
+                {renderTable("management", management)}
 
-                {/* ================= BOARD ================= */}
                 <h3 className={styles.sectionTitle}>🏛️ Consiliu De Administratie</h3>
-                <table className={styles.editableTable}>
-                    <thead>
-                    <tr>
-                        <th>NUME</th>
-                        <th>CALITATE</th>
-                        <th>DATA START</th>
-                        <th>DATA END</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {board.map((row, i) => (
-                        <tr key={i}>
-                            {row.map((cell, j) => (
-                                <td key={j}>
-                                    <input
-                                        placeholder={["[nume]", "Selectează", "[ data ]", "[ data ]"][j]}
-                                        value={cell}
-                                        onChange={(e) => {
-                                            const updated = board.map(r => [...r]);
-                                            updated[i][j] = e.target.value;
-                                            updateSection("board", updated);
-                                        }}
-                                    />
-                                </td>
-                            ))}
-                        </tr>
-                    ))}
-                    </tbody>
-                </table>
+                {renderTable("board", board)}
 
-                {/* ================= LOCATIONS ================= */}
                 <h3 className={styles.sectionTitle}>📍 Locatii / Puncte De Lucru</h3>
-                <table className={styles.editableTable}>
-                    <thead>
-                    <tr>
-                        <th>TIP</th>
-                        <th>ADRESA</th>
-                        <th>ACT JURIDIC</th>
-                        <th>PERIOADA</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {locations.map((row, i) => (
-                        <tr key={i}>
-                            {row.map((cell, j) => (
-                                <td key={j}>
-                                    <input
-                                        placeholder={["Punct de lucru", "[text editabil]", "[text editabil]", "[perioada]"][j]}
-                                        value={cell}
-                                        onChange={(e) => {
-                                            const updated = locations.map(r => [...r]);
-                                            updated[i][j] = e.target.value;
-                                            updateSection("locations", updated);
-                                        }}
-                                    />
-                                </td>
-                            ))}
-                        </tr>
-                    ))}
-                    </tbody>
-                </table>
+                {renderTable("locations", locations)}
 
                 {/* ================= IMAGES ================= */}
                 <div className={styles.imagesSection}>
