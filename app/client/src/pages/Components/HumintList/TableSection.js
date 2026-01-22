@@ -37,17 +37,40 @@ const TableSection = ({
                           totalCount,
                       }) => {
     /** 🔍 SEARCH INPUT */
-
+    const [activeTab, setActiveTab] = useState("ALL");
 
     /** 📄 PAGINATION */
     const [page, setPage] = useState(1);
     const [limit, setLimit] = useState(10);
 
+    const filteredRequests = useMemo(() => {
+        switch (activeTab) {
+            case "APPROVED":
+                return requests.filter((r) => r.status === "Approved");
+
+            case "CLARIFICATION":
+                return requests.filter((r) => r.status === "Clarification");
+
+            case "REQUESTED":
+                return requests.filter((r) => r.status === "Requested");
+
+            default:
+                return requests; // ALL
+        }
+    }, [requests, activeTab]);
+
+    React.useEffect(() => {
+        setPage(1);
+    }, [activeTab]);
+
     /** PAGINATION LOGIC */
-    const totalPages = Math.ceil(requests.length / limit);
+    const totalPages = Math.ceil(filteredRequests.length / limit);
 
+    const paginated = filteredRequests.slice(
+        (page - 1) * limit,
+        page * limit
+    );
 
-    const paginated = requests.slice((page - 1) * limit, page * limit);
 
 
     /** SELECT ALL */
@@ -60,7 +83,11 @@ const TableSection = ({
         onToggleSelectAll(visibleIds, e.target.checked);
     };
 
+
+
+
     const pendingCount = requests.filter((r) => r.status === "Requested").length;
+    const approvedCount = requests.filter((r) => r.status === "Approved").length;
     const clarCount = requests.filter((r) => r.status === "Clarification").length;
 
     return (
@@ -72,17 +99,44 @@ const TableSection = ({
             {/* TABS */}
             <div className={styles.statsCard}>
                 <div className={styles.tabsRow}>
-                    <button className={`${styles.tab} ${styles.tabGhost}`}>
+                    <button
+                        onClick={() => setActiveTab("ALL")}
+                        className={`${styles.tab} ${
+                            activeTab === "ALL" ? styles.tabActive : styles.tabGhost
+                        }`}
+                    >
                         Toate: {totalCount}
                     </button>
-                    <button className={`${styles.tab} ${styles.tabActive}`}>
-                        De aprobat: {pendingCount}
+
+                    <button
+                        onClick={() => setActiveTab("APPROVED")}
+                        className={`${styles.tab} ${
+                            activeTab === "APPROVED" ? styles.tabActive : styles.tabGhost
+                        }`}
+                    >
+                        De aprobat: {approvedCount}
                     </button>
-                    <button className={`${styles.tab} ${styles.tabGhost}`}>
+
+                    <button
+                        onClick={() => setActiveTab("CLARIFICATION")}
+                        className={`${styles.tab} ${
+                            activeTab === "CLARIFICATION" ? styles.tabActive : styles.tabGhost
+                        }`}
+                    >
                         Clarificări: {clarCount}
+                    </button>
+
+                    <button
+                        onClick={() => setActiveTab("REQUESTED")}
+                        className={`${styles.tab} ${
+                            activeTab === "REQUESTED" ? styles.tabActive : styles.tabGhost
+                        }`}
+                    >
+                        Solicitat: {pendingCount}
                     </button>
                 </div>
             </div>
+
 
             {/* TABLE */}
             <div className={styles.tableCard}>
