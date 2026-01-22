@@ -140,7 +140,7 @@ const Team = () => {
                     <span>Vezi lista angajați</span>
                 </button>
 
-                <button className={`${styles.pillBtn} ${styles.listBtn}`}
+                <button className={` ${styles.AddAnalyst} `}
                         onClick={() => setOpenAddModal(true)}>
                     + Adaugă analist
                 </button>

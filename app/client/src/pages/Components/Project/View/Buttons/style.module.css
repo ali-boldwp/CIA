@@ -40,7 +40,7 @@
     border-radius: 4px;   /* 👈 rectangle with soft corners (INPUT FIELD STYLE) */
     padding: 14px 28px;    /* 👈 bigger height & width */
     min-width: 170px;      /* 👈 width increased */
-    font-size: 15px;       /* 👈 bigger text */
+    font-size: 16px;       /* 👈 bigger text */
     font-weight: 600;
     cursor: pointer;
     color: #2563EB;

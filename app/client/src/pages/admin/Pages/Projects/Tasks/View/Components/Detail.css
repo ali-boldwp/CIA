@@ -7,7 +7,9 @@
     background: #f8fafc;
     border-radius: 4px;
 }
-
+.start{
+    background: linear-gradient(90deg, #2563EB 0%, #4F46E5 100%) !important;
+}
 .details-left {
     flex: 1;
 }
