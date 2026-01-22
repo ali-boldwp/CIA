@@ -665,10 +665,11 @@ const Index = () => {
                                 <div
                                     className={`${styles.gridItem} ${styles.span2Left}`}
                                 >
+
                                     <label className={styles.label}>
-                                        Subiect proiect
-                                        <input
-                                            className={`${styles.input} ${errors.projectSubject ? styles.inputError : ''}`}
+                                        Denumire Proiect (Nume Companie/Persoana/Tinta )
+                                        <textarea
+                                            className={`${styles.textarea} ${styles.textareaTall}`}
                                             value={projectSubject}
                                             onChange={(e) =>
                                                 setProjectSubject(e.target.value)
