@@ -1,14 +1,17 @@
 import "./Header.css";
 import {useState} from "react";
+import { FiLogOut } from "react-icons/fi";
+import { logout } from "../../../features/auth/authSlice";
+import { useSelector, useDispatch } from "react-redux";
 import {Link, useLocation, useNavigate, useParams} from "react-router-dom";
-import {useSelector} from "react-redux";
-
+import Cookies from "js-cookie";
 
 const Header = ({ children, search, logo, title, back = false }) => {
 
     const {keyword} = useParams();
 
     const navigate = useNavigate();
+    const dispatch = useDispatch();
     const user = useSelector((state) => state.auth.user);
 
     const location = useLocation();
@@ -20,6 +23,16 @@ const Header = ({ children, search, logo, title, back = false }) => {
         if (e.key === "Enter" && input.trim() !== "") {
             navigate(`/project/search/${input.trim()}`);
         }
+    };
+
+    const handleLogout = () => {
+        dispatch(logout());
+
+        localStorage.removeItem("user");
+        localStorage.removeItem("token");
+        Cookies.remove("accessToken");
+
+        navigate("/login");
     };
 
     return (
@@ -95,7 +108,7 @@ const Header = ({ children, search, logo, title, back = false }) => {
                 </Link>
             )}
 
-
+            <FiLogOut className="logout-btn"  title="Logout" onClick={handleLogout} />
         </header>
     );
 };
