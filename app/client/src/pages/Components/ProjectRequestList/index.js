@@ -1,8 +1,9 @@
 import "./style.css";
-import { useState, useMemo } from "react";
+import React, { useState, useMemo } from "react";
 import { Link } from "react-router-dom";
 import ProjectRow from "./ProjectRow";
 import { useGetProjectRequestsQuery} from "../../../services/projectApi";
+import styles from "../HumintList/TableSection.module.css";
 
 const ProjectRequestList = () => {
     const { data, isLoading } = useGetProjectRequestsQuery();
@@ -132,25 +133,30 @@ const ProjectRequestList = () => {
             {/* LISTA PAGINATĂ */}
             <ProjectRow projects={paginatedData} safe={safeDate} />
             {/* PAGINATION CONTROLS */}
-            <div className="pagination paginationProjectList" style={{ marginTop: "20px" }}>
-                <button
-                    disabled={page === 1}
-                    onClick={() => setPage((prev) => prev - 1)}
-                >
-                    ← Precedent
-                </button>
+            <div className={`footerCard paginationProjectList`}>
 
-                <span style={{ margin: "0 10px" }}>
-                    Pagina <strong>{page}</strong> din{" "}
-                    <strong>{totalPages}</strong>
-                </span>
 
-                <button
-                    disabled={page === totalPages}
-                    onClick={() => setPage((prev) => prev + 1)}
-                >
-                    Următor →
-                </button>
+            <div className = "footerRight">
+                    <button
+                        disabled={page === 1}
+                        onClick={() => setPage(page - 1)}
+                        className = "pageBtn"
+                    >
+                        ← Precedent
+                    </button>
+
+                    <span className= "span" >
+                        Pagina <strong>{page}</strong> din <strong>{totalPages}</strong>
+                    </span>
+
+                    <button
+                        disabled={page === totalPages}
+                        onClick={() => setPage(page + 1)}
+                        className= "pageBtn"
+                    >
+                        Următor →
+                    </button>
+                </div>
             </div>
         </div>
     );

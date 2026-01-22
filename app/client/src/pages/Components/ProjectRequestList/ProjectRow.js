@@ -37,12 +37,14 @@ const ProjectRow = ({ projects , safe }) => {
 
                             <div className="grid-item">
                                 <span className="label">Se dorește:</span>
-                                <div className="tag-row">
+
+                                <ul className="bullet-list">
                                     {p.servicesRequested.map((s, i) => (
-                                        <span key={i} className="tag">{s}</span>
+                                        <li key={i}>{s}</li>
                                     ))}
-                                </div>
+                                </ul>
                             </div>
+
 
                             <div className="grid-item">
                                 <span className="label">Prioritate</span>
@@ -60,8 +62,15 @@ const ProjectRow = ({ projects , safe }) => {
 
                             <div className="grid-item">
                                 <span className="label">Livrabil</span>
-                                <span className="value prop">Limba: {p.deliverableLanguage}</span>
+
+                                <ul className="bullet-list">
+                                    {p.deliverableLanguage?.map((lang, index) => (
+                                        <li key={index}>{lang}</li>
+                                    ))}
+                                </ul>
                             </div>
+
+
 
                         </div>
 

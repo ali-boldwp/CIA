@@ -36,14 +36,18 @@
     margin: 0 6px;
     border-radius: 4px;
     border: 1px solid #d1d8ee;
-    background: white;
+    background: linear-gradient(90deg, #2563EB 0%, #4F46E5 100%);
     cursor: pointer;
     font-size: 16px;
+    font-weight: 600;
+    color: #ffffff;
 }
 
 .pageBtn:disabled {
     opacity: 0.4;
     cursor: not-allowed;
+    background: white;
+    color: #111827;
 }
 
 /* CARD 1: STATS / TABS */
