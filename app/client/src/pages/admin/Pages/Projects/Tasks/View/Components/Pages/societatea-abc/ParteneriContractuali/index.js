@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect ,useRef} from 'react';
 import styles from './styles.module.css';
 import TitleSection from "./TitleSection";
 import TextAreaSection from './TextAreaSection';
@@ -10,37 +10,80 @@ const Index = ({ formValues, setFormValues, onSaveSection }) => {
     /* =========================
        LOCAL STATE
     ========================== */
+    const isInitialized = useRef(false);
+
+
     const [title, setTitle] = useState("");
     const [introText, setIntroText] = useState("");
-    const [columns] = useState(["Denumire", "Descriere"]); // fixed columns
-    const [rows, setRows] = useState([["", ""]]); // 2D array
+    const [contractPartnertable, setContractPartnertable] = useState({
+        columns: ["Denumire", "Descriere"],
+        rows: [["", ""]]
+    });
+
     const [images, setImages] = useState([null]);
 
     /* =========================
        INIT FROM FORM VALUES
     ========================== */
     useEffect(() => {
+        if (isInitialized.current) return;
+
         setTitle(formValues?.mainSection?.title || "");
-        setIntroText(formValues?.mainSection?.introText || "In urma verificării surselor disponibile...");
-        setRows(
-            formValues?.mainSection?.rows?.length > 0
-                ? formValues.mainSection.rows
-                : [["", ""]]
+        setIntroText(
+            formValues?.mainSection?.introText ||
+            "In urma verificării surselor disponibile..."
         );
+
+        const rawTable = formValues?.mainSection?.table;
+
+        if (rawTable) {
+            setContractPartnertable({
+                columns: Array.isArray(rawTable.columns)
+                    ? rawTable.columns
+                    : ["Denumire", "Descriere"],
+                rows: Array.isArray(rawTable.rows)
+                    ? rawTable.rows.map(r => [r[0] ?? "", r[1] ?? ""])
+                    : [["", ""]]
+            });
+        }
+
         setImages(formValues?.mainSection?.images || [null]);
+
+        isInitialized.current = true;
     }, [formValues]);
+
+
+
 
     /* =========================
        TABLE HANDLERS (2D array)
     ========================== */
-    const addRow = () => setRows([...rows, ["", ""]]);
-    const deleteRow = (index) => setRows(rows.filter((_, i) => i !== index));
-    const handleCellChange = (rowIndex, colIndex, value) => {
-        const updated = rows.map((row, i) =>
-            i === rowIndex ? row.map((cell, j) => (j === colIndex ? value : cell)) : row
-        );
-        setRows(updated);
+    const addRow = () => {
+        setContractPartnertable(prev => ({
+            ...prev,
+            rows: [...prev.rows, ["", ""]]
+        }));
     };
+
+    const deleteRow = (index) => {
+        setContractPartnertable(prev => ({
+            ...prev,
+            rows: prev.rows.filter((_, i) => i !== index)
+        }));
+    };
+
+    const handleCellChange = (rowIndex, colIndex, value) => {
+        setContractPartnertable(prev => ({
+            ...prev,
+            rows: prev.rows.map((row, i) =>
+                i === rowIndex
+                    ? row.map((cell, j) => (j === colIndex ? value : cell))
+                    : row
+            )
+        }));
+    };
+
+
 
     /* =========================
        IMAGE HANDLER
@@ -50,27 +93,30 @@ const Index = ({ formValues, setFormValues, onSaveSection }) => {
     /* =========================
        SAVE HANDLER
     ========================== */
-    const handleSave = () => {
+    const handleSave = async () => {
         const payload = {
             data: {
                 mainSection: {
                     title,
                     introText,
-                    columns,
-                    rows,
+                    table: contractPartnertable,
                     images
                 }
             }
         };
 
         console.log("FINAL PAYLOAD FOR API:", payload);
-        onSaveSection && onSaveSection(payload);
 
+        // 1️⃣ Call save API
+        await onSaveSection(payload);
+
+        // 2️⃣ Update parent state only if necessary
         setFormValues(prev => ({
             ...prev,
             mainSection: payload.data.mainSection
         }));
     };
+
 
     /* =========================
        UI
@@ -86,15 +132,14 @@ const Index = ({ formValues, setFormValues, onSaveSection }) => {
                     onClear={() => setIntroText("")}
                 />
 
-                <h3 className={styles.sectionTitle}>📊 Lista partenerilor contractuali</h3>
                 <TableSection
-                    columns={columns}
-                    rows={rows}
-                    setRows={setRows}
+                    columns={contractPartnertable.columns}
+                    rows={contractPartnertable.rows}
                     addRow={addRow}
                     deleteRow={deleteRow}
                     handleCellChange={handleCellChange}
                 />
+
 
                 <div className={styles.sectionWrapper}>
                     <ImageSection
