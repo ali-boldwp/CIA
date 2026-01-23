@@ -14,8 +14,9 @@ import TableRecordsPopup from "./Popup/TableRecords";
 
 
 import styles from "./style.module.css";
-import {useState , useEffect} from "react";
+import {useState , useEffect, useRef} from "react";
 import Editor from "./Editor";
+import { useUpdateCategoryMutation } from "../../../../../services/categoryApi";
 
 const View = ({ data, categoryId, onChapterCreated }) => {
 
@@ -50,10 +51,41 @@ const View = ({ data, categoryId, onChapterCreated }) => {
     // For Set Data According to drag and drop
 
     const [localData, setLocalData] = useState(null);
+    const [updateCategory] = useUpdateCategoryMutation();
+    const hasInitializedEditorData = useRef(false);
+    const saveTimeoutRef = useRef(null);
 
     useEffect(() => {
         setLocalData(data);
     }, [data]);
+
+    const editorData = localData?.editorData;
+
+    useEffect(() => {
+        if (!categoryId || !localData) return;
+
+        if (!hasInitializedEditorData.current) {
+            hasInitializedEditorData.current = true;
+            return;
+        }
+
+        if (saveTimeoutRef.current) {
+            clearTimeout(saveTimeoutRef.current);
+        }
+
+        saveTimeoutRef.current = setTimeout(() => {
+            updateCategory({
+                id: categoryId,
+                editorData: editorData ?? null,
+            });
+        }, 600);
+
+        return () => {
+            if (saveTimeoutRef.current) {
+                clearTimeout(saveTimeoutRef.current);
+            }
+        };
+    }, [categoryId, editorData, localData, updateCategory]);
 
     if (!localData) return null;
 
@@ -168,12 +200,12 @@ const View = ({ data, categoryId, onChapterCreated }) => {
                     <div className={ styles.contentTemplate }>
 
                         <Editor
-                            value={safeParseEditorData(localData?.content)}
+                            value={safeParseEditorData(localData?.editorData || localData?.content)}
                             onChange={(output) => {
                                 // Option A: keep it in local state until user hits "Save"
                                 setLocalData((prev) => ({
                                     ...prev,
-                                    content: JSON.stringify(output), // or store object directly if your backend supports it
+                                    editorData: output,
                                 }));
                             }}
                         />
