@@ -52,6 +52,7 @@ const View = ({ data, categoryId, onChapterCreated }) => {
 
     const [localData, setLocalData] = useState(null);
     const [updateCategory] = useUpdateCategoryMutation();
+    const lastSavedEditorData = useRef(null);
 
     useEffect(() => {
         setLocalData(data);
@@ -60,6 +61,7 @@ const View = ({ data, categoryId, onChapterCreated }) => {
 
     const editorData = localData?.editorData;
     const hasEditorData = editorData !== undefined;
+    const hasChanges = hasEditorData && editorData !== lastSavedEditorData.current;
 
     if (!localData) return null;
 
@@ -86,6 +88,7 @@ const View = ({ data, categoryId, onChapterCreated }) => {
             id: categoryId,
             editorData: editorData ?? null,
         });
+        lastSavedEditorData.current = editorData;
     };
 
     return (
@@ -184,7 +187,7 @@ const View = ({ data, categoryId, onChapterCreated }) => {
                             <button
                                 type="button"
                                 className={styles.saveButton}
-                                disabled={!hasEditorData}
+                                disabled={!hasChanges}
                                 onClick={handleSaveEditorData}
                             >
                                 Save
