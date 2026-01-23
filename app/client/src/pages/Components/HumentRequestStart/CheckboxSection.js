@@ -1,4 +1,3 @@
-// /home/ubaid/workspace/app/client/src/pages/Humint/CheckboxSection.js
 
 import React, { useState } from "react";
 import styles from "./CheckboxSection.module.css";
