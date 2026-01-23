@@ -52,8 +52,6 @@ const View = ({ data, categoryId, onChapterCreated }) => {
 
     const [localData, setLocalData] = useState(null);
     const [updateCategory] = useUpdateCategoryMutation();
-    const saveTimeoutRef = useRef(null);
-    const lastSavedEditorData = useRef(null);
 
     useEffect(() => {
         setLocalData(data);
@@ -61,31 +59,6 @@ const View = ({ data, categoryId, onChapterCreated }) => {
     }, [data]);
 
     const editorData = localData?.editorData;
-
-    useEffect(() => {
-        if (!categoryId) return;
-
-        if (saveTimeoutRef.current) {
-            clearTimeout(saveTimeoutRef.current);
-        }
-
-        if (editorData === undefined) return;
-        if (lastSavedEditorData.current === editorData) return;
-
-        saveTimeoutRef.current = setTimeout(() => {
-            updateCategory({
-                id: categoryId,
-                editorData: editorData ?? null,
-            });
-            lastSavedEditorData.current = editorData;
-        }, 600);
-
-        return () => {
-            if (saveTimeoutRef.current) {
-                clearTimeout(saveTimeoutRef.current);
-            }
-        };
-    }, [categoryId, editorData, updateCategory]);
 
     if (!localData) return null;
 
@@ -105,6 +78,14 @@ const View = ({ data, categoryId, onChapterCreated }) => {
     }
 
 
+
+    const handleSaveEditorData = async () => {
+        if (!categoryId) return;
+        await updateCategory({
+            id: categoryId,
+            editorData: editorData ?? null,
+        });
+    };
 
     return (
         <>
@@ -198,6 +179,15 @@ const View = ({ data, categoryId, onChapterCreated }) => {
 
 
                     <div className={ styles.contentTemplate }>
+                        <div className={styles.editorActions}>
+                            <button
+                                type="button"
+                                className={styles.saveButton}
+                                onClick={handleSaveEditorData}
+                            >
+                                Save
+                            </button>
+                        </div>
 
                         <Editor
                             value={safeParseEditorData(localData?.editorData || localData?.content)}
