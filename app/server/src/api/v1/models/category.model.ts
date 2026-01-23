@@ -10,6 +10,7 @@ export interface ICategory extends Document {
     chapters:Types.ObjectId[];
     title: string;
     content: string;
+    editorData?: Record<string, unknown> | string;
     index:number;
 }
 
@@ -40,6 +41,10 @@ const categorySchema = new Schema<ICategory>(
         content : {
             type : String,
             required : false,
+        },
+        editorData: {
+            type: Schema.Types.Mixed,
+            required: false,
         },
         status : {
             type : String,
