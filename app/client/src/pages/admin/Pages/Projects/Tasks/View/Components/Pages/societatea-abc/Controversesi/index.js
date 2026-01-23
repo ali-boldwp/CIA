@@ -1,7 +1,7 @@
 import React from "react";
 import styles from "./styles.module.css";
 import ImagePlaceholder from "./ImagePlaceholder";
-import NotesPlaceholder from "./NotesPlaceholder";
+// import NotesPlaceholder from "./NotesPlaceholder";
 
 const ControversyIndex = ({ formValues, setFormValues, onSaveSection }) => {
     // 1️⃣ Initialize subpoints, notes, images
@@ -106,7 +106,7 @@ const ControversyIndex = ({ formValues, setFormValues, onSaveSection }) => {
 
                 {/* NOTES + IMAGES */}
                 <div className={styles.dualBox}>
-                    <NotesPlaceholder notes={notes} setNotes={setNotes} />
+                    {/*<NotesPlaceholder notes={notes} setNotes={setNotes} />*/}
                     <ImagePlaceholder images={images} setImages={setImagesState} />
                 </div>
 
