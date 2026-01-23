@@ -59,7 +59,7 @@ font-size: 16px;
     border: none;
     padding: 12px 24px;
     /* top: #6D28D9, bottom: #14B8A6 */
-    background: #2563eb;
+    background: linear-gradient(90deg, #2563EB 0%, #4F46E5 100%);
     color: #ffffff;
 }
 
@@ -83,23 +83,24 @@ font-size: 16px;
 
 
 .input {
-    border-radius: 4px;
+    border-radius: 4px !important;
     border: 1px solid #e5e7eb;
-    padding: 12px 14px;
+    padding: 12px 14px !important;
 
 
-font-size: 16px;
+font-size: 16px !important;
     outline: none;
     background: #f9fafb;
 }
 
 .search-input {
-    width: 100%;
+    width: 100% !important;
     border: none;
-    border-radius: 0;
+    border-radius: 0 !important;
     border-bottom: 1px solid transparent; /* default: hidden */
     background: transparent;              /* optional */
-    outline: none;                        /* default browser outline off */
+    outline: none;
+    font-size:18px !important;/* default browser outline off */
 }
 
 /* sirf click / focus hone pe line dikhayen */
@@ -191,8 +192,12 @@ font-size: 16px;
 }
 
 .rightCreateGroup button.pill {
-    background: #2563eb;
+    background: linear-gradient(90deg, #2563EB 0%, #4F46E5 100%);
     color: #FFF;
+    font-size: 16px !important;
+    border-radius: 4px !important;
+    padding: 8px 2px !important;
+    font-weight:600 !important;
 }
 
 .pill-active {
@@ -222,17 +227,20 @@ font-size: 15px;
     min-width: 4rem;
     min-height: 1.4rem;
     max-height: 1.4rem;
-    font-size: 10px;
+    font-size: 16px !important;
     padding-inline: 12px;
     background: #EEF2FF;
+    border-radius: 4px;
+
 }
 
 .pill-active {
-    background: #2563eb;          /* blue */
+    background: linear-gradient(90deg, #2563EB 0%, #4F46E5 100%) ;          /* blue */
     color: #ffffff;               /* white text */
     border-color: #2563eb;
     box-shadow: 0 2px 6px rgba(37, 99, 235, 0.35);
     font-weight: 600;
+    border-radius: 4px;
 }
 .pill:hover {
     background: #e0e7ff;
@@ -270,19 +278,20 @@ font-size: 15px;
     justify-content: space-between;
     align-items: baseline;
     padding: 0 12px;
+    font-size: 18px !important;
 
 }
 
 .label-muted {
 
-font-size: 15px;
+font-size: 18px  !important;
     font-weight: 700;
     color: #6B7280;
 }
 
 .label-small {
 
-font-size: 15px;
+font-size: 16px !important;
     color: #9ca3af;
 }
 
@@ -339,7 +348,7 @@ font-size: 15px;
 
 .conversation-name {
 
-font-size: 15px;
+font-size: 18px !important;
     font-weight: 500;
     color: #111827;
     display: flex;
@@ -358,7 +367,7 @@ font-size: 15px;
 
 .conversation-sub {
 
-font-size: 15px;
+font-size: 16px !important;
     color: #9ca3af;
 }
 
@@ -457,6 +466,7 @@ font-size: 16px;
 .chat-search-wrapper {
     max-width: 230px;
     display: flex;
+    font-size: 18px !important;
 }
 
 .chat-search {
@@ -556,7 +566,7 @@ font-size: 15px;
 
 .composer-send {
 
-font-size: 15px;
+font-size: 16px !important;
 }
 
 /* right sidebar */
@@ -567,14 +577,14 @@ font-size: 15px;
 
 .section-title {
 
-font-size: 15px;
+font-size: 18px !important;
     font-weight: 600;
     margin-bottom: 4px;
     color: gray;
 }
 
 .section-subtitle {
-    font-size: 10px;
+    font-size: 16px !important;
     font-weight: 600;
     margin-bottom: 6px;
     color: gray;
@@ -692,6 +702,7 @@ font-size: 16px;
     padding: 12px;
     background: #F8FAFF;
     border-bottom: 1px solid #e5e7eb;
+
 }
 
 .sidebar-right-section {
@@ -714,6 +725,7 @@ font-size: 16px;
     margin-left: auto;
     text-align: right;
     border-top-right-radius: 0;
+    font-size: 18px !important;
 }
 
 .chat-bubble.other {
@@ -793,20 +805,23 @@ font-size: 15px;
     gap: 12px;
     width: 100%;
     padding-bottom: 0;
+    margin-top: 30px !important;
 }
 
 .sidebar-right-footer > button {
     width: 100%;
-    background: #64748B;
+    background: linear-gradient(90deg, #2563EB 0%, #4F46E5 100%);
     color: #FFF;
     display: flex;
     align-items: center;
     justify-content: center;
 
 
-font-size: 16px;
-    font-weight: 400;
-    padding: 12px 14px;
+font-size: 16px !important;
+    font-weight: 600;
+    padding: 6px 14px;
+
+;
 }
 
 .sidebar-right-footer > button.remove {
@@ -832,6 +847,7 @@ font-size: 16px;
 .flex-start {
     text-align: end;
     margin-top: 5px;
+    font-size: 16px !important;
 
 }
 
