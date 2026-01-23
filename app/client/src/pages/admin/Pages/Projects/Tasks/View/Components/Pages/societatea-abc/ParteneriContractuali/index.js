@@ -1,117 +1,120 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import styles from './styles.module.css';
 import TitleSection from "./TitleSection";
 import TextAreaSection from './TextAreaSection';
 import TableSection from './TableSection';
 import ImageSection from './ImageSection';
 
-const Index = ({ formValues, setFormValues }) => {
+const Index = ({ formValues, setFormValues, onSaveSection }) => {
 
-    // 1️⃣ Safe values from formValues
-    const title = formValues?.mainSection?.title || "";
-    const introText = formValues?.mainSection?.introText || "In urma verificării surselor disponibile si a consultarilor cu persoane avizate, a fost conturata o lista a partenerilor contractuali ai Societatii [denumire societate], incluzand companii precum:";
-    const tableRows = formValues?.mainSection?.tableRows || [{ denumire: "", descriere: "" }];
-    const images = formValues?.mainSection?.images || [null];
+    /* =========================
+       LOCAL STATE
+    ========================== */
+    const [title, setTitle] = useState("");
+    const [introText, setIntroText] = useState("");
+    const [columns] = useState(["Denumire", "Descriere"]); // fixed columns
+    const [rows, setRows] = useState([["", ""]]); // 2D array
+    const [images, setImages] = useState([null]);
 
-    // 2️⃣ Setters that update formValues directly
-    const setTitle = (text) => {
+    /* =========================
+       INIT FROM FORM VALUES
+    ========================== */
+    useEffect(() => {
+        setTitle(formValues?.mainSection?.title || "");
+        setIntroText(formValues?.mainSection?.introText || "In urma verificării surselor disponibile...");
+        setRows(
+            formValues?.mainSection?.rows?.length > 0
+                ? formValues.mainSection.rows
+                : [["", ""]]
+        );
+        setImages(formValues?.mainSection?.images || [null]);
+    }, [formValues]);
+
+    /* =========================
+       TABLE HANDLERS (2D array)
+    ========================== */
+    const addRow = () => setRows([...rows, ["", ""]]);
+    const deleteRow = (index) => setRows(rows.filter((_, i) => i !== index));
+    const handleCellChange = (rowIndex, colIndex, value) => {
+        const updated = rows.map((row, i) =>
+            i === rowIndex ? row.map((cell, j) => (j === colIndex ? value : cell)) : row
+        );
+        setRows(updated);
+    };
+
+    /* =========================
+       IMAGE HANDLER
+    ========================== */
+    const handleImagesChange = (imgs) => setImages(imgs);
+
+    /* =========================
+       SAVE HANDLER
+    ========================== */
+    const handleSave = () => {
+        const payload = {
+            data: {
+                mainSection: {
+                    title,
+                    introText,
+                    columns,
+                    rows,
+                    images
+                }
+            }
+        };
+
+        console.log("FINAL PAYLOAD FOR API:", payload);
+        onSaveSection && onSaveSection(payload);
+
         setFormValues(prev => ({
             ...prev,
-            mainSection: {
-                ...prev.mainSection,
-                title: text,
-                introText,
-                tableRows,
-                images
-            }
+            mainSection: payload.data.mainSection
         }));
     };
 
-    const setIntroText = (text) => {
-        setFormValues(prev => ({
-            ...prev,
-            mainSection: {
-                ...prev.mainSection,
-                title,
-                introText: text,
-                tableRows,
-                images
-            }
-        }));
-    };
-
-    const setTableRows = (rows) => {
-        setFormValues(prev => ({
-            ...prev,
-            mainSection: {
-                ...prev.mainSection,
-                title,
-                introText,
-                tableRows: rows,
-                images
-            }
-        }));
-    };
-
-    const setImages = (imgs) => {
-        setFormValues(prev => ({
-            ...prev,
-            mainSection: {
-                ...prev.mainSection,
-                title,
-                introText,
-                tableRows,
-                images: imgs
-            }
-        }));
-    };
-
+    /* =========================
+       UI
+    ========================== */
     return (
         <div className={styles.container}>
             <div className={styles.mainCard}>
 
-                {/* Title Section */}
                 <TitleSection value={title} onChange={setTitle} />
-
-                {/* TextArea Section */}
                 <TextAreaSection
                     value={introText}
                     onChange={setIntroText}
                     onClear={() => setIntroText("")}
                 />
 
-                {/* Table Section */}
-                <div className={styles.sectionWrapper}>
-                    <TableSection
-                        rows={tableRows}
-                        setRows={setTableRows}
-                    />
-                </div>
+                <h3 className={styles.sectionTitle}>📊 Lista partenerilor contractuali</h3>
+                <TableSection
+                    columns={columns}
+                    rows={rows}
+                    setRows={setRows}
+                    addRow={addRow}
+                    deleteRow={deleteRow}
+                    handleCellChange={handleCellChange}
+                />
 
-                {/* Image Section */}
                 <div className={styles.sectionWrapper}>
                     <ImageSection
                         images={images}
-                        setImages={setImages}
+                        setImages={handleImagesChange}
                     />
                 </div>
 
-                {/* Navigation Buttons */}
                 <div className={styles.navigation}>
-                    <div className={styles.navButtons}>
-                        <button className={styles.saveButton}>
-                            <span className={styles.saveIcon}>💾</span>
-                            Salveaza sectiunea
-                        </button>
-                        <button className={styles.middleButton}>
-                            ❌  Exclude acest capitol
-                            <span className={styles.arrowIcon}>→</span>
-                        </button>
-                        <button className={styles.nextButton}>
-                            ➡️  Mergi la I.3. „Date fianciare”
-                            <span className={styles.arrowIcon}>→</span>
-                        </button>
-                    </div>
+                    <button className={styles.saveButton} onClick={handleSave}>
+                        💾 Salvează secțiunea
+                    </button>
+                    <button className={styles.middleButton}>
+                        ❌ Exclude acest capitol
+                        <span className={styles.arrowIcon}>→</span>
+                    </button>
+                    <button className={styles.nextButton}>
+                        ➡️ Mergi la I.3. „Date financiare”
+                        <span className={styles.arrowIcon}>→</span>
+                    </button>
                 </div>
 
             </div>
