@@ -1,115 +1,82 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import styles from "./styles.module.css";
 import ImagePlaceholder from "./ImagePlaceholder";
 
 const Index = ({ formValues, setFormValues, onSaveSection }) => {
 
-    /* =========================
-       CONSTANTS
-    ========================== */
     const chronologyColumns = ["DATA", "MENTIUNI"];
 
     /* =========================
-       SAFE STATE
+       LOCAL STATE
     ========================== */
-    const historyText = formValues?.istoric?.historyText || "";
+    const [historyText, setHistoryText] = useState("");
+    const [chronologyRows, setChronologyRows] = useState([]);
+    const [images, setImages] = useState([]);
 
-    const chronology =
-        formValues?.istoric?.chronology?.rows?.length > 0
-            ? formValues.istoric.chronology
-            : {
-                columns: chronologyColumns,
-                rows: [
+    /* =========================
+       INIT FROM FORM VALUES
+    ========================== */
+    useEffect(() => {
+        setHistoryText(formValues?.istoric?.historyText || "");
+
+        const rows =
+            formValues?.istoric?.chronology?.rows?.length > 0
+                ? formValues.istoric.chronology.rows.map(row =>
+                    Array.isArray(row) ? { DATA: row[0], MENTIUNI: row[1] } : row
+                )
+                : [
                     { DATA: "[zz.ll.aaaa]", MENTIUNI: "Schimbare sediu social" },
                     { DATA: "[zz.ll.aaaa]", MENTIUNI: "Majorare capital social" },
                     { DATA: "[zz.ll.aaaa]", MENTIUNI: "Numire / Revocare administrator" }
-                ]
-            };
+                ];
 
-    const rows = chronology.rows;
-    const images = formValues?.istoric?.images || [];
-
-    /* =========================
-       NORMALIZE FOR BACKEND
-    ========================== */
-    const normalizeChronologyForSave = (chronology) => {
-        if (!chronology?.columns || !chronology?.rows) return [];
-
-        // sirf values ka array banaye
-        return chronology.rows.map(row =>
-            chronology.columns.map(col => row[col] ?? "")
-        );
-    };
-
-    /* =========================
-       UPDATE WHOLE SECTION
-    ========================== */
-    const updateIstoric = (newRows, newImages = images, newHistory = historyText) => {
-        setFormValues(prev => ({
-            ...prev,
-            istoric: {
-                historyText: newHistory,
-                images: newImages,
-                chronology: {
-                    columns: chronologyColumns,
-                    rows: newRows
-                }
-            }
-        }));
-    };
+        setChronologyRows(rows);
+        setImages(formValues?.istoric?.images || []);
+    }, [formValues]);
 
     /* =========================
        HANDLERS
     ========================== */
-    const setHistoryText = (text) => {
-        updateIstoric(rows, images, text);
-    };
+    const addRow = () => setChronologyRows([...chronologyRows, { DATA: "", MENTIUNI: "" }]);
 
-    const addRow = () => {
-        updateIstoric([...rows, { DATA: "", MENTIUNI: "" }]);
-    };
-
-    const deleteRow = (index) => {
-        updateIstoric(rows.filter((_, i) => i !== index));
-    };
+    const deleteRow = (index) =>
+        setChronologyRows(chronologyRows.filter((_, i) => i !== index));
 
     const handleRowChange = (index, key, value) => {
-        const updated = rows.map((row, i) =>
+        const updated = chronologyRows.map((row, i) =>
             i === index ? { ...row, [key]: value } : row
         );
-        updateIstoric(updated);
+        setChronologyRows(updated);
     };
 
-    const setImages = (imgs) => {
-        updateIstoric(rows, imgs);
-    };
+    const handleImagesChange = (imgs) => setImages(imgs);
 
     /* =========================
        SAVE HANDLER
     ========================== */
     const handleSave = () => {
-        // Normalize chronology rows: sirf values
-        const normalizedChronology = rows.map(row =>
-            chronology.columns.map(col => row[col] ?? "")
-        );
-
-        // Prepare final payload for API
         const payload = {
             data: {
                 istoric: {
                     historyText: historyText,
                     images: images,
-                    chronology: normalizedChronology
+                    chronology: {
+                        columns: chronologyColumns,
+                        rows: chronologyRows.map(r => [r.DATA, r.MENTIUNI])
+                    }
                 }
             }
         };
 
         console.log("FINAL PAYLOAD FOR API:", payload);
-
-        // Call parent save function with payload
         onSaveSection(payload);
-    };
 
+        // optional: update formValues after save
+        setFormValues(prev => ({
+            ...prev,
+            istoric: payload.data.istoric
+        }));
+    };
 
     /* =========================
        UI
@@ -122,17 +89,15 @@ const Index = ({ formValues, setFormValues, onSaveSection }) => {
                     I. Societatea ABC | 2. Istoric societate
                 </h1>
 
-                {/* ===== ISTORIC TEXT ===== */}
+                {/* ISTORIC TEXT */}
                 <h3 className={styles.sectionTitle}>✏️ Istoricul societății</h3>
-
                 <div className={styles.textAreaWrapper}>
-                    <textarea
-                        className={styles.textarea}
-                        placeholder="[Scrie aici textul narativ – multiline]"
-                        value={historyText}
-                        onChange={(e) => setHistoryText(e.target.value)}
-                    />
-
+          <textarea
+              className={styles.textarea}
+              placeholder="[Scrie aici textul narativ – multiline]"
+              value={historyText}
+              onChange={(e) => setHistoryText(e.target.value)}
+          />
                     <div className={styles.deleteBoxContainer}>
                         <button
                             className={styles.deleteBox}
@@ -143,7 +108,7 @@ const Index = ({ formValues, setFormValues, onSaveSection }) => {
                     </div>
                 </div>
 
-                {/* ===== CRONOLOGIE TABLE ===== */}
+                {/* CRONOLOGIE TABLE */}
                 <h3 className={styles.sectionTitle}>
                     📜 Cronologia Mențiunilor Publicate în Monitorul Oficial
                 </h3>
@@ -151,36 +116,28 @@ const Index = ({ formValues, setFormValues, onSaveSection }) => {
                 <table className={styles.editableTableIstoric}>
                     <thead>
                     <tr>
-                        {chronology.columns.map((col, i) => (
-                            <th key={i}>{col}</th>
-                        ))}
+                        {chronologyColumns.map((col, i) => <th key={i}>{col}</th>)}
                         <th>ACTIUNI</th>
                     </tr>
                     </thead>
 
                     <tbody>
-                    {rows.map((row, index) => (
+                    {chronologyRows.map((row, index) => (
                         <tr key={index}>
                             <td>
                                 <input
                                     value={row.DATA}
                                     placeholder="[zz.ll.aaaa]"
-                                    onChange={(e) =>
-                                        handleRowChange(index, "DATA", e.target.value)
-                                    }
+                                    onChange={(e) => handleRowChange(index, "DATA", e.target.value)}
                                 />
                             </td>
-
                             <td>
                                 <input
                                     value={row.MENTIUNI}
                                     placeholder="descriere editabilă"
-                                    onChange={(e) =>
-                                        handleRowChange(index, "MENTIUNI", e.target.value)
-                                    }
+                                    onChange={(e) => handleRowChange(index, "MENTIUNI", e.target.value)}
                                 />
                             </td>
-
                             <td>
                                 <button
                                     className={styles.trash}
@@ -198,21 +155,17 @@ const Index = ({ formValues, setFormValues, onSaveSection }) => {
                     + Adaugă rând
                 </button>
 
-                {/* ===== IMAGES ===== */}
+                {/* IMAGES */}
                 <div className={styles.imagesSection}>
                     <h3 className={styles.sectionTitle}>🖼️ Imagini / Grafice</h3>
-                    <ImagePlaceholder images={images} setImages={setImages} />
+                    <ImagePlaceholder images={images} setImages={handleImagesChange} />
                 </div>
 
-                {/* ===== SAVE ===== */}
+                {/* SAVE */}
                 <div className={styles.navigation}>
-                    <button
-                        className={styles.saveButton}
-                        onClick={handleSave}
-                    >
+                    <button className={styles.saveButton} onClick={handleSave}>
                         💾 Salvează secțiunea
                     </button>
-
                     <button className={styles.nextButton}>
                         ➡️ Mergi la I.3. Date financiare
                     </button>
