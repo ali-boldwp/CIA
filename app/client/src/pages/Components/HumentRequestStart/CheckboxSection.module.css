@@ -86,7 +86,7 @@
 }
 
 .title {
-    font-size: 15px;
+    font-size: 18px;
     font-weight: 700;
     color: #0f172a;
     font-style: italic;     /* ✅ italic */
@@ -94,7 +94,9 @@
 
 .subtitle {
 
-font-size: 15px;
+font-size: 16px;
     color: #64748b;
     font-style: italic;     /* ✅ italic */
+    font-weight: 500;
+
 }
