@@ -14,7 +14,7 @@ import TableRecordsPopup from "./Popup/TableRecords";
 
 
 import styles from "./style.module.css";
-import {useState , useEffect} from "react";
+import {useState , useEffect, useRef} from "react";
 import Editor from "./Editor";
 import { useUpdateCategoryMutation } from "../../../../../services/categoryApi";
 
@@ -55,6 +55,7 @@ const View = ({ data, categoryId, onChapterCreated }) => {
 
     useEffect(() => {
         setLocalData(data);
+        lastSavedEditorData.current = data?.editorData;
     }, [data]);
 
     const editorData = localData?.editorData;
