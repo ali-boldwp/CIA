@@ -15,6 +15,7 @@ import TableRecordsPopup from "./Popup/TableRecords";
 
 import styles from "./style.module.css";
 import {useState , useEffect} from "react";
+import Editor from "./Editor";
 
 const View = ({ data, categoryId, onChapterCreated }) => {
 
@@ -57,6 +58,19 @@ const View = ({ data, categoryId, onChapterCreated }) => {
     if (!localData) return null;
 
 
+    function safeParseEditorData(content) {
+        if (!content) return { blocks: [] };
+
+        // if your backend already stores JSON object
+        if (typeof content === "object") return content;
+
+        // if it stores JSON string
+        try {
+            return JSON.parse(content);
+        } catch {
+            return { blocks: [] };
+        }
+    }
 
 
 
@@ -152,6 +166,18 @@ const View = ({ data, categoryId, onChapterCreated }) => {
 
 
                     <div className={ styles.contentTemplate }>
+
+                        <Editor
+                            value={safeParseEditorData(localData?.content)}
+                            onChange={(output) => {
+                                // Option A: keep it in local state until user hits "Save"
+                                setLocalData((prev) => ({
+                                    ...prev,
+                                    content: JSON.stringify(output), // or store object directly if your backend supports it
+                                }));
+                            }}
+                        />
+
                         <Content
                             data={localData}
                             onTitleClick={() => setTitlePopup(true)}
