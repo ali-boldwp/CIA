@@ -43,12 +43,12 @@ const Team = () => {
                 <div className={styles.teamTable}>
                     <div className={styles.teamHeader}>
                         <span>Nume</span>
-                        <span>Scor</span>
-                        <span>Salariu pe lună</span>
-                        <span>Salariu pe zi</span>
-                        <span>Salariu pe oră</span>
                         <span>Stare</span>
                         <span>Progres</span>
+                        <span>Score</span>
+                        <span>Salariu pe lună</span>
+                        <span>Salariu pe oră</span>
+                        <span>Salariu pe zi</span>
                         <span style={{ textAlign: "right" }}>Acțiuni</span>
                     </div>
 
