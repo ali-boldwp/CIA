@@ -1,13 +1,14 @@
 import React from "react";
 import styles from "./styles.module.css";
 import ImagePlaceholder from "./ImagePlaceholder";
+import NotesPlaceholder from "./NotesPlaceholder";
 
-const ControversyIndex = ({ formValues, setFormValues }) => {
-    // Initialize subpoints and notes in formValues if not exists
+const ControversyIndex = ({ formValues, setFormValues, onSaveSection }) => {
+    // 1️⃣ Initialize subpoints, notes, images
     const subpoints = formValues?.controversy?.subpoints || [
         { title: "10.1. Subtitlu [ex: Implicarea in dosarul Microsoft]", text: "" }
     ];
-    const notes = formValues?.controversy?.notes || [""];
+    const notes = formValues?.controversy?.notes || [null]; // files only
     const images = formValues?.controversy?.images || [null];
 
     const setSubpoints = (updated) => {
@@ -34,7 +35,7 @@ const ControversyIndex = ({ formValues, setFormValues }) => {
         }));
     };
 
-    const setImages = (updated) => {
+    const setImagesState = (updated) => {
         setFormValues(prev => ({
             ...prev,
             controversy: {
@@ -46,32 +47,29 @@ const ControversyIndex = ({ formValues, setFormValues }) => {
         }));
     };
 
+    // Add new subpoint
     const addSubpoint = () => {
-        setSubpoints([...subpoints, {
-            title: `10.${subpoints.length + 1}. Subtitlu`,
-            text: ""
-        }]);
+        setSubpoints([
+            ...subpoints,
+            { title: `10.${subpoints.length + 1}. Subtitlu`, text: "" }
+        ]);
     };
 
-    const addNote = () => setNotes([...notes, ""]);
-    const addImage = () => setImages([...images, null]);
-
+    // Handle subpoint text change
     const handleSubpointChange = (index, value) => {
         const updated = [...subpoints];
         updated[index].text = value;
         setSubpoints(updated);
     };
 
-    const handleNoteChange = (index, value) => {
-        const updated = [...notes];
-        updated[index] = value;
-        setNotes(updated);
-    };
-
-    const handleImageChange = (index, file) => {
-        const updated = [...images];
-        updated[index] = file;
-        setImages(updated);
+    // Handle Save
+    const handleSave = () => {
+        // Only keep File objects or null in notes
+        const cleanedNotes = notes.map(n => (n instanceof File ? n : null));
+        const cleanedImages = images.map(i => (i instanceof File ? i : i)); // keep blob URLs as is
+        const dataToSave = { subpoints, notes: cleanedNotes, images: cleanedImages };
+        onSaveSection(dataToSave);
+        console.log("Saved controversy data:", dataToSave);
     };
 
     return (
@@ -81,6 +79,7 @@ const ControversyIndex = ({ formValues, setFormValues }) => {
                     I. Societatea ABC | 10. Controverse si aspecte de interes public
                 </h1>
 
+                {/* SUBPOINTS */}
                 {subpoints.map((sp, i) => (
                     <div key={i} className={styles.textAreaWrapper}>
                         <h3 className={styles.sectionTitle}>{sp.title}</h3>
@@ -91,12 +90,12 @@ const ControversyIndex = ({ formValues, setFormValues }) => {
                             onChange={(e) => handleSubpointChange(i, e.target.value)}
                         />
                         <div className={styles.deleteBoxContainer}>
-                        <button
-                            className={styles.deleteBox}
-                            onClick={() => setSubpoints(subpoints.filter((_, idx) => idx !== i))}
-                        >
-                            Șterge căsuța
-                        </button>
+                            <button
+                                className={styles.deleteBox}
+                                onClick={() => setSubpoints(subpoints.filter((_, idx) => idx !== i))}
+                            >
+                                Șterge căsuța
+                            </button>
                         </div>
                     </div>
                 ))}
@@ -105,34 +104,16 @@ const ControversyIndex = ({ formValues, setFormValues }) => {
                     ➕ Adauga subpunct nou
                 </button>
 
-                {/* NOTE + IMAGE SECTION */}
+                {/* NOTES + IMAGES */}
                 <div className={styles.dualBox}>
-                    {/* NOTES */}
-                    <div className={styles.box}>
-                        <button className={styles.addBtn} onClick={addNote}>
-                            ➕ Adauga nota / link referinta
-                        </button>
-                        {notes.map((note, i) => (
-                            <div key={i} className={styles.dashedBox}>
-                                <input
-                                    type="text"
-                                    placeholder="🔗 Zona pentru nota / link"
-                                    value={note}
-                                    onChange={(e) => handleNoteChange(i, e.target.value)}
-                                />
-                            </div>
-                        ))}
-                    </div>
-
-                    {/* IMAGES */}
-                    <ImagePlaceholder images={images} setImages={setImages} />
+                    <NotesPlaceholder notes={notes} setNotes={setNotes} />
+                    <ImagePlaceholder images={images} setImages={setImagesState} />
                 </div>
+
+                {/* NAVIGATION */}
                 <div className={styles.navigation}>
                     <div className={styles.navButtons}>
-                        <button
-                            className={styles.saveButton}
-
-                        >
+                        <button className={styles.saveButton} onClick={handleSave}>
                             <span className={styles.saveIcon}>💾</span>
                             Salveaza sectiunea
                         </button>
@@ -143,7 +124,7 @@ const ControversyIndex = ({ formValues, setFormValues }) => {
                         </button>
 
                         <button className={styles.nextButton}>
-                            ➡️ Mergi la I.3. „Date fianciare”
+                            ➡️ Mergi la I.3. „Date financiare”
                             <span className={styles.arrowIcon}>→</span>
                         </button>
                     </div>
