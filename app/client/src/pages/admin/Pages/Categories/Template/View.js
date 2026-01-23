@@ -59,6 +59,7 @@ const View = ({ data, categoryId, onChapterCreated }) => {
     }, [data]);
 
     const editorData = localData?.editorData;
+    const hasEditorData = editorData !== undefined;
 
     if (!localData) return null;
 
@@ -183,6 +184,7 @@ const View = ({ data, categoryId, onChapterCreated }) => {
                             <button
                                 type="button"
                                 className={styles.saveButton}
+                                disabled={!hasEditorData}
                                 onClick={handleSaveEditorData}
                             >
                                 Save

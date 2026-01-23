@@ -36,3 +36,8 @@
     padding: 8px 16px;
     border-radius: 4px;
 }
+
+.saveButton:disabled {
+    background-color: #94a3b8;
+    cursor: not-allowed;
+}
