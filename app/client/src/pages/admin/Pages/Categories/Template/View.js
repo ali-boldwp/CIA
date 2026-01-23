@@ -52,32 +52,32 @@ const View = ({ data, categoryId, onChapterCreated }) => {
 
     const [localData, setLocalData] = useState(null);
     const [updateCategory] = useUpdateCategoryMutation();
-    const hasInitializedEditorData = useRef(false);
     const saveTimeoutRef = useRef(null);
+    const lastSavedEditorData = useRef(null);
 
     useEffect(() => {
         setLocalData(data);
+        lastSavedEditorData.current = data?.editorData;
     }, [data]);
 
     const editorData = localData?.editorData;
 
     useEffect(() => {
-        if (!categoryId || !localData) return;
-
-        if (!hasInitializedEditorData.current) {
-            hasInitializedEditorData.current = true;
-            return;
-        }
+        if (!categoryId) return;
 
         if (saveTimeoutRef.current) {
             clearTimeout(saveTimeoutRef.current);
         }
+
+        if (editorData === undefined) return;
+        if (lastSavedEditorData.current === editorData) return;
 
         saveTimeoutRef.current = setTimeout(() => {
             updateCategory({
                 id: categoryId,
                 editorData: editorData ?? null,
             });
+            lastSavedEditorData.current = editorData;
         }, 600);
 
         return () => {
@@ -85,7 +85,7 @@ const View = ({ data, categoryId, onChapterCreated }) => {
                 clearTimeout(saveTimeoutRef.current);
             }
         };
-    }, [categoryId, editorData, localData, updateCategory]);
+    }, [categoryId, editorData, updateCategory]);
 
     if (!localData) return null;
 
