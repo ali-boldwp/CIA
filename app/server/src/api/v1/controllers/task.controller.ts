@@ -205,13 +205,17 @@ export const completeTask = async (req, res) => {
 
 export const fetchShortcode = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const { id } = req.params; // task id
-        const { keys } = req.body;  // array of keys, e.g., ["Denumire societate", "management"]
+        const { id } = req.params;
+        let { keys } = req.body;
 
-        if (!keys || !Array.isArray(keys))
+        // allow single key OR array
+        if (typeof keys === "string") keys = [keys];
+
+        if (!Array.isArray(keys)) {
             return res.status(400).json({ message: "Keys array is required" });
+        }
 
-        const task = await Task.findById(id);
+        const task = await Task.findById(id).lean();
         if (!task) return res.status(404).json({ message: "Task not found" });
 
         const data: Record<string, any> = {};
@@ -219,30 +223,59 @@ export const fetchShortcode = async (req: Request, res: Response, next: NextFunc
         for (const key of keys) {
             let value: any = null;
 
-            // 1️⃣ Top-level field
-            if (task[key] !== undefined) value = task[key];
+            // 1️⃣ direct task field
+            if (task[key] !== undefined) {
+                value = task[key];
+            }
 
-            // 2️⃣ Inside data.generalInfo
-            else if (task.data && task.data.generalInfo) {
-                const generalInfo = task.data.generalInfo;
+            // 2️⃣ inside task.data (generic)
+            else if (task.data) {
+                for (const sectionKey of Object.keys(task.data)) {
+                    const section = task.data[sectionKey];
 
-                // If key matches a full table
-                if (generalInfo[key] !== undefined) {
-                    value = generalInfo[key];
-                } else {
-                    // Search inside all tables for single cell match
-                    for (const tableKey of Object.keys(generalInfo)) {
-                        const table = generalInfo[tableKey];
+                    // simple value
+                    if (section?.[key] !== undefined) {
+                        value = section[key];
+                        break;
+                    }
+
+                    // table with columns + rows
+                    if (
+                        section?.[key]?.columns &&
+                        section?.[key]?.rows
+                    ) {
+                        value = section[key];
+                        break;
+                    }
+
+                    // 🔍 search inside tables
+                    for (const tableKey of Object.keys(section || {})) {
+                        const table = section[tableKey];
+
+                        // OLD FORMAT: [ ["label","value"] ]
                         if (Array.isArray(table)) {
                             for (const row of table) {
                                 if (Array.isArray(row) && row[0] === key) {
-                                    value = row[1] !== undefined ? row[1] : null;
+                                    value = row[1] ?? null;
                                     break;
                                 }
                             }
                         }
+
+                        // NEW FORMAT: { columns, rows }
+                        if (table?.rows && Array.isArray(table.rows)) {
+                            for (const row of table.rows) {
+                                if (row[key] !== undefined) {
+                                    value = row[key];
+                                    break;
+                                }
+                            }
+                        }
+
                         if (value !== null) break;
                     }
+
+                    if (value !== null) break;
                 }
             }
 
@@ -255,5 +288,6 @@ export const fetchShortcode = async (req: Request, res: Response, next: NextFunc
         next(err);
     }
 };
+
 
 
