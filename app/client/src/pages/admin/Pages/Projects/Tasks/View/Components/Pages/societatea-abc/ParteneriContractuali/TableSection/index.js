@@ -1,28 +1,13 @@
-import React, { useEffect } from "react";
+import React from "react";
 import styles from "./styles.module.css";
 
-const Index = ({ rows, setRows }) => {
-    // Add new row
-    const handleAddRow = () => {
-        setRows([...rows, { denumire: "", descriere: "" }]);
-    };
-
-    // Remove row by index
-    const handleRemoveRow = (index) => {
-        const newRows = rows.filter((_, i) => i !== index);
-        setRows(newRows);
-    };
-
-    // Handle input change
-    const handleChange = (index, field, value) => {
-        const newRows = [...rows];
-        newRows[index][field] = value;
-        setRows(newRows);
-    };
+const Index = ({ rows, addRow, deleteRow, handleCellChange }) => {
 
     return (
         <div className={styles.tableSection}>
-            <h3 className={styles.sectionTitle}>📑 Tabel Parteneri Contractuali</h3>
+            <h3 className={styles.sectionTitle}>
+                📑 Tabel Parteneri Contractuali
+            </h3>
 
             <div className={styles.tableContainer}>
                 <table className={styles.editableTables}>
@@ -33,33 +18,36 @@ const Index = ({ rows, setRows }) => {
                         <th>ACTIUNI</th>
                     </tr>
                     </thead>
+
                     <tbody>
-                    {rows.map((row, index) => (
-                        <tr key={index}>
+                    {rows.map((row, rowIndex) => (
+                        <tr key={rowIndex}>
                             <td>
                                 <input
                                     type="text"
-                                    value={row.denumire}
+                                    value={row[0] || ""}
                                     onChange={(e) =>
-                                        handleChange(index, "denumire", e.target.value)
+                                        handleCellChange(rowIndex, 0, e.target.value)
                                     }
                                     placeholder="[denumirea societatii]"
                                 />
                             </td>
+
                             <td>
                                 <input
                                     type="text"
-                                    value={row.descriere}
+                                    value={row[1] || ""}
                                     onChange={(e) =>
-                                        handleChange(index, "descriere", e.target.value)
+                                        handleCellChange(rowIndex, 1, e.target.value)
                                     }
                                     placeholder="[descrierea societatii]"
                                 />
                             </td>
+
                             <td>
                                 <button
                                     className={styles.simpleDeleteButton}
-                                    onClick={() => handleRemoveRow(index)}
+                                    onClick={() => deleteRow(rowIndex)}
                                 >
                                     🗑️
                                 </button>
@@ -69,7 +57,7 @@ const Index = ({ rows, setRows }) => {
                     </tbody>
                 </table>
 
-                <button className={styles.addRow} onClick={handleAddRow}>
+                <button className={styles.addRow} onClick={addRow}>
                     ➕ Adauga rand
                 </button>
             </div>
@@ -77,4 +65,4 @@ const Index = ({ rows, setRows }) => {
     );
 };
 
-export default  Index;
+export default Index;
