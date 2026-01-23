@@ -14,8 +14,9 @@ import TableRecordsPopup from "./Popup/TableRecords";
 
 
 import styles from "./style.module.css";
-import {useState , useEffect} from "react";
+import {useState , useEffect, useRef} from "react";
 import Editor from "./Editor";
+import { useUpdateCategoryMutation } from "../../../../../services/categoryApi";
 
 const View = ({ data, categoryId, onChapterCreated }) => {
 
@@ -50,10 +51,17 @@ const View = ({ data, categoryId, onChapterCreated }) => {
     // For Set Data According to drag and drop
 
     const [localData, setLocalData] = useState(null);
+    const [updateCategory] = useUpdateCategoryMutation();
+    const lastSavedEditorData = useRef(null);
 
     useEffect(() => {
         setLocalData(data);
+        lastSavedEditorData.current = data?.editorData;
     }, [data]);
+
+    const editorData = localData?.editorData;
+    const hasEditorData = editorData !== undefined;
+    const hasChanges = hasEditorData && editorData !== lastSavedEditorData.current;
 
     if (!localData) return null;
 
@@ -73,6 +81,15 @@ const View = ({ data, categoryId, onChapterCreated }) => {
     }
 
 
+
+    const handleSaveEditorData = async () => {
+        if (!categoryId) return;
+        await updateCategory({
+            id: categoryId,
+            editorData: editorData ?? null,
+        });
+        lastSavedEditorData.current = editorData;
+    };
 
     return (
         <>
@@ -166,14 +183,24 @@ const View = ({ data, categoryId, onChapterCreated }) => {
 
 
                     <div className={ styles.contentTemplate }>
+                        <div className={styles.editorActions}>
+                            <button
+                                type="button"
+                                className={styles.saveButton}
+                                disabled={!hasChanges}
+                                onClick={handleSaveEditorData}
+                            >
+                                Save
+                            </button>
+                        </div>
 
                         <Editor
-                            value={safeParseEditorData(localData?.content)}
+                            value={safeParseEditorData(localData?.editorData || localData?.content)}
                             onChange={(output) => {
                                 // Option A: keep it in local state until user hits "Save"
                                 setLocalData((prev) => ({
                                     ...prev,
-                                    content: JSON.stringify(output), // or store object directly if your backend supports it
+                                    editorData: output,
                                 }));
                             }}
                         />
