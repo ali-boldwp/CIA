@@ -19,3 +19,20 @@
     border-radius: 4px;
     overflow-y: auto;
 }
+
+.editorActions {
+    display: flex;
+    justify-content: flex-end;
+    padding: 16px 16px 0;
+}
+
+.saveButton {
+    background-color: #2563eb;
+    border: none;
+    color: #fff;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    padding: 8px 16px;
+    border-radius: 4px;
+}
