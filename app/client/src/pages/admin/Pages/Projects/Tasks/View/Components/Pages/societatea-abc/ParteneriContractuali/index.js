@@ -1,145 +1,131 @@
-import React, { useState, useEffect ,useRef} from 'react';
+import React, { useEffect, useRef } from 'react';
+import { useForm, Controller } from 'react-hook-form';
 import styles from './styles.module.css';
 import TitleSection from "./TitleSection";
 import TextAreaSection from './TextAreaSection';
 import TableSection from './TableSection';
 import ImageSection from './ImageSection';
 
-const Index = ({ formValues, setFormValues, onSaveSection }) => {
+const LOCAL_STORAGE_KEY = "mainSectionFormData";
 
-    /* =========================
-       LOCAL STATE
-    ========================== */
+const Index = ({ formValues, setFormValues, onSaveSection }) => {
     const isInitialized = useRef(false);
 
-
-    const [title, setTitle] = useState("");
-    const [introText, setIntroText] = useState("");
-    const [contractPartnertable, setContractPartnertable] = useState({
-        columns: ["Denumire", "Descriere"],
-        rows: [["", ""]]
+    // ===== React Hook Form =====
+    const { control, handleSubmit, setValue, watch } = useForm({
+        defaultValues: {
+            title: "",
+            introText: "",
+            table: {
+                columns: ["Denumire", "Descriere"],
+                rows: [["", ""]]
+            },
+            images: [null]
+        }
     });
 
-    const [images, setImages] = useState([null]);
+    const table = watch("table");
+    const images = watch("images");
+    const allData = watch();
 
-    /* =========================
-       INIT FROM FORM VALUES
-    ========================== */
+    // ===== Load from localStorage or parent on mount =====
     useEffect(() => {
         if (isInitialized.current) return;
 
-        setTitle(formValues?.mainSection?.title || "");
-        setIntroText(
-            formValues?.mainSection?.introText ||
-            "In urma verificării surselor disponibile..."
-        );
-
-        const rawTable = formValues?.mainSection?.table;
-
-        if (rawTable) {
-            setContractPartnertable({
-                columns: Array.isArray(rawTable.columns)
-                    ? rawTable.columns
-                    : ["Denumire", "Descriere"],
-                rows: Array.isArray(rawTable.rows)
-                    ? rawTable.rows.map(r => [r[0] ?? "", r[1] ?? ""])
-                    : [["", ""]]
-            });
+        // 1️⃣ Try to load from localStorage first
+        const savedData = localStorage.getItem(LOCAL_STORAGE_KEY);
+        if (savedData) {
+            const parsed = JSON.parse(savedData);
+            Object.keys(parsed).forEach(key => setValue(key, parsed[key]));
+        }
+        // 2️⃣ If no localStorage, load from parent formValues
+        else if (formValues?.mainSection) {
+            const data = formValues.mainSection;
+            setValue("title", data.title || "");
+            setValue("introText", data.introText || "In urma verificării surselor disponibile...");
+            setValue("table", data.table || { columns: ["Denumire", "Descriere"], rows: [["", ""]] });
+            setValue("images", data.images || [null]);
         }
 
-        setImages(formValues?.mainSection?.images || [null]);
-
         isInitialized.current = true;
-    }, [formValues]);
+    }, [formValues, setValue]);
 
+    // ===== Persist to localStorage on any change =====
+    useEffect(() => {
+        if (!isInitialized.current) return;
+        localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(allData));
+    }, [allData]);
 
-
-
-    /* =========================
-       TABLE HANDLERS (2D array)
-    ========================== */
+    // ===== Table Handlers =====
     const addRow = () => {
-        setContractPartnertable(prev => ({
-            ...prev,
-            rows: [...prev.rows, ["", ""]]
-        }));
+        setValue("table", {
+            ...table,
+            rows: [...table.rows, ["", ""]]
+        });
     };
 
     const deleteRow = (index) => {
-        setContractPartnertable(prev => ({
-            ...prev,
-            rows: prev.rows.filter((_, i) => i !== index)
-        }));
+        setValue("table", {
+            ...table,
+            rows: table.rows.filter((_, i) => i !== index)
+        });
     };
 
     const handleCellChange = (rowIndex, colIndex, value) => {
-        setContractPartnertable(prev => ({
-            ...prev,
-            rows: prev.rows.map((row, i) =>
+        setValue("table", {
+            ...table,
+            rows: table.rows.map((row, i) =>
                 i === rowIndex
                     ? row.map((cell, j) => (j === colIndex ? value : cell))
                     : row
             )
-        }));
+        });
     };
 
+    // ===== Image Handler =====
+    const handleImagesChange = (imgs) => setValue("images", imgs);
 
+    // ===== Save Handler =====
+    const onSubmit = (data) => {
+        const payload = { data: { mainSection: data } };
+        console.log("FINAL PAYLOAD:", payload);
 
-    /* =========================
-       IMAGE HANDLER
-    ========================== */
-    const handleImagesChange = (imgs) => setImages(imgs);
+        onSaveSection(payload);
 
-    /* =========================
-       SAVE HANDLER
-    ========================== */
-    const handleSave = async () => {
-        const payload = {
-            data: {
-                mainSection: {
-                    title,
-                    introText,
-                    table: contractPartnertable,
-                    images
-                }
-            }
-        };
-
-        console.log("FINAL PAYLOAD FOR API:", payload);
-
-        // 1️⃣ Call save API
-        await onSaveSection(payload);
-
-        // 2️⃣ Update parent state only if necessary
         setFormValues(prev => ({
             ...prev,
-            mainSection: payload.data.mainSection
+            mainSection: data
         }));
+
+        // Optional: clear localStorage after save
+        // localStorage.removeItem(LOCAL_STORAGE_KEY);
     };
 
-
-    /* =========================
-       UI
-    ========================== */
     return (
         <div className={styles.container}>
             <div className={styles.mainCard}>
 
-                <TitleSection value={title} onChange={setTitle} />
-                <TextAreaSection
-                    value={introText}
-                    onChange={setIntroText}
-                    onClear={() => setIntroText("")}
+                <Controller
+                    name="title"
+                    control={control}
+                    render={({ field }) => <TitleSection {...field} />}
+                />
+
+                <Controller
+                    name="introText"
+                    control={control}
+                    render={({ field }) => (
+                        <TextAreaSection {...field} onClear={() => setValue("introText", "")} />
+                    )}
                 />
 
                 <TableSection
-                    columns={contractPartnertable.columns}
-                    rows={contractPartnertable.rows}
+                    columns={table.columns}
+                    rows={table.rows}
                     addRow={addRow}
                     deleteRow={deleteRow}
                     handleCellChange={handleCellChange}
                 />
-
 
                 <div className={styles.sectionWrapper}>
                     <ImageSection
@@ -149,7 +135,7 @@ const Index = ({ formValues, setFormValues, onSaveSection }) => {
                 </div>
 
                 <div className={styles.navigation}>
-                    <button className={styles.saveButton} onClick={handleSave}>
+                    <button className={styles.saveButton} onClick={handleSubmit(onSubmit)}>
                         💾 Salvează secțiunea
                     </button>
                     <button className={styles.middleButton}>
