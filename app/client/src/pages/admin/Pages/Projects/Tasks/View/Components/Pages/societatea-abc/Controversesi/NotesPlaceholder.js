@@ -1,21 +1,26 @@
 import React, { useEffect } from "react";
-import styles from "./ImagePlaceholder.module.css"; // reuse same styles
+import styles from "./ImagePlaceholder.module.css";
 
 const NotesPlaceholder = ({ notes = [null], setNotes }) => {
-    // Ensure at least one uploader
     useEffect(() => {
         if (!notes || notes.length === 0) setNotes([null]);
     }, [notes, setNotes]);
 
-    // Add new uploader
     const handleAdd = () => setNotes([...notes, null]);
 
-    // Update selected file
     const handleFileChange = (index, file) => {
+        if (!file) return;
+
         const updated = [...notes];
-        updated[index] = file || null;
+        updated[index] = {
+            name: file.name,
+            type: file.type,
+            size: file.size,
+            url: URL.createObjectURL(file)
+        };
         setNotes(updated);
     };
+
 
     return (
         <div className={styles.imageSection10}>
@@ -28,19 +33,20 @@ const NotesPlaceholder = ({ notes = [null], setNotes }) => {
                     <label key={index} className={styles.imagePlaceholder}>
                         <input
                             type="file"
-                            accept="image/*"
+                            accept="*"
                             hidden
                             onChange={(e) => handleFileChange(index, e.target.files[0])}
                         />
-                        {file instanceof File ? (
-                            <img
-                                src={URL.createObjectURL(file)}
-                                alt="preview"
-                                className={styles.previewImage}
-                            />
+                        {file?.name ? (
+                            <div className={styles.placeholderText}>
+                                📄 {file.name}
+                            </div>
                         ) : (
-                            <div className={styles.placeholderText}>🔗 Zona pentru nota / link</div>
+                            <div className={styles.placeholderText}>
+                                🔗 Zona pentru nota / link
+                            </div>
                         )}
+
                     </label>
                 ))}
             </div>

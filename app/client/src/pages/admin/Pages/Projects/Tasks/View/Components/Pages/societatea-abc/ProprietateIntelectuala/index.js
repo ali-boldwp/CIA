@@ -1,60 +1,105 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
+import { useForm, Controller, useFieldArray } from "react-hook-form";
 import styles from "./styles.module.css";
 import ImagePlaceholder from "./ImagePlaceholder";
 
-const Index = ({ formValues, setFormValues }) => {
-    // --- Table rows ---
-    const rows = formValues?.marciOSIM?.rows || [
-        { name: "", details: "" } // default ek row
-    ];
+const LOCAL_STORAGE_KEY = "marciOSIMFormData";
 
-    const setRows = (newRows) => {
-        setFormValues(prev => ({
-            ...prev,
-            marciOSIM: {
-                ...prev.marciOSIM,
-                rows: newRows,
-                introducere: prev.marciOSIM?.introducere || "",
-                images: prev.marciOSIM?.images || [null]
-            }
-        }));
+const Index = ({ formValues, setFormValues, onSaveSection }) => {
+    const isInitialized = useRef(false);
+
+    const { control, watch, setValue, handleSubmit } = useForm({
+        defaultValues: {
+            introducere: "",
+            columns: ["DENUMIRE MARCA", "DETALII"],
+            rows: [{ name: "", details: "" }],
+            images: [null],
+        },
+    });
+
+    const { fields, append, remove, replace } = useFieldArray({
+        control,
+        name: "rows",
+    });
+
+    const introducere = watch("introducere");
+    const rows = watch("rows");
+    const images = watch("images");
+    const columns = watch("columns");
+    const allData = watch(); // for localStorage
+
+    // ===== Initialize from localStorage or parent =====
+    useEffect(() => {
+        if (isInitialized.current) return;
+
+        const savedData = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY));
+
+        if (savedData) {
+            setValue("introducere", savedData.introducere || "");
+            setValue("columns", savedData.columns || ["DENUMIRE MARCA", "DETALII"]);
+            replace(savedData.rows && savedData.rows.length > 0 ? savedData.rows : [{ name: "", details: "" }]);
+            setValue("images", savedData.images || [null]);
+        } else if (formValues?.marciOSIM) {
+            const marciData = formValues.marciOSIM;
+            setValue("introducere", marciData.introducere || "");
+            setValue("columns", marciData.columns || ["DENUMIRE MARCA", "DETALII"]);
+            replace(marciData.rows && marciData.rows.length > 0 ? marciData.rows : [{ name: "", details: "" }]);
+            setValue("images", marciData.images || [null]);
+        }
+
+        isInitialized.current = true;
+    }, [formValues, setValue, replace]);
+
+    // ===== Auto-save to localStorage & sync parent =====
+    useEffect(() => {
+        if (!isInitialized.current) return;
+
+        const dataToSave = { introducere, columns, rows, images };
+
+        localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(dataToSave));
+
+        if (setFormValues) {
+            setFormValues(prev => ({
+                ...prev,
+                marciOSIM: dataToSave
+            }));
+        }
+    }, [introducere, rows, images, columns, setFormValues]);
+
+    // ===== Table Handlers =====
+    const addRow = () => append({ name: "", details: "" });
+    const deleteRow = (index) => {
+        remove(index);
+        if (rows.length === 1) append({ name: "", details: "" });
     };
 
-    const addRow = () => setRows([...rows, { name: "", details: "" }]);
-    const deleteRow = (index) => setRows(rows.filter((_, i) => i !== index));
+    // ===== Images Handler =====
+    const setImagesHandler = (imgs) => setValue("images", imgs.length === 0 ? [null] : imgs);
 
-    // --- Introducere textarea ---
-    const introducere = formValues?.marciOSIM?.introducere || "";
-    const setIntroducere = (text) => {
-        setFormValues(prev => ({
-            ...prev,
-            marciOSIM: {
-                ...prev.marciOSIM,
-                introducere: text,
-                rows,
-                images: prev.marciOSIM?.images || [null]
-            }
-        }));
-    };
+    // ===== Save Handler =====
+    const onSubmit = (data) => {
+        const transformedRows = data.rows.map(row => [row.name, row.details]);
 
-    // --- Images ---
-    const images = formValues?.marciOSIM?.images || [null];
-    const setImages = (imgs) => {
-        setFormValues(prev => ({
-            ...prev,
-            marciOSIM: {
-                ...prev.marciOSIM,
-                images: imgs.length === 0 ? [null] : imgs, // ensure default 1 uploader
-                rows,
-                introducere
-            }
-        }));
+        const payload = {
+            data: {
+                marciOSIM: {
+                    introducere: data.introducere,
+                    columns: data.columns,
+                    rows: transformedRows,
+                    images: data.images,
+                },
+            },
+        };
+
+        console.log("FINAL PAYLOAD:", payload);
+
+        if (onSaveSection) onSaveSection(payload);
+
     };
 
     return (
         <div className={styles.container}>
             <div className={styles.mainCard}>
-
                 <h1 className={styles.mainTitle}>
                     I. Societatea ABC | 7. Proprietate intelectuala / Marci OSIM
                 </h1>
@@ -62,89 +107,72 @@ const Index = ({ formValues, setFormValues }) => {
                 {/* Introducere */}
                 <div className={styles.textAreaWrapper}>
                     <h3 className={styles.sectionTitle}>💬 Introducere</h3>
-                    <textarea
-                        className={styles.textarea}
-                        placeholder="Potrivit verificarilor efectuate, de-a lungul timpului, Societatea [denumire societate] a inregistrat la Oficiul de Stat pentru Inventii si Marci (OSIM) urmatoarele marci:  "
-                        value={introducere}
-                        onChange={(e) => setIntroducere(e.target.value)}
+                    <Controller
+                        control={control}
+                        name="introducere"
+                        render={({ field }) => (
+                            <textarea
+                                className={styles.textarea}
+                                placeholder="Potrivit verificarilor efectuate..."
+                                {...field}
+                            />
+                        )}
                     />
-                    <button
-                        className={styles.deleteBox}
-                        onClick={() => setIntroducere("")}
-                    >
+                    <button className={styles.deleteBox} onClick={() => setValue("introducere", "")}>
                         Șterge căsuța
                     </button>
                 </div>
 
-                {/* Tabel Marci */}
-                <h3 className={styles.sectionTitle1}>
-                    ® Tabel marci inregistrate la OSIM
-                </h3>
-
+                {/* Table Marci */}
+                <h3 className={styles.sectionTitle1}>® Tabel marci inregistrate la OSIM</h3>
                 <table className={styles.table}>
                     <thead>
                     <tr>
-                        <th>DENUMIRE MARCA</th>
-                        <th>DETALII</th>
+                        {columns.map((col, i) => (
+                            <th key={i}>{col}</th>
+                        ))}
                         <th>ACTIUNI</th>
                     </tr>
                     </thead>
                     <tbody>
-                    {rows.map((row, index) => (
-                        <tr key={index}>
+                    {fields.map((row, index) => (
+                        <tr key={row.id}>
                             <td>
-                                <input
-                                    type="text"
-                                    placeholder="[Denumire marca]"
-                                    value={row.name || ""}
-                                    onChange={(e) => {
-                                        const newRows = [...rows];
-                                        newRows[index].name = e.target.value;
-                                        setRows(newRows);
-                                    }}
+                                <Controller
+                                    name={`rows.${index}.name`}
+                                    control={control}
+                                    render={({ field }) => <input type="text" placeholder={columns[0]} {...field} />}
                                 />
                             </td>
                             <td>
-                                <input
-                                    type="text"
-                                    placeholder="[Detalii marca – an inregistrare, valabilitate, titular, observatii]"
-                                    value={row.details || ""}
-                                    onChange={(e) => {
-                                        const newRows = [...rows];
-                                        newRows[index].details = e.target.value;
-                                        setRows(newRows);
-                                    }}
+                                <Controller
+                                    name={`rows.${index}.details`}
+                                    control={control}
+                                    render={({ field }) => <input type="text" placeholder={columns[1]} {...field} />}
                                 />
                             </td>
                             <td>
-                                <button
-                                    className={styles.trash}
-                                    onClick={() => deleteRow(index)}
-                                >
-                                    🗑️
-                                </button>
+                                <button className={styles.trash} onClick={() => deleteRow(index)}>🗑️</button>
                             </td>
                         </tr>
                     ))}
                     </tbody>
                 </table>
-
                 <button className={styles.addRow} onClick={addRow}>
                     + Adaugă rând
                 </button>
 
-                {/* Image Section */}
+                {/* Images */}
                 <div className={styles.imagesSection}>
                     <h3 className={styles.sectionTitle}>📷 Anexe OSIM (imagini / printscreen)</h3>
-                    <ImagePlaceholder images={images} setImages={setImages} />
+                    <ImagePlaceholder images={images} setImages={setImagesHandler} />
                 </div>
 
-                {/* Navigation */}
+                {/* Navigation / End Buttons */}
                 <div className={styles.navigation}>
                     <div className={styles.navButtons}>
-                        <button className={styles.saveButton}>
-                            <span className={styles.saveIcon}>💾</span>
-                            Salveaza sectiunea
+                        <button className={styles.saveButton} onClick={handleSubmit(onSubmit)}>
+                            <span className={styles.saveIcon}>💾</span> Salveaza sectiunea
                         </button>
                         <button className={styles.middleButton}>
                             ❌ Exclude acest capitol
@@ -156,7 +184,6 @@ const Index = ({ formValues, setFormValues }) => {
                         </button>
                     </div>
                 </div>
-
             </div>
         </div>
     );

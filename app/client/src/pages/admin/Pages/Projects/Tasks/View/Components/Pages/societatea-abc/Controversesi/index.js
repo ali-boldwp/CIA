@@ -1,75 +1,89 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
+import { useForm, Controller, useFieldArray } from "react-hook-form";
 import styles from "./styles.module.css";
 import ImagePlaceholder from "./ImagePlaceholder";
-// import NotesPlaceholder from "./NotesPlaceholder";
+import NotesPlaceholder from "./NotesPlaceholder";
+
+const LOCAL_STORAGE_KEY = "controversyFormData";
 
 const ControversyIndex = ({ formValues, setFormValues, onSaveSection }) => {
-    // 1️⃣ Initialize subpoints, notes, images
-    const subpoints = formValues?.controversy?.subpoints || [
-        { title: "10.1. Subtitlu [ex: Implicarea in dosarul Microsoft]", text: "" }
-    ];
-    const notes = formValues?.controversy?.notes || [null]; // files only
-    const images = formValues?.controversy?.images || [null];
+    const isInitialized = useRef(false);
 
-    const setSubpoints = (updated) => {
-        setFormValues(prev => ({
-            ...prev,
-            controversy: {
-                ...prev.controversy,
-                subpoints: updated,
-                notes,
-                images
-            }
-        }));
+    const { control, watch, setValue, handleSubmit } = useForm({
+        defaultValues: {
+            subpoints: [
+                { title: "10.1. Subtitlu [ex: Implicarea in dosarul Microsoft]", text: "" }
+            ],
+            notes: [null],
+            images: [null]
+        }
+    });
+
+    const { fields, append, remove } = useFieldArray({
+        control,
+        name: "subpoints"
+    });
+
+    const subpoints = watch("subpoints");
+    const notes = watch("notes");
+    const images = watch("images");
+
+    // ===== Initialize from localStorage or parent =====
+    useEffect(() => {
+        if (isInitialized.current) return;
+
+        const savedData = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY));
+        let data = savedData || formValues?.controversy || {};
+
+        // Ensure notes are File or null
+        const safeNotes = (data.notes || [null]).map(n => (n instanceof File ? n : null));
+        const safeImages = (data.images || [null]).map(i => i || null);
+
+        setValue("subpoints", data.subpoints || fields);
+        setValue("notes", safeNotes);
+        setValue("images", safeImages);
+
+        isInitialized.current = true;
+    }, [formValues, setValue, fields]);
+
+    // ===== Auto-save to localStorage + parent =====
+    useEffect(() => {
+        if (!isInitialized.current) return;
+
+        const dataToSave = {
+            subpoints,
+            notes: notes.map(n => (n instanceof File ? n : null)),
+            images
+        };
+
+        localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(dataToSave));
+
+        if (setFormValues) {
+            setFormValues(prev => ({
+                ...prev,
+                controversy: dataToSave
+            }));
+        }
+    }, [subpoints, notes, images, setFormValues]);
+
+    // ===== Handlers =====
+    const addSubpoint = () =>
+        append({ title: `10.${subpoints.length + 1}. Subtitlu`, text: "" });
+
+    const deleteSubpoint = (index) => remove(index);
+
+    const handleNotesChange = (updated) => {
+        setValue(
+            "notes",
+            updated.map(n => (n instanceof File ? n : null))
+        );
     };
 
-    const setNotes = (updated) => {
-        setFormValues(prev => ({
-            ...prev,
-            controversy: {
-                ...prev.controversy,
-                notes: updated,
-                subpoints,
-                images
-            }
-        }));
-    };
+    const handleImagesChange = (updated) => setValue("images", updated);
 
-    const setImagesState = (updated) => {
-        setFormValues(prev => ({
-            ...prev,
-            controversy: {
-                ...prev.controversy,
-                images: updated,
-                subpoints,
-                notes
-            }
-        }));
-    };
-
-    // Add new subpoint
-    const addSubpoint = () => {
-        setSubpoints([
-            ...subpoints,
-            { title: `10.${subpoints.length + 1}. Subtitlu`, text: "" }
-        ]);
-    };
-
-    // Handle subpoint text change
-    const handleSubpointChange = (index, value) => {
-        const updated = [...subpoints];
-        updated[index].text = value;
-        setSubpoints(updated);
-    };
-
-    // Handle Save
-    const handleSave = () => {
-        // Only keep File objects or null in notes
-        const cleanedNotes = notes.map(n => (n instanceof File ? n : null));
-        const cleanedImages = images.map(i => (i instanceof File ? i : i)); // keep blob URLs as is
-        const dataToSave = { subpoints, notes: cleanedNotes, images: cleanedImages };
-        onSaveSection(dataToSave);
-        console.log("Saved controversy data:", dataToSave);
+    const onSubmit = (data) => {
+        console.log("FINAL PAYLOAD:", data);
+        if (onSaveSection) onSaveSection({ data: { controversy: data } });
     };
 
     return (
@@ -80,19 +94,24 @@ const ControversyIndex = ({ formValues, setFormValues, onSaveSection }) => {
                 </h1>
 
                 {/* SUBPOINTS */}
-                {subpoints.map((sp, i) => (
-                    <div key={i} className={styles.textAreaWrapper}>
+                {fields.map((sp, index) => (
+                    <div key={sp.id} className={styles.textAreaWrapper}>
                         <h3 className={styles.sectionTitle}>{sp.title}</h3>
-                        <textarea
-                            className={styles.textarea}
-                            placeholder="[Introdu textul narativ aici]"
-                            value={sp.text}
-                            onChange={(e) => handleSubpointChange(i, e.target.value)}
+                        <Controller
+                            name={`subpoints.${index}.text`}
+                            control={control}
+                            render={({ field }) => (
+                                <textarea
+                                    className={styles.textarea}
+                                    placeholder="[Introdu textul narativ aici]"
+                                    {...field}
+                                />
+                            )}
                         />
                         <div className={styles.deleteBoxContainer}>
                             <button
                                 className={styles.deleteBox}
-                                onClick={() => setSubpoints(subpoints.filter((_, idx) => idx !== i))}
+                                onClick={() => deleteSubpoint(index)}
                             >
                                 Șterge căsuța
                             </button>
@@ -106,14 +125,23 @@ const ControversyIndex = ({ formValues, setFormValues, onSaveSection }) => {
 
                 {/* NOTES + IMAGES */}
                 <div className={styles.dualBox}>
-                    {/*<NotesPlaceholder notes={notes} setNotes={setNotes} />*/}
-                    <ImagePlaceholder images={images} setImages={setImagesState} />
+                    <Controller
+                        control={control}
+                        name="notes"
+                        render={({ field: { value, onChange } }) => (
+                            <NotesPlaceholder
+                                notes={value}
+                                setNotes={onChange} // ab directly hook form ke saath linked
+                            />
+                        )}
+                    />
+                    <ImagePlaceholder images={images} setImages={handleImagesChange} />
                 </div>
 
-                {/* NAVIGATION */}
+                {/* NAVIGATION / SAVE */}
                 <div className={styles.navigation}>
                     <div className={styles.navButtons}>
-                        <button className={styles.saveButton} onClick={handleSave}>
+                        <button className={styles.saveButton} onClick={handleSubmit(onSubmit)}>
                             <span className={styles.saveIcon}>💾</span>
                             Salveaza sectiunea
                         </button>
