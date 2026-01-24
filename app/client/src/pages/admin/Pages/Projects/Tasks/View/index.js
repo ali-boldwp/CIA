@@ -59,17 +59,18 @@ const ViewTask = () => {
     }, [task?.data]);
 
 
-    const handleSaveSection = async () => {
+    const handleSaveSection = async (payload) => {
         try {
-            // update task API
             await updateTaskData({
-                id: taskId,      // make sure taskId is available in Index
-                data: formValues
+                id: taskId,
+                data: payload.data   // 🔥 DIRECT DATA
             }).unwrap();
 
+            setFormValues(payload.data); // optional sync
+
             toast.success("Sectiunea salvata cu succes!");
-        } catch (err) {
-            toast.error("Eroare la salvarea sectiunii");
+        } catch {
+            toast.error("Eroare la salvare");
         }
     };
 
