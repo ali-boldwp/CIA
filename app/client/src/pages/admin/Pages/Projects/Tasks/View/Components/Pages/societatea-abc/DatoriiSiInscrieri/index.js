@@ -1,152 +1,161 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
+import { useForm, Controller, useFieldArray } from "react-hook-form";
 import styles from "./styles.module.css";
 import ImagePlaceholder from "./ImagePlaceholder";
 
-const Index = ({ formValues, setFormValues }) => {
+const Index = ({ formValues, setFormValues  ,onSaveSection}) => {
+    const isInitialized = useRef(false);
 
-    // Ensure at least 1 row exists by default
-    const rows = (formValues?.datorii?.rows && formValues.datorii.rows.length > 0)
-        ? formValues.datorii.rows
-        : [{ date: "", note: "", details: "" }];
+    // ===== React Hook Form =====
+    const { control, watch, setValue, handleSubmit } = useForm({
+        defaultValues: {
+            introducere: "",
+            columns: ["ACT JURIDIC / DATA", "CREDITOR", "DETALII"],
+            rows: [{ date: "", note: "", details: "" }],
+            images: []
+        }
+    });
 
-    const setRows = (newRows) => {
-        setFormValues(prev => ({
+    const { fields, append, remove, replace } = useFieldArray({
+        control,
+        name: "rows"
+    });
+
+    const introducere = watch("introducere");
+    const rows = watch("rows");
+    const images = watch("images");
+    const columns = watch("columns"); // ✅ now columns are watched
+
+    // ===== Initialize from parent =====
+    useEffect(() => {
+        if (isInitialized.current || !formValues?.datorii) return;
+
+        const datoriiData = formValues.datorii;
+
+        setValue("introducere", datoriiData.introducere || "");
+        setValue("columns", datoriiData.columns || ["ACT JURIDIC / DATA", "CREDITOR", "DETALII"]);
+        replace(datoriiData.rows || [{ date: "", note: "", details: "" }]);
+        setValue("images", datoriiData.images || []);
+
+        isInitialized.current = true;
+    }, [formValues, setValue, replace]);
+
+
+    // ===== Sync to parent =====
+    useEffect(() => {
+        if (!isInitialized.current) return;
+        setFormValues((prev) => ({
             ...prev,
             datorii: {
-                ...prev.datorii,
-                rows: newRows,
-                introducere: formValues?.datorii?.introducere || "",
-                images: formValues?.datorii?.images || []
+                introducere,
+                columns, // ✅ save columns
+                rows,
+                images
             }
         }));
-    };
+    }, [introducere, rows, images, columns, setFormValues]);
 
-    const addRow = () => {
-        setRows([...rows, { date: "", note: "", details: "" }]);
-    };
-
+    // ===== Table Handlers =====
+    const addRow = () => append({ date: "", note: "", details: "" });
     const deleteRow = (index) => {
-        const newRows = rows.filter((_, i) => i !== index);
-        setRows(newRows.length > 0 ? newRows : [{ date: "", note: "", details: "" }]);
+        remove(index);
+        if (rows.length === 1) append({ date: "", note: "", details: "" });
     };
 
-    // Load and sync introducere text
-    const introducere = formValues?.datorii?.introducere || "";
-    const setIntroducere = (text) => {
-        setFormValues(prev => ({
-            ...prev,
-            datorii: {
-                ...prev.datorii,
-                introducere: text,
-                rows,
-                images: formValues?.datorii?.images || []
-            }
-        }));
+    // ===== Images Handler =====
+    const setImagesHandler = (imgs) => setValue("images", imgs);
+
+    // ===== Save =====
+    const onSubmit = async (data) => {
+        try {
+            const payload = { data: { datorii: data } }; // backend expects 'datorii'
+            await onSaveSection(payload); // ye ViewTask me mutation call karega
+
+            // frontend state update
+            setFormValues(prev => ({
+                ...prev,
+                datorii: data
+            }));
+
+            console.log("✅ Sectiunea salvata:", payload);
+        } catch (err) {
+            console.error("❌ Eroare la salvare:", err);
+        }
     };
 
-    // Load and sync images
-    const images = formValues?.datorii?.images || [];
-    const setImages = (imgs) => {
-        setFormValues(prev => ({
-            ...prev,
-            datorii: {
-                ...prev.datorii,
-                images: imgs,
-                rows,
-                introducere
-            }
-        }));
-    };
+
 
     return (
         <div className={styles.container}>
             <div className={styles.mainCard}>
-
                 <h1 className={styles.mainTitle}>
                     I. Societatea ABC | 5. Datorii si inscrieri mobiliare
                 </h1>
 
-                {/* Istoric */}
-                <h3 className={styles.sectionTitle}>Situatia inscrierilor active existente in RNPM (AEGRM)</h3>
-
+                {/* Introducere */}
+                <h3 className={styles.sectionTitle}>
+                    Situatia inscrierilor active existente in RNPM (AEGRM)
+                </h3>
                 <div className={styles.textAreaWrapper}>
                     <div className={styles.mainCard2}>
-
-                    <h3 className={styles.sectionTitle}>💬 Introducere</h3>
-                    <textarea
-                        className={styles.textarea}
-                        placeholder="In urma verificarilor efectuate in registrele publice, inclusiv in Arhiva Electronica de Garantii Reale Mobiliare (AEGRM), a rezultat ca Societatea [denumire societate] are inregistrate un numar de __ ipoteci mobiliare in favoarea creditorilor, printre care mentionam: "
-                        value={introducere}
-                        onChange={(e) => setIntroducere(e.target.value)}
-                    />
-
+                        <h3 className={styles.sectionTitle}>💬 Introducere</h3>
+                        <Controller
+                            control={control}
+                            name="introducere"
+                            render={({ field }) => (
+                                <textarea
+                                    className={styles.textarea}
+                                    placeholder="In urma verificarilor efectuate..."
+                                    {...field}
+                                />
+                            )}
+                        />
                     </div>
                     <button
                         className={styles.deleteBox}
-                        onClick={() => setIntroducere("")}
+                        onClick={() => setValue("introducere", "")}
                     >
                         Șterge căsuța
                     </button>
                 </div>
 
-                {/* Cronologie */}
-                <h3 className={styles.sectionTitle}>
-                    📋 Tabel datorii si inscrieri mobiliare
-                </h3>
-
+                {/* Table */}
+                <h3 className={styles.sectionTitle}>📋 Tabel datorii si inscrieri mobiliare</h3>
                 <table className={styles.table}>
                     <thead>
                     <tr>
-                        <th>ACT JURIDIC / DATA</th>
-                        <th>CREDITOR</th>
-                        <th>DETALII</th>
+                        {columns.map((col, i) => (
+                            <th key={i}>{col}</th>
+                        ))}
                         <th></th>
                     </tr>
                     </thead>
                     <tbody>
-                    {rows.map((row, index) => (
-                        <tr key={index}>
+                    {fields.map((row, index) => (
+                        <tr key={row.id}>
                             <td>
-                                <input
-                                    type="text"
-                                    placeholder="[Act juridic / Data]"
-                                    value={row.date || ""}
-                                    onChange={(e) => {
-                                        const newRows = [...rows];
-                                        newRows[index].date = e.target.value;
-                                        setRows(newRows);
-                                    }}
+                                <Controller
+                                    name={`rows.${index}.date`}
+                                    control={control}
+                                    render={({ field }) => <input type="text" placeholder={columns[0]} {...field} />}
                                 />
                             </td>
                             <td>
-                                <input
-                                    type="text"
-                                    placeholder="[Creditor]"
-                                    value={row.note || ""}
-                                    onChange={(e) => {
-                                        const newRows = [...rows];
-                                        newRows[index].note = e.target.value;
-                                        setRows(newRows);
-                                    }}
+                                <Controller
+                                    name={`rows.${index}.note`}
+                                    control={control}
+                                    render={({ field }) => <input type="text" placeholder={columns[1]} {...field} />}
                                 />
                             </td>
                             <td>
-                                <input
-                                    type="text"
-                                    placeholder="[Detalii - Valoare, obiect, termen etc.]"
-                                    value={row.details || ""}
-                                    onChange={(e) => {
-                                        const newRows = [...rows];
-                                        newRows[index].details = e.target.value;
-                                        setRows(newRows);
-                                    }}
+                                <Controller
+                                    name={`rows.${index}.details`}
+                                    control={control}
+                                    render={({ field }) => <input type="text" placeholder={columns[2]} {...field} />}
                                 />
                             </td>
                             <td>
-                                <button
-                                    className={styles.trash}
-                                    onClick={() => deleteRow(index)}
-                                >
+                                <button className={styles.trash} onClick={() => deleteRow(index)}>
                                     🗑️
                                 </button>
                             </td>
@@ -154,22 +163,20 @@ const Index = ({ formValues, setFormValues }) => {
                     ))}
                     </tbody>
                 </table>
-
                 <button className={styles.addRow} onClick={addRow}>
                     + Adaugă rând
                 </button>
 
-                {/* Image Section */}
+                {/* Images */}
                 <div className={styles.imagesSection}>
                     <h3 className={styles.sectionTitle}>🖼️ Imagini / grafice</h3>
-                    <ImagePlaceholder images={images} setImages={setImages} />
+                    <ImagePlaceholder images={images} setImages={setImagesHandler} />
                 </div>
 
                 {/* Navigation */}
                 <div className={styles.navButtons}>
-                    <button className={styles.saveButton}>
-                        <span className={styles.saveIcon}>💾</span>
-                        Salveaza sectiunea
+                    <button className={styles.saveButton} onClick={handleSubmit(onSubmit)}>
+                        <span className={styles.saveIcon}>💾</span> Salveaza sectiunea
                     </button>
 
                     <button className={styles.middleButton}>
@@ -182,8 +189,6 @@ const Index = ({ formValues, setFormValues }) => {
                         <span className={styles.arrowIcon}>→</span>
                     </button>
                 </div>
-
-
             </div>
         </div>
     );

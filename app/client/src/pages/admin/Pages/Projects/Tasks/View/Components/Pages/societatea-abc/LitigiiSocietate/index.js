@@ -1,63 +1,85 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
+import { useForm, Controller, useFieldArray } from "react-hook-form";
 import styles from "./styles.module.css";
 import ImagePlaceholder from "./ImagePlaceholder";
 import Navigation from "./Navigation";
 
-const Index = ({ formValues, setFormValues , onSaveSection}) => {
+const LOCAL_STORAGE_KEY = "litigiiFormData";
 
-    // 1️⃣ Rows (litigii) always from formValues, at least 1
-    const rows = (formValues?.litigii?.rows && formValues.litigii.rows.length > 0)
-        ? formValues.litigii.rows
-        : [{ nrDosar: "", data: "", instanta: "", obiect: "", materie: "", stadiu: "", parti: "", dataSolutiei: "", solutia: "" }];
+const Index = ({ formValues, setFormValues, onSaveSection }) => {
+    const isInitialized = useRef(false);
 
-    const setRows = (newRows) => {
-        setFormValues(prev => ({
-            ...prev,
-            litigii: {
-                ...prev.litigii,
-                rows: newRows.length > 0 ? newRows : [{ nrDosar: "", data: "", instanta: "", obiect: "", materie: "", stadiu: "", parti: "", dataSolutiei: "", solutia: "" }],
-                introducere: prev.litigii?.introducere || "",
-                images: prev.litigii?.images || [null]
-            }
-        }));
+    const { control, watch, setValue, handleSubmit } = useForm({
+        defaultValues: {
+            introducere: "",
+            rows: [
+                { nrDosar: "", data: "", instanta: "", obiect: "", materie: "", stadiu: "", parti: "", dataSolutiei: "", solutia: "" }
+            ],
+            images: [null],
+        }
+    });
+
+    const { fields, append, remove } = useFieldArray({
+        control,
+        name: "rows"
+    });
+
+    const introducere = watch("introducere");
+    const rows = watch("rows");
+    const images = watch("images");
+    const allData = watch();
+
+    // ===== Initialize from localStorage or parent =====
+    useEffect(() => {
+        if (isInitialized.current) return;
+
+        const savedData = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY));
+
+        if (savedData) {
+            setValue("introducere", savedData.introducere || "");
+            setValue("rows", savedData.rows && savedData.rows.length > 0 ? savedData.rows : fields);
+            setValue("images", savedData.images || [null]);
+        } else if (formValues?.litigii) {
+            const litigiiData = formValues.litigii;
+            setValue("introducere", litigiiData.introducere || "");
+            setValue("rows", litigiiData.rows && litigiiData.rows.length > 0 ? litigiiData.rows : fields);
+            setValue("images", litigiiData.images || [null]);
+        }
+
+        isInitialized.current = true;
+    }, [formValues, setValue]);
+
+    // ===== Auto-save to localStorage & sync parent =====
+    useEffect(() => {
+        if (!isInitialized.current) return;
+
+        const dataToSave = { introducere, rows, images };
+
+        localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(dataToSave));
+
+        if (setFormValues) {
+            setFormValues(prev => ({
+                ...prev,
+                litigii: dataToSave
+            }));
+        }
+    }, [introducere, rows, images, setFormValues]);
+
+    // ===== Table Handlers =====
+    const addRow = () => append({ nrDosar: "", data: "", instanta: "", obiect: "", materie: "", stadiu: "", parti: "", dataSolutiei: "", solutia: "" });
+    const deleteRow = (index) => {
+        remove(index);
+        if (rows.length === 1) addRow(); // ensure at least 1 row
     };
 
-    const addRow = () => setRows([...rows, { nrDosar: "", data: "", instanta: "", obiect: "", materie: "", stadiu: "", parti: "", dataSolutiei: "", solutia: "" }]);
-    const deleteRow = (index) => setRows(rows.filter((_, i) => i !== index));
-    const handleChange = (index, field, value) => {
-        const newRows = [...rows];
-        newRows[index][field] = value;
-        setRows(newRows);
-    };
+    // ===== Images Handler =====
+    const handleImagesChange = (imgs) => setValue("images", imgs.length > 0 ? imgs : [null]);
 
-    // 2️⃣ Introducere
-    const introducere = formValues?.litigii?.introducere || "";
-    const setIntroducere = (text) => {
-        setFormValues(prev => ({
-            ...prev,
-            litigii: {
-                ...prev.litigii,
-                introducere: text,
-                rows,
-                images: prev.litigii?.images || [null]
-            }
-        }));
-    };
-
-    // 3️⃣ Images
-    const images = (formValues?.litigii?.images && formValues.litigii.images.length > 0)
-        ? formValues.litigii.images
-        : [null];
-    const setImages = (imgs) => {
-        setFormValues(prev => ({
-            ...prev,
-            litigii: {
-                ...prev.litigii,
-                images: imgs.length > 0 ? imgs : [null],
-                rows,
-                introducere
-            }
-        }));
+    // ===== Save Handler =====
+    const onSubmit = (data) => {
+        console.log("FINAL PAYLOAD:", data);
+        if (onSaveSection) onSaveSection({ data: { litigii: data } });
+        console.log("Data saved successfully ✅");
     };
 
     return (
@@ -70,29 +92,38 @@ const Index = ({ formValues, setFormValues , onSaveSection}) => {
                 {/* Introducere */}
                 <div className={styles.textAreaWrapper}>
                     <div className={styles.mainCard2}>
-                    <h3 className={styles.sectionTitle}>💬 Introducere</h3>
-                    <textarea
-                        className={styles.textarea}
-                        placeholder="Potrivit verificarilor efectuate la autoritatile publice, Societatea [denumire societate] figureaza cu calitati procesuale în cadrul a [nr.] de dosare civile și [nr.] de dosare penale. Dintre acestea, mentionam:"
-                        value={introducere}
-                        onChange={(e) => setIntroducere(e.target.value)}
-                    />
+                        <h3 className={styles.sectionTitle}>💬 Introducere</h3>
+                        <Controller
+                            name="introducere"
+                            control={control}
+                            render={({ field }) => (
+                                <textarea
+                                    className={styles.textarea}
+                                    placeholder="Potrivit verificarilor efectuate la autoritatile publice..."
+                                    {...field}
+                                />
+                            )}
+                        />
                     </div>
-                    <button className={styles.deleteBox} onClick={() => setIntroducere("")}>Șterge căsuța</button>
+                    <button className={styles.deleteBox} onClick={() => setValue("introducere", "")}>
+                        Șterge căsuța
+                    </button>
                 </div>
 
                 {/* ⚖️ Fisa individuala litigiu */}
                 <h3 className={styles.sectionTitle}>⚖️ Fisa individuala litigiu</h3>
 
-                {rows.map((row, index) => (
-                    <div key={index} className={styles.litigiuCard}>
-                        {Object.entries(row).map(([field, value]) => (
+                {fields.map((row, index) => (
+                    <div key={row.id} className={styles.litigiuCard}>
+                        {Object.keys(row).map((field) => (
                             <div key={field} className={styles.formRow}>
                                 <label>{field.toUpperCase().replace(/([A-Z])/g, ' $1')}:</label>
-                                <input
-                                    type="text"
-                                    value={value || ""}
-                                    onChange={(e) => handleChange(index, field, e.target.value)}
+                                <Controller
+                                    name={`rows.${index}.${field}`}
+                                    control={control}
+                                    render={({ field: f }) => (
+                                        <input type="text" {...f} />
+                                    )}
                                 />
                             </div>
                         ))}
@@ -105,13 +136,15 @@ const Index = ({ formValues, setFormValues , onSaveSection}) => {
                 {/* Images */}
                 <div className={styles.imagesSection}>
                     <h3 className={styles.sectionTitle}>🖼️ Imagini / grafice</h3>
-                    <ImagePlaceholder images={images} setImages={setImages} />
-                    <Navigation
-                        onSave={onSaveSection}
-                        nextLabel="➡️ Mergi la I.2. Istoric societate"
-                        onNext={() => console.log("Navigate to next section")}
-                    />
+                    <ImagePlaceholder images={images} setImages={handleImagesChange} />
                 </div>
+
+                {/* Navigation / End Buttons */}
+                <Navigation
+                    onSave={handleSubmit(onSubmit)}
+                    nextLabel="➡️ Mergi la I.2. Istoric societate"
+                    onNext={() => console.log("Navigate to next section")}
+                />
             </div>
         </div>
     );
