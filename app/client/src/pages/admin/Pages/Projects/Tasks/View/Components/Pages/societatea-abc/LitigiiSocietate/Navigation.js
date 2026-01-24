@@ -31,6 +31,12 @@ const Navigation = ({ onSave, onNext, nextLabel }) => {
                 )}
             </button>
 
+            <button className={styles.nextButton}>
+                ❌ Exclude acest capitol
+                <span className={styles.arrowIcon}>→</span>
+            </button>
+
+
             {onNext && (
                 <button className={styles.nextButton} onClick={onNext}>
                     {nextLabel || "➡️ Urmatoarea sectiune"}
