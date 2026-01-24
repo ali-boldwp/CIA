@@ -1,11 +1,11 @@
 import React from 'react';
 import styles from './Navigation.module.css';
 
-const Navigation = () => {
+const Navigation = ({handleSave}) => {
     return (
         <div className={styles.navigation}>
             <div className={styles.navButtons}>
-                <button className={styles.saveButton}>
+                <button className={styles.saveButton} onClick={handleSave}>
                     <span className={styles.saveIcon}>💾</span>
                     Salveaza sectiunea
                 </button>
