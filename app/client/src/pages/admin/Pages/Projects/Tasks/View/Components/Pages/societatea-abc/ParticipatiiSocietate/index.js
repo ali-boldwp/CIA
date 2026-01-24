@@ -1,114 +1,111 @@
-import React, { useEffect, useRef } from "react";
-import { useForm, Controller, useFieldArray } from "react-hook-form";
+import React, { useEffect, useState } from "react";
 import styles from "./styles.module.css";
 import ImagePlaceholder from "./ImagePlaceholder";
-
-const LOCAL_STORAGE_KEY = "participatiiFormData";
+import Navigation from "./Navigation";
 
 const Index = ({ formValues, setFormValues, onSaveSection }) => {
-    const isInitialized = useRef(false);
+    /* =========================
+       COLUMNS + LOCAL STATE
+    ========================== */
+    const columns = ["DENUMIRE", "DETALII", "ACTIONARIAT"];
+    const [introducere, setIntroducere] = useState("");
+    const [rows, setRows] = useState([
+        {
+            DENUMIRE: "ABC SRL",
+            STATUS: "active",
+            DETALII: {
+                cui: "",
+                dateInf: "",
+                sediu: "",
+                caen: "",
+                cifraAfaceri: "",
+                profit: "",
+                angajati: ""
+            },
+            ACTIONARIAT: ""
+        }
+    ]);
+    const [images, setImages] = useState([]);
 
-    const { control, watch, setValue, handleSubmit } = useForm({
-        defaultValues: {
-            introducere: "",
-            companies: [
-                {
-                    name: "ABC SRL",
-                    status: "active",
+    /* =========================
+       INIT FROM FORM VALUES
+    ========================== */
+    useEffect(() => {
+        setIntroducere(formValues?.participatii?.introducere || "");
+        setRows(
+            formValues?.participatii?.rows && formValues.participatii.rows.length > 0
+                ? formValues.participatii.rows
+                : rows
+        );
+        setImages(formValues?.participatii?.images || []);
+    }, [formValues]);
+
+    /* =========================
+       HANDLERS
+    ========================== */
+    const handleRowChange = (index, key, value) => {
+        const updated = rows.map((row, i) =>
+            i === index ? { ...row, [key]: value } : row
+        );
+        setRows(updated);
+    };
+
+    const handleDetailsChange = (index, field, value) => {
+        const updated = rows.map((row, i) =>
+            i === index
+                ? { ...row, DETALII: { ...row.DETALII, [field]: value } }
+                : row
+        );
+        setRows(updated);
+    };
+
+    const addRow = () =>
+        setRows([
+            ...rows,
+            {
+                DENUMIRE: "",
+                STATUS: "active",
+                DETALII: {
                     cui: "",
                     dateInf: "",
                     sediu: "",
                     caen: "",
                     cifraAfaceri: "",
                     profit: "",
-                    angajati: "",
-                    actionariat: ""
+                    angajati: ""
+                },
+                ACTIONARIAT: ""
+            }
+        ]);
+
+    const deleteRow = index =>
+        setRows(rows.filter((_, i) => i !== index));
+
+    const handleSave = () => {
+        const payload = {
+            data: {
+                participatii: {
+                    introducere,
+                    rows,
+                    images
                 }
-            ],
-            images: []
-        }
-    });
+            }
+        };
+        console.log("FINAL PAYLOAD:", payload);
+        if (onSaveSection) onSaveSection(payload);
 
-    const { fields, append, remove } = useFieldArray({
-        control,
-        name: "companies"
-    });
-
-    const introducere = watch("introducere");
-    const companies = watch("companies");
-    const images = watch("images");
-    const allData = watch();
-
-    // ===== Initialize from localStorage or parent =====
-    useEffect(() => {
-        if (isInitialized.current) return;
-
-        const savedData = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY));
-
-        if (savedData) {
-            setValue("introducere", savedData.introducere || "");
-            setValue("companies", savedData.companies && savedData.companies.length > 0 ? savedData.companies : fields);
-            setValue("images", savedData.images || []);
-        } else if (formValues?.participatii) {
-            const data = formValues.participatii;
-            setValue("introducere", data.introducere || "");
-            setValue("companies", data.companies && data.companies.length > 0 ? data.companies : fields);
-            setValue("images", data.images || []);
-        }
-
-        isInitialized.current = true;
-    }, [formValues, setValue, fields]);
-
-    // ===== Auto-save to localStorage + sync parent =====
-    useEffect(() => {
-        if (!isInitialized.current) return;
-
-        const dataToSave = { introducere, companies, images };
-        localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(dataToSave));
-
-        if (setFormValues) {
-            setFormValues(prev => ({
-                ...prev,
-                participatii: dataToSave
-            }));
-        }
-    }, [introducere, companies, images, setFormValues]);
-
-    // ===== Handlers =====
-    const addCompany = () => append({
-        name: "",
-        status: "active",
-        cui: "",
-        dateInf: "",
-        sediu: "",
-        caen: "",
-        cifraAfaceri: "",
-        profit: "",
-        angajati: "",
-        actionariat: ""
-    });
-
-    const deleteCompany = (index) => {
-        remove(index);
-        if (companies.length === 1) addCompany(); // always at least 1
+        setFormValues(prev => ({
+            ...prev,
+            participatii: payload.data.participatii
+        }));
     };
 
-    // ===== Images Handler =====
-    const handleImagesChange = (imgs) => {
-        // Agar imgs empty hai to empty array, nahi to jo mile wo
-        setValue("images", imgs && imgs.length > 0 ? imgs : []);
-    };
-
-
-    const onSubmit = (data) => {
-        console.log("FINAL PAYLOAD:", data);
-        if (onSaveSection) onSaveSection({ data: { participatii: data } });
-    };
-
+    /* =========================
+       UI
+    ========================== */
     return (
         <div className={styles.container}>
             <div className={styles.mainCard}>
-
                 <h1 className={styles.mainTitle}>
                     I. Societatea ABC | 9. Participatii in alte societati
                 </h1>
@@ -116,47 +113,47 @@ const Index = ({ formValues, setFormValues, onSaveSection }) => {
                 {/* Introducere */}
                 <div className={styles.textAreaWrapper}>
                     <h3 className={styles.sectionTitle}>💬 Introducere</h3>
-                    <Controller
-                        name="introducere"
-                        control={control}
-                        render={({ field }) => (
-                            <textarea
-                                className={styles.textarea}
-                                placeholder="In urma verificarilor efectuate..."
-                                {...field}
-                            />
-                        )}
+                    <textarea
+                        className={styles.textarea}
+                        value={introducere}
+                        onChange={e => setIntroducere(e.target.value)}
+                        placeholder="In urma verificarilor efectuate..."
                     />
                     <div className={styles.deleteBoxContainer}>
-                        <button className={styles.deleteBox} onClick={() => setValue("introducere", "")}>
+                        <button
+                            className={styles.deleteBox}
+                            onClick={() => setIntroducere("")}
+                        >
                             Șterge căsuța
                         </button>
                     </div>
                 </div>
 
-                {/* Tabel participatii */}
-                <h3 className={styles.sectionTitle}>📋 Tabel participatii in alte societati</h3>
+                {/* Table */}
+                <h3 className={styles.sectionTitle}>
+                    📋 Tabel participatii in alte societati
+                </h3>
                 <table className={styles.editableTableIstoric2}>
                     <thead>
                     <tr>
-                        <th>DENUMIRE SOCIETATE</th>
-                        <th>DETALII SOCIETATE</th>
-                        <th>STRUCTURA ACTIONARIAT</th>
+                        {columns.map((col, i) => (
+                            <th key={i}>{col}</th>
+                        ))}
                         <th>ACTIUNI</th>
                     </tr>
                     </thead>
                     <tbody>
-                    {fields.map((c, index) => (
-                        <tr key={c.id}>
+                    {rows.map((row, index) => (
+                        <tr key={index}>
                             {/* DENUMIRE + STATUS */}
                             <td>
-                                <Controller
-                                    name={`companies.${index}.name`}
-                                    control={control}
-                                    render={({ field }) => <strong {...field} />}
+                                <input
+                                    value={row.DENUMIRE}
+                                    placeholder="Denumire societate"
+                                    onChange={e => handleRowChange(index, "DENUMIRE", e.target.value)}
                                 />
                                 <div className={styles.status}>
-                                    {c.status === "active" ? (
+                                    {row.STATUS === "active" ? (
                                         <span className={styles.active}>✔ societate activa</span>
                                     ) : (
                                         <span className={styles.inactive}>✖ Radiata din [anul]</span>
@@ -166,13 +163,13 @@ const Index = ({ formValues, setFormValues, onSaveSection }) => {
 
                             {/* DETALII */}
                             <td className={styles.details}>
-                                {["cui","dateInf","sediu","caen","cifraAfaceri","profit","angajati"].map(fld => (
-                                    <div key={fld} className={styles.display}>
-                                        <b>{fld.toUpperCase().replace(/([A-Z])/g, ' $1')}:</b>
-                                        <Controller
-                                            name={`companies.${index}.${fld}`}
-                                            control={control}
-                                            render={({ field }) => <input {...field} placeholder="[completeaza aici]" />}
+                                {Object.keys(row.DETALII).map(field => (
+                                    <div key={field} className={styles.display}>
+                                        <b>{field.toUpperCase()}:</b>
+                                        <input
+                                            value={row.DETALII[field]}
+                                            placeholder="[completeaza aici]"
+                                            onChange={e => handleDetailsChange(index, field, e.target.value)}
                                         />
                                     </div>
                                 ))}
@@ -180,56 +177,39 @@ const Index = ({ formValues, setFormValues, onSaveSection }) => {
 
                             {/* ACTIONARIAT */}
                             <td>
-                                <Controller
-                                    name={`companies.${index}.actionariat`}
-                                    control={control}
-                                    render={({ field }) => (
-                                        <textarea {...field} className={styles.actionariat} placeholder="[Structura actionariatului]" />
-                                    )}
-                                />
+                  <textarea
+                      value={row.ACTIONARIAT}
+                      placeholder="[Structura actionariatului]"
+                      className={styles.actionariat}
+                      onChange={e => handleRowChange(index, "ACTIONARIAT", e.target.value)}
+                  />
                             </td>
 
                             {/* DELETE */}
                             <td>
-                                <button className={styles.trash} onClick={() => deleteCompany(index)}>🗑️</button>
+                                <button className={styles.trash} onClick={() => deleteRow(index)}>🗑️</button>
                             </td>
                         </tr>
                     ))}
                     </tbody>
                 </table>
 
-                {/* Add new row */}
-                <button className={styles.addRow} onClick={addCompany}>+ Adaugă rând</button>
+                <button className={styles.addRow} onClick={addRow}>
+                    + Adaugă rând
+                </button>
 
                 {/* Images */}
                 <div className={styles.imagesSection}>
                     <h3 className={styles.sectionTitle}>🖼️ Imagini / grafice</h3>
-                    <ImagePlaceholder
-                        images={images && images.length > 0 ? images : []}
-                        setImages={handleImagesChange}
-                    />
-
+                    <ImagePlaceholder images={images} setImages={setImages} />
                 </div>
 
-                {/* Navigation / Save */}
-                <div className={styles.navigation}>
-                    <div className={styles.navButtons}>
-                        <button className={styles.saveButton} onClick={handleSubmit(onSubmit)}>
-                            <span className={styles.saveIcon}>💾</span> Salveaza sectiunea
-                        </button>
-
-                        <button className={styles.middleButton}>
-                            ❌ Exclude acest capitol
-                            <span className={styles.arrowIcon}>→</span>
-                        </button>
-
-                        <button className={styles.nextButton}>
-                            ➡️ Mergi la I.3. „Date financiare”
-                            <span className={styles.arrowIcon}>→</span>
-                        </button>
-                    </div>
-                </div>
-
+                {/* Navigation */}
+                <Navigation
+                    handleSave={handleSave}
+                    nextLabel="➡️ Mergi la I.3. „Date financiare”"
+                    onNext={() => console.log("Navigating to next section...")}
+                />
             </div>
         </div>
     );
