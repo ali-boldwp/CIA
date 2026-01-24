@@ -186,6 +186,15 @@ const Index = ({ formValues, setFormValues, onSaveSection }) => {
                         <button type="submit" className={styles.saveButton}>
                             💾 Salvează secțiunea
                         </button>
+                        <button className={styles.middleButton}>
+                            ❌ Exclude acest capitol
+                            <span className={styles.arrowIcon}>→</span>
+                        </button>
+
+                        <button className={styles.nextButton}>
+                            ➡️ Mergi la I.6. „Achizitii SEAP”
+                            <span className={styles.arrowIcon}>→</span>
+                        </button>
                     </div>
                 </form>
             </div>

@@ -397,7 +397,7 @@ const CreateProject = ({ data, main }) => {
                             <label>Denumire Proiect <small>(Nume Companie/Persoana/Tinta )</small></label>
                             <textarea
                                 className="textarea-box"
-                                value={projectSubject}
+                                value={projectName}
                                 onChange={(e) =>
                                     setProjectName(e.target.value)
                                 }
