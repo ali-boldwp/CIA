@@ -186,6 +186,13 @@ const Index = ({ formValues, setFormValues, onSaveSection }) => {
                         <button type="submit" className={styles.saveButton}>
                             💾 Salvează secțiunea
                         </button>
+                        <button className={styles.middleButton}>
+                            ❌ Exclude acest capitol
+                            <span className={styles.arrowIcon}>→</span>
+                        </button>
+                        <button className={styles.nextButton}>
+                            ➡️ Mergi la I.3. Date financiare
+                        </button>
                     </div>
                 </form>
             </div>

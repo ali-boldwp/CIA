@@ -70,6 +70,20 @@ font-size: 16px;
 .nextButton:hover {
     background-color: #F3F4F6;
 }
+.middleButton{
+    height: 30px;
+    padding: 0px 30px;
+
+    color: #64748B;
+    border:1px solid #E5E7EB;
+    border-radius: 4px;
+
+    font-size: 16px;
+    font-weight: 400;
+    cursor: pointer;
+    min-width: 180px;
+}
+
 
 /* Responsive adjustments */
 @media (max-width: 768px) {

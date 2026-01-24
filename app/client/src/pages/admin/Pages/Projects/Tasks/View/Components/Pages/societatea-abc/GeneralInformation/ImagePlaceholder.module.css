@@ -2,65 +2,34 @@
    ImageSection Styles
 =============================== */
 
-.mainTitle {
-    color: #1E3A8A;
-    font-size: 26px;
-    font-weight: 700;
-    margin-bottom: 15px;
-}
+/* ===============================
+   ImageSection Styles
+=============================== */
 
-/* Image Section wrapper */
 .imageSection {
     margin: 30px 0;
     display: flex;
-    flex-direction: column; /* button upar, images niche vertically */
-    gap: 20px; /* gap between button and grid */
+    gap:50px;
 }
-
-/* Add Image Button */
-.addImageButton {
-    background-color: #3B82F6;
-    color: #FFFFFF;
-    border: none;
-    width: 180px; /* desktop size */
-    height: 30px;
-    border-radius: 4px;
-
-font-size: 16px;
-    font-weight: 400;
-    cursor: pointer;
-    border: 1px solid #3B82F6;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    transition: all 0.3s;
+.addImageButton{
+    height:50px;
+    background: #3B82F6;
 }
-
-.addImageButton:hover {
-    background-color: #2563EB;
-}
-
-/* Add icon inside button */
-.addIcon {
-    font-size: 20px;
-}
-
-/* Image Grid */
 .imageGrid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* responsive columns */
+    grid-template-columns: repeat(3, 1fr);
     gap: 20px;
-    width: 100%;
+    max-width: 900px;
+    margin-bottom: 25px;
 }
 
-/* Each image placeholder */
+
 .imagePlaceholder {
     background-color: #f8f9fa;
     border: 2px dashed #bdc3c7;
-    border-radius: 4px;
+    border-radius: 10px;
     min-height: 140px;
-    width: 100%; /* grid cell ke width ke hisaab se */
+    width:350px !important;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -74,7 +43,6 @@ font-size: 16px;
     background-color: #ecf0f1;
 }
 
-/* Placeholder icon and text */
 .placeholderIcon {
     font-size: 18px;
     color: #95a5a6;
@@ -82,13 +50,12 @@ font-size: 16px;
 
 .placeholderText {
 
-font-size: 15px;
+    font-size: 15px;
     color: #7f8c8d;
     font-style: italic;
     text-align: center;
 }
 
-/* Preview image */
 .previewImage {
     width: 100%;
     height: 100%;
@@ -96,43 +63,26 @@ font-size: 15px;
     border-radius: 8px;
 }
 
-/* ===============================
-   Media Queries (Responsive)
-=============================== */
-
-@media (max-width: 1024px) {
-    .imageGrid {
-        gap: 18px;
-    }
-
-    .addImageButton {
-        width: 200px;
-        height: 40px;
-    }
+.addImageButton {
+    display: inline-flex;
+    align-items: center;
+    padding: 12px 25px;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 15px;
+    cursor: pointer;
 }
+
+
+.addIcon {
+    font-size: 20px;
+    margin-right: 8px;
+}
+
 
 @media (max-width: 768px) {
     .imageGrid {
-        grid-template-columns: 1fr; /* single column on tablet/mobile */
-        gap: 15px;
-    }
-
-    .addImageButton {
-        width: 100%; /* full width on tablet/mobile */
-    }
-}
-
-@media (max-width: 480px) {
-    .imageGrid {
-        gap: 10px;
-    }
-
-    .mainTitle {
-        font-size: 22px;
-    }
-
-    .addImageButton {
-        font-size: 16px;
-        height: 38px;
+        grid-template-columns: 1fr;
     }
 }

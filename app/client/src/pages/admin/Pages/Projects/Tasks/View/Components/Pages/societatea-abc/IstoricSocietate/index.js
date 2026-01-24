@@ -166,6 +166,10 @@ const Index = ({ formValues, setFormValues, onSaveSection }) => {
                     <button className={styles.saveButton} onClick={handleSave}>
                         💾 Salvează secțiunea
                     </button>
+                    <button className={styles.middleButton}>
+                        ❌ Exclude acest capitol
+                        <span className={styles.arrowIcon}>→</span>
+                    </button>
                     <button className={styles.nextButton}>
                         ➡️ Mergi la I.3. Date financiare
                     </button>

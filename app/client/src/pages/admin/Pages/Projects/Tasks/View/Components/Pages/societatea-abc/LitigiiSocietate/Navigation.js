@@ -30,7 +30,10 @@ const Navigation = ({ onSave, onNext, nextLabel }) => {
                     "💾 Salveaza sectiunea"
                 )}
             </button>
-
+            <button className={styles.middleButton}>
+                ❌ Exclude acest capitol
+                <span className={styles.arrowIcon}>→</span>
+            </button>
             {onNext && (
                 <button className={styles.nextButton} onClick={onNext}>
                     {nextLabel || "➡️ Urmatoarea sectiune"}
