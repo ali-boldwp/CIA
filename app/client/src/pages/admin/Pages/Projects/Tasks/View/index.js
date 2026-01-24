@@ -59,12 +59,12 @@ const ViewTask = () => {
     }, [task?.data]);
 
 
-    const handleSaveSection = async (payload) => {
+    const handleSaveSection = async () => {
         try {
             // update task API
             await updateTaskData({
                 id: taskId,      // make sure taskId is available in Index
-                data: payload
+                data: formValues
             }).unwrap();
 
             toast.success("Sectiunea salvata cu succes!");
