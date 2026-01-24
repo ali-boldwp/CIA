@@ -29,18 +29,13 @@ const Index = ({ formValues, setFormValues, onSaveSection }) => {
         if (isInitialized.current) return;
 
         setTitle(formValues?.mainSection?.title || "");
-        setIntroText(
-            formValues?.mainSection?.introText ||
-            "In urma verificării surselor disponibile..."
-        );
+        setIntroText(formValues?.mainSection?.introText || "In urma verificării surselor disponibile...");
 
         const rawTable = formValues?.mainSection?.table;
-
         if (rawTable) {
+            // new object reference
             setContractPartnertable({
-                columns: Array.isArray(rawTable.columns)
-                    ? rawTable.columns
-                    : ["Denumire", "Descriere"],
+                columns: Array.isArray(rawTable.columns) ? [...rawTable.columns] : ["Denumire", "Descriere"],
                 rows: Array.isArray(rawTable.rows)
                     ? rawTable.rows.map(r => [r[0] ?? "", r[1] ?? ""])
                     : [["", ""]]
@@ -50,7 +45,9 @@ const Index = ({ formValues, setFormValues, onSaveSection }) => {
         setImages(formValues?.mainSection?.images || [null]);
 
         isInitialized.current = true;
-    }, [formValues]);
+    }, []); // first render only
+// dependency array empty → only first load
+
 
 
 
@@ -63,22 +60,20 @@ const Index = ({ formValues, setFormValues, onSaveSection }) => {
             ...prev,
             rows: [...prev.rows, ["", ""]]
         }));
-    };
+    }
 
     const deleteRow = (index) => {
         setContractPartnertable(prev => ({
             ...prev,
             rows: prev.rows.filter((_, i) => i !== index)
         }));
-    };
+    }
 
     const handleCellChange = (rowIndex, colIndex, value) => {
         setContractPartnertable(prev => ({
             ...prev,
             rows: prev.rows.map((row, i) =>
-                i === rowIndex
-                    ? row.map((cell, j) => (j === colIndex ? value : cell))
-                    : row
+                i === rowIndex ? [...row.map((cell, j) => (j === colIndex ? value : cell))] : row
             )
         }));
     };
@@ -93,13 +88,16 @@ const Index = ({ formValues, setFormValues, onSaveSection }) => {
     /* =========================
        SAVE HANDLER
     ========================== */
-    const handleSave = async () => {
+    const handleSave = () => {
         const payload = {
             data: {
                 mainSection: {
                     title,
                     introText,
-                    table: contractPartnertable,
+                    table: {
+                        columns: [...contractPartnertable.columns],
+                        rows: contractPartnertable.rows.map(r => [...r])
+                    },
                     images
                 }
             }
@@ -107,15 +105,15 @@ const Index = ({ formValues, setFormValues, onSaveSection }) => {
 
         console.log("FINAL PAYLOAD FOR API:", payload);
 
-        // 1️⃣ Call save API
-        await onSaveSection(payload);
+        onSaveSection && onSaveSection(payload);
 
-        // 2️⃣ Update parent state only if necessary
         setFormValues(prev => ({
             ...prev,
             mainSection: payload.data.mainSection
         }));
     };
+
+
 
 
     /* =========================
