@@ -170,7 +170,7 @@ font-size: 16px !important;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-
+    background:none;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
     font-family: inherit;
     box-sizing: border-box;
