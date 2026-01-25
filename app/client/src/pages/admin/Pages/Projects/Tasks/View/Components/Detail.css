@@ -134,6 +134,18 @@ font-size: 15px;
     transition: all 0.25s ease;
 }
 
+.task-actions2 .btn.loadingPause {
+    padding-right: 42px;
+    animation: pulse 1.4s ease-in-out infinite;
+}
+
+/* Text animation */
+.task-actions2 .btn.loadingPause .btn-text {
+    opacity: 0.5;
+    transform: translateX(-6px);
+    transition: all 0.25s ease;
+}
+
 /* ===============================
    SPINNER
 ================================ */
@@ -150,9 +162,25 @@ font-size: 15px;
     transform: scale(0.5);
     animation: spin 0.8s linear infinite;
 }
+.task-actions2 .loadingPause .btn-spinner {
+    position: absolute;
+    right: 14px;
+    width: 16px;
+    height: 16px;
+    border: 2px solid rgba(41, 33, 33, 0.4);
+    border-top-color: #3d3737;
+    border-radius: 50%;
+    opacity: 0;
+    transform: scale(0.5);
+    animation: spin 0.8s linear infinite;
+}
 
 /* Show spinner only on loading */
 .task-actions2 .btn.loading .btn-spinner {
+    opacity: 1;
+    transform: scale(1);
+}
+.task-actions2 .btn.loadingPause .btn-spinner {
     opacity: 1;
     transform: scale(1);
 }

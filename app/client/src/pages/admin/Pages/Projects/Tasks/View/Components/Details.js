@@ -165,8 +165,19 @@ const Details = ({ projectId, taskId, formValues }) => {
                     {/* 2️⃣ STARTED + RUNNING */}
                     {!isCompleted && isStarted && !isPaused && (
                         <>
-                            <button className="btn stop" onClick={handlePause}>
-                                Pause
+                            <button
+                                className={`btn stop ${isPausing ? "loadingPause" : ""}`}
+                                onClick={handlePause}
+                                disabled={isAnyLoading}
+                            >
+                                {isPausing ? (
+                                    <>
+                                        <span className="btn-spinner" />
+                                        <span className="btn-text">Pause...</span>
+                                    </>
+                                ) : (
+                                    "Pause"
+                                )}
                             </button>
 
                             <button
@@ -184,12 +195,28 @@ const Details = ({ projectId, taskId, formValues }) => {
                     {/* 3️⃣ STARTED + PAUSED */}
                     {!isCompleted && isStarted && isPaused && (
                         <>
-                            <button className="btn start" onClick={handleResume}>
-                                Resume
+                            <button
+                                className={`btn start ${isResuming ? "loading" : ""}`}
+                                onClick={handleResume}
+                                disabled={isAnyLoading}
+                            >
+                                {isResuming ? (
+                                    <>
+                                        <span className="btn-spinner" />
+                                        <span className="btn-text">Resume...</span>
+                                    </>
+                                ) : (
+                                    "Resume"
+                                )}
                             </button>
 
-                            <button className="btn done" onClick={handleDone}>
-                                Done
+                            <button
+                                className={`btn done ${isSavingData || isCompleting ? "loading" : ""}`}
+                                onClick={handleDone}
+                                disabled={isAnyLoading}
+                            >
+                                <span className="btn-spinner" />
+                                <span className="btn-text">Done</span>
                             </button>
                         </>
                     )}
