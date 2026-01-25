@@ -160,8 +160,6 @@ const CreateProject = ({ data, main }) => {
         // PROJECT DETAILS
         if (!projectName.trim())
             newErrors.projectName = "Numele proiectului este obligatoriu";
-        if (!projectSubject.trim())
-            newErrors.projectSubject = "Subiectul proiectului este obligatoriu";
         if (!reportType.trim())
             newErrors.reportType = "Tipul raportului este obligatoriu";
         if (!entityType.trim())
@@ -409,26 +407,6 @@ const CreateProject = ({ data, main }) => {
                                 </p>
                             )}
                         </div>
-
-
-                                {/*<div className="form-field">*/}
-                                {/*    <label>Subiect proiect</label>*/}
-                                {/*    <div className="input-wrapper">*/}
-                                {/*        <input*/}
-                                {/*            className="input-box"*/}
-                                {/*            placeholder="Societatea ABC"*/}
-                                {/*            value={projectSubject}*/}
-                                {/*            onChange={(e) =>*/}
-                                {/*                setProjectSubject(e.target.value)*/}
-                                {/*            }*/}
-                                {/*        />*/}
-                                {/*        {errors.projectSubject && (*/}
-                                {/*            <p className={styles.errorText}>*/}
-                                {/*                {errors.projectSubject}*/}
-                                {/*            </p>*/}
-                                {/*        )}*/}
-                                {/*    </div>*/}
-                                {/*</div>*/}
                         <div className="flexSec">
                             <div className="firstField">
                         <div className="form-field">
