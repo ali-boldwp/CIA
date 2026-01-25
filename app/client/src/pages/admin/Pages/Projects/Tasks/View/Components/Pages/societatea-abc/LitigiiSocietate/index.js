@@ -6,7 +6,7 @@ import Navigation from "./Navigation";
 
 const LOCAL_STORAGE_KEY = "litigiiFormData";
 
-const Index = ({ formValues, setFormValues, onSaveSection }) => {
+const Index = ({ formValues, setFormValues, onSaveSection, isSaving }) => {
     const isInitialized = useRef(false);
 
     const { control, watch, setValue, handleSubmit } = useForm({
@@ -142,6 +142,7 @@ const Index = ({ formValues, setFormValues, onSaveSection }) => {
                 {/* Navigation / End Buttons */}
                 <Navigation
                     onSave={handleSubmit(onSubmit)}
+                    isSaving={isSaving}
                     nextLabel="➡️ Mergi la I.2. Istoric societate"
                     onNext={() => console.log("Navigate to next section")}
                 />

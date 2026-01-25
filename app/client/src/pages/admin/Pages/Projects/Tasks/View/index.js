@@ -21,7 +21,7 @@ import {useEffect, useRef, useState} from "react";
 const ViewTask = () => {
 
     const { id: projectId, taskId, taskName } = useParams();
-    const [updateTaskData] = useUpdateTaskDataMutation();
+    const [updateTaskData, { isLoading: updateLoading }] = useUpdateTaskDataMutation();
     const { data: projectData, isLoading } =
         useGetCreateProjectByIdQuery(projectId)
 
@@ -99,6 +99,7 @@ const ViewTask = () => {
                             formValues={formValues}
                             setFormValues={setFormValues}
                             onSaveSection={handleSaveSection}
+                            isSaving={updateLoading}
                         />
                     ) : null}
                 </>

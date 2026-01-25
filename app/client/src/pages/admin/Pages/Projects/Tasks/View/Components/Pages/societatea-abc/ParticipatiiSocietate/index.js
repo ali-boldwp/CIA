@@ -3,7 +3,7 @@ import styles from "./styles.module.css";
 import ImagePlaceholder from "./ImagePlaceholder";
 import Navigation from "./Navigation";
 
-const Index = ({ formValues, setFormValues, onSaveSection }) => {
+const Index = ({ formValues, setFormValues, onSaveSection , isSaving }) => {
     /* =========================
        COLUMNS + LOCAL STATE
     ========================== */
@@ -207,6 +207,7 @@ const Index = ({ formValues, setFormValues, onSaveSection }) => {
                 {/* Navigation */}
                 <Navigation
                     handleSave={handleSave}
+                    isSaving={isSaving}
                     nextLabel="➡️ Mergi la I.3. „Date financiare”"
                     onNext={() => console.log("Navigating to next section...")}
                 />

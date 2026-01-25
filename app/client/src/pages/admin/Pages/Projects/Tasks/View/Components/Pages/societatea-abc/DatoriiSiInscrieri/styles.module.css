@@ -271,3 +271,19 @@ font-size: 16px;
 .arrowIcon {
     margin-left: 10px;
 }
+.loader {
+    display: inline-block;
+    width: 18px;
+    height: 18px;
+    border: 3px solid rgba(255, 255, 255, 0.5); /* soft outer circle */
+    border-top-color: #ffffff; /* white spinning part */
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    vertical-align: middle;
+    margin: 0 auto;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}

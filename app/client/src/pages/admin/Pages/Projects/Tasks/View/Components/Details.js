@@ -22,11 +22,19 @@ const Details = ({ projectId, taskId, formValues }) => {
 
     const chapterName = task?.chapterId?.name;
 
-    const [startTask] = useStartTaskMutation();
-    const [pauseTask] = usePauseTaskMutation();
-    const [resumeTask] = useResumeTaskMutation();
-    const [updateTaskData] = useUpdateTaskDataMutation();
-    const [completeTask] = useCompleteTaskMutation();
+    const [startTask, { isLoading: isStarting }] = useStartTaskMutation();
+    const [pauseTask, { isLoading: isPausing }] = usePauseTaskMutation();
+    const [resumeTask, { isLoading: isResuming }] = useResumeTaskMutation();
+    const [completeTask, { isLoading: isCompleting }] = useCompleteTaskMutation();
+    const [updateTaskData, { isLoading: isSavingData }] = useUpdateTaskDataMutation();
+
+    const isAnyLoading =
+        isStarting ||
+        isPausing ||
+        isResuming ||
+        isCompleting ||
+        isSavingData;
+
 
     const project = projectData?.data;
 
@@ -82,21 +90,24 @@ const Details = ({ projectId, taskId, formValues }) => {
         }
 
         try {
-            // ✅ STEP 1: SAVE FORM DATA
+            // 1️⃣ Save form data
             await updateTaskData({
                 id: taskId,
-                data: formValues,   // 🔥 YAHI FORM DATA JAYEGA
+                data: formValues,
             }).unwrap();
-            refetch();
 
-            // ✅ STEP 2: COMPLETE TASK
+            // 2️⃣ Complete task
             await completeTask(taskId).unwrap();
 
-            toast.success("Task finalizat cu succes, iar datele au fost salvate");
+            // 🔥 IMPORTANT: refetch AFTER complete
+            await refetch();
+
+            toast.success("Task finalizat cu succes");
         } catch (err) {
-            toast.error("A apărut o eroare la trimiterea datelor");
+            toast.error("A apărut o eroare");
         }
     };
+
 
 
 
@@ -140,9 +151,15 @@ const Details = ({ projectId, taskId, formValues }) => {
 
                     {/* 1️⃣ ONLY START (never started before) */}
                     {!isCompleted && !isStarted && (
-                        <button className="btn start" onClick={handleStart}>
-                            Start
+                        <button
+                            className={`btn start ${isStarting ? "loading" : ""}`}
+                            onClick={handleStart}
+                            disabled={isAnyLoading}
+                        >
+                            <span className="btn-spinner" />
+                            <span className="btn-text">Start</span>
                         </button>
+
                     )}
 
                     {/* 2️⃣ STARTED + RUNNING */}
@@ -152,9 +169,15 @@ const Details = ({ projectId, taskId, formValues }) => {
                                 Pause
                             </button>
 
-                            <button className="btn done" onClick={handleDone}>
-                                Done
+                            <button
+                                className={`btn done ${isSavingData || isCompleting ? "loading" : ""}`}
+                                onClick={handleDone}
+                                disabled={isAnyLoading}
+                            >
+                                <span className="btn-spinner" />
+                                <span className="btn-text">Done</span>
                             </button>
+
                         </>
                     )}
 

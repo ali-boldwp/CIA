@@ -1,29 +1,18 @@
 import React, { useState } from 'react';
 import styles from './Navigation.module.css';
 
-const Navigation = ({ onSave, onNext, nextLabel }) => {
-    const [loading, setLoading] = useState(false);
-
-    const handleSaveClick = async () => {
-        if (!onSave) return;
-        setLoading(true);
-        try {
-            await onSave();
-        } finally {
-            setLoading(false);
-        }
-    };
+const Navigation = ({ onNext, nextLabel,isSaving }) => {
 
     return (
         <div className={styles.navigation}>
             <button
+                type="submit"
                 className={styles.saveButton}
-                onClick={handleSaveClick}
-                disabled={loading}
+                disabled={isSaving}
             >
-                {loading ? (
+                {isSaving ? (
                     <>
-                    <span className={styles.loader}></span>
+                        <span className={styles.loader}></span>
                         <span>...Salveaza</span>
                     </>
                 ) : (

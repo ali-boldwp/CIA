@@ -65,7 +65,7 @@ export const taskApi = createApi({
                 method: "PUT",
                 body: { data }
             }),
-            invalidatesTags: ["task"]
+            invalidatesTags: ['Projects']
         }),
 
 
@@ -94,6 +94,7 @@ export const taskApi = createApi({
                 url: `/task/${id}/complete`,
                 method: "POST",
             }),
+            invalidatesTags: ["Projects"]
         }),
 
         finalizeTask: builder.mutation({

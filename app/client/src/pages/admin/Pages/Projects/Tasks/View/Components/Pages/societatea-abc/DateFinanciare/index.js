@@ -5,7 +5,7 @@ import FinancialTable from "./FinancialTable";
 import ImagePlaceHolder from "./ImagePlaceHolder";
 import Navigation from "./Navigation";
 
-const Index = ({ formValues, setFormValues, onSaveSection }) => {
+const Index = ({ formValues, setFormValues, onSaveSection,isSaving }) => {
     /* =========================
        LOCAL STATE (like useForm)
     ========================== */
@@ -68,7 +68,7 @@ const Index = ({ formValues, setFormValues, onSaveSection }) => {
                 </div>
 
 
-                <Navigation handleSave={handleSave} />
+                <Navigation isSaving={isSaving} handleSave={handleSave} />
             </div>
         </div>
     );

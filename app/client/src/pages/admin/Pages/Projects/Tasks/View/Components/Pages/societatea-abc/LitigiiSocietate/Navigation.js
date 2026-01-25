@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import styles from './Navigation.module.css';
 
-const Navigation = ({ onSave, onNext, nextLabel }) => {
+const Navigation = ({ onSave, onNext, nextLabel,isSaving }) => {
     const [loading, setLoading] = useState(false);
 
     const handleSaveClick = async () => {
@@ -19,9 +19,9 @@ const Navigation = ({ onSave, onNext, nextLabel }) => {
             <button
                 className={styles.saveButton}
                 onClick={handleSaveClick}
-                disabled={loading}
+                disabled={isSaving}
             >
-                {loading ? (
+                {isSaving ? (
                     <>
                     <span className={styles.loader}></span>
                         <span>...Salveaza</span>

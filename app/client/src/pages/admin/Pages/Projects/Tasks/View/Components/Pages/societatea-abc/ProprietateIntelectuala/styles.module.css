@@ -162,86 +162,108 @@ font-size: 15px;
 
 font-size: 16px;
 }
-.navigation {
-    margin: 40px 0;
-    padding: 25px;
-
-    border-radius: 10px;
-
-}
-
 .navButtons {
     display: flex;
     gap: 20px;
     flex-wrap: wrap;
-    width: 1100px;
-
+}
+.navigation {
+    margin-top: 0px !important;
+    display: flex;
+    gap: 20px;
+    justify-content: flex-start;
 }
 
+
+.saveButton:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+.middleButton{
+    height: 30px;
+    padding: 0px 30px;
+
+    color: #64748B;
+    border:1px solid #E5E7EB;
+    border-radius: 4px;
+
+    font-size: 16px;
+    font-weight: 400;
+    cursor: pointer;
+    min-width: 180px;
+}
+
+/* Loader inside button */
+.loader {
+    display: inline-block;
+    width: 18px;
+    height: 18px;
+    border: 3px solid rgba(255, 255, 255, 0.5); /* soft outer circle */
+    border-top-color: #ffffff; /* white spinning part */
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    vertical-align: middle;
+    margin: 0 auto;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+.saveButton.loading span {
+    visibility: hidden;
+}
+
+.saveButton.loading .loader {
+    display: inline-block;
+}
 .saveButton {
-    display: inline-flex;
-    align-items: center;
-    padding: 14px 30px;
+    height: 30px;
+    padding: 0px 30px;
     background-color: #10B981;
     color: white;
     border: 1px solid #10B981;
-    border-radius: 8px;
+    border-radius: 4px;
+
     font-size: 16px;
-    font-weight: 600;
+    font-weight: 400;
     cursor: pointer;
-    transition: all 0.3s;
-    flex: 1;
-    width: 240px ;
-    height: 40px;
-    justify-content: center;
+    min-width: 180px;
 }
 
-
+.saveButton:hover {
+    background-color: #059669;
+}
 
 .nextButton {
-    display: inline-flex;
-    align-items: center;
-    padding: 14px 30px;
+    padding: 0px 30px;
+    height: 30px;
     background-color: #FFFFFF;
     color: #2563EB;
     border: 1px solid #2563EB;
-    border-radius: 8px;
+    border-radius: 4px;
+
     font-size: 16px;
-    font-weight: 700;
+    font-weight: 400;
     cursor: pointer;
-    transition: all 0.3s;
-    flex: 1;
-    font-style: italic;
-    width: 240px;
-    height: 40px;
-    justify-content: center;
+    min-width: 180px;
 }
 
-
-.middleButton{
-    display: inline-flex;
-    align-items: center;
-    padding: 18px 0px;
-    background-color: #FFFFFF;
-    color: #64748B;
-    border: 1px solid #E5E7EB;
-    border-radius: 8px;
-    font-size: 16px;
-    font-weight: 700;
-    cursor: pointer;
-    transition: all 0.3s;
-    flex: 1;
-    font-style: italic;
-    width: 240px !important;
-    height: 40px;
-    justify-content: center;
-}
-.saveIcon {
-    font-size: 20px;
-    margin-right: 12px;
+.nextButton:hover {
+    background-color: #F3F4F6;
 }
 
-.arrowIcon {
-    font-size: 20px;
-    margin-left: 12px;
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .navigation {
+        flex-direction: column;
+        align-items: center;
+        gap: 15px;
+    }
+
+    .saveButton,
+    .nextButton {
+        width: 100%;
+        max-width: 300px;
+    }
 }

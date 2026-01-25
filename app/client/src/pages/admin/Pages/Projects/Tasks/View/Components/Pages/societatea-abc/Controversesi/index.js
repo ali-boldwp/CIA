@@ -6,7 +6,7 @@ import NotesPlaceholder from "./NotesPlaceholder";
 
 const LOCAL_STORAGE_KEY = "controversyFormData";
 
-const ControversyIndex = ({ formValues, setFormValues, onSaveSection }) => {
+const ControversyIndex = ({ formValues, setFormValues, onSaveSection,isSaving }) => {
     const isInitialized = useRef(false);
 
     const { control, watch, setValue, handleSubmit } = useForm({
@@ -141,9 +141,15 @@ const ControversyIndex = ({ formValues, setFormValues, onSaveSection }) => {
                 {/* NAVIGATION / SAVE */}
                 <div className={styles.navigation}>
                     <div className={styles.navButtons}>
-                        <button className={styles.saveButton} onClick={handleSubmit(onSubmit)}>
-                            <span className={styles.saveIcon}>💾</span>
-                            Salveaza sectiunea
+                        <button className={styles.saveButton} disabled={isSaving} onClick={handleSubmit(onSubmit)}>
+                            {isSaving ? (
+                                <>
+                                    <span className={styles.loader}></span>
+                                    <span>...Salveaza</span>
+                                </>
+                            ) : (
+                                "💾 Salveaza sectiunea"
+                            )}
                         </button>
 
                         <button className={styles.middleButton}>

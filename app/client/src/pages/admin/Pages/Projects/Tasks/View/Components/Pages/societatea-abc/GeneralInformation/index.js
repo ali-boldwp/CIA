@@ -11,7 +11,7 @@ const tableColumns = {
     locations: ["TIP", "ADRESA", "ACT JURIDIC", "PERIOADA"]
 };
 
-const Index = ({ formValues, onSaveSection }) => {
+const Index = ({ formValues, onSaveSection,isSaving }) => {
 
     /* =========================
        useForm INIT
@@ -193,9 +193,9 @@ const Index = ({ formValues, onSaveSection }) => {
                     />
 
                     <Navigation
-                        onSave={handleSubmit(onSubmit)}
                         nextLabel="➡️ Mergi la I.2. Istoric societate"
                         onNext={() => console.log("next")}
+                        isSaving={isSaving}
                     />
                 </div>
 
