@@ -92,3 +92,109 @@ font-size: 15px;
     display: flex;
     justify-content: end;
 }
+/* ===============================
+   ACTION BUTTONS (START / DONE / PAUSE)
+================================ */
+
+.task-actions2 .btn {
+    position: relative;
+    padding: 10px 20px;
+    border-radius: 6px;
+    font-size: 15px;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+/* Disabled state */
+.task-actions2 .btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* ===============================
+   LOADING STATE
+================================ */
+
+.task-actions2 .btn.loading {
+    padding-right: 42px;
+    animation: pulse 1.4s ease-in-out infinite;
+}
+
+/* Text animation */
+.task-actions2 .btn.loading .btn-text {
+    opacity: 0.5;
+    transform: translateX(-6px);
+    transition: all 0.25s ease;
+}
+
+/* ===============================
+   SPINNER
+================================ */
+
+.task-actions2 .btn-spinner {
+    position: absolute;
+    right: 14px;
+    width: 16px;
+    height: 16px;
+    border: 2px solid rgba(255,255,255,0.4);
+    border-top-color: #fff;
+    border-radius: 50%;
+    opacity: 0;
+    transform: scale(0.5);
+    animation: spin 0.8s linear infinite;
+}
+
+/* Show spinner only on loading */
+.task-actions2 .btn.loading .btn-spinner {
+    opacity: 1;
+    transform: scale(1);
+}
+
+/* ===============================
+   BUTTON COLORS
+================================ */
+
+.task-actions2 .btn.start {
+    background: linear-gradient(90deg, #2563EB 0%, #4F46E5 100%);
+    color: #fff;
+}
+
+.task-actions2 .btn.stop {
+    background: white;
+    color: #000000;
+    border: 1px solid lightgray;
+}
+
+.task-actions2 .btn.done {
+    background: linear-gradient(90deg, #16A34A 0%, #15803D 100%);
+    color: #fff;
+}
+
+/* ===============================
+   ANIMATIONS
+================================ */
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes pulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(0,0,0,0.15);
+    }
+    70% {
+        box-shadow: 0 0 0 8px rgba(0,0,0,0);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(0,0,0,0);
+    }
+}

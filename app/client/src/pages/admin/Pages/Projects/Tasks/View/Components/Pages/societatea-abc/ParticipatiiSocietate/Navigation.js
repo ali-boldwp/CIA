@@ -1,13 +1,19 @@
 import React from 'react';
 import styles from './Navigation.module.css';
 
-const Navigation = ({handleSave}) => {
+const Navigation = ({handleSave,isSaving}) => {
     return (
         <div className={styles.navigation}>
             <div className={styles.navButtons}>
-                <button className={styles.saveButton} onClick={handleSave}>
-                    <span className={styles.saveIcon}>💾</span>
-                    Salveaza sectiunea
+                <button className={styles.saveButton} disabled={isSaving} onClick={handleSave}>
+                    {isSaving ? (
+                        <>
+                            <span className={styles.loader}></span>
+                            <span>...Salveaza</span>
+                        </>
+                    ) : (
+                        "💾 Salveaza sectiunea"
+                    )}
                 </button>
                 <button className={styles.middleButton}>
                     ❌  Exclude acest capitol

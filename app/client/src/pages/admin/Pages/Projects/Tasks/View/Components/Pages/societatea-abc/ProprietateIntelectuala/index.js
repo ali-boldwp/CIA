@@ -5,7 +5,7 @@ import ImagePlaceholder from "./ImagePlaceholder";
 
 const LOCAL_STORAGE_KEY = "marciOSIMFormData";
 
-const Index = ({ formValues, setFormValues, onSaveSection }) => {
+const Index = ({ formValues, setFormValues, onSaveSection , isSaving}) => {
     const isInitialized = useRef(false);
 
     const { control, watch, setValue, handleSubmit } = useForm({
@@ -171,8 +171,15 @@ const Index = ({ formValues, setFormValues, onSaveSection }) => {
                 {/* Navigation / End Buttons */}
                 <div className={styles.navigation}>
                     <div className={styles.navButtons}>
-                        <button className={styles.saveButton} onClick={handleSubmit(onSubmit)}>
-                            <span className={styles.saveIcon}>💾</span> Salveaza sectiunea
+                        <button className={styles.saveButton} disabled={isSaving} onClick={handleSubmit(onSubmit)}>
+                            {isSaving ? (
+                                <>
+                                    <span className={styles.loader}></span>
+                                    <span>...Salveaza</span>
+                                </>
+                            ) : (
+                                "💾 Salveaza sectiunea"
+                            )}
                         </button>
                         <button className={styles.middleButton}>
                             ❌ Exclude acest capitol

@@ -3,7 +3,7 @@ import { useForm, useFieldArray } from "react-hook-form";
 import styles from "./styles.module.css";
 import ImagePlaceholder from "./ImagePlaceholder";
 
-const Index = ({ formValues, setFormValues, onSaveSection }) => {
+const Index = ({ formValues, setFormValues, onSaveSection,isSaving }) => {
     const achizitiiColumns = [
         "TIP ACHIZITIE",
         "AUTORITATE CONTRACTANTA",
@@ -183,8 +183,15 @@ const Index = ({ formValues, setFormValues, onSaveSection }) => {
 
                     {/* SAVE */}
                     <div className={styles.navigation}>
-                        <button type="submit" className={styles.saveButton}>
-                            💾 Salvează secțiunea
+                        <button type="submit" disabled={isSaving} className={styles.saveButton}>
+                            {isSaving ? (
+                                <>
+                                    <span className={styles.loader}></span>
+                                    <span>...Salveaza</span>
+                                </>
+                            ) : (
+                                "💾 Salveaza sectiunea"
+                            )}
                         </button>
                         <button className={styles.middleButton}>
                             ❌ Exclude acest capitol

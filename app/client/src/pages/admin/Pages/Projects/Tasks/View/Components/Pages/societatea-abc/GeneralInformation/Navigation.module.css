@@ -11,30 +11,28 @@
     cursor: not-allowed;
 }
 
-/* Loader inside button */
+/* ===== BUTTON LOADER ===== */
 .loader {
-    display: inline-block;
-    width: 18px;
-    height: 18px;
-    border: 3px solid rgba(255, 255, 255, 0.5); /* soft outer circle */
-    border-top-color: #ffffff; /* white spinning part */
+    width: 16px;
+    height: 16px;
+    border: 2px solid rgba(255, 255, 255, 0.4);
+    border-top: 2px solid #ffffff;
     border-radius: 50%;
-    animation: spin 1s linear infinite;
-    vertical-align: middle;
-    margin: 0 auto;
-}
-
-@keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-}
-.saveButton.loading span {
-    visibility: hidden;
-}
-
-.saveButton.loading .loader {
+    animation: spin 0.8s linear infinite;
     display: inline-block;
+    margin-right: 8px;
 }
+
+/* Smooth rotation */
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
 .saveButton {
     height: 30px;
     padding: 0px 30px;

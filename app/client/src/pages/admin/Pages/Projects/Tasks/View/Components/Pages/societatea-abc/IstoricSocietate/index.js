@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import styles from "./styles.module.css";
 import ImagePlaceholder from "./ImagePlaceholder";
 
-const Index = ({ formValues, setFormValues, onSaveSection }) => {
+const Index = ({ formValues, setFormValues, onSaveSection,isSaving }) => {
 
     const chronologyColumns = ["DATA", "MENTIUNI"];
 
@@ -163,8 +163,15 @@ const Index = ({ formValues, setFormValues, onSaveSection }) => {
 
                 {/* SAVE */}
                 <div className={styles.navigation}>
-                    <button className={styles.saveButton} onClick={handleSave}>
-                        💾 Salvează secțiunea
+                    <button className={styles.saveButton}  disabled={isSaving} onClick={handleSave}>
+                        {isSaving ? (
+                            <>
+                                <span className={styles.loader}></span>
+                                <span>...Salveaza</span>
+                            </>
+                        ) : (
+                            "💾 Salveaza sectiunea"
+                        )}
                     </button>
                     <button className={styles.nextButton}>
                         ➡️ Mergi la I.3. Date financiare

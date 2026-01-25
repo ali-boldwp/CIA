@@ -3,7 +3,7 @@ import { useForm, Controller, useFieldArray } from "react-hook-form";
 import styles from "./styles.module.css";
 import ImagePlaceholder from "./ImagePlaceholder";
 
-const Index = ({ formValues, setFormValues  ,onSaveSection}) => {
+const Index = ({ formValues, setFormValues  ,onSaveSection,isSaving}) => {
     const isInitialized = useRef(false);
 
     // ===== React Hook Form =====
@@ -175,8 +175,15 @@ const Index = ({ formValues, setFormValues  ,onSaveSection}) => {
 
                 {/* Navigation */}
                 <div className={styles.navButtons}>
-                    <button className={styles.saveButton} onClick={handleSubmit(onSubmit)}>
-                        <span className={styles.saveIcon}>💾</span> Salveaza sectiunea
+                    <button className={styles.saveButton} disabled={isSaving} onClick={handleSubmit(onSubmit)}>
+                        {isSaving ? (
+                            <>
+                                <span className={styles.loader}></span>
+                                <span>...Salveaza</span>
+                            </>
+                        ) : (
+                            "💾 Salveaza sectiunea"
+                        )}
                     </button>
 
                     <button className={styles.middleButton}>

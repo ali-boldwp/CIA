@@ -8,7 +8,7 @@ import ImageSection from './ImageSection';
 
 const LOCAL_STORAGE_KEY = "mainSectionFormData";
 
-const Index = ({ formValues, setFormValues, onSaveSection }) => {
+const Index = ({ formValues, setFormValues, onSaveSection , isSaving}) => {
     const isInitialized = useRef(false);
 
     // ===== React Hook Form =====
@@ -135,8 +135,15 @@ const Index = ({ formValues, setFormValues, onSaveSection }) => {
                 </div>
 
                 <div className={styles.navigation}>
-                    <button className={styles.saveButton} onClick={handleSubmit(onSubmit)}>
-                        💾 Salvează secțiunea
+                    <button className={styles.saveButton} disabled={isSaving} onClick={handleSubmit(onSubmit)}>
+                        {isSaving ? (
+                            <>
+                                <span className={styles.loader}></span>
+                                <span>...Salveaza</span>
+                            </>
+                        ) : (
+                            "💾 Salveaza sectiunea"
+                        )}
                     </button>
                     <button className={styles.middleButton}>
                         ❌ Exclude acest capitol
