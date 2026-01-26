@@ -170,12 +170,12 @@ const Index = () => {
                 disabled={submitting}
             />
 
-            {/*<Button*/}
-            {/*    onApprove={handleApprove}*/}
-            {/*    onSaveDraft={handleSaveDraft}*/}
-            {/*    onGenerateBrief={() => console.log("Generate brief")}*/}
-            {/*    disabled={submitting}*/}
-            {/*/>*/}
+            <Button
+                onApprove={handleApprove}
+                onSaveDraft={handleSaveDraft}
+                onGenerateBrief={() => console.log("Generate brief")}
+                disabled={submitting}
+            />
         </>
     );
 };
