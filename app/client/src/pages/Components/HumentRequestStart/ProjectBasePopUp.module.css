@@ -59,43 +59,45 @@ font-size: 18px;
 
 
 /* PAGINATION FOOTER */
-.footer {
-    display: flex;
-    justify-content: end;
-    align-items: center;
-    margin-top: 14px;
+
+.footerCard {
+    padding: 10px 18px !important;
+    display: flex !important;
+    justify-content: end !important;
+    align-items: center !important;
+
+
+    font-size: 16px !important;
+    color: #6b7280 !important;
+
+    margin-bottom: 32px !important; /* ⬅ yahan se body ke bottom se gap aa jayega */
 }
 
 .footerLeft {
-    display: flex;
-    align-items: center;
-    gap: 6px;
+    display: flex !important;
+    align-items: center !important;
+    gap: 6px !important;
 }
 
 .footerSelect {
-    padding: 6px 10px;
-    border-radius: 8px;
-    border: 1px solid #d1d8ee;
+    border-radius: 12px !important;
+    border: 1px solid #e5e7eb !important;
+    padding: 4px 10px !important;
+
+
+    font-size: 16px !important;
+    background-color: #ffffff !important;
 }
 
-.footerRight {
-    display: flex;
-    align-items: center;
-    gap: 12px;
+.footerRight strong {
+    color: #111827 !important;
 }
 
-.pageBtn {
-    padding: 6px 12px;
-    border: 1px solid #d1d8ee;
-    border-radius: 8px;
-    background: white;
-    cursor: pointer;
+.span{
+    font-size: 16px !important;
+    font-weight: 600 !important;
 }
 
-.pageBtn:disabled {
-    opacity: 0.4;
-    cursor: not-allowed;
-}
 
 /* Empty state */
 .emptyState {
@@ -110,7 +112,7 @@ font-size: 18px;
     border: 1px solid #e2e8f0;
     padding: 12px 16px;
     color: #111827;
-    font-size: 16px;
+    font-size: 16px !important;
     background: #f8fafc;
 }
 
@@ -173,9 +175,10 @@ font-size: 18px;
 .row td {
     padding: 10px 14px;
 
-font-size: 15px;
+font-size: 16px !important;
     color: #0f172a;
     border-top: 1px solid #e2e8f0;
+    font-weight: 500;
 }
 
 /* radio cell */
@@ -208,9 +211,10 @@ font-size: 16px;
 .contextTitle {
 
 
-font-size: 16px;
+    font-size: 18px;
     color: #94a3b8;
     margin-bottom: 8px;
+    font-weight: 600;
 }
 
 .contextRow {
@@ -227,9 +231,11 @@ font-size: 16px;
 
 .contextTag {
     padding: 5px 10px;
-    border-radius: 999px;
+    border-radius: 4px;
     background: #e5e7eb;
     color: #475569;
+    font-size: 16px !important;
+    font-weight: 600;
 }
 
 .contextValue {

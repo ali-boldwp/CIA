@@ -128,8 +128,7 @@ const ProjectBasePopUp = () => {
                 </div>
 
                 {/* PAGINATION */}
-                <div className={styles.footer}>
-
+                <div className={styles.footerCard}>
 
                     <div className={styles.footerRight}>
                         <button
@@ -140,9 +139,9 @@ const ProjectBasePopUp = () => {
                             ← Precedent
                         </button>
 
-                        <span>
-                            Pagina <strong>{page}</strong> din <strong>{totalPages}</strong>
-                        </span>
+                        <span className={styles.span}>
+                        Pagina <strong>{page}</strong> din <strong>{totalPages}</strong>
+                    </span>
 
                         <button
                             disabled={page === totalPages}
