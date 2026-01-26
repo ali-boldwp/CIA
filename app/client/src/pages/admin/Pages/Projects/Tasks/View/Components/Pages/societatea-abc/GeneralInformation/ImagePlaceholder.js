@@ -25,7 +25,7 @@ const ImagePlaceholder = ({ images = [], setImages }) => {
         <>
             <span>Adauga Imagini Sau Grafice (optional).</span>
             <div className={styles.imageSection}>
-                <button className={styles.addRow} onClick={handleAdd}>
+                <button type= "button" className={styles.addRow} onClick={handleAdd}>
                     ➕ Adauga poza/grafic
                 </button>
                 <div className={styles.imageGrid}>
