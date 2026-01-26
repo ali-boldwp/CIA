@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { useForm, useFieldArray } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import ImagePlaceholder from "./ImagePlaceholder";
 import Navigation from "./Navigation";
 import styles from "./styles.module.css";
@@ -11,12 +11,12 @@ const tableColumns = {
     locations: ["TIP", "ADRESA", "ACT JURIDIC", "PERIOADA"]
 };
 
-const Index = ({ formValues, onSaveSection,isSaving }) => {
+const Index = ({ formValues, onSaveSection, isSaving }) => {
 
     /* =========================
-       useForm INIT
+       useForm INIT - WITHOUT useFieldArray
     ========================== */
-    const { control, register, handleSubmit, setValue, watch } = useForm({
+    const { register, handleSubmit, setValue, watch, getValues } = useForm({
         defaultValues: {
             generalInfo: {
                 generalProfile: [
@@ -34,7 +34,7 @@ const Index = ({ formValues, onSaveSection,isSaving }) => {
                 management: { rows: [["", "", ""]] },
                 board: { rows: [["", "", "", ""]] },
                 locations: { rows: [["", "", "", ""]] },
-                images: [null]
+                images: []
             }
         }
     });
@@ -51,54 +51,59 @@ const Index = ({ formValues, onSaveSection,isSaving }) => {
     }, [formValues, setValue]);
 
     /* =========================
-       FIELD ARRAYS
+       SIMPLE ADD ROW FUNCTION
     ========================== */
-    const shareholdersFA = useFieldArray({ control, name: "generalInfo.shareholders.rows" });
-    const managementFA = useFieldArray({ control, name: "generalInfo.management.rows" });
-    const boardFA = useFieldArray({ control, name: "generalInfo.board.rows" });
-    const locationsFA = useFieldArray({ control, name: "generalInfo.locations.rows" });
+    const handleAddRow = (key) => {
+        const currentRows = getValues(`generalInfo.${key}.rows`) || [];
+        const newRow = tableColumns[key].map(() => "");
+        setValue(`generalInfo.${key}.rows`, [...currentRows, newRow]);
+    };
 
     /* =========================
-       RENDER TABLE (UNCHANGED UI)
+       RENDER TABLE - SIMPLE VERSION
     ========================== */
-    const renderTable = (title, key, fa) => (
-        <>
-            <h3 className={styles.sectionTitle}>{title}</h3>
+    const renderTable = (title, key) => {
+        const rows = watch(`generalInfo.${key}.rows`) || [];
 
-            <table className={styles.editableTable}>
-                <thead>
-                <tr>
-                    {tableColumns[key].map((col, i) => (
-                        <th key={i}>{col}</th>
-                    ))}
-                </tr>
-                </thead>
+        return (
+            <>
+                <h3 className={styles.sectionTitle}>{title}</h3>
 
-                <tbody>
-                {fa.fields.map((row, i) => (
-                    <tr key={row.id}>
-                        {tableColumns[key].map((_, j) => (
-                            <td key={j}>
-                                <input
-                                    {...register(`generalInfo.${key}.rows.${i}.${j}`)}
-                                    placeholder={`[${tableColumns[key][j]}]`}
-                                />
-                            </td>
+                <table className={styles.editableTable}>
+                    <thead>
+                    <tr>
+                        {tableColumns[key].map((col, i) => (
+                            <th key={i}>{col}</th>
                         ))}
                     </tr>
-                ))}
-                </tbody>
-            </table>
+                    </thead>
 
-            <button
-                type="button"
-                className={styles.addRowButton}
-                onClick={() => fa.append(tableColumns[key].map(() => ""))}
-            >
-                + Add Row
-            </button>
-        </>
-    );
+                    <tbody>
+                    {rows.map((row, i) => (
+                        <tr key={`${key}-${i}`}>
+                            {tableColumns[key].map((_, j) => (
+                                <td key={j}>
+                                    <input
+                                        {...register(`generalInfo.${key}.rows.${i}.${j}`)}
+                                        placeholder={`[${tableColumns[key][j]}]`}
+                                    />
+                                </td>
+                            ))}
+                        </tr>
+                    ))}
+                    </tbody>
+                </table>
+
+                <button
+                    type="button"
+                    className={styles.addRowButton}
+                    onClick={() => handleAddRow(key)}
+                >
+                    + Add Row
+                </button>
+            </>
+        );
+    };
 
     /* =========================
        SAVE
@@ -134,7 +139,6 @@ const Index = ({ formValues, onSaveSection,isSaving }) => {
 
         onSaveSection(payload);
     };
-
 
     const images = watch("generalInfo.images");
 
@@ -178,10 +182,10 @@ const Index = ({ formValues, onSaveSection,isSaving }) => {
                 </table>
 
                 {/* ===== TABLES ===== */}
-                {renderTable("📊 Structura Actionariatului", "shareholders", shareholdersFA)}
-                {renderTable("👥 Conducere / Administratori", "management", managementFA)}
-                {renderTable("🏛️ Consiliu De Administratie", "board", boardFA)}
-                {renderTable("📍 Locatii / Puncte De Lucru", "locations", locationsFA)}
+                {renderTable("📊 Structura Actionariatului", "shareholders")}
+                {renderTable("👥 Conducere / Administratori", "management")}
+                {renderTable("🏛️ Consiliu De Administratie", "board")}
+                {renderTable("📍 Locatii / Puncte De Lucru", "locations")}
 
                 {/* ===== IMAGES ===== */}
                 <div className={styles.imagesSection}>

@@ -1,25 +1,32 @@
-import React from "react";
+import React, { useEffect } from "react";
 import styles from "./ImagePlaceholder.module.css";
 
-const ImagePlaceholder = ({ images, setImages }) => {
+const ImagePlaceholder = ({ images = [], setImages }) => {
+    // Ensure at least 1 uploader always visible
+    useEffect(() => {
+        if (images.length === 0) {
+            setImages([null]);
+        }
+    }, [images, setImages]);
 
+    // Add new uploader
     const handleAdd = () => {
         setImages([...images, null]);
     };
 
+    // Update selected image
     const handleImageChange = (index, file) => {
         const updated = [...images];
-        updated[index] = URL.createObjectURL(file); // keep preview
+        updated[index] = URL.createObjectURL(file);
         setImages(updated);
     };
 
     return (
         <>
-            <span>Adauga imagini sau grafice (optional).</span>
+            <span>Adauga Imagini Sau Grafice (optional).</span>
             <div className={styles.imageSection}>
-                <button className={styles.addImageButton} onClick={handleAdd}>
-                    <span className={styles.addIcon}>+</span>
-                    Adaugă poza/grafic
+                <button className={styles.addRow} onClick={handleAdd}>
+                    ➕ Adauga poza/grafic
                 </button>
                 <div className={styles.imageGrid}>
                     {images.map((img, index) => (
@@ -28,11 +35,16 @@ const ImagePlaceholder = ({ images, setImages }) => {
                                 type="file"
                                 accept="image/*"
                                 hidden
-                                onChange={(e) => handleImageChange(index, e.target.files[0])}
+                                onChange={(e) =>
+                                    handleImageChange(index, e.target.files[0])
+                                }
                             />
-
                             {img ? (
-                                <img src={img} alt="preview" className={styles.previewImage} />
+                                <img
+                                    src={img}
+                                    alt="preview"
+                                    className={styles.previewImage}
+                                />
                             ) : (
                                 <>
                                     <div className={styles.placeholderIcon}>🖼️</div>
