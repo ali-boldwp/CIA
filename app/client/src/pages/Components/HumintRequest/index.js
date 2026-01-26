@@ -1,7 +1,9 @@
 // HumintRequestDetail.js
 
 import React, { useRef, useState, useEffect } from "react";
-import Header from "./Header";
+import jsPDF from "jspdf";
+import autoTable from "jspdf-autotable";
+
 import RequestDetailForm from "./RequestDetailForm";
 import ActionButtons from "./Button";
 import ClarificationSectiom from "./ClarificationSectiom";
@@ -310,6 +312,99 @@ const Index = ({ data, analystData, clarificationData, refetchClarifications }) 
         }
     };
 
+
+    const handlePrint = () => {
+        const values = validateAndGetValues();
+        if (!values) return;
+
+        const doc = new jsPDF();
+
+        // ===== HUMINT BRIEF TITLE =====
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(16);
+        doc.setTextColor(0, 0, 0);
+        doc.text("HUMINT BRIEF", 14, 15);
+
+        // ===== CONTEXT TABLE =====
+        autoTable(doc, {
+            startY: 25,
+            head: [["Context", ""]],
+            body: [
+                ["Denumire proiect", values.projectName],
+                ["Tip raport", values.reportType],
+                ["Responsabil proiect", values.projectOwner],
+                ["Deadline", values.deadline],
+                ["Prioritate", values.priority],
+            ],
+            theme: "grid",
+        });
+
+        // ===== BRIEF OPERATIV + FEEDBACK =====
+        let y = doc.lastAutoTable.finalY + 10;
+
+        const addSection = (heading, content) => {
+            // Heading → BLACK
+            doc.setFont("helvetica", "bold");
+            doc.setFontSize(16);
+            doc.setTextColor(0, 0, 0);
+            doc.text(heading, 14, y);
+            y += 8;
+
+            // Value → LIGHT GRAY
+            doc.setFont("helvetica", "normal");
+            doc.setFontSize(14);
+            doc.setTextColor(80, 80, 80);
+            doc.text(content || "-", 14, y, { maxWidth: 180 });
+            y += 20;
+        };
+
+        addSection("Scop & obiective:", values.briefObjective);
+        addSection("Întrebări cheie:", values.keyQuestions);
+        addSection("Ținte:", values.targets);
+        addSection("Zone / locații:", values.locations);
+        addSection("Restricții:", values.restrictions);
+        addSection("Feedback manager:", values.managerFeedback);
+
+        // ===== CLARIFICATIONS HISTORY =====
+        if (clarifications && clarifications.length > 0) {
+
+            // Clarifications heading
+            doc.setFont("helvetica", "bold");
+            doc.setFontSize(16);
+            doc.setTextColor(0, 0, 0);
+            doc.text("Clarificări:", 14, y);
+            y += 10;
+
+            clarifications.forEach((c) => {
+                const userName = c.userId?.name || "User";
+                const date = c.createdAt
+                    ? new Date(c.createdAt).toLocaleString("ro-RO", {
+                        day: "2-digit",
+                        month: "2-digit",
+                        year: "numeric",
+                        hour: "2-digit",
+                        minute: "2-digit",
+                    })
+                    : "";
+
+                const message = `User: ${userName}\nDate: ${date}\nMesaj: ${c.clarificationText || "-"}`;
+
+                // Value → LIGHT GRAY
+                doc.setFont("helvetica", "normal");
+                doc.setFontSize(14);
+                doc.setTextColor(80, 80, 80);
+                doc.text(message, 14, y, { maxWidth: 180 });
+                y += 25;
+            });
+        }
+
+        doc.save("humint-brief.pdf");
+    };
+
+
+
+
+
     return (
         <>
             <RequestDetailForm
@@ -338,7 +433,8 @@ const Index = ({ data, analystData, clarificationData, refetchClarifications }) 
                     onApprove={handleApprove}
                     onReject={handleReject}
                     onClarify={handleShowClarifyBox}
-                    onPrint={() => console.log("Print soon")}
+                    onPrint={handlePrint}
+
                     disabled={submitting}
                 />
             )}
