@@ -1,115 +1,27 @@
 // TaskFieldForm.jsx
 import styles from "./TaskFieldForm.module.css";
 import { useGetFoamFieldsByTaskIdQuery } from "../../../../../../../services/formFieldsApi";
-import React, { useEffect, useRef, useMemo } from "react";
+import React, { useRef, useMemo } from "react";
 import JoditEditor from "jodit-react";
 import ImageDropzoneField from "./ImageDropzoneField";
-
-// ✅ helper: create empty row object from table columns
-const makeEmptyRow = (columns = []) => {
-    const row = {};
-    columns.forEach((c) => {
-        row[c.slug] = "";
-    });
-    return row;
-};
+import { useForms } from "./useForms";
 
 const  TaskFieldForm = ({ taskId, taskData, formValues, setFormValues }) => {
     const { data, isLoading } = useGetFoamFieldsByTaskIdQuery(taskId, {
         skip: !taskId,
     });
 
-    // ✅ ordered rendering: inputs -> information -> table -> file
-    const orderedFields = useMemo(() => {
-        const fields = data?.data || [];
-        const weight = (type) => {
-            if (type === "information") return 2;
-            if (type === "table") return 3;
-            if (type === "file") return 4;
-            return 1; // everything else (text/number/date/textarea/etc.)
-        };
-
-        // stable sort
-        return [...fields]
-            .map((f, idx) => ({ ...f, __idx: idx }))
-            .sort((a, b) => {
-                const wa = weight(a.type);
-                const wb = weight(b.type);
-                if (wa !== wb) return wa - wb;
-                return a.__idx - b.__idx;
-            })
-            .map(({ __idx, ...rest }) => rest);
-    }, [data]);
-
-    // ✅ set initial form values (from taskData if present)
-    useEffect(() => {
-        if (!data?.data?.length) return;
-
-        const initialValues = {};
-        data.data.forEach((field) => {
-            initialValues[field.slug] =
-                field.type === "table"
-                    ? taskData?.[field.slug] || []
-                    : taskData?.[field.slug] || "";
-
-        });
-
-        setFormValues(initialValues);
-    }, [data, taskData, setFormValues]);
-
-    // ✅ ensure each TABLE has at least 1 default row
-    useEffect(() => {
-        if (!data?.data?.length) return;
-
-        const tableFields = data.data.filter((f) => f.type === "table");
-        if (!tableFields.length) return;
-
-        setFormValues((prev) => {
-            const next = { ...(prev || {}) };
-
-            tableFields.forEach((tf) => {
-                const existing = next[tf.slug];
-                const fromTask = taskData?.[tf.slug];
-
-                if (Array.isArray(fromTask) && fromTask.length > 0) {
-                    next[tf.slug] = fromTask;
-                    return;
-                }
-
-                if (Array.isArray(existing) && existing.length > 0) return;
-
-                next[tf.slug] = [makeEmptyRow(tf.columns || [])];
-            });
-
-            return next;
-        });
-    }, [data, taskData, setFormValues]);
-
-    const handleChange = (slug, value) => {
-        setFormValues((prev) => ({
-            ...(prev || {}),
-            [slug]: value,
-        }));
-    };
-
-    // ✅ table cell update
-    const updateTableCell = (tableSlug, rowIndex, colSlug, value) => {
-        setFormValues((prev) => {
-            const current = Array.isArray(prev?.[tableSlug]) ? prev[tableSlug] : [];
-            const nextRows = [...current];
-            nextRows[rowIndex] = { ...(nextRows[rowIndex] || {}), [colSlug]: value };
-            return { ...(prev || {}), [tableSlug]: nextRows };
-        });
-    };
-
-    // ✅ add row
-    const addTableRow = (tableSlug, columns) => {
-        setFormValues((prev) => {
-            const current = Array.isArray(prev?.[tableSlug]) ? prev[tableSlug] : [];
-            const nextRows = [...current, makeEmptyRow(columns)];
-            return { ...(prev || {}), [tableSlug]: nextRows };
-        });
-    };
+    const {
+        orderedFields,
+        handleChange,
+        updateTableCell,
+        addTableRow,
+    } = useForms({
+        fields: data?.data || [],
+        taskData,
+        formValues,
+        setFormValues,
+    });
 
     const editor = useRef(null);
 
