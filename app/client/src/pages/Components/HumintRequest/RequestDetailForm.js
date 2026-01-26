@@ -25,6 +25,7 @@ const RequestDetailForm = forwardRef(({ humint, analysts }, ref) => {
     });
 
     const [errors, setErrors] = useState({});
+    const [files, setFiles] = useState([]);
 
     // 🔥 Convert backend priority → UI format
     const priorityMap = {
@@ -61,6 +62,10 @@ const RequestDetailForm = forwardRef(({ humint, analysts }, ref) => {
             restrictions: humint.restrictions || "",
             managerFeedback: humint.managerFeedback || "",
         });
+        if (humint.attachments && Array.isArray(humint.attachments)) {
+            setFiles(humint.attachments);
+        }
+
     }, [humint]);
 
     const handleChange = (e) => {
@@ -102,10 +107,26 @@ const RequestDetailForm = forwardRef(({ humint, analysts }, ref) => {
         return Object.keys(newErrors).length === 0;
     };
 
+    const handleFileUpload = (e) => {
+        setFiles([...files, ...Array.from(e.target.files)]);
+    };
+
+    const handleDrop = (e) => {
+        e.preventDefault();
+        setFiles([...files, ...Array.from(e.dataTransfer.files)]);
+    };
+
+    const handleDragOver = (e) => e.preventDefault();
+
+    const removeFile = (index) => {
+        setFiles(files.filter((_, i) => i !== index));
+    };
+
     // Make functions available to parent component
     useImperativeHandle(ref, () => ({
         submitForm: () => validate(),
         getValues: () => values,
+        getFiles: () => files,
     }));
 
     return (
@@ -272,6 +293,53 @@ const RequestDetailForm = forwardRef(({ humint, analysts }, ref) => {
                             {errors.restrictions && <p className={styles.errorText}>{errors.restrictions}</p>}
                         </div>
                     </div>
+                    <div className={styles.dropzoncard}>
+                        <h3 className={styles.sectionTitle}>Fișiere atașate HUMINT</h3>
+
+                        <div
+                            className={styles.dropzone}
+                            onDrop={handleDrop}
+                            onDragOver={handleDragOver}
+                            onClick={() => document.getElementById("fileInput").click()}
+                        >
+                            <p>📁 Click sau trage fișiere aici</p>
+                        </div>
+
+                        <input
+                            id="fileInput"
+                            type="file"
+                            hidden
+                            multiple
+                            onChange={handleFileUpload}
+                        />
+
+                        {files.length > 0 && (
+                            <div className={styles.fileList}>
+                                {files.map((file, i) => (
+                                    <div key={i} className={styles.fileItem}>
+
+                                        {/* LEFT: icon + filename */}
+                                        <div className={styles.fileLeft}>
+                                            <span className={styles.fileIcon}>📄</span>
+                                            <span className={styles.fileName}>
+            {typeof file === "string" ? file : file.originalName}
+          </span>
+                                        </div>
+
+                                        {/* RIGHT: delete */}
+                                        <span
+                                            className={styles.deleteFile}
+                                            onClick={() => removeFile(i)}
+                                        >
+          ✖
+        </span>
+
+                                    </div>
+                                ))}
+                            </div>
+                        )}
+
+                    </div>
                 </div>
 
                 {/* MANAGER FEEDBACK */}
@@ -289,6 +357,7 @@ const RequestDetailForm = forwardRef(({ humint, analysts }, ref) => {
                             placeholder="Comentariu către analist..."
                         />
                     </div>
+
                 </div>
             </form>
         </div>
