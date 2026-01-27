@@ -17,6 +17,12 @@ export default function Editor({ value, onChange, readOnly = false }) {
     const saveTimeoutRef = useRef(null);
 
     useEffect(() => {
+        // 🔥 IMPORTANT: clear holder DOM (React 18 StrictMode fix)
+        const holder = document.getElementById(holderIdRef.current);
+        if (holder) {
+            holder.innerHTML = "";
+        }
+
         if (editorRef.current) return; // prevent double init
 
         const editor = new EditorJS({
@@ -27,7 +33,11 @@ export default function Editor({ value, onChange, readOnly = false }) {
 
             tools: {
                 paragraph: { class: Paragraph, inlineToolbar: true },
-                header: { class: Header, inlineToolbar: true, config: { levels: [2, 3, 4], defaultLevel: 2 } },
+                header: {
+                    class: Header,
+                    inlineToolbar: true,
+                    config: { levels: [2, 3, 4], defaultLevel: 2 },
+                },
                 list: { class: List, inlineToolbar: true },
             },
 
@@ -36,8 +46,9 @@ export default function Editor({ value, onChange, readOnly = false }) {
             },
 
             onChange: async () => {
-                // Debounce saves so you don't hammer state/api on every keystroke
-                if (saveTimeoutRef.current) clearTimeout(saveTimeoutRef.current);
+                if (saveTimeoutRef.current) {
+                    clearTimeout(saveTimeoutRef.current);
+                }
 
                 saveTimeoutRef.current = setTimeout(async () => {
                     if (!isReadyRef.current) return;
@@ -55,35 +66,20 @@ export default function Editor({ value, onChange, readOnly = false }) {
         editorRef.current = editor;
 
         return () => {
-            // cleanup
-            if (saveTimeoutRef.current) clearTimeout(saveTimeoutRef.current);
+            if (saveTimeoutRef.current) {
+                clearTimeout(saveTimeoutRef.current);
+            }
+
             isReadyRef.current = false;
 
             const instance = editorRef.current;
             editorRef.current = null;
 
-            // destroy editor (EditorJS has destroy in newer versions; guard just in case)
             if (instance?.destroy) {
                 instance.destroy();
             }
         };
-    }, [onChange, readOnly, value]);
-
-    // If you need to update editor contents when `value` changes AFTER init:
-    useEffect(() => {
-        const editor = editorRef.current;
-        if (!editor || !isReadyRef.current) return;
-
-        // Re-render when value changes (optional; depends on your UX)
-        // If you don't want external changes to overwrite current typing, remove this.
-        (async () => {
-            try {
-                await editor.render(value || { blocks: [] });
-            } catch (e) {
-                console.error("EditorJS render failed:", e);
-            }
-        })();
-    }, [value]);
+    }, []); // ❗ EMPTY dependency array (very important)
 
     return <div id={holderIdRef.current} />;
 }
