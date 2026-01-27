@@ -162,6 +162,108 @@ font-size: 15px;
     color: #9ca3af;
 }
 
+
+/* Section card style */
+.dropzonecard {
+    border-radius: 12px;
+    padding: 20px;
+    margin-top: 20px;
+}
+
+/* Section title */
+.sectionTitle {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 12px;
+    color: #1f2937; /* dark gray */
+}
+
+/* Dropzone container */
+.dropzone {
+    border: 2px dashed #3b82f6; /* blue dashed border */
+    border-radius: 4px;
+    padding: 30px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background: #eff6ff; /* light blue background */
+    color: #1e3a8a; /* blue text */
+    font-weight: 500;
+    margin-bottom: 15px;
+}
+
+.dropzone:hover {
+    background: #dbeafe;
+    border-color: #2563eb; /* darker blue on hover */
+}
+
+/* File list container */
+.fileList {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 10px;
+}
+
+/* Single file row */
+.fileItem {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #ffffff;
+    border-radius: 4px;
+    padding: 8px 12px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+    font-size: 14px;
+}
+
+/* Left side: icon + name */
+.fileLeft {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    overflow: hidden;
+}
+
+/* File icon */
+.fileIcon {
+    font-size: 16px;
+}
+
+/* File name */
+.fileName {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 400px;
+}
+
+/* Delete button (X) */
+.deleteFile {
+    color: #ef4444;
+    font-size: 16px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.deleteFile:hover {
+    color: #b91c1c;
+}
+
+/* Responsive adjustments */
+@media (max-width: 500px) {
+    .dropzone {
+        padding: 20px;
+        font-size: 14px;
+    }
+
+    .fileItem {
+        font-size: 13px;
+        padding: 8px 10px;
+    }
+}
+
+
 /* responsive */
 @media (max-width: 1024px) {
     .contextGrid {

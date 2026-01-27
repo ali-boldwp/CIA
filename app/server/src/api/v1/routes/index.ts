@@ -21,6 +21,7 @@ import categoryRoutes from "./category.routes";
 import chapterTemplateRoutes from "./chapterTemplate.routes";
 import taskTemplateRoutes from "./taskTemplate.routes";
 import foamFieldsRoutes from "./foamFields.routes";
+import pdfRoutes from "./pdf.routes";
 
 const router = Router();
 
@@ -46,6 +47,7 @@ router.use("/category" , categoryRoutes);
 router.use("/chapter-template" , chapterTemplateRoutes);
 router.use("/task-template" , taskTemplateRoutes);
 router.use("/foam-fields", foamFieldsRoutes);
+router.use("/pdf", pdfRoutes);
 
 
 export default router;
