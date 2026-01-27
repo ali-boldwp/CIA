@@ -72,16 +72,20 @@ const ActionButtons = ({ data, onApprove, onReject, onClarify, onPrint, disabled
                         />
                     )}
 
-                    {isAdminOrManager && (
+                    {(isAdminOrManager) && (
                         <button
                             type="button"
                             className={`${styles.btn} ${styles.btnPrint}`}
-                            onClick={onPrint}
+                            onClick={() => {
+                                console.log("PRINT CLICKED");
+                                onPrint();
+                            }}
                             disabled={disabled}
                         >
                             Generează brief printabil
                         </button>
                     )}
+
                 </div>
             </div>
         </div>
