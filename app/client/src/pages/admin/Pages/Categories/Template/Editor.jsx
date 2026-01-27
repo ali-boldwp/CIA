@@ -76,6 +76,7 @@ export default function Editor({ value, onChange, readOnly = false }) {
             editorRef.current = null;
 
             if (instance?.destroy) {
+
                 instance.destroy();
             }
         };
