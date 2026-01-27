@@ -122,12 +122,14 @@ const RequestDetailForm = forwardRef(({ humint, analysts }, ref) => {
         setFiles(files.filter((_, i) => i !== index));
     };
 
-    // Make functions available to parent component
+    // // Make functions available to parent component
     useImperativeHandle(ref, () => ({
-        submitForm: () => validate(),
-        getValues: () => values,
+        getValues: () => {
+            return values;   // ❗ no validation block
+        },
         getFiles: () => files,
     }));
+
 
     return (
         <div className={styles.wrapper}>

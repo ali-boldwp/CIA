@@ -1,34 +1,21 @@
-// HumintRequestDetail.js
-
 import React, { useRef, useState, useEffect } from "react";
-import jsPDF from "jspdf";
-import autoTable from "jspdf-autotable";
-
+import { useParams } from "react-router-dom";
+import { toast } from "react-toastify";
 import RequestDetailForm from "./RequestDetailForm";
 import ActionButtons from "./Button";
 import ClarificationSectiom from "./ClarificationSectiom";
 import clarificationStyles from "./Clarification.module.css";
-import { useParams } from "react-router-dom";
 
 import {
-    useGetHumintByIdQuery,
     useApproveHumintMutation,
     useRejectHumintMutation,
     useClarificationHumintMutation,
     useUpdateHumintMutation,
-    useGetClarificationsByHumintQuery,
     useCreateClarificationMutation,
 } from "../../../services/humintApi";
 
-import { useGetAnalystsQuery } from "../../../services/userApi";
-import { toast } from "react-toastify";
-
-
-// 🔹 SEPARATE CARD: shows messages only (if any)
 const ClarificationHistoryCard = ({ messages, currentUserId }) => {
     const chatEndRef = useRef(null);
-
-
 
     useEffect(() => {
         if (chatEndRef.current) {
@@ -37,7 +24,7 @@ const ClarificationHistoryCard = ({ messages, currentUserId }) => {
     }, [messages]);
 
     if (!messages || messages.length === 0) {
-        return null; // koi message nahi -> card hi nahi dikhega
+        return null;
     }
 
     return (
@@ -52,14 +39,11 @@ const ClarificationHistoryCard = ({ messages, currentUserId }) => {
                     {messages.map((msg) => {
                         const id = msg._id;
                         const user = msg.userId || {};
-                        const isOwn =
-                            user._id === currentUserId ||
-                            msg.userId === currentUserId;
-
+                        const isOwn = user._id === currentUserId || msg.userId === currentUserId;
                         const name = user.name || (isOwn ? "Tu" : "Utilizator");
-
                         const rawDate = msg.createdAt;
                         let formattedDate = "";
+
                         if (rawDate) {
                             try {
                                 formattedDate = new Date(rawDate).toLocaleString("ro-RO", {
@@ -97,7 +81,6 @@ const ClarificationHistoryCard = ({ messages, currentUserId }) => {
                             </div>
                         );
                     })}
-
                     <div ref={chatEndRef} />
                 </div>
             </div>
@@ -105,25 +88,17 @@ const ClarificationHistoryCard = ({ messages, currentUserId }) => {
     );
 };
 
-
 const Index = ({ data, analystData, clarificationData, refetchClarifications }) => {
-    const { id } = useParams(); // HUMINT id
+    const { id } = useParams();
     const [submitting, setSubmitting] = useState(false);
-
-    // HUMINT detail
-
-    const humint = data?.data;
-
-    // analysts
-
-    const analysts = analystData?.data || [];
-
-    const formRef = useRef(null);
-
-    // UI: actions vs clarify form
     const [isClarifyMode, setIsClarifyMode] = useState(false);
 
-    // current user id (simple) - apne project ke mutabiq adjust kar sakte ho
+    const humint = data?.data;
+    const analysts = analystData?.data || [];
+    const clarifications = clarificationData?.data || [];
+    const formRef = useRef(null);
+
+    // Get current user ID
     let currentUserId = "";
     try {
         const stored = localStorage.getItem("user");
@@ -132,67 +107,56 @@ const Index = ({ data, analystData, clarificationData, refetchClarifications }) 
             currentUserId = parsed._id || parsed.id || "";
         }
     } catch (e) {
-        // ignore
+        console.error("Error getting user from localStorage:", e);
     }
 
-    // CLARIFICATIONS LIST (messages for chat card)
-
-
-    const clarifications = clarificationData?.data || [];
-
-    // MUTATIONS
+    // Mutations
     const [approveHumint] = useApproveHumintMutation();
     const [rejectHumint] = useRejectHumintMutation();
     const [clarificationHumint] = useClarificationHumintMutation();
     const [updateHumint] = useUpdateHumintMutation();
     const [createClarification] = useCreateClarificationMutation();
 
-    // auto scroll jab clarify mode on ho (page bottom)
+    // Auto scroll to bottom when clarify mode is on
     useEffect(() => {
         if (isClarifyMode) {
-            const timer = setTimeout(() => {
+            setTimeout(() => {
                 window.scrollTo({
                     top: document.body.scrollHeight,
-                    behavior: "smooth",
+                    behavior: "smooth"
                 });
             }, 100);
-
-            return () => clearTimeout(timer);
         }
     }, [isClarifyMode]);
 
-    // analyst resolve
+    // Resolve analyst name
     const resolveAnalystName = (responsible) => {
         if (!responsible) return "";
-
         if (typeof responsible === "object" && responsible._id) {
             return responsible.name;
         }
-
         const found = analysts.find((a) => a._id === responsible);
         return found ? found.name : "";
     };
 
     const enrichedHumint = {
         ...humint,
-        responsibleName: resolveAnalystName(humint.responsible),
+        responsibleName: resolveAnalystName(humint?.responsible),
     };
 
-    const validateAndGetValues = () => {
+    const getValuesWithoutValidation = () => {
         if (!formRef.current) return null;
-        if (!formRef.current.submitForm()) return null;
         return formRef.current.getValues();
     };
 
-    // Approve
+    // Approve function
     const handleApprove = async () => {
         if (submitting) return;
 
-        const values = validateAndGetValues();
+        const values = getValuesWithoutValidation();
         if (!values) return;
 
         setSubmitting(true);
-
         const actionPromise = approveHumint(id).unwrap();
 
         try {
@@ -210,25 +174,23 @@ const Index = ({ data, analystData, clarificationData, refetchClarifications }) 
                 { autoClose: 3000 }
             );
         } catch (err) {
-            console.error(err);
+            console.error("Approve error:", err);
         } finally {
             setSubmitting(false);
         }
     };
 
-
-    // Reject
+    // Reject function
     const handleReject = async () => {
         if (submitting) return;
 
-        const values = validateAndGetValues();
+        const values = getValuesWithoutValidation();
         if (!values) return;
 
         setSubmitting(true);
-
         const actionPromise = rejectHumint({
             id,
-            feedback: values.managerFeedback,
+            feedback: values.managerFeedback || "",
         }).unwrap();
 
         try {
@@ -246,31 +208,39 @@ const Index = ({ data, analystData, clarificationData, refetchClarifications }) 
                 { autoClose: 3000 }
             );
         } catch (err) {
-            console.error(err);
+            console.error("Reject error:", err);
         } finally {
             setSubmitting(false);
         }
     };
 
-    // "Solicită clarificări" → form validate + clarify form open
+    // Show clarify box
     const handleShowClarifyBox = () => {
-        const values = validateAndGetValues();
+        const values = getValuesWithoutValidation();
         if (!values) return;
         setIsClarifyMode(true);
     };
 
-    // "Clarifică" → status + message save + refetch messages
+    // Submit clarification
     const handleClarifySubmit = async (message) => {
-        if (submitting) return;
+        if (submitting || !message.trim()) return;
 
-        const values = validateAndGetValues();
+        const values = getValuesWithoutValidation();
         if (!values) return;
 
         setSubmitting(true);
 
         const actionPromise = (async () => {
-            await clarificationHumint({ id, feedback: message }).unwrap();
-            await createClarification({ humintId: id, clarificationText: message }).unwrap();
+            await clarificationHumint({
+                id,
+                feedback: message
+            }).unwrap();
+
+            await createClarification({
+                humintId: id,
+                clarificationText: message
+            }).unwrap();
+
             await refetchClarifications();
         })();
 
@@ -288,122 +258,129 @@ const Index = ({ data, analystData, clarificationData, refetchClarifications }) 
                 },
                 { autoClose: 3000 }
             );
-
-            // optional: clarify box close after success
-            // setIsClarifyMode(false);
         } catch (err) {
-            console.error(err);
+            console.error("Clarify error:", err);
         } finally {
             setSubmitting(false);
         }
     };
 
-
+    // Update function
     const handleUpdate = async () => {
-        const values = validateAndGetValues();
+        const values = getValuesWithoutValidation();
         if (!values) return;
 
         try {
-            await updateHumint({ id, data: values }).unwrap();
-            toast("Actualizat!");
+            await updateHumint({
+                id,
+                data: values
+            }).unwrap();
+            toast.success("Actualizat cu succes!");
         } catch (err) {
-            console.error(err);
+            console.error("Update error:", err);
             toast.error("Eroare la actualizare");
         }
     };
 
-
-    const handlePrint = () => {
-        const values = validateAndGetValues();
-        if (!values) return;
-
-        const doc = new jsPDF();
-
-        // ===== HUMINT BRIEF TITLE =====
-        doc.setFont("helvetica", "bold");
-        doc.setFontSize(16);
-        doc.setTextColor(0, 0, 0);
-        doc.text("HUMINT BRIEF", 14, 15);
-
-        // ===== CONTEXT TABLE =====
-        autoTable(doc, {
-            startY: 25,
-            head: [["Context", ""]],
-            body: [
-                ["Denumire proiect", values.projectName],
-                ["Tip raport", values.reportType],
-                ["Responsabil proiect", values.projectOwner],
-                ["Deadline", values.deadline],
-                ["Prioritate", values.priority],
-            ],
-            theme: "grid",
-        });
-
-        // ===== BRIEF OPERATIV + FEEDBACK =====
-        let y = doc.lastAutoTable.finalY + 10;
-
-        const addSection = (heading, content) => {
-            // Heading → BLACK
-            doc.setFont("helvetica", "bold");
-            doc.setFontSize(16);
-            doc.setTextColor(0, 0, 0);
-            doc.text(heading, 14, y);
-            y += 8;
-
-            // Value → LIGHT GRAY
-            doc.setFont("helvetica", "normal");
-            doc.setFontSize(14);
-            doc.setTextColor(80, 80, 80);
-            doc.text(content || "-", 14, y, { maxWidth: 180 });
-            y += 20;
-        };
-
-        addSection("Scop & obiective:", values.briefObjective);
-        addSection("Întrebări cheie:", values.keyQuestions);
-        addSection("Ținte:", values.targets);
-        addSection("Zone / locații:", values.locations);
-        addSection("Restricții:", values.restrictions);
-        addSection("Feedback manager:", values.managerFeedback);
-
-        // ===== CLARIFICATIONS HISTORY =====
-        if (clarifications && clarifications.length > 0) {
-
-            // Clarifications heading
-            doc.setFont("helvetica", "bold");
-            doc.setFontSize(16);
-            doc.setTextColor(0, 0, 0);
-            doc.text("Clarificări:", 14, y);
-            y += 10;
-
-            clarifications.forEach((c) => {
-                const userName = c.userId?.name || "User";
-                const date = c.createdAt
-                    ? new Date(c.createdAt).toLocaleString("ro-RO", {
-                        day: "2-digit",
-                        month: "2-digit",
-                        year: "numeric",
-                        hour: "2-digit",
-                        minute: "2-digit",
-                    })
-                    : "";
-
-                const message = `User: ${userName}\nDate: ${date}\nMesaj: ${c.clarificationText || "-"}`;
-
-                // Value → LIGHT GRAY
-                doc.setFont("helvetica", "normal");
-                doc.setFontSize(14);
-                doc.setTextColor(80, 80, 80);
-                doc.text(message, 14, y, { maxWidth: 180 });
-                y += 25;
-            });
+    // PRINT/PDF GENERATION FUNCTION - FIXED VERSION
+    const handlePrint = async () => {
+        const values = getValuesWithoutValidation();
+        if (!values) {
+            toast.error("Formular invalid");
+            return;
         }
 
-        doc.save("humint-brief.pdf");
+        try {
+            const formData = new FormData();
+
+            // Add form data as JSON
+            formData.append("data", JSON.stringify({
+                projectName: values.projectName || "",
+                reportType: values.reportType || "",
+                projectOwner: values.projectOwner || "",
+                deadline: values.deadline || "",
+                priority: values.priority || "",
+                briefObjective: values.briefObjective || "",
+                keyQuestions: values.keyQuestions || "",
+                targets: values.targets || "",
+                locations: values.locations || "",
+                restrictions: values.restrictions || "",
+                managerFeedback: values.managerFeedback || "",
+                clarifications: clarifications || [],
+            }));
+
+            // Get files from form
+            const files = formRef.current.getFiles ? formRef.current.getFiles() : [];
+
+            // Add newly uploaded files (File objects)
+            const newFiles = files.filter(file => file instanceof File);
+            console.log("New files to upload:", newFiles.length);
+
+            newFiles.forEach(file => {
+                formData.append("files", file); // Important: same field name
+            });
+
+            // Add existing attachments from database
+            const existingAttachments = humint?.attachments || [];
+            console.log("Existing attachments:", existingAttachments.length);
+
+            if (existingAttachments.length > 0) {
+                formData.append("existingAttachments", JSON.stringify(existingAttachments));
+            }
+
+            // Log FormData contents for debugging
+            console.log("FormData entries:");
+            for (let [key, value] of formData.entries()) {
+                if (value instanceof File) {
+                    console.log(`${key}:`, value.name, value.size, value.type);
+                } else {
+                    console.log(`${key}:`, value);
+                }
+            }
+
+            // Send request
+
+
+            const res = await fetch("http://localhost:4000/api/v1/pdf/generate", {
+                method: "POST",
+                body: formData,
+                // Note: Do NOT set Content-Type header for FormData
+            });
+
+            if (!res.ok) {
+                const errorText = await res.text();
+                console.error("Server error:", errorText);
+                throw new Error(`PDF generation failed: ${res.status} ${res.statusText}`);
+            }
+
+            // Get PDF as blob
+            const blob = await res.blob();
+
+            if (blob.size === 0) {
+                throw new Error("PDF este gol");
+            }
+
+            // Open PDF in new tab
+            const url = window.URL.createObjectURL(blob);
+            const newWindow = window.open(url, "_blank");
+
+            if (!newWindow) {
+                // If popup blocked, download instead
+                const link = document.createElement("a");
+                link.href = url;
+                link.download = "humint-brief.pdf";
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            }
+
+            toast.success("PDF generat cu succes!");
+
+        } catch (err) {
+            console.error("PDF generation error:", err);
+            toast.error(`Eroare la generarea PDF-ului: ${err.message}`);
+        }
     };
-
-
-
-
 
     return (
         <>
@@ -414,13 +391,13 @@ const Index = ({ data, analystData, clarificationData, refetchClarifications }) 
                 disabled={submitting}
             />
 
-            {/* messages card */}
+            {/* Clarification history */}
             <ClarificationHistoryCard
                 messages={clarifications}
                 currentUserId={currentUserId}
             />
 
-            {/* actions vs clarify */}
+            {/* Action buttons or clarification form */}
             {isClarifyMode ? (
                 <ClarificationSectiom
                     onSubmit={handleClarifySubmit}
@@ -434,7 +411,7 @@ const Index = ({ data, analystData, clarificationData, refetchClarifications }) 
                     onReject={handleReject}
                     onClarify={handleShowClarifyBox}
                     onPrint={handlePrint}
-
+                    onUpdate={handleUpdate}
                     disabled={submitting}
                 />
             )}
