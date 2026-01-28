@@ -13,6 +13,8 @@
     "concurrently": "^9.2.1"
   },
   "dependencies": {
+    "@editorjs/image": "^2.10.3",
+    "@editorjs/underline": "^1.2.1",
     "@fontsource/inter": "^5.2.8",
     "@libs/AppContext": "file:./libs/AppContext",
     "@libs/AppRoutes": "file:./libs/AppRoutes",
@@ -21,6 +23,7 @@
     "@libs/test": "file:./libs/test",
     "@libs/utils": "file:./libs/utils",
     "client": "^0.0.1",
+    "editorjs-text-alignment-blocktune": "^1.0.3",
     "express": "^5.2.1",
     "jodit-react": "^5.2.38",
     "js-cookie": "^3.0.5",
