@@ -182,7 +182,7 @@ const View = ({ data, categoryId, onChapterCreated }) => {
 
 
 
-                    <div className={ styles.contentTemplate }>
+                    <div className={styles.contentTemplate}>
                         <div className={styles.editorActions}>
                             <button
                                 type="button"
@@ -194,21 +194,24 @@ const View = ({ data, categoryId, onChapterCreated }) => {
                             </button>
                         </div>
 
-                        <Editor
-                            value={safeParseEditorData(localData?.editorData || localData?.content)}
-                            onChange={(output) => {
-                                // Option A: keep it in local state until user hits "Save"
-                                setLocalData((prev) => ({
-                                    ...prev,
-                                    editorData: output,
-                                }));
-                            }}
-                        />
+                        {/* 👇 Sirf border ke liye wrapper */}
+                        <div className={styles.editorBorder}>
+                            <Editor
+                                value={safeParseEditorData(localData?.editorData || localData?.content)}
+                                onChange={(output) => {
+                                    setLocalData((prev) => ({
+                                        ...prev,
+                                        editorData: output,
+                                    }));
+                                }}
+                            />
+                        </div>
 
-                        <Content
-                            data={localData}
-                            onTitleClick={() => setTitlePopup(true)}
-                        />
+
+                    {/*<Content*/}
+                        {/*    data={localData}*/}
+                        {/*    onTitleClick={() => setTitlePopup(true)}*/}
+                        {/*/>*/}
 
 
                     </div>

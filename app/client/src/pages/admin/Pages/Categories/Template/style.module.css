@@ -7,25 +7,47 @@
 .content {
     padding: 24px;
     display: flex;
-    flex-direction: row;
-    flex-grow: 1;
     gap: 24px;
-    overflow-y: auto;
-}
-
-.contentTemplate {
-    background: #FFF;
     flex-grow: 1;
-    border-radius: 4px;
-    overflow-y: auto;
+    overflow: hidden;
 }
 
+/* Right panel */
+.contentTemplate {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+
+    background: #ffffff;   /* 👈 Save button ke peeche bhi white */
+}
+
+
+/* Save button row */
 .editorActions {
     display: flex;
     justify-content: flex-end;
-    padding: 16px 16px 0;
+    padding: 16px;
+    flex-shrink: 0;
 }
 
+/* 👇 ONLY BORDER, NO BG CHANGE */
+.editorBorder {
+    flex-grow: 1;
+    margin: 0 16px 16px;
+    border: 1px solid #e5e7eb;
+    border-radius: 4px;
+
+    background: #ffffff;
+    overflow-y: auto;
+    box-sizing: border-box;
+
+    padding: 20px 0;   /* 👈 upar & niche 10px */
+}
+
+
+
+/* Save button untouched */
 .saveButton {
     background-color: #2563eb;
     border: none;
@@ -35,6 +57,63 @@
     font-weight: 600;
     padding: 8px 16px;
     border-radius: 4px;
+}
+.container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+}
+
+.content {
+    padding: 24px;
+    display: flex;
+    gap: 24px;
+    flex-grow: 1;
+    overflow: hidden;
+}
+
+/* Right panel */
+.contentTemplate {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+/* Save button row */
+.editorActions {
+    display: flex;
+    justify-content: flex-end;
+    padding: 16px;
+    flex-shrink: 0;
+}
+
+/* 👇 ONLY BORDER, NO BG CHANGE */
+.editorBorder {
+    flex-grow: 1;
+    margin: 0 16px 16px;          /* left & right gap */
+    border: 1px solid #e5e7eb;    /* charo taraf border */
+    border-radius: 4px;
+
+    overflow-y: auto;
+    box-sizing: border-box;
+}
+
+/* Save button untouched */
+.saveButton {
+    background-color: #2563eb;
+    border: none;
+    color: #fff;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    padding: 8px 16px;
+    border-radius: 4px;
+}
+
+.saveButton:disabled {
+    background-color: #94a3b8;
+    cursor: not-allowed;
 }
 
 .saveButton:disabled {
