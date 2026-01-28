@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from "express";
 import * as taskService from '../services/task.service'
 import { ok } from "../../../utils/ApiResponse";
 import Task from "../models/task.model";
+import Chapter from "../models/chapter.model";
 
 
 
@@ -202,92 +203,160 @@ export const completeTask = async (req, res) => {
     });
 };
 
+type ShortcodeResult =
+    | { type: "value"; value: any }
+    | { type: "grid"; columns: any[]; rows: any[] }
+    | { type: "list"; items: any[] }
+    | { type: "object"; value: Record<string, any> };
 
-export const fetchShortcode = async (req: Request, res: Response, next: NextFunction) => {
+function isGridTable(v: any): v is { columns: any[]; rows: any[] } {
+    return (
+        v &&
+        typeof v === "object" &&
+        !Array.isArray(v) &&
+        Array.isArray(v.columns) &&
+        Array.isArray(v.rows)
+    );
+}
+
+// supports "a.b.0.c"
+function getByPath(obj: any, path: string): any {
+    if (!obj || !path) return undefined;
+    const parts = path.split(".").map(p => p.trim()).filter(Boolean);
+
+    let cur: any = obj;
+    for (const p of parts) {
+        if (cur == null) return undefined;
+
+        // array index
+        if (Array.isArray(cur) && /^\d+$/.test(p)) {
+            cur = cur[Number(p)];
+            continue;
+        }
+
+        cur = cur[p];
+    }
+    return cur;
+}
+
+function toResult(v: any): ShortcodeResult | null {
+    if (v === undefined) return null;
+
+    if (isGridTable(v)) return { type: "grid", columns: v.columns, rows: v.rows };
+    if (Array.isArray(v)) return { type: "list", items: v };
+    if (v && typeof v === "object") return { type: "object", value: v };
+    return { type: "value", value: v };
+}
+
+/**
+ * Resolve ONE token inside ONE task
+ * token examples:
+ *  - "shareholders" (table)
+ *  - "chronology" (table)
+ *  - "historyText" (simple value)
+ *  - "Denumire societate" (label in 2D arrays)
+ *  - "istoric.historyText" (dot-path inside data)
+ */
+function resolveTokenFromTask(task: any, token: string): ShortcodeResult | null {
+    const key = String(token).trim();
+    if (!key) return null;
+
+    // 0) dot-path support (inside task OR inside task.data)
+    const direct1 = getByPath(task, key);
+    if (direct1 !== undefined) return toResult(direct1);
+
+    const direct2 = getByPath(task?.data, key);
+    if (direct2 !== undefined) return toResult(direct2);
+
+    // 1) direct task field (name, completed, slug, etc.)
+    if (task?.[key] !== undefined) return toResult(task[key]);
+
+    // 2) search inside task.data (ALL sections: generalInfo, istoric, dateFinanciare, etc.)
+    const dataObj = task?.data;
+    if (!dataObj || typeof dataObj !== "object") return null;
+
+    for (const sectionKey of Object.keys(dataObj)) {
+        const section = dataObj[sectionKey];
+        if (!section) continue;
+
+        // 2a) direct match: token == key inside section
+        // e.g. section["shareholders"], section["chronology"], section["historyText"]
+        if (section[key] !== undefined) return toResult(section[key]);
+
+        // 2b) search inside 2D label/value arrays in that section
+        // example: generalProfile: [ ["Denumire societate","data"], ... ]
+        for (const tableName of Object.keys(section)) {
+            const table = section[tableName];
+
+            if (Array.isArray(table)) {
+                for (const row of table) {
+                    if (Array.isArray(row) && row.length >= 2) {
+                        const label = String(row[0]).trim();
+                        if (label === key) {
+                            return { type: "value", value: row[1] };
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    return null;
+}
+
+export const fetchProjectShortcode = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const { id } = req.params;
+        const { projectId } = req.params;
         let { keys } = req.body;
 
         // allow single key OR array
         if (typeof keys === "string") keys = [keys];
 
-        if (!Array.isArray(keys)) {
-            return res.status(400).json({ message: "Keys array is required" });
+        if (!Array.isArray(keys) || keys.length === 0) {
+            return res.status(400).json({ success: false, message: "Keys array is required" });
         }
 
-        const task = await Task.findById(id).lean();
-        if (!task) return res.status(404).json({ message: "Task not found" });
+        // ✅ 1) get chapters of project
+        const chapters = await Chapter.find({ projectId }).select("_id").lean();
+        if (!chapters.length) {
+            return res.status(404).json({ success: false, message: "No chapters found for this project" });
+        }
 
-        const data: Record<string, any> = {};
+        // ✅ 2) get tasks under those chapters
+        const chapterIds = chapters.map((c: any) => c._id);
+        const tasks = await Task.find({ chapterId: { $in: chapterIds } }).lean();
+        if (!tasks.length) {
+            return res.status(404).json({ success: false, message: "No tasks found for this project" });
+        }
 
-        for (const key of keys) {
+        // ✅ 3) resolve keys across all tasks - FIRST MATCH WINS
+        const finalData: Record<string, any> = {};
+
+        for (const rawKey of keys) {
+            const token = String(rawKey).trim();
             let value: any = null;
 
-            // 1️⃣ direct task field
-            if (task[key] !== undefined) {
-                value = task[key];
+            for (const t of tasks) {
+                const hit = resolveTokenFromTask(t, token);
+                if (!hit) continue;
+
+                // return raw JSON only (as you want)
+                if (hit.type === "value") value = hit.value;
+                else if (hit.type === "grid") value = { columns: hit.columns, rows: hit.rows };
+                else if (hit.type === "list") value = hit.items;
+                else if (hit.type === "object") value = hit.value;
+
+                break; // ✅ stop at first match in project
             }
 
-            // 2️⃣ inside task.data (generic)
-            else if (task.data) {
-                for (const sectionKey of Object.keys(task.data)) {
-                    const section = task.data[sectionKey];
-
-                    // simple value
-                    if (section?.[key] !== undefined) {
-                        value = section[key];
-                        break;
-                    }
-
-                    // table with columns + rows
-                    if (
-                        section?.[key]?.columns &&
-                        section?.[key]?.rows
-                    ) {
-                        value = section[key];
-                        break;
-                    }
-
-                    // 🔍 search inside tables
-                    for (const tableKey of Object.keys(section || {})) {
-                        const table = section[tableKey];
-
-                        // OLD FORMAT: [ ["label","value"] ]
-                        if (Array.isArray(table)) {
-                            for (const row of table) {
-                                if (Array.isArray(row) && row[0] === key) {
-                                    value = row[1] ?? null;
-                                    break;
-                                }
-                            }
-                        }
-
-                        // NEW FORMAT: { columns, rows }
-                        if (table?.rows && Array.isArray(table.rows)) {
-                            for (const row of table.rows) {
-                                if (row[key] !== undefined) {
-                                    value = row[key];
-                                    break;
-                                }
-                            }
-                        }
-
-                        if (value !== null) break;
-                    }
-
-                    if (value !== null) break;
-                }
-            }
-
-            data[key] = value ?? null;
+            finalData[token] = value; // null if not found
         }
 
-        return res.json({ data });
-
+        return res.json({
+            success: true,
+            data: finalData
+        });
     } catch (err) {
         next(err);
     }
 };
-
-
-

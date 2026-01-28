@@ -24,7 +24,7 @@ const Index = ({ formValues, setFormValues, onSaveSection,isSaving }) => {
     } = useForm({
         defaultValues: {
             achizitii: {
-                introducere: "",
+                achizitiiIntroducere: "",
                 images: [],
                 rows: [
                     { TIP: "", AUTORITATE: "", OBIECT: "", VALOARE: "", DATA: "" }
@@ -47,7 +47,7 @@ const Index = ({ formValues, setFormValues, onSaveSection,isSaving }) => {
     useEffect(() => {
         if (!formValues?.achizitii) return;
 
-        setValue("achizitii.introducere", formValues.achizitii.introducere || "");
+        setValue("achizitii.achizitiiIntroducere", formValues.achizitii.achizitiiIntroducere || "");
 
         setValue(
             "achizitii.rows",
@@ -74,7 +74,7 @@ const Index = ({ formValues, setFormValues, onSaveSection,isSaving }) => {
         const payload = {
             data: {
                 achizitii: {
-                    introducere: data.achizitii.introducere,
+                    achizitiiIntroducere: data.achizitii.achizitiiIntroducere,
                     images: data.achizitii.images,
                     columns: achizitiiColumns,
                     rows: data.achizitii.rows.map(r => [
@@ -117,13 +117,13 @@ const Index = ({ formValues, setFormValues, onSaveSection,isSaving }) => {
                         <textarea
                             className={styles.textarea}
                             placeholder="Conform verificarilor efectuate la autoritatile publice..."
-                            {...register("achizitii.introducere")}
+                            {...register("achizitii.achizitiiIntroducere")}
                         />
                         <div className={styles.deleteBoxContainer}>
                             <button
                                 type="button"
                                 className={styles.deleteBox}
-                                onClick={() => setValue("achizitii.introducere", "")}
+                                onClick={() => setValue("achizitii.achizitiiIntroducere", "")}
                             >
                                 Șterge căsuța
                             </button>

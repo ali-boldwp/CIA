@@ -1,14 +1,12 @@
-import React, { useEffect, useRef } from 'react';
-import { useForm, Controller } from 'react-hook-form';
-import styles from './styles.module.css';
+import React, { useEffect, useRef } from "react";
+import { useForm, Controller } from "react-hook-form";
+import styles from "./styles.module.css";
 import TitleSection from "./TitleSection";
-import TextAreaSection from './TextAreaSection';
-import TableSection from './TableSection';
-import ImageSection from './ImageSection';
+import TextAreaSection from "./TextAreaSection";
+import TableSection from "./TableSection";
+import ImageSection from "./ImageSection";
 
-const LOCAL_STORAGE_KEY = "mainSectionFormData";
-
-const Index = ({ formValues, setFormValues, onSaveSection , isSaving}) => {
+const Index = ({ formValues, setFormValues, onSaveSection, isSaving }) => {
     const isInitialized = useRef(false);
 
     // ===== React Hook Form =====
@@ -26,35 +24,45 @@ const Index = ({ formValues, setFormValues, onSaveSection , isSaving}) => {
 
     const table = watch("table");
     const images = watch("images");
-    const allData = watch();
+    const title = watch("title");
+    const introText = watch("introText");
 
-    // ===== Load from localStorage or parent on mount =====
+    // ✅ Load ONLY from parent (NO localStorage) — fixed for async formValues
     useEffect(() => {
         if (isInitialized.current) return;
 
-        // 1️⃣ Try to load from localStorage first
-        const savedData = localStorage.getItem(LOCAL_STORAGE_KEY);
-        if (savedData) {
-            const parsed = JSON.parse(savedData);
-            Object.keys(parsed).forEach(key => setValue(key, parsed[key]));
-        }
-        // 2️⃣ If no localStorage, load from parent formValues
-        else if (formValues?.mainSection) {
-            const data = formValues.mainSection;
-            setValue("title", data.title || "");
-            setValue("introText", data.introText || "In urma verificării surselor disponibile...");
-            setValue("table", data.table || { columns: ["Denumire", "Descriere"], rows: [["", ""]] });
-            setValue("images", data.images || [null]);
-        }
+        const data = formValues?.mainSection;
+
+        // ✅ if API data not yet arrived, don't lock init
+        if (!data) return;
+
+        setValue("title", data.title || "");
+        setValue("introText", data.introText || "In urma verificării surselor disponibile...");
+        setValue(
+            "table",
+            data.table || { columns: ["Denumire", "Descriere"], rows: [["", ""]] }
+        );
+        setValue("images", data.images || [null]);
 
         isInitialized.current = true;
-    }, [formValues, setValue]);
+    }, [formValues?.mainSection, setValue]);
 
-    // ===== Persist to localStorage on any change =====
+    // ✅ Sync parent on change (NO localStorage)
     useEffect(() => {
         if (!isInitialized.current) return;
-        localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(allData));
-    }, [allData]);
+
+        if (setFormValues) {
+            setFormValues(prev => ({
+                ...prev,
+                mainSection: {
+                    title,
+                    introText,
+                    table,
+                    images
+                }
+            }));
+        }
+    }, [title, introText, table, images, setFormValues]);
 
     // ===== Table Handlers =====
     const addRow = () => {
@@ -64,7 +72,7 @@ const Index = ({ formValues, setFormValues, onSaveSection , isSaving}) => {
         });
     };
 
-    const deleteRow = (index) => {
+    const deleteRow = index => {
         setValue("table", {
             ...table,
             rows: table.rows.filter((_, i) => i !== index)
@@ -83,28 +91,26 @@ const Index = ({ formValues, setFormValues, onSaveSection , isSaving}) => {
     };
 
     // ===== Image Handler =====
-    const handleImagesChange = (imgs) => setValue("images", imgs);
+    const handleImagesChange = imgs => setValue("images", imgs);
 
     // ===== Save Handler =====
-    const onSubmit = (data) => {
+    const onSubmit = data => {
         const payload = { data: { mainSection: data } };
         console.log("FINAL PAYLOAD:", payload);
 
-        onSaveSection(payload);
+        if (onSaveSection) onSaveSection(payload);
 
-        setFormValues(prev => ({
-            ...prev,
-            mainSection: data
-        }));
-
-        // Optional: clear localStorage after save
-        // localStorage.removeItem(LOCAL_STORAGE_KEY);
+        if (setFormValues) {
+            setFormValues(prev => ({
+                ...prev,
+                mainSection: data
+            }));
+        }
     };
 
     return (
         <div className={styles.container}>
             <div className={styles.mainCard}>
-
                 <Controller
                     name="title"
                     control={control}
@@ -128,14 +134,15 @@ const Index = ({ formValues, setFormValues, onSaveSection , isSaving}) => {
                 />
 
                 <div className={styles.sectionWrapper}>
-                    <ImageSection
-                        images={images}
-                        setImages={handleImagesChange}
-                    />
+                    <ImageSection images={images} setImages={handleImagesChange} />
                 </div>
 
                 <div className={styles.navigation}>
-                    <button className={styles.saveButton} disabled={isSaving} onClick={handleSubmit(onSubmit)}>
+                    <button
+                        className={styles.saveButton}
+                        disabled={isSaving}
+                        onClick={handleSubmit(onSubmit)}
+                    >
                         {isSaving ? (
                             <>
                                 <span className={styles.loader}></span>
@@ -145,16 +152,17 @@ const Index = ({ formValues, setFormValues, onSaveSection , isSaving}) => {
                             "💾 Salveaza sectiunea"
                         )}
                     </button>
+
                     <button className={styles.middleButton}>
                         ❌ Exclude acest capitol
                         <span className={styles.arrowIcon}>→</span>
                     </button>
+
                     <button className={styles.nextButton}>
                         ➡️ Mergi la I.3. „Date financiare”
                         <span className={styles.arrowIcon}>→</span>
                     </button>
                 </div>
-
             </div>
         </div>
     );
