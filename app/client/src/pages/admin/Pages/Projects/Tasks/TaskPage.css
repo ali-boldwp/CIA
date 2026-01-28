@@ -1398,12 +1398,79 @@ font-size: 16px;
     opacity: 1;
 }
 
-.report-root { font-family: Arial, sans-serif; font-size: 12px; padding: 18px; color:#111; }
+.report-root { font-size: 14px; padding: 18px; color:#111; }
 .r-p { margin: 8px 0; line-height: 1.5; }
 .r-list { margin: 8px 0; padding-left: 18px; }
 
 .r-table { width: 100%; border-collapse: collapse; margin: 10px 0; }
 .r-th, .r-td { border: 1px solid #ddd; padding: 6px; text-align: left; vertical-align: top; }
 .r-th { font-weight: 600; }
+
+
+/* ====== TIGHTER PDF SPACING ====== */
+
+#export-report {
+    /* reduce page margins */
+    padding: 8mm 8mm;        /* was 18mm 16mm */
+    box-sizing: border-box;
+}
+
+.report-root {
+    font-size: 12pt;
+    line-height: 1.25;       /* was 1.45 */
+    color: #000;
+}
+
+/* Paragraph spacing */
+.r-p {
+    margin: 0 0 6px 0;       /* was 10px */
+    text-align: justify;
+}
+
+/* Headings spacing */
+.r-h {
+    margin: 8px 0 4px 0;     /* was 14px 0 8px */
+    font-weight: 700;
+    font-style: italic;
+    text-decoration: underline;
+}
+
+/* Lists spacing */
+.r-list {
+    margin: 4px 0 6px 18px;  /* was 6px 0 10px 22px */
+    padding: 0;
+}
+
+.r-li {
+    margin: 2px 0;           /* was 4px 0 */
+    text-align: justify;
+}
+
+/* Tables spacing */
+.r-table {
+    margin: 6px 0 8px 0;     /* was 10px 0 14px */
+    font-size: 11pt;
+}
+
+.r-th,
+.r-td {
+    padding: 6px 8px;        /* slightly tighter */
+}
+
+/* Images spacing */
+.report-root img {
+    margin: 8px auto;        /* was 12px */
+}
+
+/* ✅ Fixed image width in PDF */
+.report-root img {
+    width: 500px;        /* fix width */
+    max-width: 100%;     /* responsive if page smaller */
+    height: auto;        /* keep aspect ratio */
+    display: block;
+    margin: 8px auto;    /* center */
+    border: 1px solid #ddd;
+}
+
 
 
