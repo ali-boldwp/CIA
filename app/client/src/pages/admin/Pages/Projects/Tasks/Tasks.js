@@ -156,14 +156,10 @@ const editorBlockToHtml = (block, shortcodeMap) => {
 
     if (block.type === "paragraph") {
         const raw = block.data?.text || "";
-
-
         const token = getStandaloneToken(raw);
         if (token && isTableValue(shortcodeMap?.[token])) {
             return tableToHtml(shortcodeMap[token]);
         }
-
-
         return `<p class="r-p">${replaceInlineShortcodes(raw, shortcodeMap)}</p>`;
     }
 
@@ -181,7 +177,6 @@ const editorBlockToHtml = (block, shortcodeMap) => {
         return `<${style} class="r-list">${items}</${style}>`;
     }
 
-
     if (block.type === "table") {
         const content = block.data?.content || [];
         const rows = content
@@ -195,8 +190,25 @@ const editorBlockToHtml = (block, shortcodeMap) => {
         return `<table class="r-table"><tbody>${rows}</tbody></table>`;
     }
 
+    // ✅ ✅ ADD THIS: IMAGE BLOCK
+    if (block.type === "image") {
+        const url = block.data?.file?.url || "";
+        const caption = block.data?.caption || "";
+
+        if (!url) return "";
+
+        // crossOrigin is important for html2canvas
+        return `
+      <figure class="r-figure">
+        <img class="r-img" src="${url}" crossorigin="anonymous" />
+        ${caption ? `<figcaption class="r-cap">${escapeHtml(caption)}</figcaption>` : ""}
+      </figure>
+    `;
+    }
+
     return "";
 };
+
 
 
 const editorDataToHtml = (editorData, shortcodeMap) => {
@@ -475,20 +487,31 @@ const ProjectTasks = ({ projectData }) => {
         }
     };
 
+    const waitForImages = async (root) => {
+        const imgs = Array.from(root.querySelectorAll("img"));
+
+        await Promise.all(
+            imgs.map(
+                (img) =>
+                    new Promise((resolve) => {
+                        // already loaded
+                        if (img.complete && img.naturalWidth > 0) return resolve();
+
+                        img.onload = () => resolve();
+                        img.onerror = () => resolve();
+                    })
+            )
+        );
+    };
+
+
     const handleExportPDF = async () => {
         try {
-            const element = document.getElementById("export-report");
-            if (!element) {
-                toast.error("Export content not found");
-                return;
-            }
-
             if (!projectId) {
                 toast.error("Project not selected");
                 return;
             }
 
-            // ✅ Editor data source (as per your shared response)
             const editorData = category?.editorData;
             if (!editorData) {
                 toast.error("Editor data not found");
@@ -503,19 +526,31 @@ const ProjectTasks = ({ projectData }) => {
                 ? (await fetchProjectShortcodes({ projectId, keys }).unwrap())?.data || {}
                 : {};
 
-
             // 3) EditorJS -> HTML
             const finalHtml = editorDataToHtml(editorData, shortcodeMap);
             setExportHtml(finalHtml);
-            await new Promise((r) => setTimeout(r, 0));
 
-            // 6) Canvas -> PDF
-            const canvas = await html2canvas(element, {
+            // ✅ wait for DOM update
+            await new Promise((r) => setTimeout(r, 50));
+
+            const exportEl = document.getElementById("export-report");
+            if (!exportEl) {
+                toast.error("Export content not found");
+                return;
+            }
+
+            // ✅ wait for images to load
+            await waitForImages(exportEl);
+
+            // ✅ canvas
+            const canvas = await html2canvas(exportEl, {
                 scale: 2,
                 backgroundColor: "#ffffff",
                 useCORS: true,
-                windowWidth: element.scrollWidth,
-                windowHeight: element.scrollHeight,
+                allowTaint: true,
+                imageTimeout: 15000,
+                windowWidth: exportEl.scrollWidth,
+                windowHeight: exportEl.scrollHeight,
             });
 
             const imgData = canvas.toDataURL("image/png");
@@ -545,6 +580,7 @@ const ProjectTasks = ({ projectData }) => {
             toast.error("PDF export failed");
         }
     };
+
 
     return (
         <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>

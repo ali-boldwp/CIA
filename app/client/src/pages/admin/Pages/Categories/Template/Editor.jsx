@@ -17,9 +17,12 @@ export default function Editor({ value, onChange, readOnly = false }) {
     const isReadyRef = useRef(false);
     const saveTimeoutRef = useRef(null);
 
+    // ✅ NEW: track last rendered + prevent render loop while typing
+    const lastRenderedRef = useRef("");
+    const isApplyingRemoteValueRef = useRef(false);
+
     const [uploadEditorImage] = useUploadEditorImageMutation();
 
-    // ✅ Init editor once
     useEffect(() => {
         if (editorRef.current) return;
 
@@ -73,15 +76,29 @@ export default function Editor({ value, onChange, readOnly = false }) {
                 },
             },
 
-            onReady: () => {
+            onReady: async () => {
                 isReadyRef.current = true;
+
+                // ✅ store initial rendered snapshot
+                try {
+                    const output = await editor.save();
+                    lastRenderedRef.current = JSON.stringify(output || {});
+                } catch {}
             },
 
             onChange: async () => {
+                // ✅ if we are rendering remote value, ignore onChange triggered by render
+                if (isApplyingRemoteValueRef.current) return;
+
                 clearTimeout(saveTimeoutRef.current);
                 saveTimeoutRef.current = setTimeout(async () => {
                     if (!isReadyRef.current) return;
+
                     const output = await editor.save();
+
+                    // ✅ update snapshot so parent->value echo doesn't trigger render
+                    lastRenderedRef.current = JSON.stringify(output || {});
+
                     onChange?.(output);
                 }, 400);
             },
@@ -95,13 +112,33 @@ export default function Editor({ value, onChange, readOnly = false }) {
             editorRef.current = null;
             isReadyRef.current = false;
         };
-    }, []); // ✅ init once
+    }, []); // init once
 
-    // ✅ When value loads/changes (e.g. after refresh API fetch), render it
+    // ✅ FIXED: Only render when incoming value is different from what editor already has
     useEffect(() => {
         const editor = editorRef.current;
         if (!editor || !isReadyRef.current) return;
-        editor.render(value || { blocks: [] });
+
+        const incoming = value || { blocks: [] };
+        const incomingStr = JSON.stringify(incoming || {});
+
+        // if same as current editor content -> do nothing (prevents typing reset)
+        if (incomingStr === lastRenderedRef.current) return;
+
+        // apply remote value (API fetch etc.)
+        isApplyingRemoteValueRef.current = true;
+
+        editor
+            .render(incoming)
+            .then(() => {
+                lastRenderedRef.current = incomingStr;
+            })
+            .finally(() => {
+                // small delay to avoid immediate onChange firing after render
+                setTimeout(() => {
+                    isApplyingRemoteValueRef.current = false;
+                }, 0);
+            });
     }, [value]);
 
     return <div ref={holderRef} />;
