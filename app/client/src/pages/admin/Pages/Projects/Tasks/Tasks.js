@@ -1,11 +1,9 @@
-import "./TaskPage.css"
+import "./TaskPage.css";
 import { useSelector } from "react-redux";
-import { Outlet } from "react-router-dom";
-import {Link, useNavigate, useParams} from "react-router-dom";
-import React, {useEffect, useState} from "react";
+import { Outlet, useNavigate, useParams } from "react-router-dom";
+import React, { useEffect, useState } from "react";
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
-
 
 import {
     useCreateChapterMutation,
@@ -15,28 +13,205 @@ import {
     useFinalizeTaskMutation,
     useCreateObservationMutation,
     useGetObservationsByProjectQuery,
+    useFetchProjectShortcodesMutation
 } from "../../../../../services/taskApi";
-import { useGetCreateProjectByIdQuery , useGetAnalystsProjectProgressQuery } from "../../../../../services/projectApi";
-import {toast} from "react-toastify";
+
+import {
+    useGetCreateProjectByIdQuery,
+    useGetAnalystsProjectProgressQuery,
+} from "../../../../../services/projectApi";
+
+import { toast } from "react-toastify";
 import ChapterCreation from "../../../../taskPage/components/ChapterCreation";
 import ReviewPopUp from "./Popup/ReviewPop/ReviewPopUp";
 import PleaseWaitPopUp from "./Popup/PleaseWaitPopUp/PleaseWaitPopUp";
 import Chapter from "./Components/Chapter";
 import Details from "./Components/Details";
-import {useGetCategoryByIdQuery} from "../../../../../services/categoryApi";
-import styles from "../../Categories/Template/style.module.css";
-import Content from "../../Categories/Template/Content";
+import { useGetCategoryByIdQuery } from "../../../../../services/categoryApi";
+
+
+const escapeHtml = (s = "") =>
+    String(s)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+
+const isTableValue = (v) =>
+    v && typeof v === "object" && Array.isArray(v.columns) && Array.isArray(v.rows);
+
+// ✅ Editor sometimes gives "&nbsp;" so handle it
+
+const getStandaloneToken = (htmlText) => {
+    const raw = String(htmlText || "");
+
+    // 1) Strip HTML -> plain text
+    const doc = new DOMParser().parseFromString(raw, "text/html");
+    let text = (doc.body.textContent || "");
+
+    // 2) Normalize spaces + remove hidden chars
+    text = text
+        .replace(/&nbsp;/g, " ")
+        .replace(/[\u200B-\u200D\uFEFF]/g, "")
+        .replace(/\s+/g, " ")
+        .trim();
+
+
+    const m = text.match(/^\[([^\[\]]+)\]$/);
+    return m ? m[1].trim() : null;
+};
+
+
+
+const tableToHtml = (tbl) => {
+    const cols = tbl.columns || [];
+    const rows = tbl.rows || [];
+
+    const head = `<tr>${cols.map((c) => `<th class="r-th">${escapeHtml(c)}</th>`).join("")}</tr>`;
+
+    const body = rows
+        .map((r) => {
+            // rows can be array OR object
+            let cells = [];
+            if (Array.isArray(r)) cells = r;
+            else if (r && typeof r === "object") {
+                // map object values in same order as columns if possible
+                const keys = Object.keys(r);
+                cells = cols.map((_, i) => {
+                    // best effort: try by known keys or by index
+                    const k = keys[i];
+                    return r?.[k] ?? "";
+                });
+            } else cells = [r ?? ""];
+
+            return `<tr>${cells.map((c) => `<td class="r-td">${escapeHtml(c)}</td>`).join("")}</tr>`;
+        })
+        .join("");
+
+    return `<table class="r-table"><thead>${head}</thead><tbody>${body}</tbody></table>`;
+};
+
+const replaceInlineShortcodes = (text, map) => {
+    if (!text) return text;
+
+    return String(text).replace(/\[([^\[\]]+)\]/g, (full, token) => {
+        const key = String(token).trim();
+        const v = map?.[key];
+
+        if (v === undefined || v === null) return full;
+
+        // inline tables not allowed
+        if (isTableValue(v)) return full;
+
+        if (Array.isArray(v)) return v.map(String).join(", ");
+        if (typeof v === "object") return full;
+
+        return String(v);
+    });
+};
+
+const extractTextContent = (html) => {
+    const tmp = new DOMParser().parseFromString(String(html || ""), "text/html");
+    return (tmp.body.textContent || "").replace(/&nbsp;/g, " ");
+};
+
+const extractTokensFromEditorData = (editorData) => {
+    const tokens = new Set();
+    const blocks = editorData?.blocks || [];
+
+    for (const b of blocks) {
+        if (!b) continue;
+
+        if (b.type === "paragraph" || b.type === "header") {
+            const text = extractTextContent(b?.data?.text);
+            [...text.matchAll(/\[([^\[\]]+)\]/g)].forEach((m) => tokens.add(m[1].trim()));
+        }
+
+        if (b.type === "list") {
+            const items = b?.data?.items || [];
+            for (const it of items) {
+                const t = extractTextContent(it);
+                [...t.matchAll(/\[([^\[\]]+)\]/g)].forEach((m) => tokens.add(m[1].trim()));
+            }
+        }
+
+        if (b.type === "table") {
+            const content = b?.data?.content || [];
+            for (const row of content) {
+                for (const cell of row || []) {
+                    const t = extractTextContent(cell);
+                    [...t.matchAll(/\[([^\[\]]+)\]/g)].forEach((m) => tokens.add(m[1].trim()));
+                }
+            }
+        }
+    }
+
+    return [...tokens];
+};
+
+
+const editorBlockToHtml = (block, shortcodeMap) => {
+    if (!block) return "";
+
+    if (block.type === "paragraph") {
+        const raw = block.data?.text || "";
+
+
+        const token = getStandaloneToken(raw);
+        if (token && isTableValue(shortcodeMap?.[token])) {
+            return tableToHtml(shortcodeMap[token]);
+        }
+
+
+        return `<p class="r-p">${replaceInlineShortcodes(raw, shortcodeMap)}</p>`;
+    }
+
+    if (block.type === "header") {
+        const lvl = block.data?.level || 2;
+        const raw = block.data?.text || "";
+        return `<h${lvl} class="r-h">${replaceInlineShortcodes(raw, shortcodeMap)}</h${lvl}>`;
+    }
+
+    if (block.type === "list") {
+        const style = block.data?.style === "ordered" ? "ol" : "ul";
+        const items = (block.data?.items || [])
+            .map((it) => `<li class="r-li">${replaceInlineShortcodes(it, shortcodeMap)}</li>`)
+            .join("");
+        return `<${style} class="r-list">${items}</${style}>`;
+    }
+
+
+    if (block.type === "table") {
+        const content = block.data?.content || [];
+        const rows = content
+            .map(
+                (row) =>
+                    `<tr>${(row || [])
+                        .map((c) => `<td class="r-td">${replaceInlineShortcodes(c, shortcodeMap)}</td>`)
+                        .join("")}</tr>`
+            )
+            .join("");
+        return `<table class="r-table"><tbody>${rows}</tbody></table>`;
+    }
+
+    return "";
+};
+
+
+const editorDataToHtml = (editorData, shortcodeMap) => {
+    const blocks = editorData?.blocks || [];
+    return blocks.map((b) => editorBlockToHtml(b, shortcodeMap)).join("");
+};
 
 
 
 
-const ProjectTasks = ({
-    projectData
-}) => {
 
+const ProjectTasks = ({ projectData }) => {
     const { user } = useSelector((state) => state.auth);
-
     const { id: projectId } = useParams();
+
     const [showTaskForm, setShowTaskForm] = useState(false);
     const [newTaskName, setNewTaskName] = useState("");
     const [activeChapterId, setActiveChapterId] = useState(null);
@@ -45,59 +220,52 @@ const ProjectTasks = ({
     const [showReviewPopup, setShowReviewPopup] = useState(false);
     const [showEditingPopup, setShowEditingPopup] = useState(false);
     const [showPleaseWait, setShowPleaseWait] = useState(false);
-    const [allBtn,setAllBtn]=useState(false);
+    const [allBtn, setAllBtn] = useState(false);
     const [isFinalizedLocal, setIsFinalizedLocal] = useState(false);
 
+    // ✅ Export HTML (rendered in hidden div)
+    const [exportHtml, setExportHtml] = useState("");
 
     const [updateEditable] = useUpdateEditableMutation();
-    const [finalizeTask, { isLoading: isFinalizing }] = useFinalizeTaskMutation();
-    const [createObservation, { isLoading: isCreatingObservation }] = useCreateObservationMutation();
-    const {data:Observation, isLoading: isObservationLoading } = useGetObservationsByProjectQuery(projectId, {
+    const [finalizeTask] = useFinalizeTaskMutation();
+    const [createObservation] = useCreateObservationMutation();
+    const [fetchProjectShortcodes] = useFetchProjectShortcodesMutation();
+
+
+    const { data: Observation } = useGetObservationsByProjectQuery(projectId, {
         skip: !projectId,
     });
 
+    const { data: analystsProgress, refetch: refetchProgress } =
+        useGetAnalystsProjectProgressQuery(projectId);
 
+    const [createTask] = useCreateTaskMutation();
 
+    const { data: pro } = useGetCreateProjectByIdQuery(projectId, {
+        ship: !projectId,
+    });
 
-
-    const { data: analystsProgress , refetch: refetchProgress} = useGetAnalystsProjectProgressQuery(projectId);
-
-    const [createTask, { isLoading: isCreatingTask }] = useCreateTaskMutation();
-    const {data:pro}=useGetCreateProjectByIdQuery(projectId,{
-        ship:!projectId
-    })
-
-    const {data:chapter, refetch: refetchChapters}=useGetChapterByIdQuery(projectId, {
+    const { data: chapter, refetch: refetchChapters } = useGetChapterByIdQuery(projectId, {
         skip: !projectId,
     });
-    const chapterData=chapter?.data || [];
 
-
+    const chapterData = chapter?.data || [];
     const legendColors = ["blue", "purple", "green", "red", "yellow", "pink"];
 
-    // Fetch project info
-
     const project = projectData?.data;
-    const isFinalized = project?.status === "revision" || project?.isFinalized;
     const isObservation = project?.status === "observation";
 
-    const entityType = project?.entityType; // 🔥 categoryId
+    const entityType = project?.entityType; // categoryId
 
     const { data: categoryResponse } = useGetCategoryByIdQuery(entityType, {
         skip: !entityType,
     });
 
+    // ✅ This is your category which contains editorData (as you shared)
     const category = categoryResponse?.data;
-
-
 
     const [createChapter] = useCreateChapterMutation();
 
-
-    const analystId = project?.responsibleAnalyst?._id;
-    const current = analystsProgress?.data?.find(
-        (a) => a.analystId === analystId
-    );
     useEffect(() => {
         if (project) {
             setIsFinalizedLocal(project?.status === "revision" || project?.isFinalized);
@@ -110,35 +278,26 @@ const ProjectTasks = ({
 
             for (const ch of chapterData) {
                 const res = await fetch(`${process.env.REACT_APP_API_BASE_URL}/task/${ch._id}`, {
-                    headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
+                    headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
                 });
                 const json = await res.json();
-
                 result[ch._id] = json.data || [];
             }
 
             setTasksByChapter(result);
         };
 
-        if (chapterData.length > 0) {
-            fetchAll();
-        }
+        if (chapterData.length > 0) fetchAll();
     }, [chapterData]);
-
 
     const responsible = project?.responsibleAnalyst;
     const assigned = project?.assignedAnalysts || [];
 
-
-    const [edit_Mode, setEdit_Mode] = useState(project?.isEditable ?? true);
-    const [editMode, setEditMode] = useState( false );
+    const [editMode, setEditMode] = useState(false);
 
     useEffect(() => {
-        if (project) {
-            setEditMode(project.isEditable);  // Always follow backend
-        }
+        if (project) setEditMode(project.isEditable);
     }, [project]);
-
 
     const handleCreateTask = async (chapterId) => {
         if (!newTaskName.trim()) return;
@@ -160,7 +319,6 @@ const ProjectTasks = ({
 
             refetchProgress();
 
-            // UI update
             setTasksByChapter((prev) => ({
                 ...prev,
                 [chapterId]: [...(prev[chapterId] || []), response.data],
@@ -170,15 +328,11 @@ const ProjectTasks = ({
             setNewTaskName("");
         } catch (error) {
             console.error(error);
-            // toast.promise already handled error
         }
     };
 
-    const navigate=useNavigate();
-
-    const goBack = () => {
-        navigate("/");
-    };
+    const navigate = useNavigate();
+    const goBack = () => navigate("/");
 
     const handleAddObservation = async (notes) => {
         if (!projectId) return toast.error("Project not selected");
@@ -188,10 +342,7 @@ const ProjectTasks = ({
 
         try {
             await toast.promise(
-                createObservation({
-                    projectId,
-                    text: notes.trim(),
-                }).unwrap(),
+                createObservation({ projectId, text: notes.trim() }).unwrap(),
                 {
                     pending: "Se salvează observația...",
                     success: "Observație adăugată! Proiect marcat ca observation.",
@@ -208,56 +359,38 @@ const ProjectTasks = ({
             setShowReviewPopup(false);
         } catch (err) {
             console.error(err);
-            // toast.promise already handled error
         } finally {
             setShowPleaseWait(false);
         }
     };
 
     const handleToggleEdit = async () => {
-
         const newValue = !editMode;
-
         setEditMode(newValue);
 
         try {
-            await updateEditable({
-                projectId,
-                isEditable: newValue
-            }).unwrap();
-
+            await updateEditable({ projectId, isEditable: newValue }).unwrap();
             toast.success(`Modul de editare ${newValue ? "ACTIVAT" : "DEZACTIVAT"}`);
         } catch (err) {
             toast.error("Actualizarea modului de editare a eșuat");
-            // setEditMode(!newValue); // revert if failed
         }
     };
 
-
-
-
     const formatTime = (seconds) => {
         if (!seconds || seconds <= 0) return "0h00m";
-
         const h = Math.floor(seconds / 3600);
         const m = Math.floor((seconds % 3600) / 60);
-
         return `${h}h ${m.toString().padStart(2, "0")}m`;
     };
 
-
     const handleFinalize = async (statusType) => {
-        // UI immediate
         setIsFinalizedLocal(true);
         setShowPleaseWait(true);
         setAllBtn(true);
 
         try {
             await toast.promise(
-                finalizeTask({
-                    id: projectId,
-                    status: statusType,
-                }).unwrap(),
+                finalizeTask({ id: projectId, status: statusType }).unwrap(),
                 {
                     pending: "Se trimite din nou la revizie...",
                     success: "Project trimis la revizie!",
@@ -271,8 +404,6 @@ const ProjectTasks = ({
             );
         } catch (err) {
             console.error(err);
-
-            // revert if backend fails
             setIsFinalizedLocal(false);
             setAllBtn(false);
         } finally {
@@ -280,66 +411,42 @@ const ProjectTasks = ({
         }
     };
 
-
-
-
-
     const getInitials = (name) => {
         if (!name) return "";
-
         const parts = name.trim().split(" ");
-
         const first = parts[0]?.charAt(0).toUpperCase() || "";
         const last = parts[parts.length - 1]?.charAt(0).toUpperCase() || "";
-
-        return first + last;  // AP, BI, CM etc.
+        return first + last;
     };
 
     let totalWorkedSeconds = 0;
     let analystWorkMap = {};
 
-    chapterData.forEach(ch => {
+    chapterData.forEach((ch) => {
         const chapterTasks = tasksByChapter[ch._id] || [];
-
-        chapterTasks.forEach(task => {
+        chapterTasks.forEach((task) => {
             totalWorkedSeconds += task.totalSeconds || 0;
 
             if (task.analyst?._id) {
                 const id = task.analyst._id.toString();
-
                 if (!analystWorkMap[id]) analystWorkMap[id] = 0;
-
                 analystWorkMap[id] += task.totalSeconds || 0;
             }
         });
     });
 
-
     const allTasks = Object.values(tasksByChapter).flat();
-
     const totalTasks = allTasks.length;
-    const completedTasks = allTasks.filter(t => t.completed).length;
-    const progress = totalTasks > 0
-        ? Math.round((completedTasks / totalTasks) * 100)
-        : 0;
-
+    const completedTasks = allTasks.filter((t) => t.completed).length;
+    const progress = totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0;
 
     const analystTimes = Object.entries(analystWorkMap)
         .map(([analystId, sec]) => {
-            const taskAnalyst = allTasks.find(
-                t => t.analyst?._id?.toString() === analystId
-            )?.analyst;
-
+            const taskAnalyst = allTasks.find((t) => t.analyst?._id?.toString() === analystId)?.analyst;
             if (!taskAnalyst) return null;
-
             return `${getInitials(taskAnalyst.name)} - ${formatTime(sec)}`;
         })
         .filter(Boolean);
-
-    // if (!projectId) return <p>No project selected.</p>;
-    // if (isLoading) return <p>Loading project data...</p>;
-    // if (isError) return <p>Error fetching project data!</p>;
-
 
     const addWatermarkToAllPages = (pdf) => {
         const pageCount = pdf.getNumberOfPages();
@@ -357,117 +464,87 @@ const ProjectTasks = ({
             pdf.setFont("helvetica");
             pdf.setFontSize(fontSize);
             pdf.setTextColor(180, 180, 180);
-            pdf.setGState(new pdf.GState({ opacity: 0.20 }));
+            pdf.setGState(new pdf.GState({ opacity: 0.2 }));
 
-            // 🔥 text width (jsPDF units)
-            const textWidth =
-                pdf.getStringUnitWidth(text) *
-                fontSize /
-                pdf.internal.scaleFactor;
+            const textWidth = (pdf.getStringUnitWidth(text) * fontSize) / pdf.internal.scaleFactor;
+            const x = pageWidth / 2 + textWidth * 0.18;
+            const y = pageHeight / 2 + fontSize * 0.95;
 
-
-            const x = (pageWidth / 2) + (textWidth * 0.18);
-            const y = (pageHeight / 2) + (fontSize * 0.95);
-
-            pdf.text(text, x, y, {
-                align: "center",
-                angle: angle,
-            });
-
+            pdf.text(text, x, y, { align: "center", angle });
             pdf.restoreGraphicsState();
         }
     };
 
-
-
     const handleExportPDF = async () => {
-        const element = document.getElementById("export-report");
-        if (!element) {
-            toast.error("Export content not found");
-            return;
-        }
+        try {
+            const element = document.getElementById("export-report");
+            if (!element) {
+                toast.error("Export content not found");
+                return;
+            }
 
-        const canvas = await html2canvas(element, {
-            scale: 2,
-            backgroundColor: "#ffffff",
-            useCORS: true,
-            windowWidth: element.scrollWidth,
-            windowHeight: element.scrollHeight,
-        });
+            if (!projectId) {
+                toast.error("Project not selected");
+                return;
+            }
 
-        const imgData = canvas.toDataURL("image/png");
+            // ✅ Editor data source (as per your shared response)
+            const editorData = category?.editorData;
+            if (!editorData) {
+                toast.error("Editor data not found");
+                return;
+            }
 
-        const pdf = new jsPDF("p", "mm", "a4");
+            // 1) Extract keys
+            const keys = extractTokensFromEditorData(editorData);
 
-        const pdfWidth = pdf.internal.pageSize.getWidth();
-        const pdfHeight = pdf.internal.pageSize.getHeight();
+            // 2) Fetch shortcode values
+            const shortcodeMap = keys.length
+                ? (await fetchProjectShortcodes({ projectId, keys }).unwrap())?.data || {}
+                : {};
 
-        const imgHeight = (canvas.height * pdfWidth) / canvas.width;
-        let heightLeft = imgHeight;
-        let position = 0;
 
-        pdf.addImage(imgData, "PNG", 0, position, pdfWidth, imgHeight);
-        heightLeft -= pdfHeight;
+            // 3) EditorJS -> HTML
+            const finalHtml = editorDataToHtml(editorData, shortcodeMap);
+            setExportHtml(finalHtml);
+            await new Promise((r) => setTimeout(r, 0));
 
-        while (heightLeft > 0) {
-            position -= pdfHeight;
-            pdf.addPage();
+            // 6) Canvas -> PDF
+            const canvas = await html2canvas(element, {
+                scale: 2,
+                backgroundColor: "#ffffff",
+                useCORS: true,
+                windowWidth: element.scrollWidth,
+                windowHeight: element.scrollHeight,
+            });
+
+            const imgData = canvas.toDataURL("image/png");
+            const pdf = new jsPDF("p", "mm", "a4");
+
+            const pdfWidth = pdf.internal.pageSize.getWidth();
+            const pdfHeight = pdf.internal.pageSize.getHeight();
+
+            const imgHeight = (canvas.height * pdfWidth) / canvas.width;
+            let heightLeft = imgHeight;
+            let position = 0;
+
             pdf.addImage(imgData, "PNG", 0, position, pdfWidth, imgHeight);
             heightLeft -= pdfHeight;
-        }
 
-        // 🔥 APPLY WATERMARK TO ALL PAGES
-        addWatermarkToAllPages(pdf);
-
-        pdf.save(`project-${projectId}-report.pdf`);
-    };
-
-
-
-
-
-
-
-
-    // 🔥 SLUG REPLACER FUNCTION
-    const replaceSlugsWithValues = (html, values = {}) => {
-        if (!html) return html;
-
-        let updatedHtml = html;
-
-        Object.keys(values).forEach((slug) => {
-            const value = values[slug] || "";
-            const regex = new RegExp(`\\[${slug}\\]`, "g");
-            updatedHtml = updatedHtml.replace(regex, value);
-        });
-
-        return updatedHtml;
-    };
-
-    // 🔥 ALL TASK FORM DATA COMBINED (slug → value)
-    const combinedTaskData = {};
-
-    Object.values(tasksByChapter)
-        .flat()
-        .forEach(task => {
-            if (task.data && typeof task.data === "object") {
-                Object.assign(combinedTaskData, task.data);
+            while (heightLeft > 0) {
+                position -= pdfHeight;
+                pdf.addPage();
+                pdf.addImage(imgData, "PNG", 0, position, pdfWidth, imgHeight);
+                heightLeft -= pdfHeight;
             }
-        });
 
-
-    const contentData = category
-        ? {
-            title: category.title || category.name || "Project Report",
-            chapters: (category.chapters || []).map(chapter => ({
-                ...chapter,
-                content: replaceSlugsWithValues(
-                    chapter.content,
-                    combinedTaskData   // 🔥 slug → real value
-                ),
-            })),
+            addWatermarkToAllPages(pdf);
+            pdf.save(`project-${projectId}-report.pdf`);
+        } catch (e) {
+            console.error(e);
+            toast.error("PDF export failed");
         }
-        : null;
+    };
 
     return (
         <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
@@ -482,57 +559,54 @@ const ProjectTasks = ({
                     background: "white",
                 }}
             >
-                {contentData && <Content data={contentData} />}
+                {/* ✅ This is what gets captured by html2canvas */}
+                <div className="report-root" dangerouslySetInnerHTML={{ __html: exportHtml }} />
             </div>
 
-
-
             <Details
-                isFinalizedLocal={ isFinalizedLocal }
-                setShowReviewPopup={ setShowReviewPopup }
-                handleFinalize={ handleFinalize }
-                isObservation={ isObservation }
-                setShowEditingPopup={ setShowEditingPopup }
-                progress={ progress }
-                completedTasks={ completedTasks }
-                totalTasks={ totalTasks }
-                editMode={ editMode }
-                handleToggleEdit={ handleToggleEdit }
-                formatTime={ formatTime }
-                totalWorkedSeconds={ totalWorkedSeconds }
-                analystTimes={ analystTimes }
-                responsible={ responsible }
-                getInitials={ getInitials }
-                assigned={ assigned }
-                legendColors={ legendColors }
+                isFinalizedLocal={isFinalizedLocal}
+                setShowReviewPopup={setShowReviewPopup}
+                handleFinalize={handleFinalize}
+                isObservation={isObservation}
+                setShowEditingPopup={setShowEditingPopup}
+                progress={progress}
+                completedTasks={completedTasks}
+                totalTasks={totalTasks}
+                editMode={editMode}
+                handleToggleEdit={handleToggleEdit}
+                formatTime={formatTime}
+                totalWorkedSeconds={totalWorkedSeconds}
+                analystTimes={analystTimes}
+                responsible={responsible}
+                getInitials={getInitials}
+                assigned={assigned}
+                legendColors={legendColors}
                 onExportPDF={handleExportPDF}
-                projectId={ projectId }
+                projectId={projectId}
                 project={project}
                 status={pro}
             />
 
-            <div className="task-container" style={{ padding: "16px 24px", marginTop: '12px' }}>
+            <div className="task-container" style={{ padding: "16px 24px", marginTop: "12px" }}>
                 <h3> Capitole </h3>
             </div>
 
             <Chapter
-                data={ chapterData }
-                tasksByChapter={ tasksByChapter }
-                setTasksByChapter={ setTasksByChapter }
-                getInitials={ getInitials }
-                isFinalizedLocal={ isFinalizedLocal }
-                editMode={ editMode }
-                formatTime={ formatTime }
-                refetchProgress={ refetchProgress }
-                setActiveChapterId={ setActiveChapterId }
-                setShowTaskForm={ setShowTaskForm }
-                refetchChapters={ refetchChapters }
+                data={chapterData}
+                tasksByChapter={tasksByChapter}
+                setTasksByChapter={setTasksByChapter}
+                getInitials={getInitials}
+                isFinalizedLocal={isFinalizedLocal}
+                editMode={editMode}
+                formatTime={formatTime}
+                refetchProgress={refetchProgress}
+                setActiveChapterId={setActiveChapterId}
+                setShowTaskForm={setShowTaskForm}
+                refetchChapters={refetchChapters}
                 projectId={projectId}
             />
 
-
             <div className="task-container">
-
                 {/* BOTTOM TASK FORM */}
                 {showTaskForm && (user?.role === "admin" || user?.role === "manager") && (
                     <div className="task-form-container">
@@ -558,10 +632,7 @@ const ProjectTasks = ({
                                     Anuleaza
                                 </button>
 
-                                <button
-                                    className="task-submit-btn"
-                                    onClick={() => handleCreateTask(activeChapterId)}
-                                >
+                                <button className="task-submit-btn" onClick={() => handleCreateTask(activeChapterId)}>
                                     Adauga
                                 </button>
                             </div>
@@ -569,14 +640,12 @@ const ProjectTasks = ({
                     </div>
                 )}
 
-
                 {showReviewPopup && (
                     <ReviewPopUp
                         onClose={() => setShowReviewPopup(false)}
                         onAddObservation={handleAddObservation}
                         observation={Observation?.data}
                     />
-
                 )}
 
                 {showEditingPopup && (
@@ -585,10 +654,9 @@ const ProjectTasks = ({
                         onAddObservation={handleAddObservation}
                         observation={Observation?.data || []}
                     />
-
                 )}
 
-                {showPleaseWait  && (
+                {showPleaseWait && (
                     <PleaseWaitPopUp
                         message="Vă rugăm să așteptați..."
                         subText="Se procesează finalizarea task-ului."
@@ -596,19 +664,13 @@ const ProjectTasks = ({
                 )}
 
                 {(user?.role === "admin" || user?.role === "manager") && (
-                    <ChapterCreation
-                        mode={editMode}
-                        observe={isFinalizedLocal}
-                        projectId={projectId}
-                        createChapter={createChapter}
-                    />
+                    <ChapterCreation mode={editMode} observe={isFinalizedLocal} projectId={projectId} createChapter={createChapter} />
                 )}
-
             </div>
-            <Outlet/>
+
+            <Outlet />
         </div>
     );
-
-}
+};
 
 export default ProjectTasks;
