@@ -193,7 +193,7 @@ const View = ({ data, categoryId, onChapterCreated }) => {
                                 Save
                             </button>
                         </div>
-
+                        <div className={styles.editorWrapper}   >
                         <Editor
                             value={safeParseEditorData(localData?.editorData || localData?.content)}
                             onChange={(output) => {
@@ -204,6 +204,7 @@ const View = ({ data, categoryId, onChapterCreated }) => {
                                 }));
                             }}
                         />
+                        </div>
 
                         <Content
                             data={localData}
