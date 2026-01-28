@@ -138,6 +138,13 @@ export const taskApi = createApi({
             }),
             invalidatesTags: ["Chapters"],
         }),
+        fetchProjectShortcodes: builder.mutation({
+            query: ({ projectId, keys }) => ({
+                url: `/task/project/${projectId}/fetch-shortcode`,
+                method: "POST",
+                body: { keys },
+            }),
+        }),
 
 
 
@@ -163,5 +170,7 @@ export const {
     useCreateObservationMutation,
     useGetObservationsByProjectQuery,
     useUpdateChapterMutation,
+    useFetchProjectShortcodesMutation,
+
 
 } = taskApi;
