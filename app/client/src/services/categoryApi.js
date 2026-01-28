@@ -221,6 +221,19 @@ export const categoryApi = createApi({
 
             ],
         }),
+        uploadEditorImage: builder.mutation({
+            query: (file) => {
+                const formData = new FormData();
+                formData.append("image", file); // ✅ multer expects "image"
+
+                return {
+                    url: `/download/editorjs/image`,
+                    method: "POST",
+                    body: formData,
+                };
+            },
+        }),
+
 
     }),
 });
@@ -245,4 +258,5 @@ export const {
     useDeleteCategoryMutation,
 
     useUpdateChapterTemplateIndexMutation,
+    useUploadEditorImageMutation,
 } = categoryApi;

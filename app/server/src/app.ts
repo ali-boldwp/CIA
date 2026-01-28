@@ -37,7 +37,17 @@ app.use(express.json({ limit: "20mb" }));
 app.use(express.urlencoded({ limit: "20mb", extended: true }));
 
 
-app.use("/uploads", express.static(path.join(process.cwd(), "uploads")));
+
+app.use(
+    "/uploads",
+    (req, res, next) => {
+        // ✅ allow other origins to load these images
+        res.setHeader("Cross-Origin-Resource-Policy", "cross-origin");
+        next();
+    },
+    express.static(path.join(process.cwd(), "uploads"))
+);
+
 
 
 
