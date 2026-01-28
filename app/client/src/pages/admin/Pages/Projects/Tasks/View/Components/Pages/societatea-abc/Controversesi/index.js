@@ -4,22 +4,18 @@ import styles from "./styles.module.css";
 import ImagePlaceholder from "./ImagePlaceholder";
 import NotesPlaceholder from "./NotesPlaceholder";
 
-const LOCAL_STORAGE_KEY = "controversyFormData";
-
-const ControversyIndex = ({ formValues, setFormValues, onSaveSection,isSaving }) => {
+const ControversyIndex = ({ formValues, setFormValues, onSaveSection, isSaving }) => {
     const isInitialized = useRef(false);
 
     const { control, watch, setValue, handleSubmit } = useForm({
         defaultValues: {
-            subpoints: [
-                { title: "10.1. Subtitlu [ex: Implicarea in dosarul Microsoft]", text: "" }
-            ],
+            subpoints: [{ title: "10.1. Subtitlu [ex: Implicarea in dosarul Microsoft]", text: "" }],
             notes: [null],
             images: [null]
         }
     });
 
-    const { fields, append, remove } = useFieldArray({
+    const { fields, append, remove, replace } = useFieldArray({
         control,
         name: "subpoints"
     });
@@ -28,35 +24,40 @@ const ControversyIndex = ({ formValues, setFormValues, onSaveSection,isSaving })
     const notes = watch("notes");
     const images = watch("images");
 
-    // ===== Initialize from localStorage or parent =====
+    // ✅ Initialize ONLY from parent (formValues.controversy). No localStorage.
     useEffect(() => {
+        // prevent overriding user edits on every render
         if (isInitialized.current) return;
 
-        const savedData = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY));
-        let data = savedData || formValues?.controversy || {};
+        const data = formValues?.controversy || {};
 
-        // Ensure notes are File or null
-        const safeNotes = (data.notes || [null]).map(n => (n instanceof File ? n : null));
-        const safeImages = (data.images || [null]).map(i => i || null);
+        // ensure arrays exist
+        const safeSubpoints =
+            Array.isArray(data.subpoints) && data.subpoints.length > 0
+                ? data.subpoints
+                : [{ title: "10.1. Subtitlu [ex: Implicarea in dosarul Microsoft]", text: "" }];
 
-        setValue("subpoints", data.subpoints || fields);
+        const safeNotes = Array.isArray(data.notes) && data.notes.length > 0 ? data.notes : [null];
+        const safeImages = Array.isArray(data.images) && data.images.length > 0 ? data.images : [null];
+
+        // ✅ Properly load subpoints into useFieldArray
+        replace(safeSubpoints);
+
         setValue("notes", safeNotes);
         setValue("images", safeImages);
 
         isInitialized.current = true;
-    }, [formValues, setValue, fields]);
+    }, [formValues, setValue, replace]);
 
-    // ===== Auto-save to localStorage + parent =====
+    // ✅ Keep syncing changes to parent state (no localStorage)
     useEffect(() => {
         if (!isInitialized.current) return;
 
         const dataToSave = {
             subpoints,
-            notes: notes.map(n => (n instanceof File ? n : null)),
+            notes,
             images
         };
-
-        localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(dataToSave));
 
         if (setFormValues) {
             setFormValues(prev => ({
@@ -70,18 +71,11 @@ const ControversyIndex = ({ formValues, setFormValues, onSaveSection,isSaving })
     const addSubpoint = () =>
         append({ title: `10.${subpoints.length + 1}. Subtitlu`, text: "" });
 
-    const deleteSubpoint = (index) => remove(index);
+    const deleteSubpoint = index => remove(index);
 
-    const handleNotesChange = (updated) => {
-        setValue(
-            "notes",
-            updated.map(n => (n instanceof File ? n : null))
-        );
-    };
+    const handleImagesChange = updated => setValue("images", updated);
 
-    const handleImagesChange = (updated) => setValue("images", updated);
-
-    const onSubmit = (data) => {
+    const onSubmit = data => {
         console.log("FINAL PAYLOAD:", data);
         if (onSaveSection) onSaveSection({ data: { controversy: data } });
     };
@@ -109,10 +103,7 @@ const ControversyIndex = ({ formValues, setFormValues, onSaveSection,isSaving })
                             )}
                         />
                         <div className={styles.deleteBoxContainer}>
-                            <button
-                                className={styles.deleteBox}
-                                onClick={() => deleteSubpoint(index)}
-                            >
+                            <button className={styles.deleteBox} onClick={() => deleteSubpoint(index)}>
                                 Șterge căsuța
                             </button>
                         </div>
@@ -129,10 +120,7 @@ const ControversyIndex = ({ formValues, setFormValues, onSaveSection,isSaving })
                         control={control}
                         name="notes"
                         render={({ field: { value, onChange } }) => (
-                            <NotesPlaceholder
-                                notes={value}
-                                setNotes={onChange} // ab directly hook form ke saath linked
-                            />
+                            <NotesPlaceholder notes={value} setNotes={onChange} />
                         )}
                     />
                     <ImagePlaceholder images={images} setImages={handleImagesChange} />
@@ -141,7 +129,11 @@ const ControversyIndex = ({ formValues, setFormValues, onSaveSection,isSaving })
                 {/* NAVIGATION / SAVE */}
                 <div className={styles.navigation}>
                     <div className={styles.navButtons}>
-                        <button className={styles.saveButton} disabled={isSaving} onClick={handleSubmit(onSubmit)}>
+                        <button
+                            className={styles.saveButton}
+                            disabled={isSaving}
+                            onClick={handleSubmit(onSubmit)}
+                        >
                             {isSaving ? (
                                 <>
                                     <span className={styles.loader}></span>

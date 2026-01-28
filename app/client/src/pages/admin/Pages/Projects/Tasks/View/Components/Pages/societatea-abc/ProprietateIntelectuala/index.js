@@ -3,98 +3,122 @@ import { useForm, Controller, useFieldArray } from "react-hook-form";
 import styles from "./styles.module.css";
 import ImagePlaceholder from "./ImagePlaceholder";
 
-const LOCAL_STORAGE_KEY = "marciOSIMFormData";
-
-const Index = ({ formValues, setFormValues, onSaveSection , isSaving}) => {
+const Index = ({ formValues, setFormValues, onSaveSection, isSaving }) => {
     const isInitialized = useRef(false);
+
+    const defaultColumns = ["DENUMIRE MARCA", "DETALII"];
+    const emptyRow = { name: "", details: "" };
 
     const { control, watch, setValue, handleSubmit } = useForm({
         defaultValues: {
-            introducere: "",
-            columns: ["DENUMIRE MARCA", "DETALII"],
-            rows: [{ name: "", details: "" }],
-            images: [null],
-        },
+            marciOSIMIntroducere: "",
+            columns: defaultColumns,
+            rows: [emptyRow],
+            images: [null]
+        }
     });
 
     const { fields, append, remove, replace } = useFieldArray({
         control,
-        name: "rows",
+        name: "rows"
     });
 
-    const introducere = watch("introducere");
+    const marciOSIMIntroducere = watch("marciOSIMIntroducere");
     const rows = watch("rows");
     const images = watch("images");
     const columns = watch("columns");
-    const allData = watch(); // for localStorage
 
-    // ===== Initialize from localStorage or parent =====
+    // ✅ Initialize from parent (NO localStorage) — FIXED for async formValues
     useEffect(() => {
+        // already initialized? do nothing
         if (isInitialized.current) return;
 
-        const savedData = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY));
+        const marciData = formValues?.marciOSIM;
 
-        if (savedData) {
-            setValue("introducere", savedData.introducere || "");
-            setValue("columns", savedData.columns || ["DENUMIRE MARCA", "DETALII"]);
-            replace(savedData.rows && savedData.rows.length > 0 ? savedData.rows : [{ name: "", details: "" }]);
-            setValue("images", savedData.images || [null]);
-        } else if (formValues?.marciOSIM) {
-            const marciData = formValues.marciOSIM;
-            setValue("introducere", marciData.introducere || "");
-            setValue("columns", marciData.columns || ["DENUMIRE MARCA", "DETALII"]);
-            replace(marciData.rows && marciData.rows.length > 0 ? marciData.rows : [{ name: "", details: "" }]);
-            setValue("images", marciData.images || [null]);
+        // ✅ IMPORTANT:
+        // If data not yet available (API pending), DO NOT lock initialization.
+        if (!marciData) return;
+
+        setValue("marciOSIMIntroducere", marciData.marciOSIMIntroducere || "");
+        setValue("columns", marciData.columns || defaultColumns);
+
+        const savedRows = marciData.rows;
+
+        // support array-of-arrays => convert for UI
+        if (Array.isArray(savedRows) && Array.isArray(savedRows[0])) {
+            const converted = savedRows.map(r => ({
+                name: r?.[0] ?? "",
+                details: r?.[1] ?? ""
+            }));
+            replace(converted.length > 0 ? converted : [emptyRow]);
+        }
+        // support object rows
+        else if (Array.isArray(savedRows) && savedRows.length > 0 && typeof savedRows[0] === "object") {
+            replace(savedRows.length > 0 ? savedRows : [emptyRow]);
+        } else {
+            replace([emptyRow]);
         }
 
-        isInitialized.current = true;
-    }, [formValues, setValue, replace]);
+        setValue(
+            "images",
+            Array.isArray(marciData.images) && marciData.images.length > 0 ? marciData.images : [null]
+        );
 
-    // ===== Auto-save to localStorage & sync parent =====
+        // ✅ Now lock initialization ONLY after real data has been applied
+        isInitialized.current = true;
+    }, [formValues?.marciOSIM, setValue, replace]);
+
+    // ✅ Sync to parent (no localStorage)
     useEffect(() => {
+        // only sync after we have loaded data at least once
         if (!isInitialized.current) return;
 
-        const dataToSave = { introducere, columns, rows, images };
-
-        localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(dataToSave));
+        const dataToSync = { marciOSIMIntroducere, columns, rows, images };
 
         if (setFormValues) {
             setFormValues(prev => ({
                 ...prev,
-                marciOSIM: dataToSave
+                marciOSIM: dataToSync
             }));
         }
-    }, [introducere, rows, images, columns, setFormValues]);
+    }, [marciOSIMIntroducere, rows, images, columns, setFormValues]);
 
     // ===== Table Handlers =====
     const addRow = () => append({ name: "", details: "" });
-    const deleteRow = (index) => {
+
+    const deleteRow = index => {
         remove(index);
         if (rows.length === 1) append({ name: "", details: "" });
     };
 
     // ===== Images Handler =====
-    const setImagesHandler = (imgs) => setValue("images", imgs.length === 0 ? [null] : imgs);
+    const setImagesHandler = imgs => setValue("images", imgs.length === 0 ? [null] : imgs);
 
     // ===== Save Handler =====
-    const onSubmit = (data) => {
-        const transformedRows = data.rows.map(row => [row.name, row.details]);
+    const onSubmit = data => {
+        const transformedRows = (data.rows || []).map(row => [row?.name ?? "", row?.details ?? ""]);
 
         const payload = {
             data: {
                 marciOSIM: {
-                    introducere: data.introducere,
-                    columns: data.columns,
+                    marciOSIMIntroducere: data.marciOSIMIntroducere || "",
+                    columns: data.columns || defaultColumns,
                     rows: transformedRows,
-                    images: data.images,
-                },
-            },
+                    images: data.images || []
+                }
+            }
         };
 
         console.log("FINAL PAYLOAD:", payload);
-
         if (onSaveSection) onSaveSection(payload);
 
+        // keep parent in saved format too
+        if (setFormValues) {
+            setFormValues(prev => ({
+                ...prev,
+                marciOSIM: payload.data.marciOSIM
+            }));
+        }
     };
 
     return (
@@ -109,7 +133,7 @@ const Index = ({ formValues, setFormValues, onSaveSection , isSaving}) => {
                     <h3 className={styles.sectionTitle}>💬 Introducere</h3>
                     <Controller
                         control={control}
-                        name="introducere"
+                        name="marciOSIMIntroducere"
                         render={({ field }) => (
                             <textarea
                                 className={styles.textarea}
@@ -118,7 +142,7 @@ const Index = ({ formValues, setFormValues, onSaveSection , isSaving}) => {
                             />
                         )}
                     />
-                    <button className={styles.deleteBox} onClick={() => setValue("introducere", "")}>
+                    <button className={styles.deleteBox} onClick={() => setValue("marciOSIMIntroducere", "")}>
                         Șterge căsuța
                     </button>
                 </div>
@@ -158,6 +182,7 @@ const Index = ({ formValues, setFormValues, onSaveSection , isSaving}) => {
                     ))}
                     </tbody>
                 </table>
+
                 <button className={styles.addRow} onClick={addRow}>
                     + Adaugă rând
                 </button>
@@ -181,10 +206,12 @@ const Index = ({ formValues, setFormValues, onSaveSection , isSaving}) => {
                                 "💾 Salveaza sectiunea"
                             )}
                         </button>
+
                         <button className={styles.middleButton}>
                             ❌ Exclude acest capitol
                             <span className={styles.arrowIcon}>→</span>
                         </button>
+
                         <button className={styles.nextButton}>
                             ➡️ Mergi la I.8. „Litigii societate”
                             <span className={styles.arrowIcon}>→</span>

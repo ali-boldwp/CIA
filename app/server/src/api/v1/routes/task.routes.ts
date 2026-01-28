@@ -11,7 +11,9 @@ const router = Router();
 
 router.post("/", auth, taskController.createTask);
 
-router.post("/:id/fetch-shortcode", taskController.fetchShortcode);
+
+router.post("/project/:projectId/fetch-shortcode", auth, taskController.fetchProjectShortcode);
+
 
 
 router.get("/", auth, taskController.getAllTasks);
