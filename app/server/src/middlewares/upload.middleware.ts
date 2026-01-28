@@ -2,6 +2,7 @@ import multer from "multer";
 import fs from "fs";
 import path from "path";
 
+// 📁 uploads folder path
 const uploadDir = path.join(process.cwd(), "uploads");
 
 // 📁 ensure uploads folder exists
@@ -13,6 +14,7 @@ if (!fs.existsSync(uploadDir)) {
 // 💾 storage config
 const storage = multer.diskStorage({
     destination: (_req, _file, cb) => {
+        // ✅ Store directly in uploads folder
         cb(null, uploadDir);
     },
 
@@ -31,6 +33,6 @@ const storage = multer.diskStorage({
 export const upload = multer({
     storage,
     limits: {
-        fileSize: 50 * 1024 * 1024, // ✅ 50MB per file (change if needed)
+        fileSize: 50 * 1024 * 1024, // ✅ 50MB
     },
 });
