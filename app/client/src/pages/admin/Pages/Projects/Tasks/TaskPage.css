@@ -1406,71 +1406,69 @@ font-size: 16px;
 .r-th, .r-td { border: 1px solid #ddd; padding: 6px; text-align: left; vertical-align: top; }
 .r-th { font-weight: 600; }
 
-
-/* ====== TIGHTER PDF SPACING ====== */
-
+/* PDF Export Styles */
 #export-report {
-    /* reduce page margins */
-    padding: 8mm 8mm;        /* was 18mm 16mm */
+    width: 210mm; /* A4 width */
+    min-height: 297mm; /* A4 height */
+    padding: 15mm 15mm; /* ✅ Top/Bottom اور Left/Right padding */
     box-sizing: border-box;
+    background: white;
 }
 
 .report-root {
+    font-family: 'Arial', sans-serif;
     font-size: 12pt;
-    line-height: 1.25;       /* was 1.45 */
+    line-height: 1.5;
     color: #000;
 }
 
-/* Paragraph spacing */
 .r-p {
-    margin: 0 0 6px 0;       /* was 10px */
+    margin: 0 0 12px 0;
     text-align: justify;
 }
 
-/* Headings spacing */
 .r-h {
-    margin: 8px 0 4px 0;     /* was 14px 0 8px */
-    font-weight: 700;
-    font-style: italic;
-    text-decoration: underline;
+    margin: 20px 0 12px 0;
+    font-weight: bold;
 }
 
-/* Lists spacing */
 .r-list {
-    margin: 4px 0 6px 18px;  /* was 6px 0 10px 22px */
+    margin: 12px 0 12px 20px;
     padding: 0;
 }
 
 .r-li {
-    margin: 2px 0;           /* was 4px 0 */
-    text-align: justify;
+    margin: 6px 0;
 }
 
-/* Tables spacing */
 .r-table {
-    margin: 6px 0 8px 0;     /* was 10px 0 14px */
+    margin: 12px 0;
+    border-collapse: collapse;
+    width: 100%;
     font-size: 11pt;
 }
 
-.r-th,
-.r-td {
-    padding: 6px 8px;        /* slightly tighter */
+.r-th, .r-td {
+    border: 1px solid #000;
+    padding: 8px;
+    text-align: left;
 }
 
-/* Images spacing */
-.report-root img {
-    margin: 8px auto;        /* was 12px */
+.r-img-container {
+    margin: 16px 0;
+    text-align: center;
 }
 
-/* ✅ Fixed image width in PDF */
-.report-root img {
-    width: 500px;        /* fix width */
-    max-width: 100%;     /* responsive if page smaller */
-    height: auto;        /* keep aspect ratio */
+.r-img {
+    max-width: 100%;
+    height: auto;
     display: block;
-    margin: 8px auto;    /* center */
-    border: 1px solid #ddd;
+    margin: 0 auto;
 }
 
-
-
+.r-img-caption {
+    margin-top: 8px;
+    font-style: italic;
+    font-size: 11pt;
+    text-align: center;
+}
