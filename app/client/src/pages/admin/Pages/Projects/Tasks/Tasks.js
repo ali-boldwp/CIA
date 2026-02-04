@@ -199,11 +199,12 @@ const editorBlockToHtml = (block, shortcodeMap) => {
 
         // crossOrigin is important for html2canvas
         return `
-      <figure class="r-figure">
-        <img class="r-img" src="${url}" crossorigin="anonymous" />
-        ${caption ? `<figcaption class="r-cap">${escapeHtml(caption)}</figcaption>` : ""}
-      </figure>
-    `;
+<figure class="r-figure no-break">
+  <img class="r-img" src="${url}" crossorigin="anonymous" />
+  ${caption ? `<figcaption class="r-cap">${escapeHtml(caption)}</figcaption>` : ""}
+</figure>
+`;
+
     }
 
     return "";
