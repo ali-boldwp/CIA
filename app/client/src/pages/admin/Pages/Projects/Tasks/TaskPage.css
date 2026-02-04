@@ -1397,97 +1397,37 @@ font-size: 16px;
 .task-row:hover .col-actions .btn.start {
     opacity: 1;
 }
-
-.report-root { font-size: 14px; padding: 18px; color:#111; }
-.r-p { margin: 8px 0; line-height: 1.5; }
-.r-list { margin: 8px 0; padding-left: 18px; }
-
-.r-table { width: 100%; border-collapse: collapse; margin: 10px 0; }
-.r-th, .r-td { border: 1px solid #ddd; padding: 6px; text-align: left; vertical-align: top; }
-.r-th { font-weight: 600; }
-
-/* PDF Export Styles */
-#export-report {
-    width: 210mm; /* A4 width */
-    min-height: 297mm; /* A4 height */
-    padding: 0; /* ✅ Top/Bottom اور Left/Right padding */
-    box-sizing: border-box;
-    background: white;
-}
-
+/* used by temp export container */
+#pdf-export-temp .report-root,
 .report-root {
-    font-family: 'Arial', sans-serif;
+    font-family: Arial, sans-serif;
     font-size: 12pt;
-    padding: 20mm 15mm;
-    box-sizing: border-box;
     line-height: 1.5;
     color: #000;
+    padding: 0; /* ✅ padding yahan nahi, margins html2pdf se */
+    box-sizing: border-box;
 }
-.no-break {
-    page-break-inside: avoid;
-    break-inside: avoid;
-}
-/* Page break protection */
+
+.no-break,
 .r-p,
 .r-h,
 .r-list,
 .r-table,
 .r-figure,
 .r-img {
-    page-break-inside: avoid;
-    break-inside: avoid;
-}
-.report-root > *:last-child {
-    margin-bottom: 10mm;
+    break-inside: avoid !important;
+    page-break-inside: avoid !important;
 }
 
-.r-p {
-    margin: 0 0 12px 0;
-    text-align: justify;
-}
+.r-p { margin: 0 0 12px 0; text-align: justify; }
+.r-h { margin: 20px 0 12px 0; font-weight: bold; }
 
-.r-h {
-    margin: 20px 0 12px 0;
-    font-weight: bold;
-}
+.r-list { margin: 12px 0 12px 20px; padding: 0; }
+.r-li { margin: 6px 0; }
 
-.r-list {
-    margin: 12px 0 12px 20px;
-    padding: 0;
-}
+.r-table { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 11pt; }
+.r-th, .r-td { border: 1px solid #000; padding: 8px; text-align: left; }
 
-.r-li {
-    margin: 6px 0;
-}
-
-.r-table {
-    margin: 12px 0;
-    border-collapse: collapse;
-    width: 100%;
-    font-size: 11pt;
-}
-
-.r-th, .r-td {
-    border: 1px solid #000;
-    padding: 8px;
-    text-align: left;
-}
-
-.r-img-container {
-    margin: 16px 0;
-    text-align: center;
-}
-
-.r-img {
-    max-width: 100%;
-    height: auto;
-    display: block;
-    margin: 0 auto;
-}
-
-.r-img-caption {
-    margin-top: 8px;
-    font-style: italic;
-    font-size: 11pt;
-    text-align: center;
-}
+.r-figure { margin: 16px 0; text-align: center; }
+.r-img { max-width: 100%; height: auto; display: block; margin: 0 auto; max-height: 230mm; object-fit: contain; }
+.r-cap { margin-top: 8px; font-style: italic; font-size: 11pt; text-align: center; }

@@ -504,20 +504,55 @@ const ProjectTasks = ({ projectData }) => {
             )
         );
     };
+    const applySmartPageBreaks = (rootEl, pagePx) => {
+        if (!rootEl) return;
 
+        // remove old spacers (if any)
+        rootEl.querySelectorAll(".pdf-page-spacer").forEach((n) => n.remove());
+
+        const children = Array.from(rootEl.children);
+        let used = 0;
+
+        for (const child of children) {
+            const h = child.offsetHeight || 0;
+            if (!h) continue;
+
+            // if this element is "no-break" and would cross page boundary, push it
+            const isNoBreak =
+                child.classList.contains("no-break") ||
+                child.classList.contains("r-figure") ||
+                child.querySelector?.(".no-break, .r-figure");
+
+            const nextUsed = used + h;
+            const crosses = nextUsed > pagePx && used % pagePx !== 0;
+
+            if (isNoBreak && crosses) {
+                const remaining = pagePx - (used % pagePx);
+
+                // if remaining is small, still push
+                const spacer = document.createElement("div");
+                spacer.className = "pdf-page-spacer";
+                spacer.style.height = `${remaining}px`;
+
+                rootEl.insertBefore(spacer, child);
+
+                used += remaining;
+            }
+
+            used += h;
+        }
+    };
+
+
+    const waitNextPaint = () =>
+        new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
 
     const handleExportPDF = async () => {
         try {
-            if (!projectId) {
-                toast.error("Project not selected");
-                return;
-            }
+            if (!projectId) return toast.error("Project not selected");
 
             const editorData = category?.editorData;
-            if (!editorData) {
-                toast.error("Editor data not found");
-                return;
-            }
+            if (!editorData) return toast.error("Editor data not found");
 
             // 1) Extract keys
             const keys = extractTokensFromEditorData(editorData);
@@ -531,48 +566,117 @@ const ProjectTasks = ({ projectData }) => {
             const finalHtml = editorDataToHtml(editorData, shortcodeMap);
             setExportHtml(finalHtml);
 
-            // ✅ wait for DOM update
-            await new Promise((r) => setTimeout(r, 50));
+            // ✅ ensure DOM updated
+            await waitNextPaint();
 
             const exportEl = document.getElementById("export-report");
-            if (!exportEl) {
-                toast.error("Export content not found");
-                return;
-            }
+            if (!exportEl) return toast.error("Export content not found");
 
-            // ✅ wait for images to load
+            // ✅ force html into DOM (avoid stale state render)
+            const root = exportEl.querySelector(".report-root");
+            if (root) root.innerHTML = finalHtml;
+
+            await waitNextPaint();
             await waitForImages(exportEl);
 
-            // ✅ canvas
+// ✅ compute usable page height in PX (based on export width)
+            const exportWidthPx = exportEl.scrollWidth;      // px
+            const pxPerMm = exportWidthPx / 210;            // 210mm A4 width
+            const paddingTopMm = 20;
+            const paddingBottomMm = 20;
+
+// usable content height in mm (A4 height 297)
+            const usableMm = 297 - paddingTopMm - paddingBottomMm;
+            const pageContentPx = Math.floor(usableMm * pxPerMm);
+
+// ✅ IMPORTANT: add smart breaks so images/cards don't split
+            applySmartPageBreaks(root, pageContentPx);
+
+            await waitNextPaint();
+
+            // ✅ render canvas
             const canvas = await html2canvas(exportEl, {
                 scale: 2,
                 backgroundColor: "#ffffff",
                 useCORS: true,
                 allowTaint: true,
                 imageTimeout: 15000,
+                scrollX: 0,
+                scrollY: 0,
                 windowWidth: exportEl.scrollWidth,
                 windowHeight: exportEl.scrollHeight,
             });
 
-            const imgData = canvas.toDataURL("image/png");
             const pdf = new jsPDF("p", "mm", "a4");
 
-            const pdfWidth = pdf.internal.pageSize.getWidth();
-            const pdfHeight = pdf.internal.pageSize.getHeight();
+            const pdfW = pdf.internal.pageSize.getWidth();
+            const pdfH = pdf.internal.pageSize.getHeight();
 
-            const imgHeight = (canvas.height * pdfWidth) / canvas.width;
-            let heightLeft = imgHeight;
-            let position = 0;
+            // ✅ REQUIRED: margins on every page
+            const marginTop = 12;
+            const marginBottom = 12;
+            const marginLeft = 10;
+            const marginRight = 10;
 
-            pdf.addImage(imgData, "PNG", 0, position, pdfWidth, imgHeight);
-            heightLeft -= pdfHeight;
+            const usableW = pdfW - marginLeft - marginRight;
+            const usableH = pdfH - marginTop - marginBottom;
 
-            while (heightLeft > 0) {
-                position -= pdfHeight;
-                pdf.addPage();
-                pdf.addImage(imgData, "PNG", 0, position, pdfWidth, imgHeight);
-                heightLeft -= pdfHeight;
+            // ✅ canvas -> page crop math
+            const canvasW = canvas.width;
+            const canvasH = canvas.height;
+
+            // how many canvas pixels fit in 1 pdf page height
+            // how many canvas pixels fit in 1 pdf page height
+            const pageCanvasH = Math.floor((usableH * canvasW) / usableW);
+
+// ✅ overlap to avoid cutting text lines
+            const overlapPx = 30; // try 40 or 60
+
+            let rendered = 0;
+            let pageIndex = 0;
+
+            while (rendered < canvasH) {
+
+                // ✅ overlap start (go a little back for next page)
+                const startPx =
+                    pageIndex === 0 ? 0 : Math.max(0, rendered - overlapPx);
+
+                const sliceH = Math.min(
+                    pageCanvasH + (pageIndex === 0 ? 0 : overlapPx),
+                    canvasH - startPx
+                );
+
+                // create slice
+                const pageCanvas = document.createElement("canvas");
+                pageCanvas.width = canvasW;
+                pageCanvas.height = sliceH;
+
+                const ctx = pageCanvas.getContext("2d");
+                ctx.drawImage(canvas, 0, startPx, canvasW, sliceH, 0, 0, canvasW, sliceH);
+
+                const imgData = pageCanvas.toDataURL("image/png");
+
+                if (pageIndex > 0) pdf.addPage();
+
+                const imgHmm = (sliceH * usableW) / canvasW;
+
+                // ✅ shift image up so overlap stays hidden
+                const overlapMm =
+                    pageIndex === 0 ? 0 : (overlapPx * usableW) / canvasW;
+
+                pdf.addImage(
+                    imgData,
+                    "PNG",
+                    marginLeft,
+                    marginTop - overlapMm,
+                    usableW,
+                    imgHmm
+                );
+
+                rendered = startPx + sliceH;
+                pageIndex++;
             }
+
 
             addWatermarkToAllPages(pdf);
             pdf.save(`project-${projectId}-report.pdf`);
@@ -581,6 +685,7 @@ const ProjectTasks = ({ projectData }) => {
             toast.error("PDF export failed");
         }
     };
+
 
 
     return (
