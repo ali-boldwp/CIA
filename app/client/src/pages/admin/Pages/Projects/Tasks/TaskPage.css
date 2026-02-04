@@ -1410,7 +1410,7 @@ font-size: 16px;
 #export-report {
     width: 210mm; /* A4 width */
     min-height: 297mm; /* A4 height */
-    padding: 15mm 15mm; /* ✅ Top/Bottom اور Left/Right padding */
+    padding: 0; /* ✅ Top/Bottom اور Left/Right padding */
     box-sizing: border-box;
     background: white;
 }
@@ -1418,8 +1418,27 @@ font-size: 16px;
 .report-root {
     font-family: 'Arial', sans-serif;
     font-size: 12pt;
+    padding: 20mm 15mm;
+    box-sizing: border-box;
     line-height: 1.5;
     color: #000;
+}
+.no-break {
+    page-break-inside: avoid;
+    break-inside: avoid;
+}
+/* Page break protection */
+.r-p,
+.r-h,
+.r-list,
+.r-table,
+.r-figure,
+.r-img {
+    page-break-inside: avoid;
+    break-inside: avoid;
+}
+.report-root > *:last-child {
+    margin-bottom: 10mm;
 }
 
 .r-p {
