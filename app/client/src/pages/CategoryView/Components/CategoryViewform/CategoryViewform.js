@@ -71,8 +71,6 @@ const CategoryViewform = ({ chapter, categoryId, onUpdate, onCreated }) => {
         }
     };
 
-
-
     return (
         <div className="form-box">
             <div style={{ position: "relative" }}>
